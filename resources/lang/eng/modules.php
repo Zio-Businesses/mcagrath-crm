@@ -2172,9 +2172,11 @@ return array(
         'leadContactsName' => 'Lead Contact Name',
         'addLeadContact' => 'Add Lead Contact',
         'leadDetails' => 'Lead Contact Detail',
+        'vendorDetails' => 'Vendor Contact Detail',
         'updateTitle' => 'Update Lead Contact',
         'title' => 'Lead Contact',
         'createTitle' => 'Add Lead Contact Info',
+        'createTitlev' => 'Add Vendor Contact Info',
         'deal' => 'Deals',
         'stage' => 'Stage',
         'leadStage' => 'Deal Stage',
@@ -2238,6 +2240,7 @@ return array(
         'client' => 'Client',
         'vendor' => 'Vendor',
         'cancel' => 'Cancel',
-        'next' => 'Next'
+        'next' => 'Next',
+        'contract'=>'Contract',
     ),
 );

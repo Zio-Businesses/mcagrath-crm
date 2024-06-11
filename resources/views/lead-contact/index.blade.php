@@ -68,25 +68,15 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                             <div class="form-group my-3">
 
                                     <div class="d-flex">
-                                        <x-forms.radio fieldId="requester-client" :fieldLabel="__('modules.modal.client')"
-                                                           fieldName="requester_type" fieldValue="client"
-                                                           checked="true">
-                                        </x-forms.radio>
-                                        <x-forms.radio fieldId="requester-vendor" :fieldLabel="__('modules.modal.vendor')"
-                                                           fieldValue="vendor"
-                                                           fieldName="requester_type">
-                                        </x-forms.radio>
+                                        <x-forms.link-primary :link="route('lead-contact.create')"  class="px-3 openRightModal mr-3" id="client">
+                                        @lang('modules.modal.client')
+                                        </x-forms.link-primary>
+                                        <x-forms.link-primary :link="route('lead-vendor.handle')"  class="px-3 openRightModal" id="vendor">
+                                        @lang('modules.modal.vendor')
+                                        </x-forms.link-primary>
                                     </div>
                             </div>
 
-                        </div>
-                        <div class=" modal-footer">
-                                    <x-forms.link-primary :link="route('lead-contact.create')" class="px-3 openRightModal" id="next" onclick="sendData()">
-                                        @lang('modules.modal.next')
-                                    </x-forms.link-primary>
-                                    <x-forms.button-secondary id="cancel" >
-                                        @lang('modules.modal.cancel')
-                                    </x-forms.button-secondary>
                         </div>
                     </div>
                 </div>
@@ -101,19 +91,13 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
     @include('sections.datatable_js')
 
     <script>
-        const sendData=()=>{
-            var radioButtons = document.querySelector('input[name=requester_type]:checked').value;
-
-
-            console.log(radioButtons);
-        }
           $('#clientvendor').click(function () {
             $('#ajaxModel').modal('show');
          });
-         $('#cancel').click(function () {
+         $('#client').click(function () {
             $('#ajaxModel').modal('hide');
          });
-         $('#next').click(function () {
+         $('#vendor').click(function () {
             $('#ajaxModel').modal('hide');
          });
         $('#lead-contact-table').on('preXhr.dt', function(e, settings, data) {

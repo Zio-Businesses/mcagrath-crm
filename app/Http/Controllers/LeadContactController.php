@@ -25,6 +25,7 @@ use App\Models\Product;
 use App\Models\User;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LeadContactController extends AccountBaseController
 {
@@ -146,6 +147,7 @@ class LeadContactController extends AccountBaseController
      */
     public function create()
     {
+    
         $this->pageTitle = __('modules.leadContact.createTitle');
 
         $this->addPermission = user()->permission('add_lead');
@@ -181,7 +183,6 @@ class LeadContactController extends AccountBaseController
         $this->categories = LeadCategory::all();
         $this->countries = countries();
         $this->salutations = Salutation::cases();
-
         $this->view = 'lead-contact.ajax.create';
 
         if (request()->ajax()) {
@@ -189,7 +190,7 @@ class LeadContactController extends AccountBaseController
         }
 
         return view('lead-contact.create', $this->data);
-
+      
     }
 
     /**
