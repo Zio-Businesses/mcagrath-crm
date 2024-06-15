@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 
 use App\Http\Controllers\PublicUrlController;
+use App\Http\Controllers\OneTimeAgreeController;
 use App\Http\Controllers\Payment\MollieController;
 use App\Http\Controllers\Payment\PaypalController;
 use App\Http\Controllers\Payment\SquareController;
@@ -144,6 +145,10 @@ Route::get('file/{type}/{path}', [FileController::class, 'getFile'])->name('file
 // SIGNED URLS ->middleware('signed')
 Route::get('/proposal/{hash}', [HomeController::class, 'proposal'])->name('front.proposal')->middleware('signed');
 Route::get('/contract/{hash}', [PublicUrlController::class, 'contractView'])->name('front.contract.show')->middleware('signed');
+Route::get('/ota', [OneTimeAgreeController::class, 'OtaView'])->name('front.ota.show')->middleware('signed');
+Route::get('/form-vendor', [OneTimeAgreeController::class, 'vendorfredirect'])->name('front.form.show');
+Route::post('/vendor-store', [OneTimeAgreeController::class, 'vendorstore'])->name('front.vendor.save');
+Route::get('/form-vendor-show', [OneTimeAgreeController::class, 'vendorformshow'])->name('front.formv.show');
 Route::get('/estimate/{hash}', [PublicUrlController::class, 'estimateView'])->name('front.estimate.show')->middleware('signed');
 Route::get('/invoice/{hash}', [HomeController::class, 'invoice'])->name('front.invoice')->middleware('signed');
 Route::get('/task-board/{hash}', [HomeController::class, 'taskboard'])->name('front.taskboard');

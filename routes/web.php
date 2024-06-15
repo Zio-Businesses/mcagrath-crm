@@ -121,6 +121,7 @@ use App\Http\Controllers\LeadContactController;
 use App\Http\Controllers\LeadVendorController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PipelineController;
+
 use App\Models\AttendanceSetting;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -814,4 +815,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     Route::get('quickbooks/{hash}/callback', [QuickbookController::class, 'callback'])->name('quickbooks.callback');
     Route::get('quickbooks', [QuickbookController::class, 'index'])->name('quickbooks.index');
+    
 });

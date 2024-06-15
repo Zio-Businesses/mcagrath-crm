@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Listeners;
-use Illuminate\Support\Facades\Log;
+
 use App\Events\NewContractEvent;
 use App\Notifications\NewContract;
 use Illuminate\Support\Facades\Notification;
@@ -20,7 +20,6 @@ class NewContractListener
     {
         if (!isRunningInConsoleOrSeeding()) {
             Notification::send($event->contract->client, new NewContract($event->contract));
-            Log::info($event->contract->client);
  
         }
     }

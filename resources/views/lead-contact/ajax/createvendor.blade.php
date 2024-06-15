@@ -31,11 +31,16 @@ $addProductPermission = user()->permission('add_product');
                            :fieldPlaceholder="__('placeholders.mobile')"></x-forms.tel>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <x-forms.select fieldId="vendor_contract" :fieldLabel="__('modules.modal.contract')"
-                            fieldName="vendor_contract" fieldRequired="true">
-                            <option value="">--</option>
-                            
-                        </x-forms.select>
+                       <x-forms.datepicker fieldId="start_date" fieldRequired="true"
+                                            :fieldLabel="__('modules.projects.startDate')" fieldName="start_date"
+                                            
+                                            :fieldPlaceholder="__('placeholders.date')"/>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                    <x-forms.datepicker fieldId="end_date"
+                                            
+                                            :fieldLabel="__('modules.timeLogs.endDate')" fieldName="end_date"
+                                            :fieldPlaceholder="__('placeholders.date')"/>
                     </div>
 
                  </div>
@@ -43,7 +48,7 @@ $addProductPermission = user()->permission('add_product');
                 <x-form-actions>
                     <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
                     </x-forms.button-primary>
-                    <x-forms.button-secondary class="mr-3" id="save-more-lead-form" icon="check-double">@lang('app.saveAddMore')
+                    <x-forms.button-secondary class="mr-3" id="save-email-form" icon="check-double">save and send proposal
                     </x-forms.button-secondary>
                     <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
                     </x-forms.button-cancel>
@@ -58,36 +63,55 @@ $addProductPermission = user()->permission('add_product');
 <script>
 
 
-    // $(document).ready(function() {
+    $(document).ready(function() {
+        const dp1 = datepicker('#start_date', {
+            position: 'bl',
+            onSelect: (instance, date) => {
+                if (typeof dp2.dateSelected !== 'undefined' && dp2.dateSelected.getTime() < date
+                    .getTime()) {
+                    dp2.setDate(date, true)
+                }
+                if (typeof dp2.dateSelected === 'undefined') {
+                    dp2.setDate(date, true)
+                }
+                dp2.setMin(date);
+            },
+            ...datepickerConfig
+        });
 
-    //     $('.custom-date-picker').each(function(ind, el) {
-    //         datepicker(el, {
-    //             position: 'bl',
-    //             ...datepickerConfig
-    //         });
-    //     });
+        const dp2 = datepicker('#end_date', {
+            position: 'bl',
+            onSelect: (instance, date) => {
+                dp1.setMax(date);
+            },
+            ...datepickerConfig
+        });
 
+        $('.custom-date-picker').each(function(ind, el) {
+            datepicker(el, {
+                position: 'bl',
+                ...datepickerConfig
+            });
+        });
+    });
 
-    //     $('#save-more-lead-form').click(function () {
-
-    //         $('#add_more').val(true);
-
-    //         const url = "{{ route('lead-contact.store') }}?add_more=true";
-
-    //         var data = $('#save-lead-data-form').serialize() + '&add_more=true';
-
-    //         saveLead(data, url, "#save-more-lead-form");
-
-    //     });
-
-        $('#save-lead-form').click(function() {
+        $('#save-email-form').click(function () {
+            var i=1;
             const url = "{{ route('vendor-crud.store') }}";
             var data = $('#save-lead-data-form').serialize();
-            saveLead(data, url, "#save-lead-form");
+            saveLead(data, url, "#save-email-form",i);
 
         });
 
-        function saveLead(data, url, buttonSelector) {
+        $('#save-lead-form').click(function() {
+            var i=0;
+            const url = "{{ route('vendor-crud.store') }}";
+            var data = $('#save-lead-data-form').serialize();
+            saveLead(data, url, "#save-lead-form",i);
+
+        });
+
+        function saveLead(data, url, buttonSelector,i) {
             $.easyAjax({
                 url: url,
                 container: '#save-lead-data-form',
@@ -96,7 +120,7 @@ $addProductPermission = user()->permission('add_product');
                 disableButton: true,
                 blockUI: true,
                 buttonSelector: buttonSelector,
-                data: data,
+                data: [data,i],
                 success: function(response) {
                    
                 }

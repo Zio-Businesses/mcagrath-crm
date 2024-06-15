@@ -5,7 +5,7 @@ namespace App\Notifications;
 use App\Models\Contract;
 use App\Models\GlobalSetting;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use Illuminate\Support\Facades\Log;
 class NewContract extends BaseNotification
 {
 
@@ -31,6 +31,7 @@ class NewContract extends BaseNotification
      */
     public function via($notifiable)
     {
+        Log::info($notifiable);
         $via = ['database'];
 
         if ($notifiable->email_notifications && $notifiable->email != '') {
@@ -48,6 +49,7 @@ class NewContract extends BaseNotification
      */
     public function toMail($notifiable): MailMessage
     {
+        
         $build = parent::build();
         $url = url()->temporarySignedRoute('front.contract.show', now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY), $this->contract->hash);
         $url = getDomainSpecificUrl($url, $this->company);

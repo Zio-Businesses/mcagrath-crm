@@ -6,8 +6,10 @@ use App\Http\Requests\Lead\StoreVendorRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Vendor;
+use App\Models\VendorContract;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\NewContract;
+use App\Notifications\NewVendorContract;
+use Illuminate\Support\Facades\DB;
 class LeadVendorController extends AccountBaseController
 {
     public function handle()
@@ -48,7 +50,6 @@ class LeadVendorController extends AccountBaseController
         // $this->categories = LeadCategory::all();
         // $this->countries = countries();
         // $this->salutations = Salutation::cases();
-        
          $this->view = 'lead-contact.ajax.createvendor';
 
         if (request()->ajax()) {
@@ -60,13 +61,39 @@ class LeadVendorController extends AccountBaseController
     }
     public function store(StoreVendorRequest $request)
     {
-        $email = $request->input('email');
-        // $leadContact = new Vendor();
-        // $leadContact->vendor_name = $request->vendor_name;
-        // $leadContact->vendor_email = $request->vendor_email;
-        // $leadContact->vendor_number = $request->vendor_mobile;
-        // $leadContact->save();
-        Notification::route('mail', $email)->notify(new NewContract($contract));
-
+        $email = $request->input('vendor_email');
+        if($request[1]==1)
+        {
+            $leadContact = new Vendor();
+            $leadContact->vendor_name = $request->vendor_name;
+            $leadContact->vendor_email = $request->vendor_email;
+            $leadContact->vendor_number = $request->vendor_mobile;
+            $leadContact->contract_start=companyToYmd($request->start_date);
+            $leadContact->contract_end=companyToYmd($request->end_date);
+            // $leadContact->save();
+            if($leadContact->save()){
+                $cid = DB::table('vendors')->latest('id')->first();
+                $vendorcont = new VendorContract;
+                if($cid){
+                    $vendorcont->id=$cid->id;
+                    $vendorcont->save();
+                 }
+            //     else{
+            //         $vendorcont->contact_id=($cid->vendor_c_id+1);
+            //         $vendorcont->save();
+                }
+            //  } 
+            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->vendor_name,$leadContact->contract_start,$leadContact->contract_end));
+            
+        }
+        else{
+            $leadContact = new Vendor();
+            $leadContact->vendor_name = $request->vendor_name;
+            $leadContact->vendor_email = $request->vendor_email;
+            $leadContact->vendor_number = $request->vendor_mobile;
+            $leadContact->contract_start=companyToYmd($request->start_date);
+            $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->save();
+        }
     }
 }
