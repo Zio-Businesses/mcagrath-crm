@@ -18,17 +18,12 @@
         <!-- DATE END -->
 
         <!-- CLIENT START -->
-        <div class="select-box d-flex py-2 px-lg-2 px-md-2 px-0 border-right-grey border-right-grey-sm-0">
+        <!-- <div class="select-box d-flex py-2 px-lg-2 px-md-2 px-0 border-right-grey border-right-grey-sm-0">
             <p class="mb-0 pr-2 f-14 text-dark-grey d-flex align-items-center">@lang('app.client')</p>
             <div class="select-status">
-                <!-- <select class="form-control select-picker" name="client" id="client" data-live-search="true" data-size="8">
-                    <option value="all">@lang('app.all')</option>
-                    @foreach ($clients as $client)
-                        <x-user-option :user="$client" />
-                    @endforeach
-                </select> -->
+               
             </div>
-        </div>
+        </div> -->
 
         <!-- CLIENT END -->
 
@@ -177,11 +172,11 @@
         <div class="d-grid d-lg-flex d-md-flex action-bar">
 
             <div id="table-actions" class="flex-grow-1 align-items-center">
-                @if ($addClientPermission == 'all' || $addClientPermission == 'added' || $addClientPermission == 'both')
+                <!-- @if ($addClientPermission == 'all' || $addClientPermission == 'added' || $addClientPermission == 'both')
                     <x-forms.link-primary :link="route('clients.create')" class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus">
                         @lang('app.addClient')
                     </x-forms.link-primary>
-                @endif
+                @endif -->
 
                 @if ($addClientPermission == 'all' || $addClientPermission == 'added' || $addClientPermission == 'both')
                     <x-forms.link-secondary :link="route('clients.import')" class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload">
@@ -208,11 +203,11 @@
 
 
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
-                <a href="{{ route('clients.index') }}" class="btn btn-secondary f-14 btn-active show-clients" data-toggle="tooltip"
-                    data-original-title="@lang('app.menu.clients')"><i class="side-icon bi bi-list-ul"></i></a>
+                <a href="{{ route('vendors.index') }}" class="btn btn-secondary f-14 btn-active show-clients" data-toggle="tooltip"
+                    data-original-title="@lang('Vendors')"><i class="side-icon bi bi-list-ul"></i></a>
 
-                <a href="javascript:;" class="btn btn-secondary f-14 show-unverified" data-toggle="tooltip"
-                    data-original-title="@lang('modules.dashboard.verificationPending')"><i class="side-icon bi bi-person-x"></i></a>
+                <!-- <a href="javascript:;" class="btn btn-secondary f-14 show-unverified" data-toggle="tooltip"
+                    data-original-title="@lang('modules.dashboard.verificationPending')"><i class="side-icon bi bi-person-x"></i></a> -->
             </div>
 
         </div>
@@ -271,7 +266,7 @@
             data['searchText'] = searchText;
         });
         const showTable = () => {
-            window.LaravelDataTables["clients-table"].draw(false);
+            window.LaravelDataTables["vendors-table"].draw(false);
         }
 
         $('#client, #status, #filter_category_id, #filter_sub_category_id, #project_id, #contract_type_id, #country_id, #verification')
@@ -494,6 +489,7 @@
         });
 
         $( document ).ready(function() {
+            
             @if (!is_null(request('start')) && !is_null(request('end')))
             $('#datatableRange').val('{{ request('start') }}' +
             ' @lang("app.to") ' + '{{ request('end') }}');

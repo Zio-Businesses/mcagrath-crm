@@ -70,19 +70,19 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=companyToYmd($request->start_date);
             $leadContact->contract_end=companyToYmd($request->end_date);
-            // $leadContact->save();
-            if($leadContact->save()){
-                $cid = DB::table('vendors')->latest('id')->first();
-                $vendorcont = new VendorContract;
-                if($cid){
-                    $vendorcont->id=$cid->id;
-                    $vendorcont->save();
-                 }
-            //     else{
-            //         $vendorcont->contact_id=($cid->vendor_c_id+1);
+            $leadContact->save();
+            // if($leadContact->save()){
+            //     $cid = DB::table('vendors')->latest('id')->first();
+            //     $vendorcont = new VendorContract;
+            //     if($cid){
+            //         $vendorcont->id=$cid->id;
             //         $vendorcont->save();
-                }
-            //  } 
+            //      }
+            // //     else{
+            // //         $vendorcont->contact_id=($cid->vendor_c_id+1);
+            // //         $vendorcont->save();
+            //     }
+            // //  } 
             Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->vendor_name,$leadContact->contract_start,$leadContact->contract_end));
             
         }

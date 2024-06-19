@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Models\VendorContract;
 use App\Helper\Files;
+use Illuminate\Support\Facades\File;
 class OneTimeAgreeController extends Controller
 {
     public function OtaView(Request $request){
@@ -71,7 +72,25 @@ class OneTimeAgreeController extends Controller
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
         }
+        if ($request->signature_type == 'signature') {
+            $image = $request->signature;  // your base64 encoded
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = str_random(32) . '.' . 'jpg';
+
+            Files::createDirectoryIfNotExist('vendor/sign');
+
+            File::put(public_path() . '/' . Files::UPLOAD_FOLDER . '/vendor/sign/' . $imageName, base64_decode($image));
+            Files::uploadLocalFile($imageName, 'vendor/sign', $this->company->id);
+        }
+        else {
+            if ($request->hasFile('image')) {
+                $imageName = Files::uploadLocalOrS3($request->image, 'vendor/sign', 300);
+            }
+        }
+        $vendor->contract_sign=$imageName;
         $vendor->company_logo=$logo;
         $vendor->save();
+     
     }
 }

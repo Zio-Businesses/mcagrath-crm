@@ -385,6 +385,7 @@
 <script>
 $('#save-signature').click(function () {
     var signature = signaturePad.toDataURL('image/png');
+    var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
     $.easyAjax({
                 url: "{{route('front.vendor.save')}}",
                 container: '#save-lead-data-form',
@@ -392,7 +393,12 @@ $('#save-signature').click(function () {
                 file: true,
                 disableButton: true,
                 blockUI: true,
-                data: $('#save-lead-data-form').serialize(),
+                // data: $('#save-lead-data-form').serialize()+ '&' + $.param({signature: signature, signature_type: signature_type}),
+                data:{
+                    signature:signature,
+                    signature_type:signature_type,
+                    details:$('#save-lead-data-form').serialize()
+                },
                 success: function(response) {
                    
                 }

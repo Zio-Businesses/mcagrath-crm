@@ -179,6 +179,7 @@ return array(
         'messages' => 'Messages',
         'customFields' => 'Custom Fields',
         'events' => 'Events',
+        'vendors'=>'Vendors',
         'products' => 'Products',
         'orders' => 'Orders',
         'profileSettings' => 'Profile Settings',
