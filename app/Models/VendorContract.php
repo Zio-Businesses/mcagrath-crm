@@ -18,4 +18,8 @@ class VendorContract extends BaseModel
     {
         return ($this->contract_sign) ? asset_url_local_s3('vendor/sign/' . $this->contract_sign) : null;
     }
+    public function getTertiaryImageUrlAttribute()
+    {
+        return ($this->company_sign) ? asset_url_local_s3('vendor/company_sign/' . $this->company_sign) : null;
+    }
 }

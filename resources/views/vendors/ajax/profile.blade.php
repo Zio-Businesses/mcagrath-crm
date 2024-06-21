@@ -145,6 +145,18 @@
                     @endif
                 </p>
             </div>
+            <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
+                <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
+                    Company Sign</p>
+                <p class="mb-0 text-dark-grey f-14 w-70">
+                    @if ($vendorDetail->company_sign)
+                        <img data-toggle="tooltip" style="height:50px;"
+                    src="{{ $vendorDetail->tertiary_image_url }}">
+                    @else
+                    --
+                    @endif
+                </p>
+            </div>
         </x-cards.data>
     </div>
     <div class="col-xl-5 col-lg-12 col-md-12 ">

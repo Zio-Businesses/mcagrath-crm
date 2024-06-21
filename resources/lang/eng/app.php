@@ -18,6 +18,7 @@ return array(
     'lateHalfday' => 'HalfDay , Present( Late )',
     'addNew' => 'Add New',
     'edit' => 'Edit',
+    'companysign'=>'Company Sign',
     'defaultStatus' => 'Default Status',
     'id' => 'Id',
     'hierarchy' => 'Hierarchy',

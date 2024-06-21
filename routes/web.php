@@ -489,6 +489,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     // deals route
     Route::get('lead-handle',[LeadVendorController::class,'handle'])->name('lead-vendor.handle');
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
+    Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
     Route::resource('clients', ClientController::class);
     Route::resource('vendors',VendorController::class);
     Route::resource('vendor-crud', LeadVendorController::class);

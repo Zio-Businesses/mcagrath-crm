@@ -58,6 +58,13 @@ class VendorDataTable extends BaseDataTable
                             </a>';
             // }
 
+              if (!$row->company_sign) {
+                $action .= '<a class="dropdown-item companysign" href="javascript:;" data-user-row="' . $row->id . '" data-toggle="modal" data-target="#signature-modal">
+                                <i class="fa fa-edit mr-2"></i>
+                                ' . trans('app.companysign') . '
+                            </a>';
+             }
+
             $action .= '</div>
                     </div>
                 </div>';
@@ -68,15 +75,20 @@ class VendorDataTable extends BaseDataTable
         // $datatables->addColumn('added_by', fn($row) => optional($row->clientDetails)->addedBy ? $row->clientDetails->addedBy->name : '--');
         $datatables->editColumn('name', function ($row) {
             $signed = '';
-
+            $companysign='';
             if ($row->contract_sign) {
                 $signed = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('app.signed') . '</span>';
+            }
+            if($row->company_sign)
+            {
+                $companysign = '<span class="badge badge-secondary"><i class="fa fa-signature"></i> ' . __('Company Signed') . '</span>';
             }
 
             return '<div class="media align-items-center">
                     <div class="media-body">
                 <h5 class="mb-0 f-13 text-darkest-grey">' . $row->vendor_name . '</h5>
                 <p class="mb-0">' . $signed . '</p>
+                <p class="mb-0">' . $companysign . '</p>
                 </div>
               </div>';
         });

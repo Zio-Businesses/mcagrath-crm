@@ -219,6 +219,45 @@
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
 
         </div>
+                    <div id="signature-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog d-flex justify-content-center align-items-center modal-xl">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modelHeading">@lang('modules.estimates.cpatureAndConfirmation')</h5>
+                            <button type="button"  class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <x-form id="acceptEstimate">
+                                <div class="row">
+                                    <div class="col-sm-12 bg-grey p-4 signature">
+                                        <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
+                                        <div class="signature_wrap wrapper border-0 form-control">
+                                            <canvas id="signature-pad" class="signature-pad rounded" width=725 height=150></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 p-4 d-none upload-image">
+                                        <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
+                                            fieldId="image" :popover="__('messages.fileFormat.ImageFile')" fieldRequired="true" />
+                                    </div>
+                                    <div class="col-sm-12 mt-3">
+                                        <x-forms.button-secondary id="undo-signature" class="signature">@lang('modules.estimates.undo')</x-forms.button-secondary>
+                                        <x-forms.button-secondary class="ml-2 signature" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
+                                        <x-forms.button-secondary class="ml-2 " id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')
+                                        </x-forms.button-secondary>
+                                    </div>
+
+                                </div>
+                            </x-form>
+                        </div>
+                        <div class="modal-footer">
+                            <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.cancel')</x-forms.button-cancel>
+                            <x-forms.button-primary id="save-signature" icon="check">@lang('app.sign')</x-forms.button-primary>
+                        </div>
+                        </div>
+                     </div>
+                    </div>
         <!-- Task Box End -->
     </div>
     <!-- CONTENT WRAPPER END -->
@@ -227,71 +266,14 @@
 
 @push('scripts')
     @include('sections.datatable_js')
-
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
-        $('#clients-table').on('preXhr.dt', function(e, settings, data) {
-
-            const dateRangePicker = $('#datatableRange').data('daterangepicker');
-            let startDate = $('#datatableRange').val();
-
-            let endDate;
-
-            if (startDate == '') {
-                startDate = null;
-                endDate = null;
-            } else {
-                startDate = dateRangePicker.startDate.format('{{ company()->moment_date_format }}');
-                endDate = dateRangePicker.endDate.format('{{ company()->moment_date_format }}');
-            }
-
-            const status = $('#status').val();
-            const client = $('#client').val();
-            const category_id = $('#filter_category_id').val();
-            const sub_category_id = $('#filter_sub_category_id').val();
-            const project_id = $('#project_id').val();
-            const contract_type_id = $('#contract_type_id').val();
-            const country_id = $('#country_id').val();
-            const verification = $('#verification').val();
-            const searchText = $('#search-text-field').val();
-            data['startDate'] = startDate;
-            data['endDate'] = endDate;
-            data['status'] = status;
-            data['client'] = client;
-            data['category_id'] = category_id;
-            data['sub_category_id'] = sub_category_id;
-            data['project_id'] = project_id;
-            data['contract_type_id'] = contract_type_id;
-            data['country_id'] = country_id;
-            data['verification'] = verification;
-            data['searchText'] = searchText;
-        });
+        var row_id;
         const showTable = () => {
             window.LaravelDataTables["vendors-table"].draw(false);
         }
 
-        $('#client, #status, #filter_category_id, #filter_sub_category_id, #project_id, #contract_type_id, #country_id, #verification')
-            .on('change keyup', function() {
-                if ($('#status').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#client').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#filter_category_id').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#filter_sub_category_id').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#project_id').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#contract_type_id').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#country_id').val() !== "all") {
-                    $('#reset-filters').removeClass('d-none');
-                } else if ($('#verification').val() != 'all') {
-                    $('#reset-filters').removeClass('d-none');
-                } else {
-                    $('#reset-filters').addClass('d-none');
-                }
-                showTable();
-            });
+        
 
         $('#search-text-field').on('keyup', function() {
             if ($('#search-text-field').val() != "") {
@@ -300,13 +282,37 @@
             }
         });
 
-        $('#reset-filters,#reset-filters-2').click(function() {
-            $('#filter-form')[0].reset();
-            $('.filter-box .select-picker').selectpicker("refresh");
-            $('.show-unverified').removeClass("btn-active");
-            $('.show-clients').addClass("btn-active");
-            $('#reset-filters').addClass('d-none');
-            showTable();
+       
+        $('body').on('click', '.companysign', function() {
+            row_id = $(this).data('user-row');
+            // $('#signature-modal').modal('show');
+             
+        })
+        $('#save-signature').click(function() {
+            var token = "{{ csrf_token() }}";
+            var url = "{{route('vendors.companysign')}}";
+            var signature = signaturePad.toDataURL('image/png');
+            var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
+            $.easyAjax({
+                        url: url,
+                        type: "POST",
+                        file: true,
+                        container: '#acceptEstimate',
+                        disableButton: true,
+                        blockUI: true,
+                        data:{
+                            id:row_id,
+                            '_token': token,
+                            signature:signature,
+                            signature_type:signature_type,
+                            details:$('#acceptEstimate').serialize()
+                        },
+                        success: function(response) {
+                            $('#signature-modal').modal('hide');
+                            showTable();
+                        }
+                    });
+                                                                                                                                                                                                                                                                                
         });
 
 
@@ -358,64 +364,12 @@
             }
         });
 
-        $('body').on('click', '.verify-user', function() {
-            const id = $(this).data('user-id');
-            Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.approvalWarning')",
-                icon: 'warning',
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "@lang('app.approve')",
-                cancelButtonText: "@lang('app.cancel')",
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-secondary'
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('clients.approve', ':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        data: {
-                            '_token': token
-                        },
-                        success: function(response) {
-                            if (response.status == "success") {
-                                showTable();
-                            }
-                        }
-                    });
-                }
-            });
-        });
-
         $('body').on('click', '.delete-table-row', function() {
             const id = $(this).data('user-id');
-            var url = "{{ route('clients.finance_count', ':id') }}";
-            url = url.replace(':id', id)
             var token = "{{ csrf_token() }}";
-            $.easyAjax({
-                type: 'GET',
-                url: url,
-                data: {
-                    '_token': token
-                },
-                success: function(response) {
-                    if (response.status == "success") {
-                        Swal.fire({
+            Swal.fire({
                             title: "@lang('messages.sweetAlertTitle')",
-                            text: response.deleteClient + "@lang('messages.recoverRecord')",
+                            text:   "@lang('messages.recoverRecord')",
                             icon: 'warning',
                             showCancelButton: true,
                             focusConfirm: false,
@@ -432,7 +386,7 @@
                             buttonsStyling: false
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                var url = "{{ route('clients.destroy', ':id') }}";
+                                var url = "{{ route('vendors.destroy', ':id') }}";
                                 url = url.replace(':id', id);
                                 $.easyAjax({
                                     type: 'POST',
@@ -449,11 +403,9 @@
                                 });
                             }
                         });
-                    }
-                }
-            });
+            
         });
-
+        
         const applyQuickAction = () => {
             var rowdIds = $("#clients-table input:checkbox:checked").map(function() {
                 return $(this).val();
@@ -479,29 +431,34 @@
             })
         };
 
-        $('.show-unverified').click(function() {
-            $('#verification').val('no');
+    </script>
+    <script>
+        var canvas = document.getElementById('signature-pad');
 
-            $('#verification').selectpicker('refresh');
-            $(this).addClass('btn-active')
-            $('#reset-filters').removeClass('d-none');
-            showTable();
+        var signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
         });
 
-        $( document ).ready(function() {
-            
-            @if (!is_null(request('start')) && !is_null(request('end')))
-            $('#datatableRange').val('{{ request('start') }}' +
-            ' @lang("app.to") ' + '{{ request('end') }}');
-            $('#datatableRange').data('daterangepicker').setStartDate("{{ request('start') }}");
-            $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
-                showTable();
-            @endif
+        document.getElementById('clear-signature').addEventListener('click', function (e) {
+            e.preventDefault();
+            signaturePad.clear();
         });
 
-        $('.btn-group .btn-secondary').click(function() {
-            $('.btn-secondary').removeClass('btn-active');
-            $(this).addClass('btn-active');
+        document.getElementById('undo-signature').addEventListener('click', function (e) {
+            e.preventDefault();
+            var data = signaturePad.toData();
+            if (data) {
+                data.pop(); // remove the last dot or line
+                signaturePad.fromData(data);
+            }
+        });
+        $('#toggle-pad-uploader').click(function () {
+            var text = $('.signature').hasClass('d-none') ? '{{ __("modules.estimates.uploadSignature") }}' : '{{ __("app.sign") }}';
+
+            $(this).html(text);
+
+            $('.signature').toggleClass('d-none');
+            $('.upload-image').toggleClass('d-none');
         });
     </script>
 @endpush

@@ -197,11 +197,11 @@
                 file: true,
                 buttonSelector: "#save-form",
                 data: $('#save-data-form').serialize(),
-                // success: function(response) {
-                //     if (response.status == 'success') {
-                //         window.location.href = response.redirectUrl;
-                //     }
-                // }
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.href = response.redirectUrl;
+                    }
+                }
             })
         });
 

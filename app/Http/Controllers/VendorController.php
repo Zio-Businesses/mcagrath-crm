@@ -6,15 +6,16 @@ use App\Models\Role;
 use App\Models\User;
 use App\Helper\Files;
 use App\Helper\Reply;
-
 use App\Models\Project;
-use Illuminate\Support\Facades\Log;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use App\Models\Notification;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
+use App\Models\VendorContract;
+use Illuminate\Support\Facades\DB;
 use App\Models\ClientDetails;
 use App\Models\ClientCategory;
 use App\Models\PurposeConsent;
@@ -22,13 +23,12 @@ use App\Models\LanguageSetting;
 use App\Models\UniversalSearch;
 use App\Models\ClientSubCategory;
 use App\Models\PurposeConsentUser;
-use App\Models\VendorContract;
-use Illuminate\Support\Facades\DB;
-use App\DataTables\TicketDataTable;
 use App\DataTables\VendorDataTable;
 use Carbon\Carbon;
 use App\Models\Lead;
+use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\File;
 class VendorController extends AccountBaseController
 {
     public function __construct()
@@ -209,7 +209,52 @@ class VendorController extends AccountBaseController
             $data['company_logo'] = Files::uploadLocalOrS3($request->company_logo, 'vendor/logo', 300);
             DB::table('vendor_contracts')->where('id', $id)->update($data);
         }
-       
+        $redirectUrl = route('vendors.index');
+        return Reply::successWithData(__('messages.updateSuccess'), ['redirectUrl' => $redirectUrl]);
+    }
+      /**
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $vendor = VendorContract::find($id);
+
+        if ($vendor) {
+            // Delete the user
+            $vendor->delete();
+
+        }
+
+        return Reply::success(__('messages.deleteSuccess'));
+    }
+    public function companysign(Request $request)
+    {  Log::info($request->id);
+        $vendor = VendorContract::find($request->id);
+        if($vendor){
+        if ($request->signature_type == 'signature') {
+            $image = $request->signature;  // your base64 encoded
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = str_random(32) . '.' . 'jpg';
+
+            Files::createDirectoryIfNotExist('vendor/company_sign');
+
+            File::put(public_path() . '/' . Files::UPLOAD_FOLDER . '/vendor/company_sign/' . $imageName, base64_decode($image));
+            Files::uploadLocalFile($imageName, 'vendor/company_sign', $this->company->id);
+        }
+        else {
+            if ($request->hasFile('image')) {
+                $imageName = Files::uploadLocalOrS3($request->image, 'vendor/company_sign', 300);
+            }
+        }
+        $vendor->company_sign=$imageName;
+        $vendor->save();
+        return Reply::success(__('Signed'));
+        }
+    
     }
 
 }
