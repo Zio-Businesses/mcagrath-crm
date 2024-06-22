@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Vendor;
 use App\Models\VendorContract;
+use App\Helper\Reply;
+use App\Models\Project;
+use App\Models\ContractType;
+use App\Models\ClientDetails;
+use App\Models\ClientCategory;
+use App\Models\PurposeConsent;
+use App\Models\LanguageSetting;
+use App\Models\UniversalSearch;
+use App\Models\ClientSubCategory;
+use App\Models\PurposeConsentUser;
+use App\DataTables\VendorTrackDataTable;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorContract;
 use Illuminate\Support\Facades\DB;
@@ -16,40 +27,6 @@ class LeadVendorController extends AccountBaseController
     {
 
         $this->pageTitle = __('modules.leadContact.createTitlev');
-
-        // $this->addPermission = user()->permission('add_lead');
-        // abort_403(!in_array($this->addPermission, ['all', 'added']));
-
-        // if ($this->addPermission == 'all') {
-        //     $this->employees = User::allEmployees();
-        // }
-
-        // $defaultStatus = LeadStatus::where('default', '1')->first();
-        // $this->columnId = ((request('column_id') != '') ? request('column_id') : $defaultStatus->id);
-        // $this->leadAgents = LeadAgent::with('user')->whereHas('user', function ($q) {
-        //     $q->where('status', 'active');
-        // })->get();
-
-        // $this->leadAgentArray = $this->leadAgents->pluck('user_id')->toArray();
-
-        // if ((in_array(user()->id, $this->leadAgentArray))) {
-        //     $this->myAgentId = $this->leadAgents->filter(function ($value, $key) {
-        //         return $value->user_id == user()->id;
-        //     })->first()->id;
-        // }
-
-        // $leadContact = new Lead();
-
-        // if ($leadContact->getCustomFieldGroupsWithFields()) {
-        //     $this->fields = $leadContact->getCustomFieldGroupsWithFields()->fields;
-        // }
-
-        // $this->products = Product::all();
-        // $this->sources = LeadSource::all();
-        // $this->status = LeadStatus::all();
-        // $this->categories = LeadCategory::all();
-        // $this->countries = countries();
-        // $this->salutations = Salutation::cases();
          $this->view = 'lead-contact.ajax.createvendor';
 
         if (request()->ajax()) {
@@ -70,20 +47,9 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=companyToYmd($request->start_date);
             $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->v_status='wip';
             $leadContact->save();
-            // if($leadContact->save()){
-            //     $cid = DB::table('vendors')->latest('id')->first();
-            //     $vendorcont = new VendorContract;
-            //     if($cid){
-            //         $vendorcont->id=$cid->id;
-            //         $vendorcont->save();
-            //      }
-            // //     else{
-            // //         $vendorcont->contact_id=($cid->vendor_c_id+1);
-            // //         $vendorcont->save();
-            //     }
-            // //  } 
-            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->vendor_name,$leadContact->contract_start,$leadContact->contract_end));
+            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->vendor_name,$leadContact->contract_start,$leadContact->contract_end,$leadContact->id));
             
         }
         else{
@@ -93,7 +59,28 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=companyToYmd($request->start_date);
             $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->v_status='email_not_send';
             $leadContact->save();
         }
+    }
+    public function index(VendorTrackDataTable $dataTable)
+    {
+        $this->pageTitle = 'Vendor Leads';
+        $viewPermission = user()->permission('view_clients');
+        $this->addClientPermission = user()->permission('add_clients');
+
+        abort_403(!in_array($viewPermission, ['all', 'added', 'both']));
+
+        if (!request()->ajax()) {
+            
+            $this->subcategories = ClientSubCategory::all();
+            $this->categories = ClientCategory::all();
+            $this->projects = Project::all();
+            $this->contracts = ContractType::all();
+            $this->countries = countries();
+            
+        }
+
+        return $dataTable->render('vendortrack.index', $this->data);
     }
 }

@@ -90,6 +90,7 @@ class OneTimeAgreeController extends Controller
         }
         $vendor->contract_sign=$imageName;
         $vendor->company_logo=$logo;
+       
         $vendor->save();
      
     }

@@ -50,6 +50,9 @@
                     <x-sub-menu-item :link="route('deals.index')" :text="__('app.deal')" />
                 </div>
             @endif
+                <div class="accordionItemContent ">
+                    <x-sub-menu-item  :link="route('vendortrack.index')" :text="__('Vendor Lead')" />
+                </div>
         </x-menu-item>
     @endif
 

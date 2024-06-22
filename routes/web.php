@@ -121,7 +121,6 @@ use App\Http\Controllers\LeadContactController;
 use App\Http\Controllers\LeadVendorController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\PipelineController;
-
 use App\Models\AttendanceSetting;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -489,6 +488,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     // deals route
     Route::get('lead-handle',[LeadVendorController::class,'handle'])->name('lead-vendor.handle');
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
+    Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
     Route::resource('clients', ClientController::class);
     Route::resource('vendors',VendorController::class);

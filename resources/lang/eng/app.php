@@ -9,6 +9,7 @@ return array(
     'false' => 'False',
     'title' => 'Title',
     'note' => 'Note',
+    'cell'=>'Cell',
     'save' => 'Save',
     'update' => 'Update',
     'timer' => 'Timer',
