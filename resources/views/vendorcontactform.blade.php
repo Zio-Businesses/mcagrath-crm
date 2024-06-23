@@ -354,6 +354,7 @@
     });
  </script>
 <script>
+    
     var canvas = document.getElementById('signature-pad');
 
     var signaturePad = new SignaturePad(canvas, {
@@ -384,6 +385,7 @@
 </script>
 <script>
 $('#save-signature').click(function () {
+    var id="{{$id}}";
     var signature = signaturePad.toDataURL('image/png');
     var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
     $.easyAjax({
@@ -397,10 +399,14 @@ $('#save-signature').click(function () {
                 data:{
                     signature:signature,
                     signature_type:signature_type,
-                    details:$('#save-lead-data-form').serialize()
+                    details:$('#save-lead-data-form').serialize(),
+                    id:id
                 },
                 success: function(response) {
-                   
+                    $('#signature-modal').modal('hide');
+                   setTimeout(() => {
+                    window.close();
+                   }, 5000);
                 }
             });
 });

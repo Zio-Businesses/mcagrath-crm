@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Models\Vendor;
 use App\Models\VendorContract;
 use App\Helper\Files;
 use Illuminate\Support\Facades\File;
+use App\Helper\Reply;
 class OneTimeAgreeController extends Controller
 {
     public function OtaView(Request $request){
         $pageTitle = 'app.menu.contracts';
         $pageIcon = 'fa fa-file';
         $company = Company::find(1);
+        $id=$request->query('id');
         $startdate=$request->query('startdate');
         $enddate=$request->query('enddate');
         $name=$request->query('name');
         return view('vendorcontract', [
             'name'=>$name,
+            'id'=>$id,
             'startdate'=>$startdate,
             'enddate'=>$enddate,
             'company' => $company,
@@ -26,18 +30,34 @@ class OneTimeAgreeController extends Controller
         ]);
     }
     public function vendorfredirect(Request $request){
-        $startDate = $request->input('startdate');
-        $endDate = $request->input('enddate');
-        $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate]);
+        $id = $request->query('id');
+        $vendor=Vendor::find($id);
+        if($request->status=='accepted'){
+        $startDate = $request->query('startdate');
+        $endDate = $request->query('enddate');
+        
+        $vendor->v_status='in_progress';
+        $vendor->save();
+        $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate,'id'=>$id]);
         return response()->json(['redirect_url' => $redirectUrl]);
+        }
+        else{
+            $vendor->v_status='rejected';
+            $vendor->save();
+            return Reply::success(__('Thank You For Your Time'));
+        }
     }
-    public function vendorformshow()
+    public function vendorformshow(Request $request)
     {
-
+        $id = $request->query('id');
+        $startdate=$request->query('startdate');
+        $enddate=$request->query('enddate');
         $pageTitle = 'app.menu.contracts';
         $company = Company::find(1);
          return view('vendorcontactform', [
-            
+            'id'=>$id,
+            'startdate'=>$startdate,
+            'enddate'=>$enddate,
             'company' => $company,
             'pageTitle' => $pageTitle,
             
@@ -90,8 +110,11 @@ class OneTimeAgreeController extends Controller
         }
         $vendor->contract_sign=$imageName;
         $vendor->company_logo=$logo;
-       
         $vendor->save();
-     
+        $vendorst=Vendor::find($request->id);
+        $vendorst->v_status='vendor_created';
+        $vendorst->sign=$imageName;
+        $vendorst->save();
+        return Reply::success(__('Saved! Page Closes in 5 Seconds'));
     }
 }

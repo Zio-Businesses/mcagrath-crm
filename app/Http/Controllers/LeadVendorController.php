@@ -49,7 +49,7 @@ class LeadVendorController extends AccountBaseController
             $leadContact->contract_end=companyToYmd($request->end_date);
             $leadContact->v_status='wip';
             $leadContact->save();
-            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->vendor_name,$leadContact->contract_start,$leadContact->contract_end,$leadContact->id));
+            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->id));
             
         }
         else{

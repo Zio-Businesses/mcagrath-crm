@@ -330,21 +330,39 @@ Neither party may assign or transfer this Agreement without the prior written co
 <script src="{{ asset('js/main.js') }}"></script>
 
 <script>
+    
     $('#cancel').click(function () {
         if (confirm("Are you sure you want to exit?")) {
-        window.close();
+            var id="{{$id}}";
+            $.easyAjax({
+                url: "{{ route('front.form.show') }}",
+                type: "GET",
+                data:{
+                    id:id,
+                    status:'rejected'
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        window.close();
+                    },3000);
+                    
+                },
+            });
         }
     });
     $('#accept').click(function () {
         if(confirm("Make sure you have read the contract carefully!!")){
         var startDate = "{{ $startdate }}";
         var endDate = "{{ $enddate }}";
+        var id="{{$id}}";
     $.easyAjax({
         url: "{{ route('front.form.show') }}",
         type: "GET",
         data:{
             startdate: startDate,
             enddate: endDate,
+            id:id,
+            status:'accepted'
         },
         success: function(response) {
             window.location.href=response.redirect_url;

@@ -6,21 +6,22 @@ namespace App\Notifications;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Company;
+use App\Models\Vendor;
+use Illuminate\Support\Facades\Log;
 use App\Models\GlobalSetting;
 
 class NewVendorContract extends BaseNotification
 {
     
-    protected $name,$start_date,$end_date;
+
+    protected $vendor;
     /**
      * Create a new notification instance.
      */
-    public function __construct($name,$start_date,$end_date)
+    public function __construct($id)
     {
         $this->company= Company::find(1);
-        $this->name=$name;
-        $this->start_date=$start_date;
-        $this->end_date=$end_date;
+        $this->vendor=Vendor::find($id);
     }
 
     /**
@@ -53,9 +54,10 @@ class NewVendorContract extends BaseNotification
         
         $build = parent::build();
         $url = url()->temporarySignedRoute('front.ota.show', now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),[
-            'startdate' =>  $this->start_date,
-            'enddate' =>  $this->end_date,
-            'name'=> $this->name
+            'startdate' =>  $this->vendor->contract_start,
+            'enddate' =>  $this->vendor->contract_end,
+            'name'=> $this->vendor->vendor_name,
+            'id'=>$this->vendor->id
         ]);
         $url = getDomainSpecificUrl($url, $this->company);
 
@@ -68,7 +70,7 @@ class NewVendorContract extends BaseNotification
                 'content' => $content,
                 'themeColor' => $this->company->header_color,
                 'actionText' => __('app.view') . ' ' . __('app.menu.contract'),
-                'notifiableName' => $this->name]);
+                'notifiableName' => $this->vendor->vendor_name]);
     }
 
     /**
