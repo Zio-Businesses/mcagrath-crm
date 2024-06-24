@@ -43,11 +43,7 @@ class VendorController extends AccountBaseController
     }
     public function index(VendorDataTable $dataTable)
     {
-        $viewPermission = user()->permission('view_clients');
-        $this->addClientPermission = user()->permission('add_clients');
-
-        abort_403(!in_array($viewPermission, ['all', 'added', 'both']));
-
+    //   Log::info(user()->id);
         if (!request()->ajax()) {
             $this->clients = VendorContract::all();
             $this->subcategories = ClientSubCategory::all();
@@ -231,7 +227,7 @@ class VendorController extends AccountBaseController
         return Reply::success(__('messages.deleteSuccess'));
     }
     public function companysign(Request $request)
-    {  Log::info($request->id);
+    {  
         $vendor = VendorContract::find($request->id);
         if($vendor){
         if ($request->signature_type == 'signature') {

@@ -16,6 +16,7 @@ class OneTimeAgreeController extends Controller
         $pageIcon = 'fa fa-file';
         $company = Company::find(1);
         $id=$request->query('id');
+        $vendorsign=Vendor::find($id);
         $startdate=$request->query('startdate');
         $enddate=$request->query('enddate');
         $name=$request->query('name');
@@ -27,19 +28,25 @@ class OneTimeAgreeController extends Controller
             'company' => $company,
             'pageTitle' => $pageTitle,
             'pageIcon' => $pageIcon,
+            'vendor'=>$vendorsign,
         ]);
     }
     public function vendorfredirect(Request $request){
         $id = $request->query('id');
         $vendor=Vendor::find($id);
         if($request->status=='accepted'){
+            if($vendor->v_status=='rejected')
+            {
+                return Reply::error(__('Previously Declined Contract.'));
+            }
+            else{
         $startDate = $request->query('startdate');
         $endDate = $request->query('enddate');
         
         $vendor->v_status='in_progress';
         $vendor->save();
         $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate,'id'=>$id]);
-        return response()->json(['redirect_url' => $redirectUrl]);
+        return response()->json(['redirect_url' => $redirectUrl]);}
         }
         else{
             $vendor->v_status='rejected';
@@ -110,11 +117,12 @@ class OneTimeAgreeController extends Controller
         }
         $vendor->contract_sign=$imageName;
         $vendor->company_logo=$logo;
-        $vendor->save();
         $vendorst=Vendor::find($request->id);
         $vendorst->v_status='vendor_created';
         $vendorst->sign=$imageName;
+        $vendor->created_by=$vendorst->created_by;
         $vendorst->save();
+        $vendor->save();
         return Reply::success(__('Saved! Page Closes in 5 Seconds'));
     }
 }

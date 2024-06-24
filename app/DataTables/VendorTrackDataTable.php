@@ -37,15 +37,15 @@ class VendorTrackDataTable extends BaseDataTable
                             <i class="icon-options-vertical icons"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-' . $row->id . '" tabindex="0">';
-
-            $action .= '<a href="' . route('vendors.show', [$row->id]) . '" class="dropdown-item"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
-
+            if ($row->v_status=='rejected'||$row->v_status=='email_not_send') {
+            $action .= '<a href="' . route('vendortrack.proposal', $row->id) . '" class="dropdown-item"><i class="fa fa-paper-plane mr-2"></i>' . __('app.send_proposal') . '</a>';
+            }
             // if (in_array('admin', user_roles()) && !$row->admin_approval) {
             //     $action .= '<a href="javascript:;" class="dropdown-item verify-user" data-user-id="' . $row->id . '"><i class="fa fa-check mr-2"></i>' . __('app.approve') . '</a>';
             // }
 
           //  if ($this->editClientPermission == 'all' || ($this->editClientPermission == 'added' && user()->id == $row->added_by) || ($this->editClientPermission == 'both' && user()->id == $row->added_by)) {
-                $action .= '<a class="dropdown-item openRightModal" href="' . route('vendors.edit', [$row->id]) . '">
+                $action .= '<a class="dropdown-item openRightModal" href="' . route('vendortrack.edit', [$row->id]) . '">
                                 <i class="fa fa-edit mr-2"></i>
                                 ' . trans('app.edit') . '
                             </a>';
@@ -58,12 +58,12 @@ class VendorTrackDataTable extends BaseDataTable
                             </a>';
             // }
 
-              if (!$row->company_sign) {
-                $action .= '<a class="dropdown-item companysign" href="javascript:;" data-user-row="' . $row->id . '" data-toggle="modal" data-target="#signature-modal">
-                                <i class="fa fa-edit mr-2"></i>
-                                ' . trans('app.companysign') . '
-                            </a>';
-             }
+            //   if (!$row->company_sign) {
+            //     $action .= '<a class="dropdown-item companysign" href="javascript:;" data-user-row="' . $row->id . '" data-toggle="modal" data-target="#signature-modal">
+            //                     <i class="fa fa-edit mr-2"></i>
+            //                     ' . trans('app.companysign') . '
+            //                 </a>';
+            //  }
 
             $action .= '</div>
                     </div>
@@ -77,6 +77,8 @@ class VendorTrackDataTable extends BaseDataTable
         $datatables->editColumn('vendor_name', fn($row) => $row->vendor_name);
         $datatables->editColumn('vendor_email', fn($row) => $row->vendor_email);
         $datatables->editColumn('vendor_number', fn($row) => $row->vendor_number);
+        $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('created_by', fn($row) => $row->created_by);
         $datatables->editColumn('status', fn($row) => $row->v_status);
         $datatables->addIndexColumn();
         $datatables->smart(false);
@@ -96,7 +98,14 @@ class VendorTrackDataTable extends BaseDataTable
     {
         $request = $this->request();
         $users = Vendor::query();
-
+        if ($request->searchText != '') {
+            $users = $users->where(function ($query) {
+                $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('vendor_number', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
+            });
+        }
 
         return $users;
     }
@@ -108,10 +117,10 @@ class VendorTrackDataTable extends BaseDataTable
      */
     public function html()
     {
-        $dataTable = $this->setBuilder('vendors-table', 2)
+        $dataTable = $this->setBuilder('vendorstrack-table', 2)
             ->parameters([
                 'initComplete' => 'function () {
-                   window.LaravelDataTables["vendors-table"].buttons().container()
+                   window.LaravelDataTables["vendorstrack-table"].buttons().container()
                     .appendTo("#table-actions")
                 }',
                 'fnDrawCallback' => 'function( oSettings ) {
@@ -143,9 +152,14 @@ class VendorTrackDataTable extends BaseDataTable
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
-            __('app.name') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'exportable' => false, 'title' => __('app.name')],
+            __('app.name') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'title' => __('app.name')],
             __('app.email') => ['data' => 'vendor_email', 'name' => 'vendor_email', 'title' => __('app.email')],
             __('app.cell') => ['data' => 'vendor_number', 'name' => 'vendor_number', 'title' => __('app.cell')],
+            
+            __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
+             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
+             __('app.csd') => ['data' => 'contract_start', 'name' => 'contract_start', 'title' => __('app.csd')],
+             __('app.ced') => ['data' => 'contract_end', 'name' => 'contract_end', 'title' => __('app.ced')],
             __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'title' => __('app.status')],
         ];
 

@@ -31,7 +31,7 @@ class NewContract extends BaseNotification
      */
     public function via($notifiable)
     {
-        Log::info($notifiable);
+        // Log::info($notifiable);
         $via = ['database'];
 
         if ($notifiable->email_notifications && $notifiable->email != '') {

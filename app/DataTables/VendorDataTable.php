@@ -98,6 +98,7 @@ class VendorDataTable extends BaseDataTable
         // $datatables->editColumn('status', fn($row) => $row->status == 'active' ? Common::active() : Common::inactive());
         $datatables->editColumn('email', fn($row) => $row->vendor_email);
         $datatables->editColumn('company_name', fn($row) => $row->company_name);
+        $datatables->editColumn('created_by', fn($row) => $row->created_by);
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
@@ -116,7 +117,13 @@ class VendorDataTable extends BaseDataTable
     {
         $request = $this->request();
         $users = VendorContract::query();
-
+        if ($request->searchText != '') {
+            $users = $users->where(function ($query) {
+                $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('company_name', 'like', '%' . request('searchText') . '%');
+            });
+        }
 
         return $users;
     }
@@ -166,6 +173,7 @@ class VendorDataTable extends BaseDataTable
             __('app.name') => ['data' => 'name', 'name' => 'name', 'exportable' => false, 'title' => __('app.name')],
             __('app.company_name') => ['data' => 'company_name', 'name' => 'compnay_name', 'title' => __('app.company_name')],
             __('app.email') => ['data' => 'email', 'name' => 'email', 'title' => __('app.email')],
+            __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')]
         ];
 

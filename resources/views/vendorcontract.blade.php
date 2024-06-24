@@ -92,7 +92,7 @@
             <div class="invoice-table-wrapper">
                 <table width="100%" class="">
                     <tr class="inv-logo-heading">
-                        <td><img src="" alt="{{ $company->company_name }}"
+                        <td><img src="{{$company->logo_url}}" alt="{{ $company->company_name }}"
                                  class="logo"/></td>
                         <td align="right" class="font-weight-bold f-21 text-dark text-uppercase mt-4 mt-lg-0 mt-md-0">
                             @lang('app.menu.contract')</td>
@@ -143,7 +143,7 @@
                     <tr class="inv-unpaid">
                         <td class="f-14 text-dark">
                             <p class="mb-0 text-left"><span
-                                    class="text-dark-grey text-capitalize">@lang("app.client")</span><br>
+                                    class="text-dark-grey text-capitalize">@lang("app.menu.vendor")</span><br>
                                     <strong>{{$name}}</strong>
                                                                                     <br>
                                                                                     <br>
@@ -304,13 +304,21 @@ Neither party may assign or transfer this Agreement without the prior written co
 
  
                 </div>
-
+                
                 
             </div>
+            @if ($vendor->sign)
+                <div class="d-flex flex-column float-right`">
+                    <h6>@lang('Signature')</h6>
+                    <img src="{{$vendor->image_url}}" style="width: 200px;">
+                </div>
+             @endif
         </div>
         <!-- CARD BODY END -->
 
         <!-- CARD FOOTER START -->
+        
+        @if (!$vendor->sign)
         <div
             class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
 
@@ -320,6 +328,7 @@ Neither party may assign or transfer this Agreement without the prior written co
             </x-forms.button-success>
 
         </div>
+        @endif
         <!-- CARD FOOTER END -->
     </div>
     <!-- INVOICE CARD END -->

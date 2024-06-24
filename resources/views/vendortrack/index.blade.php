@@ -254,10 +254,12 @@
     <script>
         var row_id;
         const showTable = () => {
-            window.LaravelDataTables["vendors-table"].draw(false);
+            window.LaravelDataTables["vendorstrack-table"].draw(false);
         }
-
-        
+        $('#vendorstrack-table').on('preXhr.dt', function(e, settings, data) {
+            const searchText = $('#search-text-field').val();
+            data['searchText'] = searchText;
+        });
 
         $('#search-text-field').on('keyup', function() {
             if ($('#search-text-field').val() != "") {
@@ -265,40 +267,11 @@
                 showTable();
             }
         });
-
-       
-        $('body').on('click', '.companysign', function() {
-            row_id = $(this).data('user-row');
-            // $('#signature-modal').modal('show');
-             
-        })
-        $('#save-signature').click(function() {
-            var token = "{{ csrf_token() }}";
-            var url = "{{route('vendors.companysign')}}";
-            var signature = signaturePad.toDataURL('image/png');
-            var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
-            $.easyAjax({
-                        url: url,
-                        type: "POST",
-                        file: true,
-                        container: '#acceptEstimate',
-                        disableButton: true,
-                        blockUI: true,
-                        data:{
-                            id:row_id,
-                            '_token': token,
-                            signature:signature,
-                            signature_type:signature_type,
-                            details:$('#acceptEstimate').serialize()
-                        },
-                        success: function(response) {
-                            $('#signature-modal').modal('hide');
-                            showTable();
-                        }
-                    });
-                                                                                                                                                                                                                                                                                
+        $('#reset-filters,#reset-filters-2').click(function() {
+            $('#filter-form')[0].reset();
+            $('.filter-box .select-picker').selectpicker("refresh");
+            showTable();
         });
-
 
         $('#quick-action-type').change(function() {
             const actionValue = $(this).val();
@@ -370,7 +343,7 @@
                             buttonsStyling: false
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                var url = "{{ route('vendors.destroy', ':id') }}";
+                                var url = "{{ route('vendortrack.destroy', ':id') }}";
                                 url = url.replace(':id', id);
                                 $.easyAjax({
                                     type: 'POST',
@@ -392,33 +365,5 @@
         
 
     </script>
-    <script>
-        var canvas = document.getElementById('signature-pad');
-
-        var signaturePad = new SignaturePad(canvas, {
-            backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
-        });
-
-        document.getElementById('clear-signature').addEventListener('click', function (e) {
-            e.preventDefault();
-            signaturePad.clear();
-        });
-
-        document.getElementById('undo-signature').addEventListener('click', function (e) {
-            e.preventDefault();
-            var data = signaturePad.toData();
-            if (data) {
-                data.pop(); // remove the last dot or line
-                signaturePad.fromData(data);
-            }
-        });
-        $('#toggle-pad-uploader').click(function () {
-            var text = $('.signature').hasClass('d-none') ? '{{ __("modules.estimates.uploadSignature") }}' : '{{ __("app.sign") }}';
-
-            $(this).html(text);
-
-            $('.signature').toggleClass('d-none');
-            $('.upload-image').toggleClass('d-none');
-        });
-    </script>
+   
 @endpush

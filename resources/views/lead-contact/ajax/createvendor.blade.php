@@ -42,6 +42,7 @@ $addProductPermission = user()->permission('add_product');
                                             :fieldLabel="__('modules.timeLogs.endDate')" fieldName="end_date"
                                             :fieldPlaceholder="__('placeholders.date')"/>
                     </div>
+                    
 
                  </div>
 

@@ -172,17 +172,13 @@
         <div class="d-grid d-lg-flex d-md-flex action-bar">
 
             <div id="table-actions" class="flex-grow-1 align-items-center">
-                <!-- @if ($addClientPermission == 'all' || $addClientPermission == 'added' || $addClientPermission == 'both')
-                    <x-forms.link-primary :link="route('clients.create')" class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus">
-                        @lang('app.addClient')
-                    </x-forms.link-primary>
-                @endif -->
+                
 
-                @if ($addClientPermission == 'all' || $addClientPermission == 'added' || $addClientPermission == 'both')
+               
                     <x-forms.link-secondary :link="route('clients.import')" class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload">
                         @lang('app.importExcel')
                     </x-forms.link-secondary>
-                @endif
+                
             </div>
 
             <x-datatable.actions>
@@ -269,6 +265,11 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
         var row_id;
+        $('#vendors-table').on('preXhr.dt', function(e, settings, data) {
+            const searchText = $('#search-text-field').val();
+            data['searchText'] = searchText;
+        });
+
         const showTable = () => {
             window.LaravelDataTables["vendors-table"].draw(false);
         }
@@ -280,6 +281,11 @@
                 $('#reset-filters').removeClass('d-none');
                 showTable();
             }
+        });
+        $('#reset-filters,#reset-filters-2').click(function() {
+            $('#filter-form')[0].reset();
+            $('.filter-box .select-picker').selectpicker("refresh");
+            showTable();
         });
 
        

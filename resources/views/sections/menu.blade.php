@@ -50,9 +50,11 @@
                     <x-sub-menu-item :link="route('deals.index')" :text="__('app.deal')" />
                 </div>
             @endif
-                <div class="accordionItemContent ">
+            <div class="accordionItemContent ">
                     <x-sub-menu-item  :link="route('vendortrack.index')" :text="__('Vendor Lead')" />
-                </div>
+            </div>
+                
+          
         </x-menu-item>
     @endif
 
@@ -67,7 +69,7 @@
             </x-slot>
         </x-menu-item>
     @endif
-    @if (!in_array('client', user_roles()) && in_array('clients', user_modules()) && $sidebarUserPermissions['view_clients'] != 5 && $sidebarUserPermissions['view_clients'] != 'none')
+   
         <x-menu-item icon="building" :text="__('Vendors')" :link="route('vendors.index')">
             <x-slot name="iconPath">
                 <path fill-rule="evenodd"
@@ -76,7 +78,7 @@
                     d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z" />
             </x-slot>
         </x-menu-item>
-    @endif
+   
 
 <!-- NAV ITEM - HR COLLAPASE MENU -->
     @if (!in_array('client', user_roles()) && (in_array('employees', user_modules()) || in_array('leaves', user_modules()) || in_array('attendance', user_modules()) || in_array('holidays', user_modules())) && ($sidebarUserPermissions['view_employees'] != 5 || $sidebarUserPermissions['view_leave'] != 5 || $sidebarUserPermissions['view_attendance'] != 5 || $sidebarUserPermissions['view_holiday'] != 5) && ($sidebarUserPermissions['view_employees'] != 'none' || $sidebarUserPermissions['view_leave'] != 'none' || $sidebarUserPermissions['view_attendance'] != 'none' || $sidebarUserPermissions['view_holiday'] != 'none' || $sidebarUserPermissions['view_shift_roster'] != 'none'))

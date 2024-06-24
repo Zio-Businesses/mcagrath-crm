@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Vendor extends Model
 {
     use HasFactory;
+    public function getImageUrlAttribute()
+    {
+        return ($this->sign) ? asset_url_local_s3('vendor/sign/' . $this->sign) : null;
+    }
 }
