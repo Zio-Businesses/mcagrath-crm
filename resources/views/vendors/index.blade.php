@@ -291,7 +291,7 @@
        
         $('body').on('click', '.companysign', function() {
             row_id = $(this).data('user-row');
-           console.log(row_id);
+        //    console.log(row_id);
              
         })
         $('#save-signature').click(function() {

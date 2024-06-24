@@ -321,6 +321,27 @@
             }
         });
 
+        $('body').on('click', '.send-proposal', function() {
+            const id = $(this).data('user-send');
+            var token = "{{ csrf_token() }}";
+            var buttonSelector=".send-proposal";
+            var url = "{{ route('vendortrack.proposal', ':id') }}";
+            url = url.replace(':id', id);
+                                $.easyAjax({
+                                    type: 'POST',
+                                    url: url,
+                                    disableButton: true,
+                                    blockUI: true,
+                                    buttonSelector: buttonSelector,
+                                    data: {
+                                        '_token': token,
+                                    },
+                                    success: function(response) {
+                                        showTable();
+                                    }
+                                });
+            
+        });
         $('body').on('click', '.delete-table-row', function() {
             const id = $(this).data('user-id');
             var token = "{{ csrf_token() }}";

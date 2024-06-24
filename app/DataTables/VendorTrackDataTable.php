@@ -35,11 +35,14 @@ class VendorTrackDataTable extends BaseDataTable
                         <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle" type="link"
                             id="dropdownMenuLink-' . $row->id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="icon-options-vertical icons"></i>
-                        </a>
+                        </a>            
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-' . $row->id . '" tabindex="0">';
-            if ($row->v_status=='rejected'||$row->v_status=='email_not_send') {
-            $action .= '<a href="' . route('vendortrack.proposal', $row->id) . '" class="dropdown-item"><i class="fa fa-paper-plane mr-2"></i>' . __('app.send_proposal') . '</a>';
-            }
+                    if ($row->v_status=='rejected'||$row->v_status=='email_not_send') {
+                        $action .= '<a class="dropdown-item send-proposal" href="javascript:;" data-user-send="' . $row->id . '">
+                        <i class="fa fa-paper-plane mr-2"></i>
+                        ' . trans('app.send_proposal') . '
+                        </a>';
+                    }
             // if (in_array('admin', user_roles()) && !$row->admin_approval) {
             //     $action .= '<a href="javascript:;" class="dropdown-item verify-user" data-user-id="' . $row->id . '"><i class="fa fa-check mr-2"></i>' . __('app.approve') . '</a>';
             // }

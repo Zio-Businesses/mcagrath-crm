@@ -490,7 +490,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
     Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
-    Route::get('proposal/{id}',[LeadVendorController::class,'proposal'])->name('vendortrack.proposal');
+    Route::post('proposal/{id}',[LeadVendorController::class,'proposal'])->name('vendortrack.proposal');
     Route::resource('vendortrack',LeadVendorController::class);
     Route::resource('clients', ClientController::class);
     Route::resource('vendors',VendorController::class);

@@ -38,7 +38,10 @@ class LeadVendorController extends AccountBaseController
     }
     public function store(StoreVendorRequest $request)
     {
+        
         $email = $request->input('vendor_email');
+        $users =User::where('vendor_email', $email)->where('v_status', 'rejected')->get();
+        Log::info($users);
         if($request[1]==1)
         {
             
@@ -132,6 +135,10 @@ class LeadVendorController extends AccountBaseController
     }
     public function proposal($id)
     {
-        Log::info($id);
+        $send_email = Vendor::find($id);
+        $send_email->v_status='wip';
+        $send_email->save();
+        Notification::route('mail', $send_email->vendor_email)->notify(new NewVendorContract($send_email->id));
+        return Reply::success(__('Mail Send'));
     }
 }
