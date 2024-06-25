@@ -12,4 +12,10 @@ class Vendor extends Model
     {
         return ($this->sign) ? asset_url_local_s3('vendor/sign/' . $this->sign) : null;
     }
+    public static function getStatuses()
+    {
+        return [
+            'work in progress', 'in progress', 'rejected','vendor created','email not send','on hold',
+        ];
+    }
 }

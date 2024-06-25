@@ -9,6 +9,7 @@ use App\Models\VendorContract;
 use App\Helper\Files;
 use Illuminate\Support\Facades\File;
 use App\Helper\Reply;
+use App\Http\Requests\vendor\SaveVendorRequest;
 class OneTimeAgreeController extends Controller
 {
     public function OtaView(Request $request){
@@ -40,13 +41,14 @@ class OneTimeAgreeController extends Controller
                 return Reply::error(__('Previously Declined Contract.'));
             }
             else{
-        $startDate = $request->query('startdate');
-        $endDate = $request->query('enddate');
-        
-        $vendor->v_status='in_progress';
-        $vendor->save();
-        $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate,'id'=>$id]);
-        return response()->json(['redirect_url' => $redirectUrl]);}
+                    $startDate = $request->query('startdate');
+                    $endDate = $request->query('enddate');
+                    
+                    $vendor->v_status='in progress';
+                    $vendor->save();
+                    $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate,'id'=>$id]);
+                    return response()->json(['redirect_url' => $redirectUrl]);
+                }
         }
         else{
             $vendor->v_status='rejected';
@@ -70,8 +72,9 @@ class OneTimeAgreeController extends Controller
             
         ]);
     }
-    public function vendorstore(Request $request)
+    public function vendorstore(SaveVendorRequest $request)
     {
+       
         $vendor=New VendorContract();
         $vendor->company_name=$request->company_name;
         $vendor->street_address=$request->street_address;
@@ -96,11 +99,17 @@ class OneTimeAgreeController extends Controller
         $vendor->wc_insurance_carrier_phone=$request->wc_ins_cp;
         $vendor->wc_insurance_carrier_email_address=$request->wc_ins_em;
         $vendor->wc_insurance_expiry_date=companyToYmd($request->wc_ins_exp);
+        $vendor->contract_start=$request->contract_start;
+        $vendor->contract_end=$request->contract_end;
+        $vendor->vendor_track_id=$request->id;
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
+            $vendor->company_logo=$logo;
         }
+        
         if ($request->signature_type == 'signature') {
             $image = $request->signature;  // your base64 encoded
+            Log::info($request->signature);
             $image = str_replace('data:image/png;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = str_random(32) . '.' . 'jpg';
@@ -116,9 +125,9 @@ class OneTimeAgreeController extends Controller
             }
         }
         $vendor->contract_sign=$imageName;
-        $vendor->company_logo=$logo;
+        $vendor->signed_date=date("Y-m-d");
         $vendorst=Vendor::find($request->id);
-        $vendorst->v_status='vendor_created';
+        $vendorst->v_status='vendor created';
         $vendorst->sign=$imageName;
         $vendor->created_by=$vendorst->created_by;
         $vendorst->save();

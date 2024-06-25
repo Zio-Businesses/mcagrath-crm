@@ -61,16 +61,15 @@ class NewVendorContract extends BaseNotification
         ]);
         $url = getDomainSpecificUrl($url, $this->company);
 
-        $content = __('email.newContract.text') . '<br>';
 
         return $build
             ->subject(__('email.newContract.subject'))
-            ->markdown('mail.email', [
+            ->markdown('mail.vendor_co', [
+                'name'=>$this->vendor->vendor_name,
                 'url' => $url,
-                'content' => $content,
                 'themeColor' => $this->company->header_color,
                 'actionText' => __('app.view') . ' ' . __('app.menu.contract'),
-                'notifiableName' => $this->vendor->vendor_name]);
+                ]);
     }
 
     /**

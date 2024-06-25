@@ -123,7 +123,7 @@ $addProductPermission = user()->permission('add_product');
                 buttonSelector: buttonSelector,
                 data: [data,i],
                 success: function(response) {
-                   
+                    window.location.href = response.redirectUrl;
                 }
             });
 

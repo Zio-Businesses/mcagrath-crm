@@ -299,6 +299,22 @@
             var url = "{{route('vendors.companysign')}}";
             var signature = signaturePad.toDataURL('image/png');
             var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
+            if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none')) {
+                Swal.fire({
+                    icon: 'error',
+                    text: '{{ __('messages.signatureRequired') }}',
+
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                    showClass: {
+                        popup: 'swal2-noanimation',
+                        backdrop: 'swal2-noanimation'
+                    },
+                    buttonsStyling: false
+                });
+                return false;
+            }
             $.easyAjax({
                         url: url,
                         type: "POST",

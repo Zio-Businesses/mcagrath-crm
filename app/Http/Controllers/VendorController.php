@@ -23,11 +23,12 @@ use App\Models\LanguageSetting;
 use App\Models\UniversalSearch;
 use App\Models\ClientSubCategory;
 use App\Models\PurposeConsentUser;
+use App\Models\Company;
 use App\DataTables\VendorDataTable;
 use Carbon\Carbon;
 use App\Models\Lead;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 class VendorController extends AccountBaseController
 {
@@ -153,7 +154,7 @@ class VendorController extends AccountBaseController
         $this->pageTitle = __('app.update') . ' ' . __('Vendor');
 
         $this->view = 'vendors.ajax.edit';
-
+        
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
         }
@@ -251,6 +252,27 @@ class VendorController extends AccountBaseController
         return Reply::success(__('Signed'));
         }
     
+    }
+    public function download($id)
+    {
+        Log::info($id);
+        $this->contract = VendorContract::findOrFail($id);
+        $this->pageTitle = 'app.menu.contracts';
+        $this->pageIcon = 'fa fa-file';
+        $this->company = Company::find(1);
+        $pdf = app('dompdf.wrapper');
+
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        App::setLocale('en');
+        Carbon::setLocale('en');
+        $pdf->loadView('vendors.contract-pdf', $this->data);
+
+        $filename = 'contract-' . $this->contract->id;
+
+        return $pdf->download($filename . '.pdf');
+
     }
 
 }

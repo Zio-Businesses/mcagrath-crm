@@ -388,6 +388,22 @@ $('#save-signature').click(function () {
     var id="{{$id}}";
     var signature = signaturePad.toDataURL('image/png');
     var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
+    if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none')) {
+            Swal.fire({
+                icon: 'error',
+                text: '{{ __('messages.signatureRequired') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            });
+            return false;
+        }
     $.easyAjax({
                 url: "{{route('front.vendor.save')}}",
                 container: '#save-lead-data-form',
@@ -400,7 +416,9 @@ $('#save-signature').click(function () {
                     signature:signature,
                     signature_type:signature_type,
                     details:$('#save-lead-data-form').serialize(),
-                    id:id
+                    id:id,
+                    contract_start:"{{$startdate}}",
+                    contract_end:"{{$enddate}}"
                 },
                 success: function(response) {
                     $('#signature-modal').modal('hide');

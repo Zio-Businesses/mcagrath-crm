@@ -87,8 +87,9 @@
 
             <x-cards.data-row :label="__('modules.client.companyName')"
                 :value="$vendorDetail->company_name" />
-               
-            <x-cards.data-row :label="__('Created at')"
+            <x-cards.data-row :label="__('Website')"
+                :value="$vendorDetail->website" />     
+            <x-cards.data-row :label="__('Created At')"
                 :value="$vendorDetail->created_at" />
 
             <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">

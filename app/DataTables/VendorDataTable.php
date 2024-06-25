@@ -64,6 +64,10 @@ class VendorDataTable extends BaseDataTable
                                 ' . trans('app.companysign') . '
                             </a>';
              }
+                $action .= '<a class="dropdown-item" href="' . route('vendors.download', $row->id) . '">
+                                <i class="fa fa-download mr-2"></i>
+                                ' . trans('app.download') . '
+                            </a>';
 
             $action .= '</div>
                     </div>

@@ -34,6 +34,17 @@
                                         :fieldLabel="__('app.ced')" fieldName="contract_end"
                                         :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->contract_end"/>
                             </div>
+                            <div class="col-lg-4 col-md-6">
+                                <x-forms.select fieldId="v_status" :fieldLabel="__('Status')"
+                                    fieldName="v_status" >
+                                    <option value="">--</option>
+                                    @foreach ($vendorStatuses as $status)
+                                        <option value="{{ $status }}" {{ $vendor->v_status === $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                    @endforeach
+                                </x-forms.select>
+                            </div>
                         </div>    
                     </div>        
                 </div>

@@ -37,7 +37,7 @@ class VendorTrackDataTable extends BaseDataTable
                             <i class="icon-options-vertical icons"></i>
                         </a>            
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-' . $row->id . '" tabindex="0">';
-                    if ($row->v_status=='rejected'||$row->v_status=='email_not_send') {
+                    if ($row->v_status=='rejected'||$row->v_status=='email not send') {
                         $action .= '<a class="dropdown-item send-proposal" href="javascript:;" data-user-send="' . $row->id . '">
                         <i class="fa fa-paper-plane mr-2"></i>
                         ' . trans('app.send_proposal') . '
@@ -82,7 +82,13 @@ class VendorTrackDataTable extends BaseDataTable
         $datatables->editColumn('vendor_number', fn($row) => $row->vendor_number);
         $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
         $datatables->editColumn('created_by', fn($row) => $row->created_by);
-        $datatables->editColumn('status', fn($row) => $row->v_status);
+        $datatables->editColumn('status', function($row){
+            return '<div class="media align-items-center">
+                    <div class="media-body">
+                    <td>' .  str_replace('_', ' ', $row->v_status)  . '</td>
+                </div>
+              </div>';
+        });
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
@@ -163,7 +169,7 @@ class VendorTrackDataTable extends BaseDataTable
              __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
              __('app.csd') => ['data' => 'contract_start', 'name' => 'contract_start', 'title' => __('app.csd')],
              __('app.ced') => ['data' => 'contract_end', 'name' => 'contract_end', 'title' => __('app.ced')],
-            __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'title' => __('app.status')],
+            __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
         ];
 
         $action = [
