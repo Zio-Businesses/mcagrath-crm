@@ -528,7 +528,7 @@ Neither party may assign or transfer this Agreement without the prior written co
             <div style="text-align: left; margin-top: 10px">
                 <h4 class="name" style="margin-bottom: 20px;">@lang('Vendor Signature')</h4>
                 <img src="{{ $contract->secondary_image_url }}" style="width: 200px;">
-                <p>Client Name:- {{ $contract->vendor_name }}<br>
+                <p>Vendor Name:- {{ $contract->vendor_name }}<br>
                     Place:- {{ $contract->city }}<br>
                     Date:- {{ $contract->signed_date}}
                 </p>

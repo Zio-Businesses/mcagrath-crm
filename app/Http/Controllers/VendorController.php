@@ -150,10 +150,11 @@ class VendorController extends AccountBaseController
     }
     public function edit($id)
     {
-        $this->vendor = VendorContract::where('id', '=', $id)->first();
+        $this->vendor = VendorContract::find($id);
         $this->pageTitle = __('app.update') . ' ' . __('Vendor');
         $this->vendorStatus = VendorContract::getStatus(); 
         $this->view = 'vendors.ajax.edit';
+        $this->contracttype = VendorContract::getContractType();
         
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
@@ -162,10 +163,9 @@ class VendorController extends AccountBaseController
         return view('vendors.create', $this->data);
 
     }
-    public function update(Request $request, $id)
+    public function update(SaveVendorRequest $request, $id)
     {
         $v_date = VendorContract::find($id);
-    
         DB::table('vendor_contracts')
         ->where('id', $id)
         ->update([
@@ -193,7 +193,8 @@ class VendorController extends AccountBaseController
             'wc_insurance_carrier_phone'=>$request->wc_ins_cp,
             'wc_insurance_carrier_email_address'=>$request->wc_ins_em,
             'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:companyToYmd($request->wc_ins_exp),
-            'status'=>$request->status
+            'status'=>$request->status,
+            'payment_methods'=>$request->payment_methods
         ]);
         if ($request->has('company_logo_delete') ) {
             $filePath='vendor/logo/' . $v_date->company_logo;

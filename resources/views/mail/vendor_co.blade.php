@@ -13,6 +13,12 @@ To help you get started, here are a few important details:
     - Click “Submit”.
 - **Complete**: Once submitted, it will ask for your digital signature to complete the onboarding process.
 
+@if (!empty($url))
+    @component('mail::button', ['url' => $url, 'themeColor' => ((!empty($themeColor)) ? $themeColor : '#1f75cb')])
+    {{ $actionText }}
+     @endcomponent
+@endif
+
 ### Documents:
 
 Please email the following documents to [vendors@mcresi.com](mailto:vendors@mcresi.com):
@@ -38,11 +44,7 @@ Barnegat, NJ 08005
 Phone #: 609-488-4290  
 Email: [vendors@mcresi.com](mailto:vendors@mcresi.com)  
 Website: [https://www.mcresi.com](https://www.mcresi.com)
-@if (!empty($url))
-    @component('mail::button', ['url' => $url, 'themeColor' => ((!empty($themeColor)) ? $themeColor : '#1f75cb')])
-    {{ $actionText }}
-     @endcomponent
-@endif
+
 
 @endcomponent
 

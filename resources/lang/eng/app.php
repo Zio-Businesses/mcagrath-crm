@@ -38,7 +38,7 @@ return array(
     'licensed'=>'Licensed',
     'send_proposal'=>'Send Proposal',
     'not_applicable'=>'Not applicable',
-    'license'=>'License#',
+    'license'=>'License (Contractor/Buisness) # ',
     'license_expiry_date'=>'License Expiry Date',
     'insured'=>'Insured',
     'GL_Insurance_Expiry_Date'=>'GL Insurance Expiry Date',

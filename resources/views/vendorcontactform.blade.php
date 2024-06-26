@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.tel fieldId="vendor_mobile" :fieldLabel="('modules.lead.mobile')" fieldName="vendor_mobile"
+                            <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
                             :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true"></x-forms.tel>
                         </div>
 
@@ -175,11 +175,11 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.license')" fieldName="license" fieldId="license" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.license')" fieldName="license" fieldId="license"  />
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker custom="true" fieldId="license_exp" fieldRequired="true"
+                            <x-forms.datepicker custom="true" fieldId="license_exp" 
                                 :fieldLabel="__('app.license_expiry_date')" fieldName="license_exp"
                                 :fieldPlaceholder="__('placeholders.date')" />
                         </div>
@@ -201,22 +201,22 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker custom="true" fieldId="gl_ins_exp" fieldRequired="true"
+                            <x-forms.datepicker custom="true" fieldId="gl_ins_exp" 
                                 :fieldLabel="__('app.GL_Insurance_Expiry_Date')" fieldName="gl_ins_exp"
                                 :fieldPlaceholder="__('placeholders.date')" />
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Name')" fieldName="gl_ins_cn" fieldId="gl_ins_cn" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Name')" fieldName="gl_ins_cn" fieldId="gl_ins_cn"  />
                         </div>
 
                         <div class="col-lg-6 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Phone')" fieldName="gl_ins_cp" fieldId="gl_ins_cp" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Phone')" fieldName="gl_ins_cp" fieldId="gl_ins_cp"  />
                         </div>
 
                         <div class="col-lg-6 col-md-6">
                             <x-forms.email fieldId="gl_ins_em" :fieldLabel="__('app.GL_Insurance_Carrier_Email_Address')"
-                                fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true">
+                                fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')" >
                             </x-forms.email>
                         </div>
 
@@ -235,25 +235,95 @@
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Name')" fieldName="wc_ins_cn" fieldId="wc_ins_cn" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Name')" fieldName="wc_ins_cn" fieldId="wc_ins_cn" />
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Phone')" fieldName="wc_ins_cp" fieldId="wc_ins_cp" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Phone')" fieldName="wc_ins_cp" fieldId="wc_ins_cp"  />
                         </div>
 
                         <div class="col-lg-4 col-md-6">
                             <x-forms.email fieldId="wc_ins_em" :fieldLabel="__('app.WC_Insurance_Carrier_Email_Address')"
-                                fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true">
+                                fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')" >
                             </x-forms.email>
                         </div>
 
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker custom="true" fieldId="wc_ins_exp" fieldRequired="true"
+                            <x-forms.datepicker custom="true" fieldId="wc_ins_exp" 
                                 :fieldLabel="__('app.WC_Insurance_Expiry_Date')" fieldName="wc_ins_exp"
                                 :fieldPlaceholder="__('placeholders.date')" />
                         </div>
-
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype" fieldRequired="true">
+                                <option value="">--</option>
+                                @foreach ($contracttype as $type)
+                                    <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                                @endforeach
+                            </x-forms.select>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.text :fieldLabel="__('Distnace covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')"/>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.text :fieldLabel="__('Coverage Citites')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the Counties that you cover')"/>
+                        </div>
+                        <div class="col-lg-12 mt-2">
+                            <div class="row">
+                                <div class="col-lg-12 mb-2">
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Required )</label><br>
+                                </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('Credit Card')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldValue="credit_card"
+                                    fieldId="credit_card" />
+                                </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                        :fieldLabel="__('PayPal')" 
+                                        fieldName="payment_methods[]" 
+                                        fieldValue="paypal"
+                                        fieldId="paypal" />
+                                 </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('ACH')" 
+                                    fieldName="payment_methods[]"
+                                    fieldValue="ach" 
+                                    fieldId="ach" />
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Check')" 
+                                    fieldName="payment_methods[]"
+                                    fieldValue="check" 
+                                    fieldId="check" />
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('CashApp')" 
+                                    fieldName="payment_methods[]"
+                                    fieldValue="cashapp" 
+                                    fieldId="cashapp" />
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Zelle')" 
+                                    fieldName="payment_methods[]"
+                                    fieldValue="zelle" 
+                                    fieldId="zelle" />
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Venmo')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldValue="venmo"
+                                    fieldId="venmo" />
+                                </div>
+                            </div>                                     
+                        </div>
+                        
                         <div id="signature-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog d-flex justify-content-center align-items-center modal-xl">
                                 <div class="modal-content">
@@ -266,7 +336,7 @@
                                         <x-form id="acceptEstimate">
                                             <div class="row">
                                                 <div class="col-sm-12 bg-grey p-4 signature">
-                                                    <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="('modules.estimates.signature')" />
+                                                    <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
                                                     <div class="signature_wrap wrapper border-0 form-control">
                                                         <canvas id="signature-pad" class="signature-pad rounded" width=400 height=150></canvas>
                                                     </div>
@@ -281,6 +351,7 @@
                                                     <x-forms.button-secondary class="ml-2" id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')
                                                     </x-forms.button-secondary>
                                                 </div>
+                                                
                                             </div>
                                         </x-form>
                                     </div>
@@ -382,6 +453,8 @@ $('#save-signature').click(function () {
     var id="{{$id}}";
     var signature = signaturePad.toDataURL('image/png');
     var signature_type = !$('.signature').hasClass('d-none') ? 'signature' : 'upload';
+    var checkboxes = document.querySelectorAll('input[name="payment_methods[]"]');
+    var isChecked = Array.prototype.slice.call(checkboxes).some(x => x.checked);
     if (signaturePad.isEmpty() && !$('.signature').hasClass('d-none')) {
             Swal.fire({
                 icon: 'error',
@@ -398,6 +471,24 @@ $('#save-signature').click(function () {
             });
             return false;
         }
+        if (!isChecked) {
+                $('#signature-modal').modal('hide');
+                Swal.fire({
+                icon: 'error',
+                text: '{{ __('Payment Method Required') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+                });
+                return false;
+        }
+        
     $.easyAjax({
                 url: "{{route('front.vendor.save')}}",
                 container: '#save-lead-data-form',
@@ -415,12 +506,13 @@ $('#save-signature').click(function () {
                     contract_end:"{{$enddate}}"
                 },
                 success: function(response) {
-                    $('#signature-modal').modal('hide');
-                   setTimeout(() => {
-                    window.close();
-                   }, 5000);
+                //     $('#signature-modal').modal('hide');
+                //    setTimeout(() => {
+                //     window.close();
+                //    }, 5000);
                 }
             });
 });
 </script>
+
 </html>

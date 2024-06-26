@@ -171,8 +171,88 @@
                                     @endforeach
                                 </x-forms.select>
                     </div>
-                    
-                </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype">
+                                <option value="">--</option>
+                                @foreach ($contracttype as $type)
+                                    <option value="{{ $type }}" {{ $vendor->contractor_type === $type ? 'selected' : '' }}>{{ ucfirst($type) }}</option>
+                                @endforeach
+                            </x-forms.select>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.text :fieldLabel="__('Distnace covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.text :fieldLabel="__('Coverage Citites')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('type the cities that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                        </div>
+                    <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-12 mb-2">
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Required )</label><br>
+                                    @php
+                                         $paymentMethods = json_decode($vendor->payment_methods, true) ?? [];
+                                         
+                                    @endphp
+                                </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('Credit Card')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="credit_card" 
+                                    fieldValue="credit_card"
+                                    :checked="in_array('credit_card', $paymentMethods)"/>
+                                </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                        :fieldLabel="__('PayPal')" 
+                                        fieldName="payment_methods[]" 
+                                        fieldId="paypal" 
+                                        fieldValue="paypal"
+                                        :checked="in_array('paypal', $paymentMethods)"/>
+                                 </div>
+                                <div class="col-lg-4">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('ACH')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="ach" 
+                                    fieldValue="ach"
+                                    :checked="in_array('ach', $paymentMethods)"/>
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Check')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="check" 
+                                    fieldValue="check"
+                                    :checked="in_array('check', $paymentMethods)"/>
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('CashApp')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="cashapp" 
+                                    fieldValue="cashapp"
+                                    :checked="in_array('cashapp', $paymentMethods)"/>
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Zelle')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="zelle" 
+                                    fieldValue="zelle"
+                                    :checked="in_array('zelle', $paymentMethods)"/>
+                                </div>
+                                <div class="col-lg-4 mt-2">
+                                 <x-forms.checkbox 
+                                    :fieldLabel="__('Venmo')" 
+                                    fieldName="payment_methods[]" 
+                                    fieldId="venmo" 
+                                    fieldValue="venmo"
+                                    :checked="in_array('venmo', $paymentMethods)"/>
+                                </div>
+                            </div>                                     
+                        </div>
+            </div>
 
                 <x-form-actions>
                     <x-forms.button-primary id="save-form" class="mr-3" icon="check">@lang('app.save')
@@ -190,7 +270,7 @@
     $(document).ready(function() {
 
         
-
+        
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
                 position: 'bl',
@@ -199,7 +279,7 @@
         });
         $('#save-form').click(function() {
             const url = "{{ route('vendors.update', $vendor->id) }}";
-
+       
             $.easyAjax({
                 url: url,
                 container: '#save-data-form',
@@ -209,6 +289,7 @@
                 file: true,
                 buttonSelector: "#save-form",
                 data: $('#save-data-form').serialize(),
+                
                 success: function(response) {
                     if (response.status == 'success') {
                         window.location.href = response.redirectUrl;

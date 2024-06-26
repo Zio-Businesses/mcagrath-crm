@@ -62,6 +62,7 @@ class OneTimeAgreeController extends Controller
         $startdate=$request->query('startdate');
         $enddate=$request->query('enddate');
         $pageTitle = 'app.menu.contracts';
+        $contracttype = VendorContract::getContractType();
         $company = Company::find(1);
          return view('vendorcontactform', [
             'id'=>$id,
@@ -69,7 +70,7 @@ class OneTimeAgreeController extends Controller
             'enddate'=>$enddate,
             'company' => $company,
             'pageTitle' => $pageTitle,
-            
+            'contracttype'=>$contracttype,
         ]);
     }
     public function vendorstore(SaveVendorRequest $request)
@@ -88,9 +89,9 @@ class OneTimeAgreeController extends Controller
         $vendor->website=$request->website;
         $vendor->licensed=$request->licensed;
         $vendor->license=$request->license;
-        $vendor->license_expiry_date=companyToYmd($request->license_exp);
+        $vendor->license_expiry_date=$request->license_exp==null?$request->license_exp:companyToYmd($request->license_exp);
         $vendor->insured=$request->insured;
-        $vendor->gl_insurance_expiry_date=companyToYmd($request->gl_ins_exp);
+        $vendor->gl_insurance_expiry_date=$request->gl_ins_exp==null?$request->gl_ins_exp:companyToYmd($request->gl_ins_exp);
         $vendor->gl_insurance_carrier_name=$request->gl_ins_cn;
         $vendor->gl_insurance_carrier_phone=$request->gl_ins_cp;
         $vendor->gl_insurance_carrier_email_address=$request->gl_ins_em;
@@ -98,11 +99,15 @@ class OneTimeAgreeController extends Controller
         $vendor->wc_insurance_carrier_name=$request->wc_ins_cn;
         $vendor->wc_insurance_carrier_phone=$request->wc_ins_cp;
         $vendor->wc_insurance_carrier_email_address=$request->wc_ins_em;
-        $vendor->wc_insurance_expiry_date=companyToYmd($request->wc_ins_exp);
+        $vendor->wc_insurance_expiry_date=$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp);
         $vendor->contract_start=$request->contract_start;
         $vendor->contract_end=$request->contract_end;
         $vendor->vendor_track_id=$request->id;
+        $vendor->payment_methods=json_encode($request->payment_methods);
         $vendor->status='active';
+        $vendor->contractor_type=$request->contracttype;
+        $vendor->distance_covered=$request->dc;
+        $vendor->coverage_cities=$request->cc;
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
             $vendor->company_logo=$logo;

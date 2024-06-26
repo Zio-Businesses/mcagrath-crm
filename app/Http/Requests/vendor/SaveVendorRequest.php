@@ -29,6 +29,16 @@ class SaveVendorRequest extends CoreRequest
 
         $rules['website'] = 'nullable';
         $rules['logo'] = 'nullable';
+        $rules['gl_ins_exp'] = 'nullable';
+        $rules['wc_ins_exp'] = 'nullable';
+        $rules['license_exp'] = 'nullable';
+        $rules['gl_ins_cn'] = 'nullable';
+        $rules['gl_ins_cp'] = 'nullable';
+        $rules['gl_ins_em'] = 'nullable';
+        $rules['wc_ins_cn'] = 'nullable';
+        $rules['wc_ins_cp'] = 'nullable';
+        $rules['wc_ins_em'] = 'nullable';
+        $rules['license'] = 'nullable';
         return $rules;
     }
 
