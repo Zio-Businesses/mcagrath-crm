@@ -102,6 +102,7 @@ class OneTimeAgreeController extends Controller
         $vendor->contract_start=$request->contract_start;
         $vendor->contract_end=$request->contract_end;
         $vendor->vendor_track_id=$request->id;
+        $vendor->status='active';
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
             $vendor->company_logo=$logo;

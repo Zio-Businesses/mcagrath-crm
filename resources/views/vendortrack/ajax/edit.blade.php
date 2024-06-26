@@ -34,6 +34,7 @@
                                         :fieldLabel="__('app.ced')" fieldName="contract_end"
                                         :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->contract_end"/>
                             </div>
+                            
                             <div class="col-lg-4 col-md-6">
                                 <x-forms.select fieldId="v_status" :fieldLabel="__('Status')"
                                     fieldName="v_status" >

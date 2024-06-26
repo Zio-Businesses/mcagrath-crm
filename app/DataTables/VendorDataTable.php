@@ -177,8 +177,13 @@ class VendorDataTable extends BaseDataTable
             __('app.name') => ['data' => 'name', 'name' => 'name', 'exportable' => false, 'title' => __('app.name')],
             __('app.company_name') => ['data' => 'company_name', 'name' => 'compnay_name', 'title' => __('app.company_name')],
             __('app.email') => ['data' => 'email', 'name' => 'email', 'title' => __('app.email')],
+            __('app.phone') => ['data' => 'cell', 'name' => 'cell', 'title' => __('app.phone')],
+            __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
+            __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
+           
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
-            __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')]
+            __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
+            __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
         ];
 
         $action = [

@@ -154,10 +154,22 @@
                             :fieldLabel="__('app.WC_Insurance_Expiry_Date')" fieldName="wc_ins_exp"
                             :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->wc_insurance_expiry_date"/>
                     </div>
+                    
                     <div class="col-sm-12 p-4 upload-image">
-                    <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2"
-                                               :fieldLabel="__('modules.contracts.companyLogo')" fieldName="company_logo"
-                                               :fieldValue=" ($vendor->company_logo ? $vendor->image_url : null)" fieldId="company_logo" :popover="__('messages.fileFormat.ImageFile')"/>                
+                        <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2"
+                                                :fieldLabel="__('modules.contracts.companyLogo')" fieldName="company_logo"
+                                                :fieldValue=" ($vendor->company_logo ? $vendor->image_url : null)" fieldId="company_logo" :popover="__('messages.fileFormat.ImageFile')"/>                
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                                <x-forms.select fieldId="status" :fieldLabel="__('Status')"
+                                    fieldName="status" >
+                                    <option value="">--</option>
+                                    @foreach ($vendorStatus as $status)
+                                        <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                    @endforeach
+                                </x-forms.select>
                     </div>
                     
                 </div>

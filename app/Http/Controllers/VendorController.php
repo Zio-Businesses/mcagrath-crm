@@ -152,7 +152,7 @@ class VendorController extends AccountBaseController
     {
         $this->vendor = VendorContract::where('id', '=', $id)->first();
         $this->pageTitle = __('app.update') . ' ' . __('Vendor');
-
+        $this->vendorStatus = VendorContract::getStatus(); 
         $this->view = 'vendors.ajax.edit';
         
         if (request()->ajax()) {
@@ -192,7 +192,8 @@ class VendorController extends AccountBaseController
             'wc_insurance_carrier_name'=>$request->wc_ins_cn,
             'wc_insurance_carrier_phone'=>$request->wc_ins_cp,
             'wc_insurance_carrier_email_address'=>$request->wc_ins_em,
-            'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:companyToYmd($request->wc_ins_exp)
+            'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:companyToYmd($request->wc_ins_exp),
+            'status'=>$request->status
         ]);
         if ($request->has('company_logo_delete') ) {
             $filePath='vendor/logo/' . $v_date->company_logo;

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class VendorContract extends BaseModel
 {
+    
     use HasFactory;
     protected $table = 'vendor_contracts';
     protected $appends = ['image_url'];
@@ -21,5 +22,11 @@ class VendorContract extends BaseModel
     public function getTertiaryImageUrlAttribute()
     {
         return ($this->company_sign) ? asset_url_local_s3('vendor/company_sign/' . $this->company_sign) : null;
+    }
+    public static function getStatus()
+    {
+        return [
+            'active', 'not active', 'do not use','on hold',
+        ];
     }
 }
