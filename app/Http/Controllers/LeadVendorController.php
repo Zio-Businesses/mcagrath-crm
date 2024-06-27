@@ -36,23 +36,19 @@ class LeadVendorController extends AccountBaseController
 
         return view('lead-contact.create', $this->data);
     }
-    public function checkvendor($id)
+    public function vendorcheck($email)
     {
-        Log::info($id);
+        $users =Vendor::where('vendor_email', $email)->where('v_status', 'rejected')->exists();
+       if($users){
+            return Reply::dataOnly(['status' => 'success']);
+        }
+        else{
+            return Reply::dataOnly(['status' => 'failed']);
+        }
     }
     public function store(StoreVendorRequest $request)
     {
-        
         $email = $request->input('vendor_email');
-        // $users =Vendor::where('vendor_email', $email)->where('v_status', 'rejected')->exists();
-       
-        // if($users){
-        //     return Reply::dataOnly(['status' => 'success']);
-        // }
-        // else{
-        //     return Reply::dataOnly(['status' => 'success']);
-        // }
-        
         if($request[1]==1)
         {
             

@@ -488,7 +488,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     // deals route
     Route::get('lead-handle',[LeadVendorController::class,'handle'])->name('lead-vendor.handle');
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
-    Route::get('vendorcheck/{id}',[VendorController::class,'vendorcheck'])->name('vendors.check');
+    Route::get('vendorcheck/{email}',[LeadVendorController::class,'vendorcheck'])->name('vendors.check');
     Route::get('vendors/download/{id}', [VendorController::class, 'download'])->name('vendors.download');
     Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');

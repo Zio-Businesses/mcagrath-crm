@@ -98,9 +98,49 @@ $addProductPermission = user()->permission('add_product');
 
         $('#save-email-form').click(function () {
             var i=1;
-            const url = "{{ route('vendor-crud.store') }}";
-            var data = $('#save-lead-data-form').serialize();
-            saveLead(data, url, "#save-email-form",i);
+            var email=document.getElementById('vendor_email').value;
+            var url="{{route('vendors.check',':email')}}";
+            url = url.replace(':email', email);
+            $.easyAjax({
+                url: url,
+                type: "GET",
+                disableButton: true,
+                blockUI: true,
+                buttonSelector: "#save-lead-form",
+                success: function(response) {
+                    if (response.status == "success") {
+                        Swal.fire({
+                            title: "@lang('Would you like to send the email?')",
+                            text:   "@lang('This email address has previously declined your vendor contract')",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            focusConfirm: false,
+                            confirmButtonText: "@lang('Send')",
+                            cancelButtonText: "@lang('app.cancel')",
+                            customClass: {
+                                confirmButton: 'btn btn-primary mr-3',
+                                cancelButton: 'btn btn-secondary'
+                            },
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                                backdrop: 'swal2-noanimation'
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const url = "{{ route('vendor-crud.store') }}";
+                                var data = $('#save-lead-data-form').serialize();
+                                saveLead(data, url, "#save-email-form",i);
+                            }
+                        });
+                    }
+                    else{
+                        const url = "{{ route('vendor-crud.store') }}";
+                        var data = $('#save-lead-data-form').serialize();
+                        saveLead(data, url, "#save-email-form",i);
+                    }
+                }
+            });
 
         });
 

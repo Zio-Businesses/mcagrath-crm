@@ -141,6 +141,6 @@ class OneTimeAgreeController extends Controller
         $vendor->created_by=$vendorst->created_by;
         $vendorst->save();
         $vendor->save();
-        return Reply::success(__('Saved! Page Closes in 5 Seconds'));
+        return Reply::success(__('Thank you for updating your profile details and Welcome to our team!'));
     }
 }

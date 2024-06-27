@@ -341,7 +341,7 @@ Neither party may assign or transfer this Agreement without the prior written co
 <script>
     
     $('#cancel').click(function () {
-        if (confirm("Are you sure you want to exit?")) {
+        if (confirm("Thank you for you time and your response is noted.")) {
             var id="{{$id}}";
             $.easyAjax({
                 url: "{{ route('front.form.show') }}",
@@ -360,7 +360,7 @@ Neither party may assign or transfer this Agreement without the prior written co
         }
     });
     $('#accept').click(function () {
-        if(confirm("Make sure you have read the contract carefully!!")){
+        if(confirm("By clicking 'I Agree,' I confirm that I have read, understood, and agree to the Terms & Conditions.")){
         var startDate = "{{ $startdate }}";
         var endDate = "{{ $enddate }}";
         var id="{{$id}}";

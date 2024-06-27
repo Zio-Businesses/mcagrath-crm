@@ -176,7 +176,7 @@
                                     <option value="">--</option>
                                     @foreach ($vendorStatus as $status)
                                         <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
-                                            {{ ucfirst($status) }}
+                                            {{ ucwords($status) }}
                                         </option>
                                     @endforeach
                                 </x-forms.select>
@@ -190,15 +190,15 @@
                             </x-forms.select>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Distnace covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
+                            <x-forms.text :fieldLabel="__('Distance Covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Coverage Citites')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('type the cities that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                            <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
                         </div>
                     <div class="col-lg-12">
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
-                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Required )</label><br>
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Accepted By You )</label><br>
                                     @php
                                          $paymentMethods = json_decode($vendor->payment_methods, true) ?? [];
                                          
