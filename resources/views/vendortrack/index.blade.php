@@ -169,7 +169,7 @@
               
             </div>
 
-            <x-datatable.actions>
+            <!-- <x-datatable.actions>
                 <div class="select-status mr-3">
                     <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
                         <option value="">@lang('app.selectAction')</option>
@@ -183,7 +183,7 @@
                         <option value="active">@lang('app.active')</option>
                     </select>
                 </div>
-            </x-datatable.actions>
+            </x-datatable.actions> -->
 
 
             <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
@@ -270,6 +270,7 @@
         $('#reset-filters,#reset-filters-2').click(function() {
             $('#filter-form')[0].reset();
             $('.filter-box .select-picker').selectpicker("refresh");
+            $('#reset-filters').addClass('d-none');
             showTable();
         });
 

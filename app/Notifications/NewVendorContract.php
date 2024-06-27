@@ -63,7 +63,7 @@ class NewVendorContract extends BaseNotification
 
 
         return $build
-            ->subject(__('email.newContract.subject'))
+            ->subject(__('Welcome to McGrath Consulting Contractor Network!'))
             ->markdown('mail.vendor_co', [
                 'name'=>$this->vendor->vendor_name,
                 'url' => $url,

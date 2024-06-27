@@ -26,7 +26,19 @@ class SaveVendorRequest extends CoreRequest
     public function rules()
     {
         $rules = array();
-
+        $rules['vendor_name'] = 'Required';
+        $rules['vendor_email'] = 'Required';
+        $rules['vendor_mobile'] = 'Required';
+        $rules['company_name'] = 'Required';
+        $rules['street_address'] = 'Required';
+        $rules['county'] = 'Required';
+        $rules['city'] = 'Required';
+        $rules['state'] = 'Required';
+        $rules['zipcode'] = 'Required';
+        $rules['office'] = 'Required';
+        $rules['contracttype'] = 'Required';
+        $rules['dc'] = 'Required';
+        $rules['cc'] = 'Required';
         $rules['website'] = 'nullable';
         $rules['logo'] = 'nullable';
         $rules['gl_ins_exp'] = 'nullable';
@@ -39,6 +51,8 @@ class SaveVendorRequest extends CoreRequest
         $rules['wc_ins_cp'] = 'nullable';
         $rules['wc_ins_em'] = 'nullable';
         $rules['license'] = 'nullable';
+        $rules['wc_ins_pn'] = 'nullable';
+        $rules['gl_ins_pn'] = 'nullable';
         return $rules;
     }
 

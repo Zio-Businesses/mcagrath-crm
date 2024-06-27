@@ -34,6 +34,9 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-4 col-md-6">
+                    <x-forms.text :fieldLabel="__('County')" fieldName="county" fieldId="county" :fieldValue="$vendor->county"/>
+                    </div>
                     
                     <div class="col-lg-3 col-md-6">
                         <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
@@ -122,6 +125,9 @@
                             fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true" :fieldValue="$vendor->gl_insurance_carrier_email_address">
                         </x-forms.email>
                     </div>
+                    <div class="col-lg-4 col-md-6">
+                    <x-forms.text :fieldLabel="__('GL Insurance Policy Number')" fieldName="gl_ins_pn" fieldId="gl_ins_pn" :fieldValue="$vendor->gl_insurance_policy_number"/>
+                    </div>
                     <div class="form-group my-3">
                             <label class="f-14 text-dark-grey mb-12 w-100 mt-3"
                                 for="usr">@lang('app.Workers_Comp_Available')</label>
@@ -133,6 +139,8 @@
                                     fieldName="wca" :checked="($vendor->Workers_comp_available=='no') ? 'checked' : ''"></x-forms.radio>
                                 <x-forms.radio fieldId="wc-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
                                     fieldName="wca" :checked="($vendor->Workers_comp_available=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                                <x-forms.radio fieldId="wc-ex" :fieldLabel="__('Exempted')" fieldValue="exempted"
+                                    fieldName="wca" :checked="($vendor->Workers_comp_available=='exempted') ? 'checked' : ''"></x-forms.radio>
                             </div>
                     </div>
             
@@ -154,7 +162,9 @@
                             :fieldLabel="__('app.WC_Insurance_Expiry_Date')" fieldName="wc_ins_exp"
                             :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->wc_insurance_expiry_date"/>
                     </div>
-                    
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('WC Insurance Policy Number')" fieldName="wc_ins_pn" fieldId="wc_ins_pn" :fieldValue="$vendor->wc_insurance_policy_number"/>
+                    </div>
                     <div class="col-sm-12 p-4 upload-image">
                         <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2"
                                                 :fieldLabel="__('modules.contracts.companyLogo')" fieldName="company_logo"

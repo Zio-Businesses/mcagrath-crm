@@ -130,6 +130,10 @@
                             <x-forms.text :fieldLabel="__('app.street_address')" fieldName="street_address"
                                 fieldId="street_address" fieldRequired="true" />
                         </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('County')" fieldName="county"
+                                fieldId="county" fieldRequired="true" />
+                        </div>
 
                         <div class="col-lg-4 col-md-6">
                             <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
@@ -153,16 +157,16 @@
 
                         <!-- Website and Logo input in the same row -->
                         <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.website')" fieldName="website" fieldId="website" fieldRequired="true" />
+                            <x-forms.text :fieldLabel="__('app.website')" fieldName="website" fieldId="website"  />
                         </div>
-                        <div class="col-lg-8 col-md-6">
+                        <div class="col-lg-4 col-md-6">
                             <x-forms.file allowedFileExtensions="png jpg jpeg svg" class="mr-0 mr-lg-2 mr-md-2 w-100" :fieldLabel="__('app.logo')" fieldName="logo"
-                                fieldId="logo" :popover="('messages.fileFormat.multipleImageFile')" fieldRequired="true" />
+                                fieldId="logo" :popover="('messages.fileFormat.multipleImageFile')"  />
                         </div>
 
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group my-1">
-                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr">@lang('app.licensed')</label>
+                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr">@lang('app.licensed')<sup class="f-14 mr-1">*</sup></label>
                                 <div class="d-flex">
                                     <x-forms.radio fieldId="lic-yes" :fieldLabel="__('app.yes')" fieldName="licensed" fieldValue="yes">
                                     </x-forms.radio>
@@ -188,7 +192,7 @@
 
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group my-1">
-                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr">@lang('app.insured')</label>
+                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr">@lang('app.insured')<sup class="f-14 mr-1">*</sup></label>
                                 <div class="d-flex">
                                     <x-forms.radio fieldId="in-yes" :fieldLabel="__('app.yes')" fieldName="insured" fieldValue="yes">
                                     </x-forms.radio>
@@ -210,25 +214,30 @@
                             <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Name')" fieldName="gl_ins_cn" fieldId="gl_ins_cn"  />
                         </div>
 
-                        <div class="col-lg-6 col-md-6">
+                        <div class="col-lg-4 col-md-6">
                             <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Phone')" fieldName="gl_ins_cp" fieldId="gl_ins_cp"  />
                         </div>
 
-                        <div class="col-lg-6 col-md-6">
+                        <div class="col-lg-4 col-md-6">
                             <x-forms.email fieldId="gl_ins_em" :fieldLabel="__('app.GL_Insurance_Carrier_Email_Address')"
                                 fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')" >
                             </x-forms.email>
                         </div>
+                        <div class="col-lg-4 col-md-6 ">
+                            <x-forms.text :fieldLabel="__('GL Insurance Policy Number')" fieldName="gl_ins_pn" fieldId="gl_ins_pn"/>
+                        </div>
 
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group my-1">
-                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr">@lang('app.Workers_Comp_Available')</label>
+                                <label class="f-14 text-dark-grey mb-12 w-100 mt-3" for="usr" >@lang('app.Workers_Comp_Available')<sup class="f-14 mr-1">*</sup></label>
                                 <div class="d-flex">
                                     <x-forms.radio fieldId="wc-yes" :fieldLabel="__('app.yes')" fieldName="wca" fieldValue="yes">
                                     </x-forms.radio>
                                     <x-forms.radio fieldId="wc-no" :fieldLabel="__('app.no')" fieldValue="no" fieldName="wca" checked="true">
                                     </x-forms.radio>
                                     <x-forms.radio fieldId="wc-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
+                                        fieldName="wca"></x-forms.radio>
+                                    <x-forms.radio fieldId="wc-ex" :fieldLabel="__('Exempted')" fieldValue="exempted"
                                         fieldName="wca"></x-forms.radio>
                                 </div>
                             </div>
@@ -242,18 +251,21 @@
                             <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Phone')" fieldName="wc_ins_cp" fieldId="wc_ins_cp"  />
                         </div>
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 mt-2">
                             <x-forms.email fieldId="wc_ins_em" :fieldLabel="__('app.WC_Insurance_Carrier_Email_Address')"
                                 fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')" >
                             </x-forms.email>
                         </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.text :fieldLabel="__('WC Insurance Policy Number')" fieldName="wc_ins_pn" fieldId="wc_ins_pn"/>
+                        </div>
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 mt-2">
                             <x-forms.datepicker custom="true" fieldId="wc_ins_exp" 
                                 :fieldLabel="__('app.WC_Insurance_Expiry_Date')" fieldName="wc_ins_exp"
                                 :fieldPlaceholder="__('placeholders.date')" />
                         </div>
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 mt-2">
                             <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype" fieldRequired="true">
                                 <option value="">--</option>
                                 @foreach ($contracttype as $type)
@@ -270,7 +282,7 @@
                         <div class="col-lg-12 mt-2">
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
-                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Required )</label><br>
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods <sup class="f-14 mr-1">*</sup></label><br>
                                 </div>
                                 <div class="col-lg-4">
                                     <x-forms.checkbox 
@@ -506,10 +518,10 @@ $('#save-signature').click(function () {
                     contract_end:"{{$enddate}}"
                 },
                 success: function(response) {
-                //     $('#signature-modal').modal('hide');
-                //    setTimeout(() => {
-                //     window.close();
-                //    }, 5000);
+                    $('#signature-modal').modal('hide');
+                   setTimeout(() => {
+                    window.close();
+                   }, 3000);
                 }
             });
 });

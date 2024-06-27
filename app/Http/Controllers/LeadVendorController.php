@@ -36,6 +36,10 @@ class LeadVendorController extends AccountBaseController
 
         return view('lead-contact.create', $this->data);
     }
+    public function checkvendor($id)
+    {
+        Log::info($id);
+    }
     public function store(StoreVendorRequest $request)
     {
         

@@ -112,6 +112,7 @@ class VendorTrackDataTable extends BaseDataTable
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
                     ->orWhere('vendor_number', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('v_status', 'like', '%' . request('searchText') . '%')
                     ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
         }

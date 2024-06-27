@@ -30,6 +30,7 @@ use App\Models\Lead;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\vendor\SaveVendorRequest;
 class VendorController extends AccountBaseController
 {
     public function __construct()
@@ -165,37 +166,66 @@ class VendorController extends AccountBaseController
     }
     public function update(SaveVendorRequest $request, $id)
     {
-        $v_date = VendorContract::find($id);
-        DB::table('vendor_contracts')
-        ->where('id', $id)
-        ->update([
+        // $v_date = VendorContract::find($id);
+        // DB::table('vendor_contracts')
+        // ->where('id', $id)
+        // ->update([
         
-            'vendor_name' => $request->vendor_name,
-            'vendor_email'=>$request->vendor_email,
-            'company_name'=>$request->company_name,
-            'street_address'=>$request->street_address,
-            'city'=>$request->city,
-            'state'=>$request->state,
-            'zip_code'=>$request->zipcode,
-            'office'=>$request->office,
-            'cell'=>$request->vendor_mobile,
-            'website'=>$request->website,
-            'licensed'=>$request->licensed,
-            'license'=>$request->license,
-            'license_expiry_date'=>$v_date->license_expiry_date==$request->license_exp ? $request->license_exp:companyToYmd($request->license_exp),
-            'insured'=>$request->insured,
-            'gl_insurance_expiry_date'=>$v_date->gl_insurance_expiry_date==$request->gl_ins_exp ? $request->gl_ins_exp:companyToYmd($request->gl_ins_exp),
-            'gl_insurance_carrier_name'=>$request->gl_ins_cn,
-            'gl_insurance_carrier_phone'=>$request->gl_ins_cp,
-            'gl_insurance_carrier_email_address'=>$request->gl_ins_em,
-            'Workers_comp_available'=>$request->wca,
-            'wc_insurance_carrier_name'=>$request->wc_ins_cn,
-            'wc_insurance_carrier_phone'=>$request->wc_ins_cp,
-            'wc_insurance_carrier_email_address'=>$request->wc_ins_em,
-            'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:companyToYmd($request->wc_ins_exp),
-            'status'=>$request->status,
-            'payment_methods'=>$request->payment_methods
-        ]);
+        //     'vendor_name' => $request->vendor_name,
+        //     'vendor_email'=>$request->vendor_email,
+        //     'company_name'=>$request->company_name,
+        //     'street_address'=>$request->street_address,
+        //     'city'=>$request->city,
+        //     'state'=>$request->state,
+        //     'zip_code'=>$request->zipcode,
+        //     'office'=>$request->office,
+        //     'cell'=>$request->vendor_mobile,
+        //     'website'=>$request->website,
+        //     'licensed'=>$request->licensed,
+        //     'license'=>$request->license,
+        //     'license_expiry_date'=>$v_date->license_expiry_date==$request->license_exp ? $request->license_exp:companyToYmd($request->license_exp),
+        //     'insured'=>$request->insured,
+        //     'gl_insurance_expiry_date'=>$v_date->gl_insurance_expiry_date==$request->gl_ins_exp ? $request->gl_ins_exp:companyToYmd($request->gl_ins_exp),
+        //     'gl_insurance_carrier_name'=>$request->gl_ins_cn,
+        //     'gl_insurance_carrier_phone'=>$request->gl_ins_cp,
+        //     'gl_insurance_carrier_email_address'=>$request->gl_ins_em,
+        //     'Workers_comp_available'=>$request->wca,
+        //     'wc_insurance_carrier_name'=>$request->wc_ins_cn,
+        //     'wc_insurance_carrier_phone'=>$request->wc_ins_cp,
+        //     'wc_insurance_carrier_email_address'=>$request->wc_ins_em,
+        //     'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp),
+        //     'status'=>$request->status,
+        //     'payment_methods'=>$request->payment_methods
+        // ]);
+        $vendor=VendorContract::find($id);
+        $vendor->company_name=$request->company_name;
+        $vendor->street_address=$request->street_address;
+        $vendor->city=$request->city;
+        $vendor->state=$request->state;
+        $vendor->zip_code=$request->zipcode;
+        $vendor->office=$request->office;
+        $vendor->cell=$request->vendor_mobile;
+        $vendor->vendor_name=$request->vendor_name;
+        $vendor->vendor_email=$request->vendor_email;
+        $vendor->website=$request->website;
+        $vendor->licensed=$request->licensed;
+        $vendor->license=$request->license;
+        $vendor->license_expiry_date=$request->license_exp==null?$request->license_exp:companyToYmd($request->license_exp);
+        $vendor->insured=$request->insured;
+        $vendor->gl_insurance_expiry_date=$request->gl_ins_exp==null?$request->gl_ins_exp:companyToYmd($request->gl_ins_exp);
+        $vendor->gl_insurance_carrier_name=$request->gl_ins_cn;
+        $vendor->gl_insurance_carrier_phone=$request->gl_ins_cp;
+        $vendor->gl_insurance_carrier_email_address=$request->gl_ins_em;
+        $vendor->Workers_comp_available=$request->wca;
+        $vendor->wc_insurance_carrier_name=$request->wc_ins_cn;
+        $vendor->wc_insurance_carrier_phone=$request->wc_ins_cp;
+        $vendor->wc_insurance_carrier_email_address=$request->wc_ins_em;
+        $vendor->wc_insurance_expiry_date=$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp);
+        $vendor->status=$request->status;
+        $vendor->payment_methods=$request->payment_methods;
+        $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
+        $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
+        $vendor->county=$request->county;
         if ($request->has('company_logo_delete') ) {
             $filePath='vendor/logo/' . $v_date->company_logo;
             Storage::disk('s3')->delete($filePath);
@@ -209,6 +239,7 @@ class VendorController extends AccountBaseController
             DB::table('vendor_contracts')->where('id', $id)->update($data);
         }
         $redirectUrl = route('vendors.index');
+        $vendor->save();
         return Reply::successWithData(__('messages.updateSuccess'), ['redirectUrl' => $redirectUrl]);
     }
       /**
@@ -250,6 +281,7 @@ class VendorController extends AccountBaseController
             }
         }
         $vendor->company_sign=$imageName;
+        $vendor->company_sign_date=date("Y-m-d");
         $vendor->save();
         return Reply::success(__('Signed'));
         }

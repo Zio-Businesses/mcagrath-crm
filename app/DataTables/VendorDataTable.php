@@ -125,7 +125,10 @@ class VendorDataTable extends BaseDataTable
             $users = $users->where(function ($query) {
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
-                    ->orWhere('company_name', 'like', '%' . request('searchText') . '%');
+                    ->orWhere('company_name', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('contractor_type', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('status', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
         }
 
@@ -178,9 +181,9 @@ class VendorDataTable extends BaseDataTable
             __('app.company_name') => ['data' => 'company_name', 'name' => 'compnay_name', 'title' => __('app.company_name')],
             __('app.email') => ['data' => 'email', 'name' => 'email', 'title' => __('app.email')],
             __('app.phone') => ['data' => 'cell', 'name' => 'cell', 'title' => __('app.phone')],
-            __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
+            __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
-           
+            __('app.contractor_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.contractor_type')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],

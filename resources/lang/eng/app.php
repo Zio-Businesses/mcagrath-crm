@@ -10,6 +10,8 @@ return array(
     'title' => 'Title',
     'note' => 'Note',
     'cell'=>'Cell',
+    'county'=>'County',
+    'contractor_type'=>'Contractor type',
     'save' => 'Save',
     'update' => 'Update',
     'timer' => 'Timer',

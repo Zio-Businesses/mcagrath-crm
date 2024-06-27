@@ -119,21 +119,26 @@
             <x-cards.data-row :label="__('street address')" :value="$vendorDetail->street_address" />
             <x-cards.data-row :label="__('city')" :value="$vendorDetail->city" />
             <x-cards.data-row :label="__('state')" :value="$vendorDetail->state" />
+            <x-cards.data-row :label="__('county')" :value="$vendorDetail->county" />
             <x-cards.data-row :label="__('zipcode')" :value="$vendorDetail->zip_code" />
             <x-cards.data-row :label="__('office')" :value="$vendorDetail->office" />
             <x-cards.data-row :label="__('cell')" :value="$vendorDetail->cell" />
             <x-cards.data-row :label="__('licensed')" :value="$vendorDetail->licensed" />
             <x-cards.data-row :label="__('license expiry date')" :value="$vendorDetail->license_expiry_date" />
             <x-cards.data-row :label="__('insured')" :value="$vendorDetail->insured" />
-            <x-cards.data-row :label="__('gl insurance expiry date')" :value="$vendorDetail->gl_insurance_expiry_date" />
+            
             <x-cards.data-row :label="__('gl insurance carrier name')" :value="$vendorDetail->gl_insurance_carrier_name" />
             <x-cards.data-row :label="__('gl insurance carrier_phone')" :value="$vendorDetail->gl_insurance_carrier_phone" />
             <x-cards.data-row :label="__('gl insurance carrier email address')" :value="$vendorDetail->gl_insurance_carrier_email_address" />
+            <x-cards.data-row :label="__('gl insurance expiry date')" :value="$vendorDetail->gl_insurance_expiry_date" />
+            <x-cards.data-row :label="__('gl insurance policy number')" :value="$vendorDetail->gl_insurance_policy_number" />
             <x-cards.data-row :label="__('Workers comp available')" :value="$vendorDetail->Workers_comp_available" />
             <x-cards.data-row :label="__('wc insurance carrier name')" :value="$vendorDetail->wc_insurance_carrier_name" />
             <x-cards.data-row :label="__('wc insurance carrier phone')" :value="$vendorDetail->wc_insurance_carrier_phone" />
             <x-cards.data-row :label="__('wc insurance carrier email address')" :value="$vendorDetail->wc_insurance_carrier_email_address" />
             <x-cards.data-row :label="__('wc insurance expiry date')" :value="$vendorDetail->wc_insurance_expiry_date" />
+            <x-cards.data-row :label="__('wc insurance policy number')" :value="$vendorDetail->wc_insurance_policy_number" />
+
             <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                     Vendor Sign</p>

@@ -103,11 +103,14 @@ class OneTimeAgreeController extends Controller
         $vendor->contract_start=$request->contract_start;
         $vendor->contract_end=$request->contract_end;
         $vendor->vendor_track_id=$request->id;
+        $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
+        $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->payment_methods=json_encode($request->payment_methods);
         $vendor->status='active';
         $vendor->contractor_type=$request->contracttype;
         $vendor->distance_covered=$request->dc;
         $vendor->coverage_cities=$request->cc;
+        $vendor->county=$request->county;
         if ($request->hasFile('logo')) {
             $logo = Files::uploadLocalOrS3($request->logo, 'vendor/logo', 300);
             $vendor->company_logo=$logo;
