@@ -13,7 +13,7 @@ class Vendor extends Model
 
     // protected $casts = [
     //     'payment_methods' => 'array', // Cast payment_methods to an array
-    // ];
+    // ]
 
     public function getImageUrlAttribute()
     {
