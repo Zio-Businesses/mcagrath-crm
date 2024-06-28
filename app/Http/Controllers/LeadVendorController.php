@@ -57,7 +57,7 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=companyToYmd($request->start_date);
-            $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->contract_end=$request->end_date==null?$request->end_date:companyToYmd($request->end_date);
             $leadContact->v_status='work in progress';
             $leadContact->created_by=user()->name;
             $leadContact->save();

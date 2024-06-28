@@ -2,134 +2,148 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <x-form id="save-data-form" method="PUT">
+        <x-form id="save-data-form " method="PUT">
             <div class="add-client bg-white rounded">
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.employees.accountDetails')</h4>
 
-                <div class="row p-20">
-                    <div class="col-lg-9">
-                        <div class="row">
+                    <div class="row p-20">
+                        <div class="col-lg-12">
+                            <div class="row">
                             
-                            <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.name')" fieldName="vendor_name"
-                            fieldId="vendor_name" :fieldPlaceholder="__('placeholders.name')" fieldRequired="true" :fieldValue="$vendor->vendor_name"/>
+                        
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.text :fieldLabel="__('app.name')" fieldName="vendor_name"
+                                                fieldId="vendor_name" :fieldPlaceholder="__('placeholders.name')" fieldRequired="true" :fieldValue="$vendor->vendor_name"/>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.email fieldId="vendor_email" :fieldLabel="__('app.email')"
+                                                fieldName="vendor_email" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true" :fieldValue="$vendor->vendor_email">
+                                    </x-forms.email>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
+                                                :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true" :fieldValue="$vendor->cell">
+                                    </x-forms.tel>
+                                </div>
+
+
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.text :fieldLabel="__('app.company_name')" fieldName="company_name"
+                                    fieldId="company_name"  fieldRequired="true" :fieldValue="$vendor->company_name"/>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.text :fieldLabel="__('app.street_address')" fieldName="street_address"
+                                    fieldId="street_address"  fieldRequired="true" :fieldValue="$vendor->street_address"/>
+                                </div>
+                       
+                                <div class="col-lg-4 col-md-6">
+                                    <x-forms.text :fieldLabel="__('County')" fieldName="county" fieldId="county" :fieldValue="$vendor->county" fieldRequired="true"/>
+                                </div>
                             </div>
-                            <div class="col-lg-4 col-md-6">
-                                <x-forms.email fieldId="vendor_email" :fieldLabel="__('app.email')"
-                                fieldName="vendor_email" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true" :fieldValue="$vendor->vendor_email" >
-                                </x-forms.email>
-                            </div>
-                            <div class="col-lg-4 col-md-6">
-                               <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
-                               :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true" :fieldValue="$vendor->cell"></x-forms.tel>
-                            </div>
-                            <div class="col-md-4">
-                            <x-forms.text :fieldLabel="__('app.company_name')" fieldName="company_name"
-                            fieldId="company_name"  fieldRequired="true" :fieldValue="$vendor->company_name"/>
-                        </div>
-                        <div class="col-md-4">
-                        <x-forms.text :fieldLabel="__('app.street_address')" fieldName="street_address"
-                        fieldId="street_address"  fieldRequired="true" :fieldValue="$vendor->street_address"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                    <x-forms.text :fieldLabel="__('County')" fieldName="county" fieldId="county" :fieldValue="$vendor->county"/>
-                    </div>
+                         </div>
                     
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
-                        fieldId="city"  fieldRequired="true" :fieldValue="$vendor->city"/>
-                    </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
+                            fieldId="city"  fieldRequired="true" :fieldValue="$vendor->city"/>
+                        </div>
 
-                    <div class="col-md-3">
-                    <x-forms.text :fieldLabel="__('app.state')" fieldName="state"
-                    fieldId="state"  fieldRequired="true" :fieldValue="$vendor->state"/>
-                    </div>
+                        <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('app.state')" fieldName="state"
+                        fieldId="state"  fieldRequired="true" :fieldValue="$vendor->state"/>
+                        </div>
 
-                    <div class="col-md-3">
-                        <x-forms.text :fieldLabel="__('app.zipcode')" fieldName="zipcode"
-                        fieldId="zipcode"  fieldRequired="true" :fieldValue="$vendor->zip_code"/>
-                    </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('app.zipcode')" fieldName="zipcode"
+                            fieldId="zipcode"  fieldRequired="true" :fieldValue="$vendor->zip_code"/>
+                        </div>
 
-                    <div class="col-md-3">
-                        <x-forms.text :fieldLabel="__('app.office')" fieldName="office"
-                        fieldId="office"  fieldRequired="true" :fieldValue="$vendor->office"/>
-                    </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('app.office')" fieldName="office"
+                            fieldId="office"  fieldRequired="true" :fieldValue="$vendor->office"/>
+                        </div>
 
-                    <div class="col-lg-3 col-md-6">
-                    <x-forms.text :fieldLabel="__('app.website')" fieldName="website"
-                    fieldId="website"  fieldRequired="true" :fieldValue="$vendor->website"/>
-                    </div>
-                    
-                    <div class="col-lg-4 col-md-6">
-                        <div class="form-group my-3">
-                            <label class="f-14 text-dark-grey mb-12 w-100 mt-3"
-                                for="usr">@lang('app.licensed')</label>
-                            <div class="d-flex">
-                                <x-forms.radio fieldId="lic-yes" :fieldLabel="__('app.yes')" fieldName="licensed"
-                                    fieldValue="yes" :checked="($vendor->licensed=='yes') ? 'checked' : ''">
-                                </x-forms.radio>
-                                <x-forms.radio fieldId="lic-no" :fieldLabel="__('app.no')" fieldValue="no"
-                                    fieldName="licensed" :checked="($vendor->licensed=='no') ? 'checked' : ''"></x-forms.radio>
-                                <x-forms.radio fieldId="lic-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
-                                    fieldName="licensed" :checked="($vendor->licensed=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                        <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('app.website')" fieldName="website"
+                        fieldId="website"  :fieldValue="$vendor->website"/>
+                        </div>
+                        <div class="col-lg-4 col-md-6 upload-image">
+                            <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2"
+                                                    :fieldLabel="__('modules.contracts.companyLogo')" fieldName="company_logo"
+                                                    :fieldValue=" ($vendor->company_logo ? $vendor->image_url : null)" fieldId="company_logo" :popover="__('messages.fileFormat.ImageFile')"/>                
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                            <div class="form-group my-3">
+                                <label class="f-14 text-dark-grey mb-12 w-100 "
+                                    for="usr">@lang('app.licensed')</label>
+                                <div class="d-flex">
+                                    <x-forms.radio fieldId="lic-yes" :fieldLabel="__('app.yes')" fieldName="licensed"
+                                        fieldValue="yes" :checked="($vendor->licensed=='yes') ? 'checked' : ''">
+                                    </x-forms.radio>
+                                    <x-forms.radio fieldId="lic-no" :fieldLabel="__('app.no')" fieldValue="no"
+                                        fieldName="licensed" :checked="($vendor->licensed=='no') ? 'checked' : ''"></x-forms.radio>
+                                    <x-forms.radio fieldId="lic-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
+                                        fieldName="licensed" :checked="($vendor->licensed=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('app.license')" fieldName="license"
+                                fieldId="license"  :fieldValue="$vendor->license"/>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                        <x-forms.datepicker custom="true" fieldId="license_exp" 
+                                :fieldLabel="__('app.license_expiry_date')" fieldName="license_exp"
+                                :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->license_expiry_date"/>
+                        </div> 
                     </div>
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.text :fieldLabel="__('app.license')" fieldName="license"
-                            fieldId="license"  fieldRequired="true" :fieldValue="$vendor->license"/>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                       <x-forms.datepicker custom="true" fieldId="license_exp" fieldRequired="true"
-                            :fieldLabel="__('app.license_expiry_date')" fieldName="license_exp"
-                            :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->license_expiry_date"/>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                    <div class="form-group my-3">
-                            <label class="f-14 text-dark-grey mb-12 w-100 mt-3"
-                                for="usr">@lang('app.insured')</label>
-                            <div class="d-flex">
-                                <x-forms.radio fieldId="in-yes" :fieldLabel="__('app.yes')" fieldName="insured"
-                                    fieldValue="yes" :checked="($vendor->insured=='yes') ? 'checked' : ''">
-                                </x-forms.radio>
-                                <x-forms.radio fieldId="in-no" :fieldLabel="__('app.no')" fieldValue="no"
-                                    fieldName="insured" :checked="($vendor->insured=='no') ? 'checked' : ''"></x-forms.radio>
-                                <x-forms.radio fieldId="in-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
-                                    fieldName="insured" :checked="($vendor->insured=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                    <div class="row p-20">
+                        <div class="col-lg-4 col-md-6 my-1">
+                            <div class="form-group my-3">
+                                    <label class="f-14 text-dark-grey mb-12 w-100"
+                                        for="usr">@lang('app.insured')</label>
+                                    <div class="d-flex">
+                                        <x-forms.radio fieldId="in-yes" :fieldLabel="__('app.yes')" fieldName="insured"
+                                            fieldValue="yes" :checked="($vendor->insured=='yes') ? 'checked' : ''">
+                                        </x-forms.radio>
+                                        <x-forms.radio fieldId="in-no" :fieldLabel="__('app.no')" fieldValue="no"
+                                            fieldName="insured" :checked="($vendor->insured=='no') ? 'checked' : ''"></x-forms.radio>
+                                        <x-forms.radio fieldId="in-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
+                                            fieldName="insured" :checked="($vendor->insured=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                                    </div>
                             </div>
-                    </div>
-                    </div>
+                        </div>
 
 
-                </div>
-                <div class="row p-20">
+               
+               
                     <div class="col-lg-4 col-md-6">
-                       <x-forms.datepicker custom="true" fieldId="gl_ins_exp" fieldRequired="true"
+                       <x-forms.datepicker custom="true" fieldId="gl_ins_exp" 
                             :fieldLabel="__('app.GL_Insurance_Expiry_Date')" fieldName="gl_ins_exp"
                             :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->gl_insurance_expiry_date"/>
                     </div>
                     <div class="col-lg-4 col-md-6">
+                    <x-forms.text :fieldLabel="__('GL Insurance Policy Number')" fieldName="gl_ins_pn" fieldId="gl_ins_pn" :fieldValue="$vendor->gl_insurance_policy_number"/>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Name')" fieldName="gl_ins_cn"
-                            fieldId="gl_ins_cn"  fieldRequired="true" :fieldValue="$vendor->gl_insurance_carrier_name"/>
+                            fieldId="gl_ins_cn"   :fieldValue="$vendor->gl_insurance_carrier_name"/>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('app.GL_Insurance_Carrier_Phone')" fieldName="gl_ins_cp"
-                            fieldId="gl_ins_cp"  fieldRequired="true" :fieldValue="$vendor->gl_insurance_carrier_phone"/>
+                            fieldId="gl_ins_cp"   :fieldValue="$vendor->gl_insurance_carrier_phone"/>
                     </div>
                     
                     <div class="col-lg-4 col-md-6">
                         <x-forms.email fieldId="gl_ins_em" :fieldLabel="__('app.GL_Insurance_Carrier_Email_Address')"
-                            fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true" :fieldValue="$vendor->gl_insurance_carrier_email_address">
+                            fieldName="gl_ins_em" :fieldPlaceholder="__('placeholders.email')"  :fieldValue="$vendor->gl_insurance_carrier_email_address">
                         </x-forms.email>
                     </div>
+                    
                     <div class="col-lg-4 col-md-6">
-                    <x-forms.text :fieldLabel="__('GL Insurance Policy Number')" fieldName="gl_ins_pn" fieldId="gl_ins_pn" :fieldValue="$vendor->gl_insurance_policy_number"/>
-                    </div>
                     <div class="form-group my-3">
-                            <label class="f-14 text-dark-grey mb-12 w-100 mt-3"
+                            <label class="f-14 text-dark-grey mb-12 w-100 "
                                 for="usr">@lang('app.Workers_Comp_Available')</label>
                             <div class="d-flex">
                                 <x-forms.radio fieldId="wc-yes" :fieldLabel="__('app.yes')" fieldName="wca"
@@ -143,46 +157,37 @@
                                     fieldName="wca" :checked="($vendor->Workers_comp_available=='exempted') ? 'checked' : ''"></x-forms.radio>
                             </div>
                     </div>
-            
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Name')" fieldName="wc_ins_cn"
-                            fieldId="wc_ins_cn"  fieldRequired="true" :fieldValue="$vendor->wc_insurance_carrier_name"/>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                        <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Phone')" fieldName="wc_ins_cp"
-                            fieldId="wc_ins_cp"  fieldRequired="true" :fieldValue="$vendor->wc_insurance_carrier_phone"/>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.email fieldId="wc_ins_em" :fieldLabel="__('app.WC_Insurance_Carrier_Email_Address')"
-                            fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true" :fieldValue="$vendor->	wc_insurance_carrier_email_address">
-                        </x-forms.email>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                       <x-forms.datepicker custom="true" fieldId="wc_ins_exp" fieldRequired="true"
+                       <x-forms.datepicker custom="true" fieldId="wc_ins_exp" 
                             :fieldLabel="__('app.WC_Insurance_Expiry_Date')" fieldName="wc_ins_exp"
                             :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->wc_insurance_expiry_date"/>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('WC Insurance Policy Number')" fieldName="wc_ins_pn" fieldId="wc_ins_pn" :fieldValue="$vendor->wc_insurance_policy_number"/>
                     </div>
-                    <div class="col-sm-12 p-4 upload-image">
-                        <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2"
-                                                :fieldLabel="__('modules.contracts.companyLogo')" fieldName="company_logo"
-                                                :fieldValue=" ($vendor->company_logo ? $vendor->image_url : null)" fieldId="company_logo" :popover="__('messages.fileFormat.ImageFile')"/>                
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Name')" fieldName="wc_ins_cn"
+                            fieldId="wc_ins_cn"   :fieldValue="$vendor->wc_insurance_carrier_name"/>
                     </div>
                     <div class="col-lg-4 col-md-6">
-                                <x-forms.select fieldId="status" :fieldLabel="__('Status')"
-                                    fieldName="status" >
-                                    <option value="">--</option>
-                                    @foreach ($vendorStatus as $status)
-                                        <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
-                                            {{ ucwords($status) }}
-                                        </option>
-                                    @endforeach
-                                </x-forms.select>
+                        <x-forms.text :fieldLabel="__('app.WC_Insurance_Carrier_Phone')" fieldName="wc_ins_cp"
+                            fieldId="wc_ins_cp"   :fieldValue="$vendor->wc_insurance_carrier_phone"/>
                     </div>
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.email fieldId="wc_ins_em" :fieldLabel="__('app.WC_Insurance_Carrier_Email_Address')"
+                            fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')"  :fieldValue="$vendor->	wc_insurance_carrier_email_address">
+                        </x-forms.email>
+                    </div>
+                    
+                    
+                   
+                    
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype">
+                            <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mt-2">
+                            <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype" fieldRequired="true">
                                 <option value="">--</option>
                                 @foreach ($contracttype as $type)
                                     <option value="{{ $type }}" {{ $vendor->contractor_type === $type ? 'selected' : '' }}>{{ ucfirst($type) }}</option>
@@ -192,13 +197,21 @@
                         <div class="col-lg-4 col-md-6 mt-2">
                             <x-forms.text :fieldLabel="__('Distance Covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
                         </div>
-                        <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                        <div class="col-lg-4 col-md-6 mb-2">
+                                <x-forms.select fieldId="status" :fieldLabel="__('Status')"
+                                    fieldName="status" fieldRequired="true">
+                                    <option value="">--</option>
+                                    @foreach ($vendorStatus as $status)
+                                        <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
+                                            {{ ucwords($status) }}
+                                        </option>
+                                    @endforeach
+                                </x-forms.select>
                         </div>
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 mt-4">
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
-                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Accepted By You )</label><br>
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Accepted By You )<sup class="f-14 mr-1">*</sup></label><br>
                                     @php
                                          $paymentMethods = json_decode($vendor->payment_methods, true) ?? [];
                                          

@@ -127,8 +127,13 @@ class VendorController extends AccountBaseController
 
         //     return $this->gdpr();
         // default:
-            $this->vendorDetail = VendorContract::where('id', '=', $id)->first();
+            $this->vendorDetail = VendorContract::Find($id);
             $this->pageTitle = $this->vendorDetail->vendor_name;
+            $dataArray = json_decode($this->vendorDetail->payment_methods, true); 
+            $sanitizedData = array_map(function ($item) {
+                return str_replace(['[', ']', ','], '', $item);
+            }, $dataArray);
+            $this->joinedData= implode(', ', $sanitizedData);
             // if (!is_null($this->clientDetail)) {
             //     $this->clientDetail = $this->clientDetail->withCustomFields();
 
@@ -136,6 +141,7 @@ class VendorController extends AccountBaseController
             //         $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
             //     }
             // }
+             
 
             $this->view = 'vendors.ajax.profile';
             // break;

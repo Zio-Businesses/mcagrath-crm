@@ -114,7 +114,7 @@
                 
             </div> -->
 
-            
+            <x-cards.data-row :label="__('contractor type')" :value="$vendorDetail->contractor_type" />
 
             <x-cards.data-row :label="__('street address')" :value="$vendorDetail->street_address" />
             <x-cards.data-row :label="__('city')" :value="$vendorDetail->city" />
@@ -138,7 +138,9 @@
             <x-cards.data-row :label="__('wc insurance carrier email address')" :value="$vendorDetail->wc_insurance_carrier_email_address" />
             <x-cards.data-row :label="__('wc insurance expiry date')" :value="$vendorDetail->wc_insurance_expiry_date" />
             <x-cards.data-row :label="__('wc insurance policy number')" :value="$vendorDetail->wc_insurance_policy_number" />
-
+            <x-cards.data-row :label="__('coverage by county')" :value="$vendorDetail->coverage_cities" />
+            <x-cards.data-row :label="__('distance covered')" :value="$vendorDetail->distance_covered" />
+            <x-cards.data-row :label="__('payment method')" :value="$joinedData" />
             <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                     Vendor Sign</p>

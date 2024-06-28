@@ -101,6 +101,23 @@ $addProductPermission = user()->permission('add_product');
             var email=document.getElementById('vendor_email').value;
             var url="{{route('vendors.check',':email')}}";
             url = url.replace(':email', email);
+            if(email.trim()=="")
+            {
+                Swal.fire({
+                icon: 'error',
+                text: '{{ __('Email Field Required!!') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+                });
+                return false;
+            }
             $.easyAjax({
                 url: url,
                 type: "GET",

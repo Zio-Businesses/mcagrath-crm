@@ -354,7 +354,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-12 p-4 d-none upload-image">
-                                                    <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="('modules.estimates.signature')" fieldName="image"
+                                                    <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
                                                         fieldId="image" :popover="('messages.fileFormat.ImageFile')" fieldRequired="true" />
                                                 </div>
                                                 <div class="col-sm-12 mt-3">
@@ -369,7 +369,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.cancel')</x-forms.button-cancel>
-                                        <x-forms.button-primary id="save-signature" icon="check">@lang('app.sign')</x-forms.button-primary>
+                                        <x-forms.button-primary id="save-signature" icon="check">@lang('app.submit')</x-forms.button-primary>
                                     </div>
                                 </div>
                             </div>
@@ -386,6 +386,7 @@
             </x-form>
         </div>
     </div>
+    
 </div>
 </body>
 
@@ -408,6 +409,7 @@
     };
 
 </script>
+
 <script>
     $('.dropify').dropify();
     const MODAL_LG = '#myModal';

@@ -570,7 +570,7 @@ return array(
     'where' => 'where',
     'followUp' => 'Follow Up',
     'createdOn' => 'Created',
-    'createdby'=>'created by',
+    'createdby'=>'Created By',
     'updatedOn' => 'Updated on',
     'notice' => 'Notice',
     'minutes' => 'Minutes',

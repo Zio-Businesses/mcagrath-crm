@@ -10,8 +10,8 @@ To help you get started, here are a few important details:
 - **Accept or Reject**: After reviewing, click “Accept” or “Reject”.
 - **If Accepted**:
     - You will be directed to the next page to enter a few details about yourself.
-    - Click “Submit”.
-- **Complete**: Once submitted, it will ask for your digital signature to complete the onboarding process.
+    - Click “Sign”.
+- **Complete**: Once Sign is clicked, it will ask for your digital signature to complete the onboarding process.
 
 @if (!empty($url))
     @component('mail::button', ['url' => $url, 'themeColor' => ((!empty($themeColor)) ? $themeColor : '#1f75cb')])

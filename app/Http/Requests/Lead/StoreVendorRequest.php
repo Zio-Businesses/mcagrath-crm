@@ -28,7 +28,10 @@ class StoreVendorRequest extends CoreRequest
         $rules = array();
 
         $rules['vendor_name'] = 'required';
-        
+        $rules['vendor_email'] = 'required';
+        $rules['vendor_mobile'] = 'required';
+        $rules['start_date'] = 'required';
+        $rules['end_date'] = 'required';
         return $rules;
     }
 
