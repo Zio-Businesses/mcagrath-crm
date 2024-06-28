@@ -118,7 +118,7 @@ class OneTimeAgreeController extends Controller
         
         if ($request->signature_type == 'signature') {
             $image = $request->signature;  // your base64 encoded
-            Log::info($request->signature);
+          
             $image = str_replace('data:image/png;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = str_random(32) . '.' . 'jpg';

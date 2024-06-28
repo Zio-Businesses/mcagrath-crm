@@ -274,15 +274,15 @@
                             </x-forms.select>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Distnace covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')"/>
+                            <x-forms.text :fieldLabel="__('Distance covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')"/>
                         </div>
                         <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Coverage Citites')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the Counties that you cover')"/>
+                            <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the Counties that you cover')"/>
                         </div>
                         <div class="col-lg-12 mt-2">
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
-                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods <sup class="f-14 mr-1">*</sup></label><br>
+                                    <label class='f-14 text-dark-grey mb-12'>Payment Methods ( Accepted By You )<sup class="f-14 mr-1">*</sup></label><br>
                                 </div>
                                 <div class="col-lg-4">
                                     <x-forms.checkbox 
