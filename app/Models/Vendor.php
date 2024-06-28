@@ -9,11 +9,11 @@ class Vendor extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payment_methods']; // Add other fillable attributes as needed
+    // protected $fillable = ['payment_methods']; // Add other fillable attributes as needed
 
-    protected $casts = [
-        'payment_methods' => 'array', // Cast payment_methods to an array
-    ];
+    // protected $casts = [
+    //     'payment_methods' => 'array', // Cast payment_methods to an array
+    // ];
 
     public function getImageUrlAttribute()
     {

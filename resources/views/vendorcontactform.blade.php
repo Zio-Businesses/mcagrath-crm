@@ -288,8 +288,8 @@
                                     <x-forms.checkbox 
                                     :fieldLabel="__('Credit Card')" 
                                     fieldName="payment_methods[]" 
-                                    fieldValue="credit_card"
-                                    fieldId="credit_card" />
+                                    fieldValue="credit card"
+                                    fieldId="credit card" />
                                 </div>
                                 <div class="col-lg-4">
                                     <x-forms.checkbox 

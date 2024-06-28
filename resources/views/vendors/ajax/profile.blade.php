@@ -81,8 +81,9 @@
 <div class="row mt-4">
     <div class="col-xl-7 col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
         <x-cards.data :title="__('modules.client.profileInfo')">
+        <x-cards.data-row :label="__('status')" :value="$vendorDetail->status" />
             <x-cards.data-row :label="__('modules.employees.fullName')" :value="$vendorDetail->vendor_name" />
-
+            
             <x-cards.data-row :label="__('app.email')" :value="$vendorDetail->vendor_email" />
 
             <x-cards.data-row :label="__('modules.client.companyName')"
@@ -153,6 +154,7 @@
                     @endif
                 </p>
             </div>
+            <x-cards.data-row :label="__('vendor signed date')" :value="$vendorDetail->signed_date" />
             <div class="col-12 px-0 pb-3 d-block d-lg-flex d-md-flex">
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                     Company Sign</p>
