@@ -10,6 +10,7 @@ use App\Helper\Files;
 use Illuminate\Support\Facades\File;
 use App\Helper\Reply;
 use App\Http\Requests\vendor\SaveVendorRequest;
+use Carbon\Carbon;
 class OneTimeAgreeController extends Controller
 {
     public function OtaView(Request $request){
@@ -75,7 +76,7 @@ class OneTimeAgreeController extends Controller
     }
     public function vendorstore(SaveVendorRequest $request)
     {
-       
+        $company = Company::find(1);
         $vendor=New VendorContract();
         $vendor->company_name=$request->company_name;
         $vendor->street_address=$request->street_address;
@@ -89,9 +90,9 @@ class OneTimeAgreeController extends Controller
         $vendor->website=$request->website;
         $vendor->licensed=$request->licensed;
         $vendor->license=$request->license;
-        $vendor->license_expiry_date=$request->license_exp==null?$request->license_exp:companyToYmd($request->license_exp);
+        $vendor->license_expiry_date=$request->license_exp==null?null: Carbon::createFromFormat($company->date_format, $request->license_exp)->format('Y-m-d');
         $vendor->insured=$request->insured;
-        $vendor->gl_insurance_expiry_date=$request->gl_ins_exp==null?$request->gl_ins_exp:companyToYmd($request->gl_ins_exp);
+        $vendor->gl_insurance_expiry_date=$request->gl_ins_exp==null?null:Carbon::createFromFormat($company->date_format, $request->gl_ins_exp)->format('Y-m-d');
         $vendor->gl_insurance_carrier_name=$request->gl_ins_cn;
         $vendor->gl_insurance_carrier_phone=$request->gl_ins_cp;
         $vendor->gl_insurance_carrier_email_address=$request->gl_ins_em;
@@ -99,7 +100,7 @@ class OneTimeAgreeController extends Controller
         $vendor->wc_insurance_carrier_name=$request->wc_ins_cn;
         $vendor->wc_insurance_carrier_phone=$request->wc_ins_cp;
         $vendor->wc_insurance_carrier_email_address=$request->wc_ins_em;
-        $vendor->wc_insurance_expiry_date=$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp);
+        $vendor->wc_insurance_expiry_date=$request->wc_ins_exp==null?null:Carbon::createFromFormat($company->date_format, $request->wc_ins_exp)->format('Y-m-d');;
         $vendor->contract_start=$request->contract_start;
         $vendor->contract_end=$request->contract_end;
         $vendor->vendor_track_id=$request->id;
@@ -126,7 +127,7 @@ class OneTimeAgreeController extends Controller
             Files::createDirectoryIfNotExist('vendor/sign');
 
             File::put(public_path() . '/' . Files::UPLOAD_FOLDER . '/vendor/sign/' . $imageName, base64_decode($image));
-            Files::uploadLocalFile($imageName, 'vendor/sign', $this->company->id);
+            Files::uploadLocalFile($imageName, 'vendor/sign');
         }
         else {
             if ($request->hasFile('image')) {
@@ -139,8 +140,11 @@ class OneTimeAgreeController extends Controller
         $vendorst->v_status='vendor created';
         $vendorst->sign=$imageName;
         $vendor->created_by=$vendorst->created_by;
+        Log::info($request);
         $vendorst->save();
         $vendor->save();
-        return Reply::success(__('Thank you for updating your profile details and Welcome to our team!'));
+        //return Reply::success(__(''));
+        $redirectUrl = route('front.ota.show');
+        return Reply::successWithData(__('Thank you for updating your profile details and Welcome to our team!'), ['redirectUrl' => $redirectUrl]);
     }
 }

@@ -172,37 +172,8 @@ class VendorController extends AccountBaseController
     }
     public function update(SaveVendorRequest $request, $id)
     {
-        // $v_date = VendorContract::find($id);
-        // DB::table('vendor_contracts')
-        // ->where('id', $id)
-        // ->update([
         
-        //     'vendor_name' => $request->vendor_name,
-        //     'vendor_email'=>$request->vendor_email,
-        //     'company_name'=>$request->company_name,
-        //     'street_address'=>$request->street_address,
-        //     'city'=>$request->city,
-        //     'state'=>$request->state,
-        //     'zip_code'=>$request->zipcode,
-        //     'office'=>$request->office,
-        //     'cell'=>$request->vendor_mobile,
-        //     'website'=>$request->website,
-        //     'licensed'=>$request->licensed,
-        //     'license'=>$request->license,
-        //     'license_expiry_date'=>$v_date->license_expiry_date==$request->license_exp ? $request->license_exp:companyToYmd($request->license_exp),
-        //     'insured'=>$request->insured,
-        //     'gl_insurance_expiry_date'=>$v_date->gl_insurance_expiry_date==$request->gl_ins_exp ? $request->gl_ins_exp:companyToYmd($request->gl_ins_exp),
-        //     'gl_insurance_carrier_name'=>$request->gl_ins_cn,
-        //     'gl_insurance_carrier_phone'=>$request->gl_ins_cp,
-        //     'gl_insurance_carrier_email_address'=>$request->gl_ins_em,
-        //     'Workers_comp_available'=>$request->wca,
-        //     'wc_insurance_carrier_name'=>$request->wc_ins_cn,
-        //     'wc_insurance_carrier_phone'=>$request->wc_ins_cp,
-        //     'wc_insurance_carrier_email_address'=>$request->wc_ins_em,
-        //     'wc_insurance_expiry_date'=>$v_date->wc_insurance_expiry_date==$request->wc_ins_exp ? $request->wc_ins_exp:$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp),
-        //     'status'=>$request->status,
-        //     'payment_methods'=>$request->payment_methods
-        // ]);
+
         $vendor=VendorContract::find($id);
         $vendor->company_name=$request->company_name;
         $vendor->street_address=$request->street_address;
@@ -216,9 +187,9 @@ class VendorController extends AccountBaseController
         $vendor->website=$request->website;
         $vendor->licensed=$request->licensed;
         $vendor->license=$request->license;
-        $vendor->license_expiry_date=$request->license_exp==null?$request->license_exp:companyToYmd($request->license_exp);
+       //$vendor->license_expiry_date=($request->license_exp!=$vendor->license_expiry_date&&!empty(trim($request->license_exp)))?companyToYmd($request->license_exp):null;
         $vendor->insured=$request->insured;
-        $vendor->gl_insurance_expiry_date=$request->gl_ins_exp==null?$request->gl_ins_exp:companyToYmd($request->gl_ins_exp);
+      //  $vendor->gl_insurance_expiry_date=($request->gl_ins_exp!=$vendor->gl_insurance_expiry_date&&!empty(trim($request->gl_ins_exp)))?companyToYmd($request->gl_ins_exp):null;
         $vendor->gl_insurance_carrier_name=$request->gl_ins_cn;
         $vendor->gl_insurance_carrier_phone=$request->gl_ins_cp;
         $vendor->gl_insurance_carrier_email_address=$request->gl_ins_em;
@@ -226,20 +197,58 @@ class VendorController extends AccountBaseController
         $vendor->wc_insurance_carrier_name=$request->wc_ins_cn;
         $vendor->wc_insurance_carrier_phone=$request->wc_ins_cp;
         $vendor->wc_insurance_carrier_email_address=$request->wc_ins_em;
-        $vendor->wc_insurance_expiry_date=$request->wc_ins_exp==null?$request->wc_ins_exp:companyToYmd($request->wc_ins_exp);
+       // $vendor->wc_insurance_expiry_date=($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))?companyToYmd($request->wc_ins_exp):null;
+       $vendor->contractor_type=$request->contracttype;
         $vendor->status=$request->status;
         $vendor->payment_methods=$request->payment_methods;
         $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
         $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->county=$request->county;
+        if($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))
+        {
+            
+            $vendor->wc_insurance_expiry_date=companyToYmd($request->wc_ins_exp);
+            
+        }
+        elseif(empty(trim($request->wc_ins_exp))){
+            $vendor->wc_insurance_expiry_date=null;
+        }
+        else{
+            $vendor->wc_insurance_expiry_date=$request->wc_ins_exp;
+        }
+        if($request->gl_ins_exp!=$vendor->gl_insurance_expiry_date&&!empty(trim($request->gl_ins_exp)))
+        {
+            
+            $vendor->gl_insurance_expiry_date=companyToYmd($request->gl_ins_exp);
+            
+        }
+        elseif(empty(trim($request->gl_ins_exp))){
+            $vendor->gl_insurance_expiry_date=null;
+        }
+        else{
+            $vendor->gl_insurance_expiry_date=$request->gl_ins_exp;
+        }
+        if($request->license_exp!=$vendor->license_expiry_date&&!empty(trim($request->license_exp)))
+        {
+            
+            $vendor->license_expiry_date=companyToYmd($request->license_exp);
+            
+        }
+        elseif(empty(trim($request->license_exp))){
+            $vendor->license_expiry_date=null;
+        }
+        else{
+            $vendor->license_expiry_date=$request->license_exp;
+        }
+        
         if ($request->has('company_logo_delete') ) {
-            $filePath='vendor/logo/' . $v_date->company_logo;
+            $filePath='vendor/logo/' . $vendor->company_logo;
             Storage::disk('s3')->delete($filePath);
             $data['company_logo'] = null;
             DB::table('vendor_contracts')->where('id', $id)->update($data);
         }
         if ($request->hasFile('company_logo')) {
-            $filePath='vendor/logo/' . $v_date->company_logo;
+            $filePath='vendor/logo/' . $vendor->company_logo;
             Storage::disk('s3')->delete($filePath);
             $data['company_logo'] = Files::uploadLocalOrS3($request->company_logo, 'vendor/logo', 300);
             DB::table('vendor_contracts')->where('id', $id)->update($data);

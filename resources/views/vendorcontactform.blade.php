@@ -395,6 +395,26 @@
 <script type="text/javascript" src="https://jeremyfagis.github.io/dropify/dist/js/dropify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
+var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
+     $(fieldIds.join(',')).on('keydown input', function(event) {
+    // Allow backspace, delete, tab, and arrow keys for navigation
+    var allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
+
+        if (allowedKeys.includes(event.key)) {
+            this.readOnly = false;
+        } else {
+            this.readOnly = true;
+            event.preventDefault();
+        }
+    }).on('focus', function() {
+        // Make the field readonly when focused to prevent mobile keyboards from appearing
+        this.readOnly = true;
+    }).on('blur', function() {
+        // Allow the field to be edited again after it loses focus
+        this.readOnly = false;
+    });
+
+
     const datepickerConfig = {
         formatter: (input, date, instance) => {
             input.value = moment(date).format('{{ companyOrGlobalSetting()->moment_date_format }}')
@@ -522,8 +542,8 @@ $('#save-signature').click(function () {
                 success: function(response) {
                     $('#signature-modal').modal('hide');
                    setTimeout(() => {
-                    window.close();
-                   }, 3000);
+                    history.back();
+                   }, 2000);
                 }
             });
 });

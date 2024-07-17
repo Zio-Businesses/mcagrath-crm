@@ -321,7 +321,8 @@
                                     <span class="text-grey text-capitalize">@lang('app.menu.vendor')</span><br>
                                     
                                     {{ $contract->vendor_name }}<br/>
-                                    {!! nl2br($contract->street_address) !!}
+                                    {!! nl2br($contract->street_address) !!}<br/>
+                                    {{ $contract->city }}, {{ $contract->state }}, {{$contract->zip_code}}<br/>
                                 </p>
 
                             </td>
@@ -529,8 +530,8 @@ Neither party may assign or transfer this Agreement without the prior written co
                 <h4 class="name" style="margin-bottom: 20px;">@lang('Vendor Signature')</h4>
                 <img src="{{ $contract->secondary_image_url }}" style="width: 200px;">
                 <p>Vendor Name:- {{ $contract->vendor_name }}<br>
-                    Place:- {{ $contract->city }}<br>
-                    Date:- {{ $contract->signed_date}}
+                   Company Name:- {{$contract->company_name}}<br>
+                   Date:- {{ $contract->signed_date}}
                 </p>
             </div>
         @endif

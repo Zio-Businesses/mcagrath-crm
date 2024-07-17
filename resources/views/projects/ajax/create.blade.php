@@ -12,22 +12,24 @@
     <div class="col-sm-12">
         <x-form id="save-project-data-form">
             <div class="add-client bg-white rounded">
-                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
-                    @lang('app.projectDetails')</h4>
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
+                    <a href="javascript:;" class="text-dark toggle-main-project-details">
+                    <i class="fa fa-chevron-up mr-2"></i>@lang('app.projectDetails')</a>
+                </h4>
                 <input type="hidden" name="template_id" value="{{ $projectTemplate->id ?? '' }}">
-                <div class="row p-20">
+                <div class="row p-20" id="main-project-details">
                     <div class="col-lg-4 col-md-4">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.taskShortCode')"
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Work Order #')"
                                       fieldName="project_code" fieldRequired="true" fieldId="project_code"
-                                      :fieldPlaceholder="__('placeholders.writeshortcode')" :fieldValue="$project ? $project->project_short_code : ''"/>
+                                      :fieldPlaceholder="__('Project unique work order')" :fieldValue="$project ? $project->project_short_code : ''"/>
                     </div>
 
-                    <div class="col-lg-8 col-md-8">
+                    <!-- <div class="col-lg-8 col-md-8">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.projects.projectName')"
                                       fieldName="project_name" fieldRequired="true" fieldId="project_name"
                                       :fieldPlaceholder="__('placeholders.project')"
                                       :fieldValue="($project ? $project->project_name : (($projectTemplate) ? $projectTemplate->project_name : ''))"/>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-6 col-lg-4">
                         <x-forms.datepicker fieldId="start_date" fieldRequired="true"
@@ -133,7 +135,7 @@
                         </div>
                     @endif
 
-                    @if ($addProjectNotePermission == 'all' || $addProjectNotePermission == 'added')
+                    <!-- @if ($addProjectNotePermission == 'all' || $addProjectNotePermission == 'added')
                         <div class="col-md-12 col-lg-6">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="notes"
@@ -144,7 +146,7 @@
                                           class="d-none">{!! $projectTemplate->notes ?? '' !!} {!! ($project) ? $project->notes : '' !!}</textarea>
                             </div>
                         </div>
-                    @endif
+                    @endif -->
 
                     @if ($addPublicProjectPermission == 'all')
                         <div class="col-sm-12">
@@ -406,10 +408,10 @@
         var userValues = @json($userData);
         quillMention(userValues, '#project_summary');
 
-        if (add_project_note_permission == 'all' || add_project_note_permission == 'added') {
+        // if (add_project_note_permission == 'all' || add_project_note_permission == 'added') {
 
-            quillImageLoad('#notes');
-        }
+        //     quillImageLoad('#notes');
+        // }
 
 
         const dp1 = datepicker('#start_date', {
@@ -449,11 +451,11 @@
                         }).get();
             $('#mentionUserId').val(mention_user_id.join(','));
 
-            if (add_project_note_permission == 'all' || add_project_note_permission == 'added') {
+            // if (add_project_note_permission == 'all' || add_project_note_permission == 'added') {
 
-                note = document.getElementById('notes').children[0].innerHTML;
-                document.getElementById('notes-text').value = note;
-            }
+            //     note = document.getElementById('notes').children[0].innerHTML;
+            //     document.getElementById('notes-text').value = note;
+            // }
             const url = "{{ route('projects.store') }}";
             var data = $('#save-project-data-form').serialize() + "&projectID={{$project ? $project->id : ''}}";
 
@@ -497,6 +499,11 @@
         $('.toggle-project-other-details').click(function () {
             $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
             $('#other-project-details').toggleClass('d-none');
+        });
+
+        $('.toggle-main-project-details').click(function () {
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#main-project-details').toggleClass('d-none');
         });
 
         $('#is_public').change(function () {

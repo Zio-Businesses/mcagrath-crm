@@ -223,7 +223,7 @@
                                     fieldName="payment_methods[]" 
                                     fieldId="credit_card" 
                                     fieldValue="credit_card"
-                                    :checked="in_array('credit_card', $paymentMethods)"/>
+                                    :checked="in_array('credit card', $paymentMethods)"/>
                                 </div>
                                 <div class="col-lg-4">
                                     <x-forms.checkbox 
@@ -302,7 +302,25 @@
         });
         $('#save-form').click(function() {
             const url = "{{ route('vendors.update', $vendor->id) }}";
-       
+            var checkboxes = document.querySelectorAll('input[name="payment_methods[]"]');
+            var isChecked = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+            if (!isChecked) {
+                $('#signature-modal').modal('hide');
+                Swal.fire({
+                icon: 'error',
+                text: '{{ __('Payment Method Required') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+                });
+                return false;
+            }
             $.easyAjax({
                 url: url,
                 container: '#save-data-form',

@@ -17,6 +17,7 @@ use App\Models\LanguageSetting;
 use App\Models\UniversalSearch;
 use App\Models\ClientSubCategory;
 use App\Models\PurposeConsentUser;
+use Carbon\Carbon;
 use App\DataTables\VendorTrackDataTable;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorContract;
@@ -57,7 +58,7 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=companyToYmd($request->start_date);
-            $leadContact->contract_end=$request->end_date==null?$request->end_date:companyToYmd($request->end_date);
+            $leadContact->contract_end=companyToYmd($request->end_date);
             $leadContact->v_status='work in progress';
             $leadContact->created_by=user()->name;
             $leadContact->save();
@@ -125,19 +126,20 @@ class LeadVendorController extends AccountBaseController
         return view('vendortrack.create', $this->data);
 
     }
-    public function update(Request $request, $id)
+    public function update(StoreVendorRequest $request, $id)
     {
         $v_date = Vendor::find($id);
-    
         DB::table('vendors')
         ->where('id', $id)
         ->update([
         
             'vendor_name' => $request->vendor_name,
             'vendor_email'=>$request->vendor_email,
-            'vendor_number'=>$request->vendor_number,
-            'contract_start'=>$v_date->contract_start==$request->contract_start? $request->contract_start:companyToYmd($request->contract_start),
-            'contract_end'=>$v_date->contract_end==$request->contract_end? $request->contract_end:companyToYmd($request->contract_end),
+            'vendor_number'=>$request->vendor_mobile,
+            // 'contract_start'=>$v_date->contract_start==$request->start_date? $request->start_date:Carbon::parse(trim($request->start_date))->format('Y-m-d'),
+            // 'contract_end'=>$v_date->contract_end==$request->end_date? $request->end_date:Carbon::parse(trim($request->end_date))->format('Y-m-d'),
+            'contract_start'=>$v_date->contract_start==$request->start_date? $request->start_date:companyToYmd($request->start_date),
+            'contract_end'=>$v_date->contract_end==$request->end_date? $request->end_date:companyToYmd($request->end_date),
             'v_status'=>$request->v_status,
             
         ]);

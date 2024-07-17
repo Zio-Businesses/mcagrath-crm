@@ -29,7 +29,6 @@ class StoreProject extends CoreRequest
         $setting = company();
 
         $rules = [
-            'project_name' => 'required|max:150',
             'start_date' => 'required|date_format:"' . $setting->date_format . '"',
             'hours_allocated' => 'nullable|numeric',
             'client_id' => 'requiredIf:client_view_task,true',
