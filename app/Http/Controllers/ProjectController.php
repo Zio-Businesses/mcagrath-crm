@@ -46,6 +46,7 @@ use App\Models\SubTaskFile;
 use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\TaskboardColumn;
+use App\Models\ProjectSubCategory;
 use App\Models\Team;
 use App\Models\User;
 use App\Scopes\ActiveScope;
@@ -209,6 +210,7 @@ class ProjectController extends AccountBaseController
         $this->pageTitle = __('app.addProject');
         $this->clients = User::allClients(null, false, ($this->addPermission == 'all' ? 'all' : null));
         $this->categories = ProjectCategory::all();
+        $this->subcategories=ProjectSubCategory::all();
         $this->templates = ProjectTemplate::all();
         $this->currencies = Currency::all();
         $this->teams = Team::all();
@@ -285,7 +287,7 @@ class ProjectController extends AccountBaseController
             $deadline = !$request->has('without_deadline') ? companyToYmd($request->deadline) : null;
 
             $project = new Project();
-            $project->project_name = $request->project_name;
+            $project->project_name = '--';
             $project->project_short_code = $request->project_code;
             $project->start_date = $startDate;
             $project->deadline = $deadline;
@@ -500,7 +502,7 @@ class ProjectController extends AccountBaseController
     public function update(UpdateProject $request, $id)
     {
         $project = Project::findOrFail($id);
-        $project->project_name = $request->project_name;
+        $project->project_name = '--';
         $project->project_short_code = $request->project_code;
 
         $project->project_summary = trim_editor($request->project_summary);
@@ -657,7 +659,7 @@ class ProjectController extends AccountBaseController
            || (($this->viewPermission == 'none') && (!is_null(($this->project->mentionProject))) && in_array(user()->id, $mentionIds))
         ));
 
-        $this->pageTitle = $this->project->project_name;
+        $this->pageTitle = $this->project->project_short_code;
 
         if ($this->project->getCustomFieldGroupsWithFields()) {
             $this->fields = $this->project->getCustomFieldGroupsWithFields()->fields;

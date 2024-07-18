@@ -91,6 +91,7 @@ use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProjectCalendarController;
 use App\Http\Controllers\ProjectCategoryController;
+use App\Http\Controllers\ProjectSubCategoryController;
 use App\Http\Controllers\ProjectTemplateController;
 use App\Http\Controllers\TimelogCalendarController;
 use App\Http\Controllers\AttendanceReportController;
@@ -220,6 +221,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     /* PROJECTS */
     Route::resource('projectCategory', ProjectCategoryController::class);
+    Route::resource('projectSubCategory', ProjectSubCategoryController::class);
     Route::post('projects/change-status', [ProjectController::class, 'changeProjectStatus'])->name('projects.change_status');
 
     Route::group(

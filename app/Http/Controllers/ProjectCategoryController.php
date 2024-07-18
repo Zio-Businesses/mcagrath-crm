@@ -61,7 +61,7 @@ class ProjectCategoryController extends AccountBaseController
         ProjectCategory::destroy($id);
         $categories = ProjectCategory::all();
         $options = BaseModel::options($categories, null, 'category_name');
-
+      
         return Reply::successWithData(__('messages.deleteSuccess'), ['data' => $options]);
     }
 

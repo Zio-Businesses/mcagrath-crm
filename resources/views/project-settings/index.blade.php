@@ -29,6 +29,12 @@
                                aria-selected="true">@lang('modules.projects.projectCategory')
                             </a>
 
+                            <a class="nav-item nav-link f-15 sub-category"
+                               href="{{ route('project-settings.index') }}?tab=sub-category" role="tab"
+                               aria-controls="nav-sub-category"
+                               aria-selected="true">@lang('modules.projects.projectsubcategory')
+                            </a>
+
                         </div>
                     </nav>
                 </div>
@@ -46,6 +52,11 @@
                         <x-forms.button-primary icon="plus" id="addProjectCategory"
                                     class="category-btn d-none mb-2 actionBtn"> @lang('modules.statusFields.addCategory')
                         </x-forms.button-primary>
+
+                        <x-forms.button-primary icon="plus" id="addProjectSubCategory"
+                                    class="sub-category-btn d-none mb-2 actionBtn"> @lang('Add Sub-Category')
+                        </x-forms.button-primary>
+                        
                     </div>
 
                 </div>
@@ -73,7 +84,6 @@
             $(this).addClass('active');
 
             const requestUrl = this.href;
-
             $.easyAjax({
                 url: requestUrl,
                 blockUI: true,

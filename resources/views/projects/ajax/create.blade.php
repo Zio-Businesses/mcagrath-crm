@@ -44,14 +44,14 @@
                                             :fieldValue="($project ? (($project->deadline) ?$project->deadline->format(company()->date_format) : '') : '')" />
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
+                    <!-- <div class="col-md-6 col-lg-4">
                         <div class="form-group">
                             <div class="d-flex mt-5">
                                 <x-forms.checkbox fieldId="without_deadline"
                                 :checked="($project && $project->deadline == null) ? true : false" :fieldLabel="__('modules.projects.withoutDeadline')"  fieldName="without_deadline"/>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-4">
                         <x-forms.label class="my-3" fieldId="category_id"
@@ -78,6 +78,24 @@
                                             data-toggle="tooltip" data-original-title="{{__('modules.projectCategory.addProjectCategory') }}">@lang('app.add')</button>
                                 </x-slot>
                             @endif
+                        </x-forms.input-group>
+                    </div>
+
+                    <div class="col-md-4">
+                        <x-forms.label class="my-3" fieldId="sub_category"
+                                       :fieldLabel="__('Project Sub-Category')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="sub_category" id="project_sub_category"
+                                    data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($subcategories as $category)
+                                    <option
+                                        value="{{ $category->sub_category }}">
+                                        {{ $category->sub_category }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </x-forms.input-group>
                     </div>
 
@@ -115,7 +133,7 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="project_summary"
-                                               :fieldLabel="__('modules.projects.projectSummary')">
+                                               :fieldLabel="__('Client Instructions')">
                                 </x-forms.label>
                                 <div id="project_summary">{!! $projectTemplate->project_summary ?? '' !!}{!! ($project) ? $project->project_summary : '' !!}</div>
                                 <textarea name="project_summary" id="project_summary-text"
@@ -126,7 +144,7 @@
                         <div class="col-md-12 col-lg-12">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="project_summary"
-                                               :fieldLabel="__('modules.projects.projectSummary')">
+                                               :fieldLabel="__('Client Instructions')">
                                 </x-forms.label>
                                 <div id="project_summary">{!! $projectTemplate->project_summary ?? '' !!}{!! ($project) ? $project->project_summary : '' !!}</div>
                                 <textarea name="project_summary" id="project_summary-text"

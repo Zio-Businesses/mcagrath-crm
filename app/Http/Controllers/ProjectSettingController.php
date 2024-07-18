@@ -6,9 +6,11 @@ use App\Helper\Reply;
 use App\Models\Project;
 use App\Models\ProjectSetting;
 use App\Models\ProjectCategory;
+use App\Models\ProjectSubCategory;
 use App\Models\ProjectStatusSetting;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
+use App\Http\Requests\Project\StoreProjectSubCategory;
 use App\Http\Requests\ProjectSetting\UpdateProjectSetting;
 
 class ProjectSettingController extends AccountBaseController
@@ -39,6 +41,10 @@ class ProjectSettingController extends AccountBaseController
         case 'category':
             $this->projectCategory = ProjectCategory::all();
             $this->view = 'project-settings.ajax.category';
+            break;
+        case 'sub-category':
+            $this->projectSubCategory = ProjectSubCategory::all();
+            $this->view = 'project-settings.ajax.sub-category';
             break;
         default:
             $this->projectSetting = ProjectSetting::first();
@@ -162,6 +168,11 @@ class ProjectSettingController extends AccountBaseController
 
         return view('project-settings.create-project-category-settings-modal', $this->data);
     }
+    public function createSubCategory()
+    {
+        return view('project-settings.create-project-sub-category-settings-modal', $this->data);
+    }
+
 
     public function saveProjectCategory(StoreProjectCategory $request)
     {
@@ -172,6 +183,15 @@ class ProjectSettingController extends AccountBaseController
         $category->category_name = $request->category_name;
         $category->save();
 
+        return Reply::success(__('messages.recordSaved'));
+    }
+    
+    public function saveProjectSubCategory(StoreProjectSubCategory $request)
+    {
+       
+        $subcategory = new ProjectSubCategory();
+        $subcategory->sub_category = $request->sub_category;
+        $subcategory->save();
         return Reply::success(__('messages.recordSaved'));
     }
 

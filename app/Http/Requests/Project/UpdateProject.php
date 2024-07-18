@@ -28,7 +28,7 @@ class UpdateProject extends CoreRequest
     public function rules()
     {
         $rules = [
-            'project_name' => 'required|max:150',
+            // 'project_name' => 'required|max:150',
             'start_date' => 'required',
             'hours_allocated' => 'nullable|numeric',
             'client_id' => 'requiredIf:client_view_task,true',

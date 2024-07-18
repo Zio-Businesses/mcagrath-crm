@@ -128,7 +128,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::resource('replyTemplates', TicketReplyTemplatesController::class);
     /* End Ticket settings routes */
     Route::get('project-settings/create-category', [ProjectSettingController::class, 'createCategory'])->name('project-settings.createCategory');
+    Route::get('project-settings/create-subcategory', [ProjectSettingController::class, 'createSubCategory'])->name('project-settings.createSubCategory');
     Route::post('project-settings/save-project-category', [ProjectSettingController::class, 'saveProjectCategory'])->name('project-settings.saveProjectCategory');
+    Route::post('project-settings/save-project-subcategory', [ProjectSettingController::class, 'saveProjectSubCategory'])->name('project-settings.saveProjectSubCategory');
     Route::resource('project-settings', ProjectSettingController::class);
     Route::post('project-settings/{id?}', [ProjectSettingController::class, 'statusUpdate'])->name('project-settings.statusUpdate');
     Route::put('project-settings/change-status/{id?}', [ProjectSettingController::class, 'changeStatus'])->name('project-settings.changeStatus');

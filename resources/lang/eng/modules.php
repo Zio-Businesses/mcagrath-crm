@@ -358,6 +358,7 @@ return array(
     'projects' => array(
         'addNewProject' => 'Add New Project',
         'projectName' => 'Project Name',
+        'projectsubcategory'=>'Project Sub-Category',
         'projectMembers' => 'Project Members',
         'createTitle' => 'Add Project',
         'selectClient' => 'Select Client',

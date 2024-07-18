@@ -4,16 +4,16 @@
         <x-table class="table-bordered">
             <x-slot name="thead">
                 <th>#</th>
-                <th width="35%">@lang('modules.projectCategory.categoryName')</th>
+                <th width="35%">@lang('Sub-Category Name')</th>
                 <th class="text-right">@lang('app.action')</th>
             </x-slot>
 
-            @forelse($projectCategory as $key => $category)
+            @forelse($projectSubCategory as $key => $category)
                 <tr id="category-{{ $category->id }}">
                     <td>
                         {{ $key + 1 }}
                     </td>
-                    <td> {{ $category->category_name }} </td>
+                    <td> {{ $category->sub_category }} </td>
                     <td class="text-right">
                         <div class="task_view">
                             <a href="javascript:;" data-category-id="{{ $category->id }}"
@@ -43,8 +43,8 @@
 
 <script>
 
-    $('#addProjectCategory').click(function () {
-        var url = "{{ route('project-settings.createCategory') }}";
+    $('#addProjectSubCategory').click(function () {
+        var url = "{{ route('project-settings.createSubCategory') }}";
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
     });
@@ -53,7 +53,7 @@
 
         var id = $(this).data('category-id');
 
-        var url = "{{ route('projectCategory.edit', ':id') }}";
+        var url = "{{ route('projectSubCategory.edit', ':id') }}";
         url = url.replace(':id', id);
 
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
@@ -83,12 +83,12 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-
-                var url = "{{ route('projectCategory.destroy', ':id') }}";
+                
+                var url = "{{ route('projectSubCategory.destroy', ':id') }}";
                 url = url.replace(':id', id);
 
                 var token = "{{ csrf_token() }}";
-
+                console.log(token);
                 $.easyAjax({
                     type: 'POST',
                     url: url,
