@@ -48,6 +48,18 @@
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
     });
+    $('#importProjectSubCategory').click(function () {
+        var url = "{{ route('project-settings.importSubCategory') }}";
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+    });
+    $('#exportProjectSubCategory').click(function () {
+        var url = "{{ route('project-settings.exportProjectSubCategory') }}";
+        $.easyAjax({
+                    type: 'GET',
+                    url: url,
+            });
+    });
 
     $('.editProjectCategory').click(function () {
 
@@ -88,7 +100,6 @@
                 url = url.replace(':id', id);
 
                 var token = "{{ csrf_token() }}";
-                console.log(token);
                 $.easyAjax({
                     type: 'POST',
                     url: url,

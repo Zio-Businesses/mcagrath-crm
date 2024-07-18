@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Helper\Reply;
 use App\Models\ProjectSubCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
+use App\Imports\SubCategoriesImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\DataTables;
+use App\Exports\SubCategoriesExport;
+use Illuminate\Support\Facades\Log;
 
 class ProjectSubCategoryController extends AccountBaseController
 {
@@ -28,4 +33,21 @@ class ProjectSubCategoryController extends AccountBaseController
         ProjectSubCategory::destroy($id);
         return Reply::success(__('messages.deleteSuccess'));
     }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx'
+        ]);
+
+        Excel::import(new SubCategoriesImport, $request->file('file'));
+
+        return Reply::success(__('messages.updateSuccess'));
+    }
+    
+    public function export()
+    {
+        Log::info('demo');
+        return Excel::download(new SubCategoriesExport, 'subcategories.xlsx');
+    }
+
 }

@@ -56,7 +56,12 @@
                         <x-forms.button-primary icon="plus" id="addProjectSubCategory"
                                     class="sub-category-btn d-none mb-2 actionBtn"> @lang('Add Sub-Category')
                         </x-forms.button-primary>
-                        
+                        <x-forms.button-secondary icon="file-upload" id="importProjectSubCategory"
+                                    class="sub-category-btn d-none mb-2 actionBtn ml-2"> @lang('Import')
+                        </x-forms.button-secondary>
+                        <x-forms.button-secondary id="exportProjectSubCategory"
+                                    class="sub-category-btn d-none mb-2 actionBtn ml-2"><i class="fa fa-file-export"></i> @lang('Export')
+                        </x-forms.button-secondary>
                     </div>
 
                 </div>

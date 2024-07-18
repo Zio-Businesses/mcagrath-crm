@@ -172,6 +172,10 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.create-project-sub-category-settings-modal', $this->data);
     }
+    public function importSubCategory()
+    {
+        return view('project-settings.import-project-sub-category-settings-modal', $this->data);
+    }
 
 
     public function saveProjectCategory(StoreProjectCategory $request)

@@ -129,6 +129,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     /* End Ticket settings routes */
     Route::get('project-settings/create-category', [ProjectSettingController::class, 'createCategory'])->name('project-settings.createCategory');
     Route::get('project-settings/create-subcategory', [ProjectSettingController::class, 'createSubCategory'])->name('project-settings.createSubCategory');
+    Route::get('project-settings/import-subcategory', [ProjectSettingController::class, 'importSubCategory'])->name('project-settings.importSubCategory');
     Route::post('project-settings/save-project-category', [ProjectSettingController::class, 'saveProjectCategory'])->name('project-settings.saveProjectCategory');
     Route::post('project-settings/save-project-subcategory', [ProjectSettingController::class, 'saveProjectSubCategory'])->name('project-settings.saveProjectSubCategory');
     Route::resource('project-settings', ProjectSettingController::class);
