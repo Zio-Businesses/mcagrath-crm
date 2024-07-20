@@ -15,7 +15,7 @@ class SubCategoriesExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return ProjectSubCategory::all();
+        return ProjectSubCategory::select('sub_category')->get();
     }
 
     /**
@@ -27,11 +27,7 @@ class SubCategoriesExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'id',
-            'created_at',
-            'updated_at',
-            'sub_category',
-            
+           'sub_category',
         ];
     }
 

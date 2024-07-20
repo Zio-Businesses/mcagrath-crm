@@ -129,9 +129,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     /* End Ticket settings routes */
     Route::get('project-settings/create-category', [ProjectSettingController::class, 'createCategory'])->name('project-settings.createCategory');
     Route::get('project-settings/create-subcategory', [ProjectSettingController::class, 'createSubCategory'])->name('project-settings.createSubCategory');
+    Route::get('project-settings/create-type', [ProjectSettingController::class, 'createType'])->name('project-settings.createType');
+    Route::get('project-settings/create-priority', [ProjectSettingController::class, 'createPriority'])->name('project-settings.createPriority');
+    Route::get('project-settings/create-property-type', [ProjectSettingController::class, 'createPropertyType'])->name('project-settings.createPropertyType');
+    Route::get('project-settings/create-occupancy-status', [ProjectSettingController::class, 'createOccupancyStatus'])->name('project-settings.createOccupancyStatus');
     Route::get('project-settings/import-subcategory', [ProjectSettingController::class, 'importSubCategory'])->name('project-settings.importSubCategory');
     Route::post('project-settings/save-project-category', [ProjectSettingController::class, 'saveProjectCategory'])->name('project-settings.saveProjectCategory');
     Route::post('project-settings/save-project-subcategory', [ProjectSettingController::class, 'saveProjectSubCategory'])->name('project-settings.saveProjectSubCategory');
+    Route::post('project-settings/save-project-type', [ProjectSettingController::class, 'saveProjectType'])->name('project-settings.saveProjectType');
+    Route::post('project-settings/save-project-priority', [ProjectSettingController::class, 'saveProjectPriority'])->name('project-settings.saveProjectPriority');
+    Route::post('project-settings/save-property-type', [ProjectSettingController::class, 'savePropertyType'])->name('project-settings.savePropertyType');
+    Route::post('project-settings/save-occupancy-status', [ProjectSettingController::class, 'saveOccupancyStatus'])->name('project-settings.saveOccupancyStatus');
     Route::resource('project-settings', ProjectSettingController::class);
     Route::post('project-settings/{id?}', [ProjectSettingController::class, 'statusUpdate'])->name('project-settings.statusUpdate');
     Route::put('project-settings/change-status/{id?}', [ProjectSettingController::class, 'changeStatus'])->name('project-settings.changeStatus');

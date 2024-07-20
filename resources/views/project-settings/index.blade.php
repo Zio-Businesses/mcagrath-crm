@@ -2,6 +2,7 @@
 
 @section('content')
 
+
     <!-- SETTINGS START -->
     <div class="w-100 d-flex ">
 
@@ -11,6 +12,7 @@
             <x-slot name="header">
                 <div class="s-b-n-header" id="tabs">
                     <nav class="tabs px-4 border-bottom-grey">
+        
                         <div class="nav" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link f-15 active sendReminder"
                                href="{{ route('project-settings.index') }}" role="tab"
@@ -35,7 +37,29 @@
                                aria-selected="true">@lang('modules.projects.projectsubcategory')
                             </a>
 
+                            <a class="nav-item nav-link f-15 type"
+                               href="{{ route('project-settings.index') }}?tab=type" role="tab"
+                               aria-controls="nav-type"
+                               aria-selected="true">@lang('Project Type')
+                            </a>
+                            <a class="nav-item nav-link f-15 priority"
+                               href="{{ route('project-settings.index') }}?tab=priority" role="tab"
+                               aria-controls="nav-priority"
+                               aria-selected="true">@lang('Project Priority')
+                            </a>
+                            <a class="nav-item nav-link f-15 propertytype"
+                               href="{{ route('project-settings.index') }}?tab=propertytype" role="tab"
+                               aria-controls="nav-propertytype"
+                               aria-selected="true">@lang('Property Type')
+                            </a> <a class="nav-item nav-link f-15 occupancystatus"
+                               href="{{ route('project-settings.index') }}?tab=occupancystatus" role="tab"
+                               aria-controls="nav-occupancystatus"
+                               aria-selected="true">@lang('Occupancy Status')
+                            </a>
+
+
                         </div>
+                      
                     </nav>
                 </div>
             </x-slot>
@@ -59,9 +83,25 @@
                         <x-forms.button-secondary icon="file-upload" id="importProjectSubCategory"
                                     class="sub-category-btn d-none mb-2 actionBtn ml-2"> @lang('Import')
                         </x-forms.button-secondary>
-                        <x-forms.button-secondary id="exportProjectSubCategory"
-                                    class="sub-category-btn d-none mb-2 actionBtn ml-2"><i class="fa fa-file-export"></i> @lang('Export')
-                        </x-forms.button-secondary>
+                        <!-- <x-forms.button-secondary id="exportProjectSubCategory"
+                                    class="sub-category-btn d-none mb-2 actionBtn ml-2"> @lang('Export')
+                        </x-forms.button-secondary> -->
+                        
+                        <x-forms.link-secondary :link="route('project-settings.exportProjectSubCategory')" class="sub-category-btn d-none mb-2 actionBtn mt-1 ml-2" >
+                        <i class="fa fa-file-export"></i> @lang('Export')
+                        </x-forms.link-secondary>
+                        <x-forms.button-primary icon="plus" id="addProjectType"
+                                    class="type-btn d-none mb-2 actionBtn"> @lang('Add Type')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addProjectPriority"
+                                    class="priority-btn d-none mb-2 actionBtn"> @lang('Add Priority')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addPropertyType"
+                                    class="propertytype-btn d-none mb-2 actionBtn"> @lang('Add Property Type')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addOccupancyStatus"
+                                    class="occupancystatus-btn d-none mb-2 actionBtn"> @lang('Add Occupancy Status')
+                        </x-forms.button-primary>
                     </div>
 
                 </div>
@@ -70,7 +110,7 @@
             @include($view)
 
         </x-setting-card>
-
+        
     </div>
     <!-- SETTINGS END -->
 @endsection

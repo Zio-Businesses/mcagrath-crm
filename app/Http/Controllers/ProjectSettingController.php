@@ -3,16 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Reply;
+use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\ProjectSetting;
 use App\Models\ProjectCategory;
 use App\Models\ProjectSubCategory;
 use App\Models\ProjectStatusSetting;
+use App\Models\ProjectType;
+use App\Models\ProjectPriority;
+use App\Models\PropertyType;
+use App\Models\OccupancyStatus;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
 use App\Http\Requests\ProjectSetting\UpdateProjectSetting;
-
+use App\Http\Requests\Project\StoreProjectType;
+use App\Http\Requests\Project\StoreProjectPriority;
+use App\Http\Requests\Project\StorePropertyType;
+use App\Http\Requests\Project\StoreOccupancyStatus;
+use Illuminate\Support\Facades\Log;
 class ProjectSettingController extends AccountBaseController
 {
 
@@ -46,6 +55,23 @@ class ProjectSettingController extends AccountBaseController
             $this->projectSubCategory = ProjectSubCategory::all();
             $this->view = 'project-settings.ajax.sub-category';
             break;
+        case 'type':
+            $this->projectType = ProjectType::all();
+            $this->view = 'project-settings.ajax.type';
+            break;
+        case 'priority':
+            $this->projectPriority = ProjectPriority::all();
+            $this->view = 'project-settings.ajax.priority';
+            break;  
+        case 'propertytype':
+                $this->propertyType = PropertyType::all();
+                $this->view = 'project-settings.ajax.propertytype';
+                break;    
+         case 'occupancystatus':
+                $this->occupancyStatus = OccupancyStatus::all();
+                $this->view = 'project-settings.ajax.occupancystatus';
+                break; 
+            
         default:
             $this->projectSetting = ProjectSetting::first();
             $this->view = 'project-settings.ajax.sendReminder';
@@ -176,8 +202,23 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.import-project-sub-category-settings-modal', $this->data);
     }
-
-
+    public function createType()
+    {
+        return view('project-settings.create-project-type-settings-modal', $this->data);
+    }
+    public function createPriority()
+    {
+        return view('project-settings.create-project-priority-settings-modal', $this->data);
+    }
+    public function createPropertyType()
+    {
+        return view('project-settings.create-property-type-settings-modal', $this->data);
+    }
+    public function createOccupancyStatus()
+    {
+        return view('project-settings.create-occupancy-status-settings-modal', $this->data);
+    }
+    
     public function saveProjectCategory(StoreProjectCategory $request)
     {
         $this->addPermission = user()->permission('manage_project_category');
@@ -199,4 +240,36 @@ class ProjectSettingController extends AccountBaseController
         return Reply::success(__('messages.recordSaved'));
     }
 
+    public function saveProjectType(StoreProjectType $request)
+    {
+       
+        $type = new ProjectType();
+        $type->type = $request->type;
+        $type->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+    public function saveProjectPriority(StoreProjectPriority $request)
+    {
+       
+        $priority = new ProjectPriority();
+        $priority->priority = $request->priority;
+        $priority->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+    public function savePropertyType(StorePropertyType $request)
+    {
+       
+        $pt = new PropertyType();
+        $pt->property_type = $request->property_type;
+        $pt->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+    public function saveOccupancyStatus(StoreOccupancyStatus $request)
+    {
+       
+        $os = new OccupancyStatus();
+        $os->occupancy_status = $request->occupancy_status;
+        $os->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
 }

@@ -492,7 +492,7 @@
                         $('#projectID').val(response.projectID);
                         myDropzone.processQueue();
                     } else if (typeof response.redirectUrl !== 'undefined') {
-                        window.location.href = response.redirectUrl;
+                        // window.location.href = response.redirectUrl;
                     }
                 }
             });

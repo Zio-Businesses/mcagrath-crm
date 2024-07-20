@@ -46,7 +46,7 @@ class ProjectSubCategoryController extends AccountBaseController
     
     public function export()
     {
-        Log::info('demo');
+        
         return Excel::download(new SubCategoriesExport, 'subcategories.xlsx');
     }
 
