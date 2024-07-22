@@ -6,7 +6,11 @@
     $addProjectMemberPermission = user()->permission('add_project_members');
     $addProjectNotePermission = user()->permission('add_project_note');
 @endphp
-
+<style>
+        .tenant-fields {
+            display: none;
+        }
+</style>
 <link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
 <div class="row">
     <div class="col-sm-12">
@@ -18,42 +22,59 @@
                 </h4>
                 <input type="hidden" name="template_id" value="{{ $projectTemplate->id ?? '' }}">
                 <div class="row p-20" id="main-project-details">
-                    <div class="col-lg-4 col-md-4">
+                    <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Work Order #')"
                                       fieldName="project_code" fieldRequired="true" fieldId="project_code"
                                       :fieldPlaceholder="__('Project unique work order')" :fieldValue="$project ? $project->project_short_code : ''"/>
                     </div>
+                    <div class="col-md-3 @if (!isset($client) && is_null($client)) py-3 @endif">
+                        @if (isset($client) && !is_null($client))
+                            <x-forms.label class="my-3" fieldId="client_id" :fieldLabel="__('app.client')">
+                            </x-forms.label>
 
-                    <!-- <div class="col-lg-8 col-md-8">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.projects.projectName')"
-                                      fieldName="project_name" fieldRequired="true" fieldId="project_name"
-                                      :fieldPlaceholder="__('placeholders.project')"
-                                      :fieldValue="($project ? $project->project_name : (($projectTemplate) ? $projectTemplate->project_name : ''))"/>
-                    </div> -->
-
-                    <div class="col-md-6 col-lg-4">
-                        <x-forms.datepicker fieldId="start_date" fieldRequired="true"
-                                            :fieldLabel="__('modules.projects.startDate')" fieldName="start_date"
-                                            :fieldPlaceholder="__('placeholders.date')" :fieldValue="$project ? $project->start_date->format(company()->date_format) : ''"/>
+                            <input type="hidden" name="client_id" id="client_id" value="{{ $client->id }}">
+                            <input type="text" value="{{ $client->name_salutation }}"
+                                   class="form-control height-35 f-15 readonly-background" readonly>
+                        @else
+                            <x-client-selection-dropdown :clients="$clients" fieldRequired="false"
+                                                         :selected="request('default_client') ?? null"/>
+                        @endif
                     </div>
-
-                    <div class="col-md-6 col-lg-4" id="deadlineBox">
-                        <x-forms.datepicker fieldId="deadline" fieldRequired="true"
-                                            :fieldLabel="__('modules.projects.deadline')" fieldName="deadline"
-                                            :fieldPlaceholder="__('placeholders.date')"
-                                            :fieldValue="($project ? (($project->deadline) ?$project->deadline->format(company()->date_format) : '') : '')" />
+                    <div class="col-md-3">
+                        <x-forms.label class="mb-12 mt-3" fieldId="type"
+                                       :fieldLabel="__('Project Type')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="type" id="type"
+                                    data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($projecttype as $category)
+                                    <option
+                                        value="{{ $category->type }}">
+                                        {{ $category->type }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
                     </div>
-
-                    <!-- <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <div class="d-flex mt-5">
-                                <x-forms.checkbox fieldId="without_deadline"
-                                :checked="($project && $project->deadline == null) ? true : false" :fieldLabel="__('modules.projects.withoutDeadline')"  fieldName="without_deadline"/>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <x-forms.label class="mb-12 mt-3" fieldId="priority"
+                                       :fieldLabel="__('Priority')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="priority" id="priority"
+                                    data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($projectpriority as $category)
+                                    <option
+                                        value="{{ $category->priority}}">
+                                        {{ $category->priority }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
+                    <div class="col-md-3">
                         <x-forms.label class="my-3" fieldId="category_id"
                                        :fieldLabel="__('modules.projects.projectCategory')">
                         </x-forms.label>
@@ -81,12 +102,12 @@
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <x-forms.label class="my-3" fieldId="sub_category"
                                        :fieldLabel="__('Project Sub-Category')">
                         </x-forms.label>
                         <x-forms.input-group>
-                            <select class="form-control select-picker" name="sub_category" id="project_sub_category"
+                            <select class="form-control select-picker" name="sub_category" id="sub_category"
                                     data-live-search="true">
                                 <option value="">--</option>
                                 @foreach ($subcategories as $category)
@@ -98,41 +119,23 @@
                             </select>
                         </x-forms.input-group>
                     </div>
-
-                    @if (!in_array('client', user_roles()))
-                        <div class="col-md-4">
-                            <x-forms.label class="my-3" fieldId="department" :fieldLabel="__('app.department')">
-                            </x-forms.label>
-                            <x-forms.input-group>
-                                <select class="form-control select-picker" name="team_id" id="employee_department"
-                                        data-live-search="true">
-                                    <option value="">--</option>
-                                    @foreach ($teams as $team)
-                                        <option @if ($project && $project->team_id == $team->id) selected @endif value="{{ $team->id }}">{{ $team->team_name }}</option>
-                                    @endforeach
-                                </select>
-                            </x-forms.input-group>
-                        </div>
-                    @endif
-
-                    <div class="col-md-4 @if (!isset($client) && is_null($client)) py-3 @endif">
-                        @if (isset($client) && !is_null($client))
-                            <x-forms.label class="my-3" fieldId="client_id" :fieldLabel="__('app.client')">
-                            </x-forms.label>
-
-                            <input type="hidden" name="client_id" id="client_id" value="{{ $client->id }}">
-                            <input type="text" value="{{ $client->name_salutation }}"
-                                   class="form-control height-35 f-15 readonly-background" readonly>
-                        @else
-                            <x-client-selection-dropdown :clients="$clients" fieldRequired="false"
-                                                         :selected="request('default_client') ?? null"/>
-                        @endif
+                    <div class="col-md-3 col-lg-3">
+                        <x-forms.datepicker fieldId="start_date" fieldRequired="true"
+                                            :fieldLabel="__('Project Date')" fieldName="start_date"
+                                            :fieldPlaceholder="__('placeholders.date')" :fieldValue="$project ? $project->start_date->format(company()->date_format) : ''"/>
                     </div>
 
+                    <div class="col-md-3 col-lg-3" id="deadlineBox">
+                        <x-forms.datepicker fieldId="deadline" fieldRequired="true"
+                                            :fieldLabel="__('Due Date')" fieldName="deadline"
+                                            :fieldPlaceholder="__('placeholders.date')"
+                                            :fieldValue="($project ? (($project->deadline) ?$project->deadline->format(company()->date_format) : '') : '')" />
+                    </div>
+            
                     @if ($addProjectNotePermission == 'all' || $addProjectNotePermission == 'added')
-                        <div class="col-md-12 col-lg-6">
-                            <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="project_summary"
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group mb-12 mt-3">
+                                <x-forms.label fieldId="project_summary"
                                                :fieldLabel="__('Client Instructions')">
                                 </x-forms.label>
                                 <div id="project_summary">{!! $projectTemplate->project_summary ?? '' !!}{!! ($project) ? $project->project_summary : '' !!}</div>
@@ -142,8 +145,8 @@
                         </div>
                     @else
                         <div class="col-md-12 col-lg-12">
-                            <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="project_summary"
+                            <div class="form-group mb-12 mt-3">
+                                <x-forms.label fieldId="project_summary"
                                                :fieldLabel="__('Client Instructions')">
                                 </x-forms.label>
                                 <div id="project_summary">{!! $projectTemplate->project_summary ?? '' !!}{!! ($project) ? $project->project_summary : '' !!}</div>
@@ -152,33 +155,292 @@
                             </div>
                         </div>
                     @endif
+                    @if ($addProjectFilePermission == 'all' || $addProjectFilePermission == 'added')
+                        <div class="col-lg-12">
+                            <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2"
+                                                   :fieldLabel="__('app.menu.addFile')" fieldName="file"
+                                                   fieldId="file-upload-dropzone"/>
+                            <input type="hidden" name="projectID" id="projectID">
+                        </div>
+                    @endif
+                    <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
+                </div>
 
-                    <!-- @if ($addProjectNotePermission == 'all' || $addProjectNotePermission == 'added')
-                        <div class="col-md-12 col-lg-6">
-                            <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="notes"
-                                               :fieldLabel="__('modules.projects.note')">
-                                </x-forms.label>
-                                <div id="notes">{!! $projectTemplate->notes ?? '' !!} {!! ($project) ? $project->notes : '' !!}</div>
-                                <textarea name="notes" id="notes-text"
-                                          class="d-none">{!! $projectTemplate->notes ?? '' !!} {!! ($project) ? $project->notes : '' !!}</textarea>
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
+                    <a href="javascript:;" class="text-dark toggle-property-details"><i
+                            class="fa fa-chevron-down"></i>
+                        @lang('Property Details')</a>
+                </h4>
+
+                <div class="row p-20 d-none" id="property-details">
+                    <div class="col-lg-10 col-md-3 ">
+                        <x-forms.text class="" :fieldLabel="__('Full Property Address')"
+                                      fieldName="property_address" fieldRequired="true" fieldId="property_address"
+                                      :fieldPlaceholder="__('Property Address')" />
+                    </div>
+                    <div>
+                    <button id="autoFill" type="button"
+                                            class="btn btn-outline-secondary border-grey mt-0 mt-md-5 ml-3 ml-md-0"
+                                            data-toggle="tooltip" data-original-title="{{__('Auto Fill Other Fields') }}">@lang('Auto Fill')</button>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2 " :fieldLabel="__('Street Address')"
+                                      fieldName="street_address" fieldRequired="true" fieldId="street_address"
+                                      :fieldPlaceholder="__('Street Address')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('City')"
+                                      fieldName="city" fieldRequired="true" fieldId="city"
+                                      :fieldPlaceholder="__('City')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('State')"
+                                      fieldName="state" fieldRequired="true" fieldId="state"
+                                      :fieldPlaceholder="__('State')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Zip Code')"
+                                      fieldName="zipcode" fieldRequired="true" fieldId="zipcode"
+                                      :fieldPlaceholder="__('Zip Code')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('County')"
+                                      fieldName="county" fieldRequired="true" fieldId="county"
+                                      :fieldPlaceholder="__('County')" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-forms.label class="my-3" fieldId="property_type"
+                                       :fieldLabel="__('Property Type')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="property_type" id="property_type"
+                                    data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($propertytype as $category)
+                                    <option
+                                        value="{{ $category->property_type }}">
+                                        {{ $category->property_type }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Year Built')"
+                                      fieldName="yearbuilt" fieldRequired="true" fieldId="yearbuilt"
+                                      :fieldPlaceholder="__('Year Built')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bedrooms')"
+                                      fieldName="bedrooms" fieldRequired="true" fieldId="bedrooms"
+                                      :fieldPlaceholder="__('Bedrooms')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bathrooms')"
+                                      fieldName="bathrooms" fieldRequired="true" fieldId="bathrooms"
+                                      :fieldPlaceholder="__('bathrooms')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('House Size')"
+                                      fieldName="house_size" fieldRequired="true" fieldId="house_size"
+                                      :fieldPlaceholder="__('House Size')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lot Size')"
+                                      fieldName="lotsize" fieldRequired="true" fieldId="lotsize"
+                                      :fieldPlaceholder="__('Lot Size')" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-forms.label class="my-3" fieldId="occupancy_status"
+                                       :fieldLabel="__('Occupancy Status')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="occupancy_status" id="occupancy_status"
+                                    data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($occupancystatus as $category)
+                                    <option
+                                        value="{{ $category->occupancy_status }}">
+                                        {{ $category->occupancy_status }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lock Box Location')"
+                                      fieldName="lockboxlocation" fieldRequired="true" fieldId="lockboxlocation"
+                                      :fieldPlaceholder="__('Lock Box Location')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lock Box Code')"
+                                      fieldName="lockboxcode" fieldRequired="true" fieldId="lockboxcode"
+                                      :fieldPlaceholder="__('Lock Box Code')" />
+                    </div>
+                        <div class="col-lg-10 mt-2">
+                            <div class="row">
+                                <div class="col-lg-10 mb-2">
+                                    <label class='f-14 text-dark-grey mb-12'>Utility Status<sup class="f-14 mr-1">*</sup></label><br>
+                                </div>
+                                <div class="col-lg-3">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('Water')" 
+                                    fieldName="utility_status[]" 
+                                    fieldValue="water"
+                                    fieldId="water" />
+                                </div>
+                                <div class="col-lg-3">
+                                    <x-forms.checkbox 
+                                        :fieldLabel="__('Gas')" 
+                                        fieldName="utility_status[]" 
+                                        fieldValue="gas"
+                                        fieldId="gas" />
+                                 </div>
+                                <div class="col-lg-3">
+                                    <x-forms.checkbox 
+                                    :fieldLabel="__('Electric')" 
+                                    fieldName="utility_status[]"
+                                    fieldValue="electric" 
+                                    fieldId="electric" />
+                                </div>
+                                
+                            </div>                                     
+                        </div>
+                    
+                </div>
+                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
+                    <a href="javascript:;" class="text-dark toggle-contact-information"><i
+                            class="fa fa-chevron-down"></i>
+                        @lang('Contact Information')</a>
+                </h4>
+                <div class="row p-20 d-none" id="contact-information">
+                    <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Name')"
+                                      fieldName="amname" fieldRequired="true" fieldId="amname"
+                                      :fieldPlaceholder="__('Asset Manager Name')" />
+                    </div>
+                    <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Phone Number')"
+                                      fieldName="amph" fieldRequired="true" fieldId="amph"
+                                      :fieldPlaceholder="__('Asset Manager Phone Number')" />
+                    </div>
+                    <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Email Address')"
+                                      fieldName="amemail" fieldRequired="true" fieldId="amemail"
+                                      :fieldPlaceholder="__('Asset Manager Email Address')" />
+                    </div>
+                    <div class="w-100 m-2" style="border: 1px solid lightgrey; border-radius: 10px; padding: 10px;">
+                        <div class="form-group row tenant-row  mx-1">
+                            <div class="col-lg-4 col-md-3">
+                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Name')"
+                                            fieldName="tenant_name_1" fieldRequired="true" fieldId="tenant_name_1"
+                                            :fieldPlaceholder="__('Tenant 1 Name')" />
+                            </div>
+                            <div class="col-lg-4 col-md-3">
+                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Email')"
+                                            fieldName="tenant_email_1" fieldRequired="true" fieldId="tenant_email_1"
+                                            :fieldPlaceholder="__('Tenant 1 Email')" />
+                            </div>
+                            <div class="col-lg-4 col-md-3">
+                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Phone')"
+                                            fieldName="tenant_phone_1" fieldRequired="true" fieldId="tenant_phone_1"
+                                            :fieldPlaceholder="__('Tenant 1 Phone')" />
+                            </div>
+                            <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary add-more">More</button>
                             </div>
                         </div>
-                    @endif -->
-
-                    @if ($addPublicProjectPermission == 'all')
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <div class="d-flex mt-2">
-                                    <x-forms.checkbox fieldId="is_public"
-                                                      :fieldLabel="__('modules.projects.createPublicProject')"
-                                                      fieldName="public"/>
+                        <!-- Tenant 2 to 5 -->
+                        <div class="tenant-fields " id="tenant_fields_2">
+                            <div class="form-group row tenant-row mx-1">
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Name')"
+                                                fieldName="tenant_name_2" fieldId="tenant_name_2"
+                                                :fieldPlaceholder="__('Tenant 2 Name')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Email')"
+                                                fieldName="tenant_email_2" fieldId="tenant_email_2"
+                                                :fieldPlaceholder="__('Tenant 2 Email')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Phone')"
+                                                fieldName="tenant_phone_2" fieldId="tenant_phone_2"
+                                                :fieldPlaceholder="__('Tenant 2 Phone')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
                                 </div>
                             </div>
                         </div>
-                    @endif
-
-                    @if ($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added')
+                        <div class="tenant-fields " id="tenant_fields_3">
+                            <div class="form-group row tenant-row mx-1">
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Name')"
+                                                fieldName="tenant_name_3" fieldId="tenant_name_3"
+                                                :fieldPlaceholder="__('Tenant 3 Name')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Email')"
+                                                fieldName="tenant_email_3" fieldId="tenant_email_3"
+                                                :fieldPlaceholder="__('Tenant 3 Email')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Phone')"
+                                                fieldName="tenant_phone_3" fieldId="tenant_phone_3"
+                                                :fieldPlaceholder="__('Tenant 3 Phone')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tenant-fields " id="tenant_fields_4">
+                            <div class="form-group row tenant-row mx-1">
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Name')"
+                                                fieldName="tenant_name_4" fieldId="tenant_name_4"
+                                                :fieldPlaceholder="__('Tenant 4 Name')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Email')"
+                                                fieldName="tenant_email_4" fieldId="tenant_email_4"
+                                                :fieldPlaceholder="__('Tenant 4 Email')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Phone')"
+                                                fieldName="tenant_phone_4" fieldId="tenant_phone_4"
+                                                :fieldPlaceholder="__('Tenant 4 Phone')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tenant-fields " id="tenant_fields_5">
+                            <div class="form-group row tenant-row mx-1">
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Name')"
+                                                fieldName="tenant_name_5" fieldId="tenant_name_5"
+                                                :fieldPlaceholder="__('Tenant 5 Name')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Email')"
+                                                fieldName="tenant_email_5" fieldId="tenant_email_5"
+                                                :fieldPlaceholder="__('Tenant 5 Email')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3">
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Phone')"
+                                                fieldName="tenant_phone_5" fieldId="tenant_phone_5"
+                                                :fieldPlaceholder="__('Tenant 5 Phone')" />
+                                </div>
+                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        @if ($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added')
                         <div class="col-md-12" id="add_members">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
@@ -207,108 +469,12 @@
                                 </x-forms.input-group>
                             </div>
                         </div>
+                    </div>
                     @elseif(in_array('employee', user_roles()))
                         <input type="hidden" name="user_id[]" value="{{ user()->id }}">
                     @endif
-
+                    
                 </div>
-
-                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
-                    <a href="javascript:;" class="text-dark toggle-project-other-details"><i
-                            class="fa fa-chevron-down"></i>
-                        @lang('modules.client.clientOtherDetails')</a>
-                </h4>
-
-                <div class="row p-20 d-none" id="other-project-details">
-                    @if ($addProjectFilePermission == 'all' || $addProjectFilePermission == 'added')
-                        <div class="col-lg-12">
-                            <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2"
-                                                   :fieldLabel="__('app.menu.addFile')" fieldName="file"
-                                                   fieldId="file-upload-dropzone"/>
-                            <input type="hidden" name="projectID" id="projectID">
-                        </div>
-                    @endif
-
-                    <div class="col-lg-4">
-                        <x-forms.select fieldId="currency_id" :fieldLabel="__('modules.invoices.currency')"
-                                        fieldName="currency_id" search="true">
-                            @foreach ($currencies as $currency)
-                                <option @if (company()->currency_id == $currency->id) selected @endif
-                                value="{{ $currency->id }}">
-                                    {{ $currency->currency_symbol . ' (' . $currency->currency_code . ')' }}
-                                </option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.projects.projectBudget')"
-                                        fieldName="project_budget" fieldId="project_budget"
-                                        :fieldValue="$project ? $project->project_budget : ''"
-                                        :fieldPlaceholder="__('placeholders.price')"/>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2"
-                                        :fieldLabel="__('modules.projects.hours_allocated')" fieldName="hours_allocated" :fieldValue="$project ? $project->hours_allocated : ''"
-                                        fieldId="hours_allocated" :fieldPlaceholder="__('placeholders.hourEstimate')"/>
-                    </div>
-
-                    <div class="col-md-6 col-lg-3">
-                        <div class="form-group">
-                            <div class="d-flex mt-5">
-                                <x-forms.checkbox fieldId="manual_timelog" :checked="($project ? $project->manual_timelog == 'enable' : ($projectTemplate ? $projectTemplate->manual_timelog == 'enable' : ''))" :fieldLabel="__('modules.projects.manualTimelog')"  fieldName="manual_timelog"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-lg-3">
-                        <div class="form-group">
-                            <div class="d-flex mt-5">
-                                <x-forms.checkbox fieldId="miroboard_checkbox" :checked="($project ? $project->enable_miroboard : '')"
-                                                  :fieldLabel="__('modules.projects.enableMiroboard')"
-                                                  fieldName="miroboard_checkbox"/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-lg-6 {{!is_null($project) && $project->enable_miroboard ? '' : 'd-none'}}" id="miroboard_detail">
-                        <div class="form-group my-3">
-                            <div class="row">
-                                <div class="col-md-6 mt-6">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2"
-                                                  :fieldLabel="__('modules.projects.miroBoardId')"
-                                                  fieldName="miro_board_id" fieldRequired="true"
-                                                  fieldId="miro_board_id" :fieldValue="$project ? $project->miro_board_id : ''"/>
-                                </div>
-                                <div class="col-md-6 col-lg-6">
-                                    <div class="form-group">
-                                        <div class="d-flex mt-5">
-                                            <x-forms.checkbox fieldId="client_access"
-                                            :fieldLabel="__('modules.projects.clientMiroAccess')" :checked="$project ? $project->client_access : ''"
-                                            fieldName="client_access"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <input type = "hidden" name = "mention_user_ids" id = "mentionUserId" class ="mention_user_ids">
-
-                    <div class="col-md-6 col-lg-4" id="clientNotification">
-                        <div class="form-group">
-                            <div class="d-flex mt-5">
-                                <x-forms.checkbox fieldId="client_task_notification" :checked="($project ? $project->allow_client_notification == 'enable' : '')"
-                                                  :fieldLabel="__('modules.projects.clientTaskNotification')"
-                                                  fieldName="client_task_notification"/>
-                            </div>
-                        </div>
-                    </div>
-                        <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
-                </div>
-
-
                 <x-form-actions>
                     <x-forms.button-primary id="save-project-form" class="mr-3" icon="check">@lang('app.save')
                     </x-forms.button-primary>
@@ -326,8 +492,29 @@
 
     var add_project_files = "{{ $addProjectFilePermission }}";
     var add_project_note_permission = "{{ $addProjectNotePermission }}";
-
+        console.log("{{$employees}}");
     $(document).ready(function () {
+          let tenantCount = 1;
+
+        $('.add-more').on('click', function() {
+            if (tenantCount < 5) {
+                tenantCount++;
+                $('#tenant_fields_' + tenantCount).show();
+            }
+            if (tenantCount === 5) {
+                $(this).hide();
+            }
+        });
+
+        $(document).on('click', '.remove-tenant', function() {
+            $(this).closest('.tenant-row').find('input').val('');
+            $(this).closest('.tenant-fields').hide();
+            tenantCount--;
+            console.log(tenantCount);
+            if (tenantCount < 5) {
+                $('.add-more').show();
+            }
+        });
 
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
@@ -343,6 +530,47 @@
             } else {
                 $('#deadlineBox').show();
             }
+        });
+        $('#autoFill').click(function() {
+            if($('#property_address').val()=='')
+            {
+                Swal.fire({
+                    icon: 'error',
+                    text: '{{ __('Property Address Field Can Not Be Empty') }}',
+
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                    showClass: {
+                        popup: 'swal2-noanimation',
+                        backdrop: 'swal2-noanimation'
+                    },
+                    buttonsStyling: false
+                });
+                return false;
+            }
+            
+            const url = "{{ route('projects.parseAddress') }}";
+            var data = $('#property_address').val();
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                url: url,
+                type: "POST",
+                disableButton: true,
+                blockUI: true,
+                buttonSelector: "#autoFill",
+                data: {
+                        '_token': token,
+                        'data': data,
+                    },
+                success: function (response) {
+                    document.getElementById('street_address').value=response.parsed_address.street_address;
+                    document.getElementById('city').value=response.parsed_address.city;
+                    document.getElementById('state').value=response.parsed_address.state;
+                    document.getElementById('zipcode').value=response.parsed_address.zipcode;
+                    document.getElementById('county').value=response.parsed_address.county;
+                }
+            });
         });
 
         if (add_project_files == "all") {
@@ -492,7 +720,8 @@
                         $('#projectID').val(response.projectID);
                         myDropzone.processQueue();
                     } else if (typeof response.redirectUrl !== 'undefined') {
-                        // window.location.href = response.redirectUrl;
+                        window.location.href = response.redirectUrl;
+                        // 
                     }
                 }
             });
@@ -514,14 +743,18 @@
             $('#clientNotification').toggleClass('d-none');
         });
 
-        $('.toggle-project-other-details').click(function () {
+        $('.toggle-property-details').click(function () {
             $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
-            $('#other-project-details').toggleClass('d-none');
+            $('#property-details').toggleClass('d-none');
         });
 
         $('.toggle-main-project-details').click(function () {
             $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
             $('#main-project-details').toggleClass('d-none');
+        });
+        $('.toggle-contact-information').click(function () {
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#contact-information').toggleClass('d-none');
         });
 
         $('#is_public').change(function () {

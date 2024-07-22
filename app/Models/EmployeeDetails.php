@@ -140,5 +140,6 @@ class EmployeeDetails extends BaseModel
     {
         return $this->belongsTo(Team::class, 'department_id');
     }
+    
 
 }

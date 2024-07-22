@@ -64,7 +64,8 @@ class StoreProject extends CoreRequest
     {
         return [
             'user_id.0.required' => __('messages.atleastOneValidation'),
-            'project_code.required' => __('messages.projectCodeRequired'),
+            'project_code.required' => __('Project work order # field is required.'),
+            'project_code.unique' => __('The work order # has already been taken.')
         ];
     }
 

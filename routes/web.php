@@ -234,6 +234,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('project-settings/import-project-subcategory', [ProjectSubCategoryController::class, 'import'])->name('project-settings.importProjectSubCategory');
     Route::get('project-settings/export-project-subcategory', [ProjectSubCategoryController::class, 'export'])->name('project-settings.exportProjectSubCategory');
     Route::post('projects/change-status', [ProjectController::class, 'changeProjectStatus'])->name('projects.change_status');
+    Route::post('projects/address', [ProjectController::class, 'parseAddress'])->name('projects.parseAddress');
 
     Route::group(
         ['prefix' => 'projects'],

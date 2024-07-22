@@ -20,6 +20,7 @@ use App\Http\Requests\Admin\Employee\ImportProcessRequest;
 use App\Http\Requests\Admin\Employee\ImportRequest;
 use App\Http\Requests\Project\StoreProject;
 use App\Http\Requests\Project\UpdateProject;
+use App\Http\Requests\Project\ProjectAddress;
 use App\Imports\ProjectImport;
 use App\Jobs\ImportProjectJob;
 use App\Models\BankAccount;
@@ -47,8 +48,13 @@ use App\Models\Task;
 use App\Models\TaskUser;
 use App\Models\TaskboardColumn;
 use App\Models\ProjectSubCategory;
+use App\Models\ProjectPriority;
+use App\Models\ProjectType;
+use App\Models\PropertyType;
+use App\Models\OccupancyStatus;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\PropertyDetails;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use App\Traits\ProjectProgress;
@@ -56,6 +62,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Mailer\Exception\TransportException;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
 
 class ProjectController extends AccountBaseController
 {
@@ -188,6 +196,7 @@ class ProjectController extends AccountBaseController
         $project = Project::withTrashed()->findOrFail($id);
         $this->deletePermission = user()->permission('delete_projects');
         abort_403(!($this->deletePermission == 'all' || ($this->deletePermission == 'added' && $project->added_by == user()->id)));
+        $project->propertyDetails()->delete();
 
         // Delete project files
         Files::deleteDirectory(ProjectFile::FILE_PATH . '/' . $id);
@@ -211,10 +220,15 @@ class ProjectController extends AccountBaseController
         $this->clients = User::allClients(null, false, ($this->addPermission == 'all' ? 'all' : null));
         $this->categories = ProjectCategory::all();
         $this->subcategories=ProjectSubCategory::all();
+        $this->projecttype=ProjectType::all();
+        $this->projectpriority=ProjectPriority::all();
+        $this->propertytype=PropertyType::all();
+        $this->occupancystatus=OccupancyStatus::all();
         $this->templates = ProjectTemplate::all();
         $this->currencies = Currency::all();
         $this->teams = Team::all();
         $this->employees = User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null));
+        $this->estimator=Emplo
         $this->redirectUrl = request()->redirectUrl;
 
         $this->project = (request()['duplicate_project']) ? Project::with('client', 'members', 'members.user', 'members.user.session', 'members.user.employeeDetail.designation', 'milestones', 'milestones.currency')->withTrashed()->findOrFail(request()['duplicate_project'])->withCustomFields() : null;
@@ -286,13 +300,35 @@ class ProjectController extends AccountBaseController
             $startDate = companyToYmd($request->start_date);
             $deadline = !$request->has('without_deadline') ? companyToYmd($request->deadline) : null;
 
+            $propertyDetails = PropertyDetails::create([
+                'property_address' => $request->property_address,
+                'street_address' => $request->street_address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'zipcode' => $request->zipcode,
+                'county' => $request->county,
+                'property_type' => $request->property_type,
+                'yearbuilt' => $request->yearbuilt,
+                'bedrooms' => $request->bedrooms,
+                'bathrooms' => $request->bathrooms,
+                'house_size' => $request->house_size,
+                'lotsize' => $request->lotsize,
+                'occupancy_status' => $request->occupancy_status,
+                'lockboxlocation' => $request->lockboxlocation,
+                'lockboxcode' => $request->lockboxcode,
+                'utility_status' => json_encode($request->utility_status), // Store as JSON or as needed
+            ]);
+
             $project = new Project();
             $project->project_name = '--';
             $project->project_short_code = $request->project_code;
             $project->start_date = $startDate;
             $project->deadline = $deadline;
             $project->client_id = $request->client_id;
-
+            $project->type=$request->type;
+            $project->priority=$request->priority;
+            $project->sub_category=$request->sub_category;
+            $project->property_details_id=$propertyDetails->id;
             if (!is_null($request->duplicateProjectID)) {
 
                 $duplicateProject = Project::findOrFail($request->duplicateProjectID);
@@ -1745,6 +1781,71 @@ class ProjectController extends AccountBaseController
         $this->view = 'projects.ajax.orders';
 
         return $dataTable->render('projects.show', $this->data);
+    }
+    public function parseAddress(Request $request)
+    {
+        $fullAddress = $request->data;
+        $apiKey = global_setting()->google_map_key; // Store your API key in the .env file
+        $client = new Client();
+        
+        try {
+            $response = $client->get("https://maps.googleapis.com/maps/api/geocode/json", [
+                'query' => [
+                    'address' => $fullAddress,
+                    'key' => $apiKey,
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error fetching data from Google Maps API: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Unable to connect to geocoding service. Please try again.');
+        }
+
+        $responseBody = $response->getBody()->getContents();
+        $data = json_decode($responseBody, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            Log::error('Error decoding JSON response: ' . json_last_error_msg());
+            return redirect()->back()->with('error', 'Error processing geocoding data. Please try again.');
+        }
+        
+        if ($data['status'] == 'OK') {
+            $addressComponents = $data['results'][0]['address_components'];
+            $parsedAddress = [
+                'street_address' => '',
+                'state' => '',
+                'zipcode' => '',
+                'county' => '',
+                'city'=>''
+            ];
+            
+            foreach ($addressComponents as $component) {
+                if (in_array('subpremise', $component['types'])) {
+                    $parsedAddress['street_address'] .= $component['long_name'] . ' ';
+                }
+                if (in_array('street_number', $component['types'])) {
+                    $parsedAddress['street_address'] .= $component['long_name'] . ' ';
+                }
+                if (in_array('route', $component['types'])) {
+                    $parsedAddress['street_address'] .= $component['long_name'];
+                }
+                if (in_array('administrative_area_level_1', $component['types'])) {
+                    $parsedAddress['state'] = $component['short_name'];
+                }
+                if (in_array('postal_code', $component['types'])) {
+                    $parsedAddress['zipcode'] = $component['long_name'];
+                }
+                if (in_array('administrative_area_level_2', $component['types'])) {
+                    $parsedAddress['county'] = $component['long_name'];
+                }
+                if (in_array('locality', $component['types'])) {
+                    $parsedAddress['city'] = $component['long_name'];
+                }
+            }
+            return Reply::dataOnly(['parsed_address' => $parsedAddress]);
+        } else {
+            return Reply::error('Unable to parse address. Please try again.');
+        }
+
     }
 
 }

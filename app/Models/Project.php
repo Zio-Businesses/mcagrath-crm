@@ -230,6 +230,12 @@ class Project extends BaseModel
         return $this->hasMany(ProjectMilestone::class, 'project_id')->whereNot('status', 'complete')->orderByDesc('id');
     }
 
+    public function propertyDetails(): BelongsTo
+    {
+        return $this->belongsTo(PropertyDetails::class, 'property_details_id');
+    }
+
+
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class, 'project_id')->orderByDesc('id');
