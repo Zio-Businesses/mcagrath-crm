@@ -617,7 +617,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
             ->get();
     }
 
-    public static function allEmployees($exceptId = null, $active = false, $overRidePermission = null, $companyId = null)
+    public static function allEmployees($exceptId = null, $active = false, $overRidePermission = null, $companyId = null,$additionalQuery = null)
     {
         if (!isRunningInConsoleOrSeeding() && !is_null($overRidePermission)) {
             $viewEmployeePermission = $overRidePermission;
@@ -645,7 +645,12 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         if (!is_null($companyId)) {
             $users->where('users.company_id', $companyId);
         }
-
+        if ($additionalQuery) {
+            
+            $users->where($additionalQuery);
+        }
+    
+            
         if (!$active) {
             $users->withoutGlobalScope(ActiveScope::class);
         }

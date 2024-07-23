@@ -228,7 +228,11 @@ class ProjectController extends AccountBaseController
         $this->currencies = Currency::all();
         $this->teams = Team::all();
         $this->employees = User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null));
-        $this->estimator=Emplo
+        $this->estimators=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 6);
+        });
+        
+        
         $this->redirectUrl = request()->redirectUrl;
 
         $this->project = (request()['duplicate_project']) ? Project::with('client', 'members', 'members.user', 'members.user.session', 'members.user.employeeDetail.designation', 'milestones', 'milestones.currency')->withTrashed()->findOrFail(request()['duplicate_project'])->withCustomFields() : null;
@@ -318,7 +322,6 @@ class ProjectController extends AccountBaseController
                 'lockboxcode' => $request->lockboxcode,
                 'utility_status' => json_encode($request->utility_status), // Store as JSON or as needed
             ]);
-
             $project = new Project();
             $project->project_name = '--';
             $project->project_short_code = $request->project_code;
@@ -470,9 +473,8 @@ class ProjectController extends AccountBaseController
             ->withTrashed()
             ->findOrFail($id)
             ->withCustomFields();
-
+            
         $memberIds = $this->project->members->pluck('user_id')->toArray();
-
         $this->editPermission = user()->permission('edit_projects');
         $this->editProjectMembersPermission = user()->permission('edit_project_members');
 
