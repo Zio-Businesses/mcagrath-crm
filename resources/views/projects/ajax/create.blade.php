@@ -189,6 +189,11 @@
                                       :fieldPlaceholder="__('Street Address')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('suite # / house #')"
+                                        fieldName="optional" fieldRequired="true" fieldId="optional"
+                                        :fieldPlaceholder="__('optional')" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('City')"
                                       fieldName="city" fieldRequired="true" fieldId="city"
                                       :fieldPlaceholder="__('City')" />
@@ -313,138 +318,138 @@
                             class="fa fa-chevron-down"></i>
                         @lang('Contact Information')</a>
                 </h4>
-                <div class="row p-20 d-none" id="contact-information">
-                    <div class="col-lg-4 col-md-3">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Name')"
-                                      fieldName="amname" fieldRequired="true" fieldId="amname"
-                                      :fieldPlaceholder="__('Asset Manager Name')" />
-                    </div>
-                    <div class="col-lg-4 col-md-3">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Phone Number')"
-                                      fieldName="amph" fieldRequired="true" fieldId="amph"
-                                      :fieldPlaceholder="__('Asset Manager Phone Number')" />
-                    </div>
-                    <div class="col-lg-4 col-md-3">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Email Address')"
-                                      fieldName="amemail" fieldRequired="true" fieldId="amemail"
-                                      :fieldPlaceholder="__('Asset Manager Email Address')" />
-                    </div>
-                    <div class="w-100 m-2" style="border: 1px solid lightgrey; border-radius: 10px; padding: 10px;">
-                        <div class="form-group row tenant-row  mx-1">
-                            <div class="col-lg-4 col-md-3">
-                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Name')"
-                                            fieldName="tenant_name_1" fieldRequired="true" fieldId="tenant_name_1"
-                                            :fieldPlaceholder="__('Tenant 1 Name')" />
-                            </div>
-                            <div class="col-lg-4 col-md-3">
-                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Email')"
-                                            fieldName="tenant_email_1" fieldRequired="true" fieldId="tenant_email_1"
-                                            :fieldPlaceholder="__('Tenant 1 Email')" />
-                            </div>
-                            <div class="col-lg-4 col-md-3">
-                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Phone')"
-                                            fieldName="tenant_phone_1" fieldRequired="true" fieldId="tenant_phone_1"
-                                            :fieldPlaceholder="__('Tenant 1 Phone')" />
-                            </div>
-                            <div class="col-lg-4 col-md-3 d-flex align-items-end">
-                                <button type="button" class="btn btn-primary add-more">More</button>
-                            </div>
+                    <div class="row p-20 d-none" id="contact-information">
+                        <div class="col-lg-4 col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Name')"
+                                        fieldName="amname" fieldRequired="true" fieldId="amname"
+                                        :fieldPlaceholder="__('Asset Manager Name')" />
                         </div>
-                        <!-- Tenant 2 to 5 -->
-                        <div class="tenant-fields " id="tenant_fields_2">
-                            <div class="form-group row tenant-row mx-1">
+                        <div class="col-lg-4 col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Phone Number')"
+                                        fieldName="amph" fieldRequired="true" fieldId="amph"
+                                        :fieldPlaceholder="__('Asset Manager Phone Number')" />
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Email Address')"
+                                        fieldName="amemail" fieldRequired="true" fieldId="amemail"
+                                        :fieldPlaceholder="__('Asset Manager Email Address')" />
+                        </div>
+                        <div class="w-100 m-2" style="border: 1px solid lightgrey; border-radius: 10px; padding: 10px;">
+                            <div class="form-group row tenant-row  mx-1">
                                 <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Name')"
-                                                fieldName="tenant_name_2" fieldId="tenant_name_2"
-                                                :fieldPlaceholder="__('Tenant 2 Name')" />
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Name')"
+                                                fieldName="tenant_name_1" fieldRequired="true" fieldId="tenant_name_1"
+                                                :fieldPlaceholder="__('Tenant 1 Name')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Email')"
-                                                fieldName="tenant_email_2" fieldId="tenant_email_2"
-                                                :fieldPlaceholder="__('Tenant 2 Email')" />
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Email')"
+                                                fieldName="tenant_email_1" fieldRequired="true" fieldId="tenant_email_1"
+                                                :fieldPlaceholder="__('Tenant 1 Email')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Phone')"
-                                                fieldName="tenant_phone_2" fieldId="tenant_phone_2"
-                                                :fieldPlaceholder="__('Tenant 2 Phone')" />
+                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Phone')"
+                                                fieldName="tenant_phone_1" fieldRequired="true" fieldId="tenant_phone_1"
+                                                :fieldPlaceholder="__('Tenant 1 Phone')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
+                                    <button type="button" class="btn btn-primary  btn-sm add-more">More</button>
+                                </div>
+                            </div>
+                            <!-- Tenant 2 to 5 -->
+                            <div class="tenant-fields " id="tenant_fields_2">
+                                <div class="form-group row tenant-row mx-1">
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Name')"
+                                                    fieldName="tenant_name_2" fieldId="tenant_name_2"
+                                                    :fieldPlaceholder="__('Tenant 2 Name')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Email')"
+                                                    fieldName="tenant_email_2" fieldId="tenant_email_2"
+                                                    :fieldPlaceholder="__('Tenant 2 Email')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 2 Phone')"
+                                                    fieldName="tenant_phone_2" fieldId="tenant_phone_2"
+                                                    :fieldPlaceholder="__('Tenant 2 Phone')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-tenant">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tenant-fields " id="tenant_fields_3">
+                                <div class="form-group row tenant-row mx-1">
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Name')"
+                                                    fieldName="tenant_name_3" fieldId="tenant_name_3"
+                                                    :fieldPlaceholder="__('Tenant 3 Name')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Email')"
+                                                    fieldName="tenant_email_3" fieldId="tenant_email_3"
+                                                    :fieldPlaceholder="__('Tenant 3 Email')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Phone')"
+                                                    fieldName="tenant_phone_3" fieldId="tenant_phone_3"
+                                                    :fieldPlaceholder="__('Tenant 3 Phone')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-tenant">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tenant-fields " id="tenant_fields_4">
+                                <div class="form-group row tenant-row mx-1">
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Name')"
+                                                    fieldName="tenant_name_4" fieldId="tenant_name_4"
+                                                    :fieldPlaceholder="__('Tenant 4 Name')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Email')"
+                                                    fieldName="tenant_email_4" fieldId="tenant_email_4"
+                                                    :fieldPlaceholder="__('Tenant 4 Email')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Phone')"
+                                                    fieldName="tenant_phone_4" fieldId="tenant_phone_4"
+                                                    :fieldPlaceholder="__('Tenant 4 Phone')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-tenant">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tenant-fields " id="tenant_fields_5">
+                                <div class="form-group row tenant-row mx-1">
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Name')"
+                                                    fieldName="tenant_name_5" fieldId="tenant_name_5"
+                                                    :fieldPlaceholder="__('Tenant 5 Name')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Email')"
+                                                    fieldName="tenant_email_5" fieldId="tenant_email_5"
+                                                    :fieldPlaceholder="__('Tenant 5 Email')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3">
+                                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Phone')"
+                                                    fieldName="tenant_phone_5" fieldId="tenant_phone_5"
+                                                    :fieldPlaceholder="__('Tenant 5 Phone')" />
+                                    </div>
+                                    <div class="col-lg-4 col-md-3 d-flex align-items-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-tenant">Remove</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="tenant-fields " id="tenant_fields_3">
-                            <div class="form-group row tenant-row mx-1">
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Name')"
-                                                fieldName="tenant_name_3" fieldId="tenant_name_3"
-                                                :fieldPlaceholder="__('Tenant 3 Name')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Email')"
-                                                fieldName="tenant_email_3" fieldId="tenant_email_3"
-                                                :fieldPlaceholder="__('Tenant 3 Email')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 3 Phone')"
-                                                fieldName="tenant_phone_3" fieldId="tenant_phone_3"
-                                                :fieldPlaceholder="__('Tenant 3 Phone')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tenant-fields " id="tenant_fields_4">
-                            <div class="form-group row tenant-row mx-1">
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Name')"
-                                                fieldName="tenant_name_4" fieldId="tenant_name_4"
-                                                :fieldPlaceholder="__('Tenant 4 Name')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Email')"
-                                                fieldName="tenant_email_4" fieldId="tenant_email_4"
-                                                :fieldPlaceholder="__('Tenant 4 Email')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 4 Phone')"
-                                                fieldName="tenant_phone_4" fieldId="tenant_phone_4"
-                                                :fieldPlaceholder="__('Tenant 4 Phone')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tenant-fields " id="tenant_fields_5">
-                            <div class="form-group row tenant-row mx-1">
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Name')"
-                                                fieldName="tenant_name_5" fieldId="tenant_name_5"
-                                                :fieldPlaceholder="__('Tenant 5 Name')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Email')"
-                                                fieldName="tenant_email_5" fieldId="tenant_email_5"
-                                                :fieldPlaceholder="__('Tenant 5 Email')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3">
-                                    <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 5 Phone')"
-                                                fieldName="tenant_phone_5" fieldId="tenant_phone_5"
-                                                :fieldPlaceholder="__('Tenant 5 Phone')" />
-                                </div>
-                                <div class="col-lg-4 col-md-3 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-tenant">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                         @if ($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added')
-                        <div class="col-md-12" id="add_members">
+                        <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
-                                               :fieldLabel="__('modules.projects.addMemberTitle')">
+                                               :fieldLabel="__('Add Project Coordinator')">
                                 </x-forms.label>
 
                                 <x-forms.input-group>
@@ -469,12 +474,91 @@
                                 </x-forms.input-group>
                             </div>
                         </div>
-                    </div>
-                    @elseif(in_array('employee', user_roles()))
-                        <input type="hidden" name="user_id[]" value="{{ user()->id }}">
-                    @endif
                     
-                </div>
+                        @elseif(in_array('employee', user_roles()))
+                        <input type="hidden" name="user_id[]" value="{{ user()->id }}">
+                        @endif
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                               :fieldLabel="__('Add Project Estimators')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" multiple name="estimator_id[]"
+                                            id="selectEstimator" data-live-search="true" data-size="8">
+                                        @foreach ($estimators as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                               :fieldLabel="__('Add Project Accounting Analyst')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" multiple name="accounting_id[]"
+                                            id="selectAccountingAnalyst" data-live-search="true" data-size="8">
+                                        @foreach ($accounting as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                               :fieldLabel="__('Add Project Escalation Manager')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" multiple name="emanager_id[]"
+                                            id="selectEscalationManager" data-live-search="true" data-size="8">
+                                        @foreach ($emanager as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
+                        <a href="javascript:;" class="text-dark toggle-accounting-information"><i
+                                class="fa fa-chevron-down"></i>
+                            @lang('Accounting Information')</a>
+                    </h4>
+                    <div class="row p-20 d-none" id="accounting-information">
+                        <div class="col-lg-4 col-md-3">
+                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Not To Exceed')"
+                                        fieldName="nte" fieldRequired="true" fieldId="nte"
+                                        :fieldPlaceholder="__('Not To Exceed')" />
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Submitted Amount')"
+                                      fieldName="bid_submitted_amount" fieldRequired="true" fieldId="bid_submitted_amount"
+                                      :fieldPlaceholder="__('Bid Submitted Amount')" />
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')"
+                                      fieldName="bid_approved_amount" fieldRequired="true" fieldId="bid_approved_amount"
+                                      :fieldPlaceholder="__('Bid Approved Amount')" />
+                        </div>
+                    </div>
+                    
                 <x-form-actions>
                     <x-forms.button-primary id="save-project-form" class="mr-3" icon="check">@lang('app.save')
                     </x-forms.button-primary>
@@ -651,6 +735,37 @@
                 return selected + " {{ __('app.membersSelected') }} ";
             }
         });
+        $("#selectEstimator").selectpicker({
+            actionsBox: true,
+            selectAllText: "{{ __('modules.permission.selectAll') }}",
+            deselectAllText: "{{ __('modules.permission.deselectAll') }}",
+            multipleSeparator: " ",
+            selectedTextFormat: "count > 8",
+            countSelectedText: function (selected, total) {
+                return selected + " {{ __('app.membersSelected') }} ";
+            }
+        });
+        $("#selectEscalationManager").selectpicker({
+            actionsBox: true,
+            selectAllText: "{{ __('modules.permission.selectAll') }}",
+            deselectAllText: "{{ __('modules.permission.deselectAll') }}",
+            multipleSeparator: " ",
+            selectedTextFormat: "count > 8",
+            countSelectedText: function (selected, total) {
+                return selected + " {{ __('app.membersSelected') }} ";
+            }
+        });
+        $("#selectAccountingAnalyst").selectpicker({
+            actionsBox: true,
+            selectAllText: "{{ __('modules.permission.selectAll') }}",
+            deselectAllText: "{{ __('modules.permission.deselectAll') }}",
+            multipleSeparator: " ",
+            selectedTextFormat: "count > 8",
+            countSelectedText: function (selected, total) {
+                return selected + " {{ __('app.membersSelected') }} ";
+            }
+        });
+        
         var userValues = @json($userData);
         quillMention(userValues, '#project_summary');
 
@@ -755,6 +870,10 @@
         $('.toggle-contact-information').click(function () {
             $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
             $('#contact-information').toggleClass('d-none');
+        });
+        $('.toggle-accounting-information').click(function () {
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#accounting-information').toggleClass('d-none');
         });
 
         $('#is_public').change(function () {

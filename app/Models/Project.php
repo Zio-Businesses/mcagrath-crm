@@ -152,6 +152,14 @@ class Project extends BaseModel
         'start_date' => 'datetime',
         'deadline' => 'datetime',
         'created_at' => 'datetime',
+        'inspection_date'=>'datetime',
+        're_inspection_date'=>'datetime',
+        'bid_submitted'=>'datetime',
+        'bid_rejected'=>'datetime',
+        'bid_approval'=>'datetime',
+        'work_schedule_date'=>'datetime',
+        'work_schedule_re_date'=>'datetime',
+        'work_completion_date'=>'datetime',
     ];
 
     protected $guarded = ['id'];
@@ -234,7 +242,10 @@ class Project extends BaseModel
     {
         return $this->belongsTo(PropertyDetails::class, 'property_details_id');
     }
-
+    public function projectContacts(): BelongsTo
+    {
+        return $this->belongsTo(ProjectContact::class, 'project_contacts_id');
+    }
 
     public function expenses(): HasMany
     {
@@ -286,6 +297,7 @@ class Project extends BaseModel
             ->exists();
 
     }
+
 
     public static function clientProjects($clientId)
     {
@@ -447,5 +459,17 @@ class Project extends BaseModel
     {
         return $this->hasMany(MentionUser::class, 'project_id');
     }
-
+    public function est_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_estimators');
+    }
+    
+    public function acct_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_accountings');
+    }
+    public function emanager_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_emanagers');
+    }
 }

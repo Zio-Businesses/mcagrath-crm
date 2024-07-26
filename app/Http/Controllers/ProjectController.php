@@ -45,6 +45,7 @@ use App\Models\ProjectTimeLogBreak;
 use App\Models\SubTask;
 use App\Models\SubTaskFile;
 use App\Models\Task;
+use App\Models\ProjectContact;
 use App\Models\TaskUser;
 use App\Models\TaskboardColumn;
 use App\Models\ProjectSubCategory;
@@ -141,14 +142,19 @@ class ProjectController extends AccountBaseController
     {
         abort_403(user()->permission('delete_projects') != 'all');
 
-        Project::withTrashed()->whereIn('id', explode(',', $request->row_ids))->forceDelete();
-
         $items = explode(',', $request->row_ids);
 
         foreach ($items as $item) {
             // Delete project files
             Files::deleteDirectory(ProjectFile::FILE_PATH . '/' . $item);
+            $project = Project::withTrashed()->findOrFail($item);
+
+            if ($project) {
+                $project->propertyDetails()->delete();
+                $project->projectContacts()->delete();
+            }
         }
+        Project::withTrashed()->whereIn('id', explode(',', $request->row_ids))->forceDelete();
     }
 
     protected function archiveRecords($request)
@@ -197,7 +203,8 @@ class ProjectController extends AccountBaseController
         $this->deletePermission = user()->permission('delete_projects');
         abort_403(!($this->deletePermission == 'all' || ($this->deletePermission == 'added' && $project->added_by == user()->id)));
         $project->propertyDetails()->delete();
-
+        $project->projectContacts()->delete();
+        
         // Delete project files
         Files::deleteDirectory(ProjectFile::FILE_PATH . '/' . $id);
         $project->forceDelete();
@@ -227,9 +234,17 @@ class ProjectController extends AccountBaseController
         $this->templates = ProjectTemplate::all();
         $this->currencies = Currency::all();
         $this->teams = Team::all();
-        $this->employees = User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null));
+        $this->employees = User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1,function ($query) {
+            $query->where('designation_id', 4);
+        });
         $this->estimators=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1, function ($query) {
             $query->where('designation_id', 6);
+        });
+        $this->accounting=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 7);
+        });
+        $this->emanager=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 10);
         });
         
         
@@ -292,7 +307,7 @@ class ProjectController extends AccountBaseController
      */
     public function store(StoreProject $request)
     {
-
+        
         $this->addPermission = user()->permission('add_projects');
 
         abort_403(!in_array($this->addPermission, ['all', 'added']));
@@ -303,7 +318,6 @@ class ProjectController extends AccountBaseController
 
             $startDate = companyToYmd($request->start_date);
             $deadline = !$request->has('without_deadline') ? companyToYmd($request->deadline) : null;
-
             $propertyDetails = PropertyDetails::create([
                 'property_address' => $request->property_address,
                 'street_address' => $request->street_address,
@@ -321,6 +335,27 @@ class ProjectController extends AccountBaseController
                 'lockboxlocation' => $request->lockboxlocation,
                 'lockboxcode' => $request->lockboxcode,
                 'utility_status' => json_encode($request->utility_status), // Store as JSON or as needed
+                'optional' => $request->optional,
+            ]);
+            $projectContact = ProjectContact::create([
+                'amname' => $request->amname,
+                'amph' => $request->amph,
+                'amemail' => $request->amemail,
+                'tenant_name_1' => $request->tenant_name_1,
+                'tenant_email_1' => $request->tenant_email_1,
+                'tenant_phone_1' => $request->tenant_phone_1,
+                'tenant_name_2' => $request->tenant_name_2,
+                'tenant_email_2' => $request->tenant_email_2,
+                'tenant_phone_2' => $request->tenant_phone_2,
+                'tenant_name_3' => $request->tenant_name_3,
+                'tenant_email_3' => $request->tenant_email_3,
+                'tenant_phone_3' => $request->tenant_phone_3,
+                'tenant_name_4' => $request->tenant_name_4,
+                'tenant_email_4' => $request->tenant_email_4,
+                'tenant_phone_4' => $request->tenant_phone_4,
+                'tenant_name_5' => $request->tenant_name_5,
+                'tenant_email_5' => $request->tenant_email_5,
+                'tenant_phone_5' => $request->tenant_phone_5,
             ]);
             $project = new Project();
             $project->project_name = '--';
@@ -332,6 +367,11 @@ class ProjectController extends AccountBaseController
             $project->priority=$request->priority;
             $project->sub_category=$request->sub_category;
             $project->property_details_id=$propertyDetails->id;
+            $project->project_contacts_id=$projectContact->id;
+            $project->nte=$request->nte;
+            $project->bid_submitted_amount=$request->bid_submitted_amount;
+            $project->bid_approved_amount=$request->bid_approved_amount;
+            // $project->est_users()->attach($request->estimator_id);
             if (!is_null($request->duplicateProjectID)) {
 
                 $duplicateProject = Project::findOrFail($request->duplicateProjectID);
@@ -469,11 +509,12 @@ class ProjectController extends AccountBaseController
 
     public function edit($id)
     {
+        
+        
         $this->project = Project::with('client', 'members', 'members.user', 'members.user.session', 'members.user.employeeDetail.designation', 'milestones', 'milestones.currency')
             ->withTrashed()
             ->findOrFail($id)
             ->withCustomFields();
-            
         $memberIds = $this->project->members->pluck('user_id')->toArray();
         $this->editPermission = user()->permission('edit_projects');
         $this->editProjectMembersPermission = user()->permission('edit_project_members');
@@ -498,11 +539,26 @@ class ProjectController extends AccountBaseController
         $this->currencies = Currency::all();
         $this->teams = Team::all();
         $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
-
+        $this->subcategories=ProjectSubCategory::all();
+        $this->projecttype=ProjectType::all();
+        $this->projectpriority=ProjectPriority::all();
+        $this->propertytype=PropertyType::all();
+        $this->occupancystatus=OccupancyStatus::all();
         $this->employees = '';
+        $this->estimators=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 6);
+        });
+        $this->accounting=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 7);
+        });
+        $this->emanager=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
+            $query->where('designation_id', 10);
+        });
 
         if ($this->editPermission == 'all' || $this->editProjectMembersPermission == 'all') {
-            $this->employees = User::allEmployees(null, null, ($this->editPermission == 'all' ? 'all' : null));
+            $this->employees = User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
+                $query->where('designation_id', 4);
+            });
         }
 
         $userData = [];
@@ -539,14 +595,69 @@ class ProjectController extends AccountBaseController
      */
     public function update(UpdateProject $request, $id)
     {
+        
         $project = Project::findOrFail($id);
+        $propertyDetails=$project->propertyDetails;
+        $projectContacts=$project->projectContacts;
         $project->project_name = '--';
         $project->project_short_code = $request->project_code;
-
         $project->project_summary = trim_editor($request->project_summary);
-
         $project->start_date = companyToYmd($request->start_date);
-
+        $project->inspection_date = $request->inspection_date == null ? null : companyToYmd($request->inspection_date);
+        $project->inspection_time = $request->inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->inspection_time)->format('H:i:s');
+        $project->re_inspection_date = $request->re_inspection_date == null ? null : companyToYmd($request->re_inspection_date);
+        $project->re_inspection_time = $request->re_inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->re_inspection_time)->format('H:i:s');
+        $project->bid_submitted = $request->bid_submitted == null ? null : companyToYmd($request->bid_submitted);
+        $project->bid_rejected = $request->bid_rejected == null ? null : companyToYmd($request->bid_rejected);
+        $project->bid_approval = $request->bid_approval == null ? null : companyToYmd($request->bid_approval);
+        $project->work_schedule_date = $request->work_schedule_date == null ? null : companyToYmd($request->work_schedule_date);
+        $project->work_schedule_time = $request->work_schedule_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->work_schedule_time)->format('H:i:s');
+        $project->work_schedule_re_date = $request->work_schedule_re_date == null ? null : companyToYmd($request->work_schedule_re_date);
+        $project->work_schedule_re_time = $request->work_schedule_re_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->work_schedule_re_time)->format('H:i:s');
+        $project->work_completion_date = $request->work_completion_date == null ? null : companyToYmd($request->work_completion_date);
+        $project->nte=$request->nte;
+        $project->bid_submitted_amount=$request->bid_submitted_amount;
+        $project->bid_approved_amount=$request->bid_approved_amount;
+        $project->type=$request->type;
+        $project->priority=$request->priority;
+        $project->sub_category=$request->sub_category;
+        $propertyDetails->property_address = $request->property_address;
+        $propertyDetails->street_address = $request->street_address;
+        $propertyDetails->city = $request->city;
+        $propertyDetails->state = $request->state;
+        $propertyDetails->zipcode = $request->zipcode;
+        $propertyDetails->county = $request->county;
+        $propertyDetails->property_type = $request->property_type;
+        $propertyDetails->yearbuilt = $request->yearbuilt;
+        $propertyDetails->bedrooms = $request->bedrooms;
+        $propertyDetails->bathrooms = $request->bathrooms;
+        $propertyDetails->house_size = $request->house_size;
+        $propertyDetails->lotsize = $request->lotsize;
+        $propertyDetails->occupancy_status = $request->occupancy_status;
+        $propertyDetails->lockboxlocation = $request->lockboxlocation;
+        $propertyDetails->lockboxcode = $request->lockboxcode;
+        $propertyDetails->utility_status = json_encode($request->utility_status); // Store as JSON or as needed
+        $propertyDetails->optional = $request->optional;
+        $propertyDetails->save();
+        $projectContacts->amname = $request->amname;
+        $projectContacts->amph = $request->amph;
+        $projectContacts->amemail = $request->amemail;
+        $projectContacts->tenant_name_1 = $request->tenant_name_1;
+        $projectContacts->tenant_email_1 = $request->tenant_email_1;
+        $projectContacts->tenant_phone_1 = $request->tenant_phone_1;
+        $projectContacts->tenant_name_2 = $request->tenant_name_2;
+        $projectContacts->tenant_email_2 = $request->tenant_email_2;
+        $projectContacts->tenant_phone_2 = $request->tenant_phone_2;
+        $projectContacts->tenant_name_3 = $request->tenant_name_3;
+        $projectContacts->tenant_email_3 = $request->tenant_email_3;
+        $projectContacts->tenant_phone_3 = $request->tenant_phone_3;
+        $projectContacts->tenant_name_4 = $request->tenant_name_4;
+        $projectContacts->tenant_email_4 = $request->tenant_email_4;
+        $projectContacts->tenant_phone_4 = $request->tenant_phone_4;
+        $projectContacts->tenant_name_5 = $request->tenant_name_5;
+        $projectContacts->tenant_email_5 = $request->tenant_email_5;
+        $projectContacts->tenant_phone_5 = $request->tenant_phone_5;
+        $projectContacts->save();
         if (!$request->has('without_deadline')) {
             $project->deadline = companyToYmd($request->deadline);
         }
@@ -627,7 +738,13 @@ class ProjectController extends AccountBaseController
 
         if (!$request->private && !$request->public && $request->member_id) {
             $project->projectMembers()->sync($request->member_id);
+            
         }
+            
+        $project->est_users()->sync($request->estimator_id);
+        $project->acct_users()->sync($request->accounting_id);
+        $project->emanager_users()->sync($request->emanager_id);
+
 
         $project->save();
 
@@ -1805,6 +1922,7 @@ class ProjectController extends AccountBaseController
 
         $responseBody = $response->getBody()->getContents();
         $data = json_decode($responseBody, true);
+        Log::info($data);
         if (json_last_error() !== JSON_ERROR_NONE) {
             Log::error('Error decoding JSON response: ' . json_last_error_msg());
             return redirect()->back()->with('error', 'Error processing geocoding data. Please try again.');

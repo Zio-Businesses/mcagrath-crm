@@ -11,7 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('vendors');
+        Schema::table('projects', function (Blueprint $table) {
+            
+        $table->string('nte')->nullable();
+        $table->string('bid_submitted_amount')->nullable();
+        $table->string('bid_approved_amount')->nullable();
+
+        });
     }
 
     /**
@@ -19,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vendors');
+        Schema::table('projects', function (Blueprint $table) {
+            //
+        });
     }
 };

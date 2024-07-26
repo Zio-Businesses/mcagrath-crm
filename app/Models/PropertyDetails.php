@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PropertyDetails extends Model
+class PropertyDetails extends BaseModel
 {
     use HasFactory;
 
@@ -26,6 +26,7 @@ class PropertyDetails extends Model
         'lockboxlocation',
         'lockboxcode',
         'utility_status',
+        'optional'
     ];
 
     public function projects()

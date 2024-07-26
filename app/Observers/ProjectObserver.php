@@ -44,6 +44,9 @@ class ProjectObserver
     {
         if (!$project->public && !empty(request()->user_id)) {
             $project->projectMembers()->attach(request()->user_id);
+            $project->est_users()->attach(request()->estimator_id);
+            $project->acct_users()->attach(request()->accounting_id);
+            $project->emanager_users()->attach(request()->emanager_id);
         }
 
         if (!isRunningInConsoleOrSeeding()) {
