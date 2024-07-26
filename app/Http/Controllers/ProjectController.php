@@ -835,6 +835,9 @@ class ProjectController extends AccountBaseController
         case 'milestones':
             $this->view = 'projects.ajax.milestones';
             break;
+        case 'sow':
+            $this->view = 'projects.ajax.sow';
+            break;
         case 'taskboard':
             session()->forget('pusher_settings');
             $this->view = 'projects.ajax.taskboard';

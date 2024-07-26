@@ -126,6 +126,7 @@ use App\Http\Controllers\ProjectTypeController;
 use App\Http\Controllers\ProjectPriorityController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\OccupancyStatusController;
+use App\Http\Controllers\ScopeOfWorkController;
 use App\Models\AttendanceSetting;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -271,7 +272,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);
-
+            Route::resource('sow', ScopeOfWorkController::class);
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');

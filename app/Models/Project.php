@@ -233,6 +233,11 @@ class Project extends BaseModel
         return $this->hasMany(ProjectMilestone::class, 'project_id')->orderByDesc('id');
     }
 
+    public function sow(): HasMany
+    {
+        return $this->hasMany(ScopeOfWork::class, 'project_id')->orderByDesc('id');
+    }
+
     public function incompleteMilestones(): HasMany
     {
         return $this->hasMany(ProjectMilestone::class, 'project_id')->whereNot('status', 'complete')->orderByDesc('id');
