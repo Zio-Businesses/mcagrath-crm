@@ -595,7 +595,6 @@ class ProjectController extends AccountBaseController
      */
     public function update(UpdateProject $request, $id)
     {
-        Log::info($request->inspection_time);
         $project = Project::findOrFail($id);
         $propertyDetails=$project->propertyDetails;
         $projectContacts=$project->projectContacts;
