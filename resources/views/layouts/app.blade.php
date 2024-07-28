@@ -123,6 +123,8 @@
 
     {{-- Timepicker --}}
     <script src="{{ asset('vendor/jquery/bootstrap-timepicker.min.js') }}" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
     @includeif('sections.push-setting-include')
 

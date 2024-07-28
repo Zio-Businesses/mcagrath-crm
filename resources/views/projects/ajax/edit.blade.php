@@ -14,7 +14,6 @@ $createPublicProjectPermission = user()->permission('create_public_project');
         }
 </style>
 <link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
-
 <div class="row">
     <div class="col-sm-12">
         <x-form id="save-project-data-form" method="PUT">
@@ -131,12 +130,12 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                     </div>
                     
                     <div class="col-md-3 col-lg-3">
-                                <div class="bootstrap-timepicker timepicker">
-                                    <x-forms.text :fieldLabel="__('Inspection Time')"
-                                        :fieldPlaceholder="__('placeholders.hours')" fieldName="inspection_time"
-                                        fieldId="inspection_time" 
-                                        :fieldValue="($project->inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->inspection_time)->format(company()->time_format) : '')" />
-                                </div>
+                        <div>
+                         <x-forms.text :fieldLabel="__('Inspection Time')"
+                            :fieldPlaceholder="__('placeholders.hours')" fieldName="inspection_time"
+                            fieldId="inspection_time" 
+                            :fieldValue="($project->inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->inspection_time)->format(company()->time_format) : '')" />        
+                        </div>          
                     </div>
                     <div class="col-md-3 col-lg-3">
                         <x-forms.datepicker fieldId="re_inspection_date" custom="true"
@@ -145,7 +144,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
                     <div class="col-md-3 col-lg-3">
-                                <div class="bootstrap-timepicker timepicker">
+                                <div class="">
                                     <x-forms.text :fieldLabel="__('Re-inspection Time')"
                                         :fieldPlaceholder="__('placeholders.hours')" fieldName="re_inspection_time"
                                         fieldId="re_inspection_time" 
@@ -178,7 +177,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
                     <div class="col-md-3 col-lg-3">
-                                <div class="bootstrap-timepicker timepicker">
+                                <div class="">
                                     <x-forms.text :fieldLabel="__('Work Schedule Time')"
                                         :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_time"
                                         fieldId="work_schedule_time" 
@@ -192,7 +191,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
                     <div class="col-md-3 col-lg-3">
-                                <div class="bootstrap-timepicker timepicker">
+                                <div class="">
                                     <x-forms.text :fieldLabel="__('Work Re-Schedule Time')"
                                         :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_re_time"
                                         fieldId="work_schedule_re_time" 
@@ -845,6 +844,9 @@ $createPublicProjectPermission = user()->permission('create_public_project');
 <script>
     $(document).ready(function() {
         let tenantCount = 1;
+        var firstOpen = true;
+        var time;
+
         if("{{$project->projectContacts->tenant_name_2}}")
         {
             tenantCount=2;
@@ -904,18 +906,20 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                 return selected + " {{ __('app.membersSelected') }} ";
             }
         });
-        //  $('').timepicker({
-        //     defaultTime: '01:00',  // Prevents default time setting
-        //     @if (company()->time_format == 'H:i')
-        //         showMeridian: false,
-        //     @endif
-        // });
-        $('#inspection_time,#re_inspection_time,#work_schedule_time,#work_schedule_re_time').timepicker({
+
+        $('#inspection_time,#re_inspection_time,#work_schedule_time,#work_schedule_re_time').datetimepicker({
             @if (company()->time_format == 'H:i')
                 showMeridian: false,
             @endif
-            defaultTime: false
-        })
+            useCurrent: false,
+            format: "hh:mm A"
+            }).on('dp.show', function() {
+            if(firstOpen) {
+                time = moment().startOf('day');
+                firstOpen = false;
+            } 
+            
+        });
 
         $('#autoFill').click(function() {
             if($('#property_address').val()=='')
@@ -1016,7 +1020,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                 data: $('#save-project-data-form').serialize(),
                 success: function(response) {
                     if (response.status == 'success') {
-                        // window.location.href = response.redirectUrl;
+                         window.location.href = response.redirectUrl;
                     }
                 }
             });

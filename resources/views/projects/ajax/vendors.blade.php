@@ -2,35 +2,37 @@
     <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
         
             <x-forms.button-primary icon="plus" id="add-project-sow" class="type-btn mb-3">
-                @lang('Create SOW')
+                @lang('Add Vendors')
             </x-forms.button-primary>
        
 
        
-            <x-cards.data :title="__('Scope Of Work')"
+            <x-cards.data :title="__('Vendors')"
                 otherClasses="border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm">
                 <x-table class="border-0 pb-3 admin-dash-table table-hover">
 
                     <x-slot name="thead">
                         <th class="pl-20">#</th>
-                        <th>@lang('SOW Title')</th>
-                        <th>@lang('Added By')</th>
-                        <th>@lang('Added Date')</th>
+                        <th>@lang('Vendor Name')</th>
+                        <th>@lang('Link Sent By')</th>
+                        <th>@lang('Sow')</th>
                         <th class="text-right pr-20">@lang('app.action')</th>
                     </x-slot>
 
-                    @forelse($project->sow as $key=>$item)
+                    @forelse($project->projectvendor as $key=>$item)
                         <tr id="row-{{ $item->id }}">
                             <td class="pl-20">{{ $key + 1 }}</td>
                             <td>
                                 <a href="javascript:;" class="sow-detail text-darkest-grey f-w-500"
-                                    data-sow-id="{{ $item->id }}">{{ $item->sow_title }}</a>
+                                    data-sow-id="{{ $item->id }}">{{ $item->vendor_name}}</a>
                             </td>
                             <td>
-                                {{$item->added->name}}
+                                {{$item->linksentby->name}}
                             </td>
                             <td>
-                                {{$item->created_at->translatedFormat(company()->date_format)}}
+                                @foreach($item->sow_id as $sow)
+                                {{$item->sowname($sow)}}<br/>
+                                @endforeach
                             </td>
                             <td class="text-right pr-20">
                                 <div class="task_view">
@@ -44,8 +46,6 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right"
                                             aria-labelledby="dropdownMenuLink-{{ $item->id }}" tabindex="0">
-
-                                            
                                                 @if(is_null($project->deleted_at))
                                                     <a class="dropdown-item edit-sow" href="javascript:;"
                                                         data-row-id="{{ $item->id }}">
@@ -53,16 +53,11 @@
                                                         @lang('app.edit')
                                                     </a>
                                                 @endif
-                                           
-
-                                            
                                                 <a class="dropdown-item delete-row" href="javascript:;"
                                                     data-row-id="{{ $item->id }}">
                                                     <i class="fa fa-trash mr-2"></i>
                                                     @lang('app.delete')
                                                 </a>
-                                           
-
                                         </div>
                                     </div>
                                 </div>
@@ -81,35 +76,35 @@
 
 <script>
     $('#add-project-sow').click(function() {
-        const url = "{{ route('sow.create') }}" + "?id={{ $project->id }}";
+        const url = "{{ route('projectvendors.create') }}" + "?id={{ $project->id }}";
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
 
     });
 
-    $('body').on('click', '.edit-sow', function() {
-        var id = $(this).data('row-id');
+    // $('body').on('click', '.edit-sow', function() {
+    //     var id = $(this).data('row-id');
 
-        var url = "{{ route('sow.edit', ':id') }}";
-        url = url.replace(':id', id);
+    //     var url = "{{ route('sow.edit', ':id') }}";
+    //     url = url.replace(':id', id);
 
-        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-        $.ajaxModal(MODAL_LG, url);
+    //     $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+    //     $.ajaxModal(MODAL_LG, url);
 
-    });
+    // });
 
-    $('body').on('click', '.sow-detail', function() {
-        var id = $(this).data('sow-id');
-        var url = "{{ route('sow.show', ':id') }}";
-        url = url.replace(':id', id);
-        $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-        $.ajaxModal(MODAL_XL, url);
-    });
+    // $('body').on('click', '.sow-detail', function() {
+    //     var id = $(this).data('sow-id');
+    //     var url = "{{ route('sow.show', ':id') }}";
+    //     url = url.replace(':id', id);
+    //     $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
+    //     $.ajaxModal(MODAL_XL, url);
+    // });
 
     $('.delete-row').click(function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('sow.destroy', ':id') }}";
+        var url = "{{ route('projectvendors.destroy', ':id') }}";
         url = url.replace(':id', id);
 
         var token = "{{ csrf_token() }}";
