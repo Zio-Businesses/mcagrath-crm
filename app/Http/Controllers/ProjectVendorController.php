@@ -12,6 +12,7 @@ use App\Models\ProjectType;
 use App\Models\ContractTemplate;
 use App\Models\ProjectVendor;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -66,6 +67,32 @@ class ProjectVendorController extends AccountBaseController
 
         return Reply::success(__('New Vendor Added Successfully'));
         
+    }
+    public function update(Request $request, $id)
+    {
+        $vpro = ProjectVendor::findOrFail($id);
+        $vpro->project_id = $request->project_id;
+        $vpro->wo_status = $request->wo_status;
+        $vpro->inspection_date = $request->inspection_date == null ? null : companyToYmd($request->inspection_date);
+        $vpro->inspection_time = $request->inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->inspection_time)->format('H:i:s');
+        $vpro->re_inspection_date = $request->re_inspection_date == null ? null : companyToYmd($request->re_inspection_date);
+        $vpro->re_inspection_time = $request->re_inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->re_inspection_time)->format('H:i:s');
+        $vpro->bid_ecd = $request->bid_ecd == null ? null : companyToYmd($request->bid_ecd);
+        $vpro->bid_submitted_date = $request->bid_submitted_date == null ? null : companyToYmd($request->bid_submitted_date);
+        $vpro->bid_amount = $request->bid_amount;
+        $vpro->bid_rejected_date = $request->bid_rejected_date == null ? null : companyToYmd($request->bid_rejected_date);
+        $vpro->bid_approval_date = $request->bid_approval_date == null ? null : companyToYmd($request->bid_approval_date);
+        $vpro->work_schedule_date = $request->work_schedule_date == null ? null : companyToYmd($request->work_schedule_date);
+        $vpro->work_schedule_time = $request->work_schedule_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->work_schedule_time)->format('H:i:s');
+        $vpro->work_schedule_re_date = $request->work_schedule_re_date == null ? null : companyToYmd($request->work_schedule_re_date);
+        $vpro->work_schedule_re_time = $request->work_schedule_re_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->work_schedule_re_time)->format('H:i:s');
+        $vpro->work_completion_date = $request->work_completion_date == null ? null : companyToYmd($request->work_completion_date);
+        $vpro->work_ecd = $request->work_ecd == null ? null : companyToYmd($request->work_ecd);
+        $vpro->bid_approved_amount = $request->bid_approved_amount;
+        $vpro->save();
+        $this->logProjectActivity($request->project_id, 'messages.vendorupdated');
+
+        return Reply::success(__('Vendor Updated'));
     }
     public function destroy($id)
     {

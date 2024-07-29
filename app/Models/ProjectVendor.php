@@ -13,6 +13,17 @@ class ProjectVendor extends BaseModel
     
     protected $casts = [
         'sow_id' => 'array',
+        'created_at' => 'datetime',
+        'inspection_date'=>'datetime',
+        're_inspection_date'=>'datetime',
+        'bid_submitted_date'=>'datetime',
+        'bid_rejected_date'=>'datetime',
+        'bid_approval_date'=>'datetime',
+        'work_schedule_date'=>'datetime',
+        'work_schedule_re_date'=>'datetime',
+        'work_completion_date'=>'datetime',
+        'bid_ecd'=>'datetime',
+        'work_ecd'=>'datetime',
     ];
     public function project(): BelongsTo
     {

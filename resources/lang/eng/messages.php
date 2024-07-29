@@ -252,6 +252,7 @@ return array(
     'newMilestoneCreated' => 'New milestone created',
     'milestoneUpdated' => 'Milestone Updated',
     'sowupdated' => 'Scope Of Work Updated',
+    'vendorupdated' => 'Vendor Updated',
     'milestoneDeleted' => 'Milestone Deleted',
     'selectConversation' => 'Select a conversation to send a message',
     'discountExceed' => 'Discount cannot be more than total amount.',
