@@ -13,6 +13,7 @@ use App\Models\ProjectType;
 use App\Models\ProjectPriority;
 use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
+use App\Models\DelayedBy;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
@@ -21,6 +22,7 @@ use App\Http\Requests\Project\StoreProjectType;
 use App\Http\Requests\Project\StoreProjectPriority;
 use App\Http\Requests\Project\StorePropertyType;
 use App\Http\Requests\Project\StoreOccupancyStatus;
+use App\Http\Requests\Project\StoreDelayedBy;
 use Illuminate\Support\Facades\Log;
 class ProjectSettingController extends AccountBaseController
 {
@@ -70,6 +72,10 @@ class ProjectSettingController extends AccountBaseController
          case 'occupancystatus':
                 $this->occupancyStatus = OccupancyStatus::all();
                 $this->view = 'project-settings.ajax.occupancystatus';
+                break; 
+        case 'delayedby':
+                $this->delayedBy = DelayedBy::all();
+                $this->view = 'project-settings.ajax.delayedby';
                 break; 
             
         default:
@@ -218,6 +224,10 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.create-occupancy-status-settings-modal', $this->data);
     }
+    public function createDelayedBy()
+    {
+        return view('project-settings.create-delayed-by-settings-modal', $this->data);
+    }
     
     public function saveProjectCategory(StoreProjectCategory $request)
     {
@@ -270,6 +280,15 @@ class ProjectSettingController extends AccountBaseController
         $os = new OccupancyStatus();
         $os->occupancy_status = $request->occupancy_status;
         $os->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+
+    public function saveDelayedBy(StoreDelayedBy $request)
+    {
+       
+        $dy = new DelayedBy();
+        $dy->delayed_by = $request->delayed_by;
+        $dy->save();
         return Reply::success(__('messages.recordSaved'));
     }
 }

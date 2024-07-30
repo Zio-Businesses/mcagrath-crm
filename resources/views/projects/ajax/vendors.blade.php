@@ -35,12 +35,14 @@
                                 {{ $item->linksentby->name }}
                             </td>
                             <td>
-                                @foreach($item->sow_id as $sow)
-                                    {{ $item->sowname($sow) }}<br/>
-                                @endforeach
+                                @if($item->sow_id)
+                                    @foreach($item->sow_id as $sow)
+                                        {{ $item->sowname($sow) }}<br/>
+                                    @endforeach
+                                @endif
                             </td>
                             <td>
-                                {{$item->link_status}}
+                                <a class="copy-vpro">{{$item->link_status}}</a>
                             </td>
                             <td class="text-right pr-20">
                                 <a href="javascript:;" class="text-dark toggle-contact-information" data-target="#contact-information-{{ $item->id }}" data-date="{{$item->id}}">
@@ -158,7 +160,7 @@
                                         </div>
                                         <div class="col-md-3 col-lg-3">
                                             <x-forms.datepicker fieldId="work_ecd-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Work Completion Date')" fieldName="work_ecd"
+                                                :fieldLabel="__('Work Ecd')" fieldName="work_ecd"
                                                 :fieldValue="($item->work_ecd ? $item->work_ecd->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
@@ -168,13 +170,26 @@
                                                         :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$item->bid_approved_amount"/>
                                         </div>
                                         
+                                        <input type="text" id="linkInput" value="{{$item->link}}" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
+                                            <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;">
+                                                    <i class="fa fa-edit mr-2"></i>
+                                                    @lang('Copy Link')
+                                            </a>
+                                            <a class="btn btn-primary m-2 btn-xs" href="{{route('projectvendors.download', $item->id)}}"
+                                                data-row-id="{{ $item->id }}">
+                                                <i class="fa fa-download mr-2"></i>
+                                                @lang('Download')
+                                            </a>
+                                            
                                             <a class="btn btn-primary m-2 btn-xs edit-vpro" href="javascript:;"
                                                 data-row-id="{{ $item->id }}">
                                                 <i class="fa fa-edit mr-2"></i>
                                                 @lang('Save')
                                             </a>
+                                            
+                                            
                                     </div>
                                     
                                 </x-form>
@@ -263,6 +278,28 @@
             }
         })
 
+    });
+
+    $('body').on('click', '.copy-vpro', function() {
+        var link = document.getElementById('linkInput').value;
+        navigator.clipboard.writeText(link).then(function() {
+            Swal.fire({
+                icon: 'success',
+                text: '{{ __('Link Copied') }}',
+
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            });
+        }).catch(function(err) {
+        console.error('Failed to copy text: ', err);
+        });
+        
     });
 
     // $('body').on('click', '.sow-detail', function() {

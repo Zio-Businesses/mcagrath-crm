@@ -128,6 +128,7 @@ use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\OccupancyStatusController;
 use App\Http\Controllers\ScopeOfWorkController;
 use App\Http\Controllers\ProjectVendorController;
+use App\Http\Controllers\ProjectDelayedByController;
 use App\Models\AttendanceSetting;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -230,6 +231,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectSubCategory', ProjectSubCategoryController::class);
     Route::resource('projectType', ProjectTypeController::class);
     Route::resource('projectPriority', ProjectPriorityController::class);
+    Route::resource('delayedBy', ProjectDelayedByController::class);
     Route::resource('propertyType', PropertyTypeController::class);
     Route::resource('occupancyStatus',OccupancyStatusController::class);
     Route::post('import-subcategories', [ProjectSubCategoryController::class, 'import'])->name('subcategory.import');
@@ -275,6 +277,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('milestones', ProjectMilestoneController::class);
             Route::resource('sow', ScopeOfWorkController::class);
             Route::resource('projectvendors', ProjectVendorController::class);
+            Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');

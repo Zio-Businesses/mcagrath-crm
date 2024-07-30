@@ -56,6 +56,11 @@
                                aria-controls="nav-occupancystatus"
                                aria-selected="true">@lang('Occupancy Status')
                             </a>
+                            </a> <a class="nav-item nav-link f-15 delayedby"
+                               href="{{ route('project-settings.index') }}?tab=delayedby" role="tab"
+                               aria-controls="nav-delayedby"
+                               aria-selected="true">@lang('Delayed By')
+                            </a>
 
 
                         </div>
@@ -101,6 +106,9 @@
                         </x-forms.button-primary>
                         <x-forms.button-primary icon="plus" id="addOccupancyStatus"
                                     class="occupancystatus-btn d-none mb-2 actionBtn"> @lang('Add Occupancy Status')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addDelayedBy"
+                                    class="delayedby-btn d-none mb-2 actionBtn"> @lang('Add Delayed By')
                         </x-forms.button-primary>
                     </div>
 

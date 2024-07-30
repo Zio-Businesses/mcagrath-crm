@@ -24,6 +24,9 @@ class ProjectVendor extends BaseModel
         'work_completion_date'=>'datetime',
         'bid_ecd'=>'datetime',
         'work_ecd'=>'datetime',
+        'due_date'=>'datetime',
+        'accepted_date'=>'datetime',
+        'rejected_date'=>'datetime',
     ];
     public function project(): BelongsTo
     {
@@ -37,6 +40,21 @@ class ProjectVendor extends BaseModel
     {
         $scopeofwork= ScopeOfWork::findOrFail($data);
         return $scopeofwork->sow_title;
+    }
+    public function sowcategory($data)
+    {
+        $scopeofwork= ScopeOfWork::findOrFail($data);
+        return $scopeofwork->category;
+    }
+    public function sowsubcategory($data)
+    {
+        $scopeofwork= ScopeOfWork::findOrFail($data);
+        return $scopeofwork->sub_category;
+    }
+    public function sowdescription($data)
+    {
+        $scopeofwork= ScopeOfWork::findOrFail($data);
+        return $scopeofwork->description;
     }
 
 }

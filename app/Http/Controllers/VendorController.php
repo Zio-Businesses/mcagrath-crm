@@ -304,7 +304,6 @@ class VendorController extends AccountBaseController
     }
     public function download($id)
     {
-        Log::info($id);
         $this->contract = VendorContract::findOrFail($id);
         $this->pageTitle = 'app.menu.contracts';
         $this->pageIcon = 'fa fa-file';

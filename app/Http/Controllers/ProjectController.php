@@ -55,6 +55,7 @@ use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
 use App\Models\Team;
 use App\Models\User;
+use App\Models\DelayedBy;
 use App\Models\PropertyDetails;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
@@ -544,6 +545,7 @@ class ProjectController extends AccountBaseController
         $this->projectpriority=ProjectPriority::all();
         $this->propertytype=PropertyType::all();
         $this->occupancystatus=OccupancyStatus::all();
+        $this->delayedby=DelayedBy::all();
         $this->employees = '';
         $this->estimators=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
             $query->where('designation_id', 6);
@@ -620,6 +622,7 @@ class ProjectController extends AccountBaseController
         $project->type=$request->type;
         $project->priority=$request->priority;
         $project->sub_category=$request->sub_category;
+        $project->delayed_by=$request->delayed_by;
         $propertyDetails->property_address = $request->property_address;
         $propertyDetails->street_address = $request->street_address;
         $propertyDetails->city = $request->city;

@@ -122,6 +122,21 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->deadline ? $project->deadline->format(company()->date_format) : '')"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
+                    <div class="col-md-3">
+                        <x-forms.label class="mb-12 mt-3" fieldId="type"
+                                       :fieldLabel="__('Delayed By')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="delayed_by" id="delayed_by"
+                                    data-live-search="true">
+                                    <option value="">--</option>
+                                @foreach ($delayedby as $category)
+                                    <option @selected($project->delayed_by == $category->delayed_by) value="{{ $category->delayed_by}}">
+                                    {{ $category->delayed_by }}</option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
                     <div class="col-md-3 col-lg-3">
                         <x-forms.datepicker fieldId="inspection_date" custom="true"
                             :fieldLabel="__('Inspection Date')" fieldName="inspection_date"

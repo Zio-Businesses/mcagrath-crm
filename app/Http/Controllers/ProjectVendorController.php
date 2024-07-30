@@ -11,8 +11,13 @@ use App\Models\ScopeOfWork;
 use App\Models\ProjectType;
 use App\Models\ContractTemplate;
 use App\Models\ProjectVendor;
+use App\Models\Company;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewVendorWorkOrder;
+use App\Http\Requests\Project\StoreProjectVendor;
+use Illuminate\Support\Facades\App;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -38,7 +43,7 @@ class ProjectVendorController extends AccountBaseController
 
         $this->project = Project::findOrFail($id);
         $this->vendor=VendorContract::all();
-        $this->sow=ScopeOfWork::all();
+        $this->sow=$this->project->sow;
         $this->projecttype=ProjectType::all();
         $this->contract=ContractTemplate::all();
         // $addProjectMilestonePermission = user()->permission('add_project_milestones');
@@ -47,13 +52,14 @@ class ProjectVendorController extends AccountBaseController
         return view('projects.vendors.create', $this->data);
     }
     
-    public function store(Request $request)
+    public function store(StoreProjectVendor $request)
     {
         $vendor = VendorContract::findOrFail($request->vendor_id);
         $vpro= new ProjectVendor();
         $vpro->project_id = $request->project_id;
         $vpro->vendor_name=$vendor->vendor_name;
         $vpro->vendor_phone=$vendor->cell;
+        $vpro->due_date=companyToYmd($request->due_date);
         $vpro->vendor_email_address=$vendor->vendor_email;
         $vpro->sow_id=$request->sow_id;
         $vpro->vendor_id=$request->vendor_id;
@@ -61,10 +67,11 @@ class ProjectVendorController extends AccountBaseController
         $vpro->project_amount=$request->project_amount;
         $vpro->add_notes=$request->add_notes;
         $vpro->project_type=$request->project_type;
+        $vpro->contract_id=$request->contract_id;
         $vpro->link_status='Sent';
         $vpro->save();
         $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
-
+        Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
         return Reply::success(__('New Vendor Added Successfully'));
         
     }
@@ -102,5 +109,27 @@ class ProjectVendorController extends AccountBaseController
         $this->logProjectActivity($vpro->project_id, 'messages.vprodeleted');
 
         return Reply::success(__('messages.deleteSuccess'));
+    }
+    public function download($id)
+    {
+        $this->pageTitle = 'app.menu.contracts';
+        $this->pageIcon = 'fa fa-file';
+        $this->company = Company::find(1);
+        $this->projectvendor = ProjectVendor::findOrFail($id);
+        $this->projectid = Project::findOrFail($this->projectvendor->project_id);
+        $this->contractid = ContractTemplate::findOrFail($this->projectvendor->contract_id);
+        $this->vendorid = VendorContract::findOrFail($this->projectvendor->vendor_id);
+        $pdf = app('dompdf.wrapper');
+
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        App::setLocale('en');
+        Carbon::setLocale('en');
+        $pdf->loadView('projects.vendors.contract-pdf', $this->data);
+
+        $filename = 'contract-' . $this->projectvendor->id;
+
+        return $pdf->download($filename . '.pdf');
     }
 }

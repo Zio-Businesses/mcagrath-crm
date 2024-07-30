@@ -8,7 +8,7 @@ use App\Helper\Reply;
 use App\Models\ProjectPriority;
 use App\Http\Requests\Project\StoreProjectPriority;
 
-class ProjectPriorityController extends Controller
+class ProjectPriorityController extends AccountBaseController
 {
     public function edit($id)
     {
