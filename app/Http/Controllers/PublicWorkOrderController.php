@@ -35,7 +35,7 @@ class PublicWorkOrderController extends Controller
         $projectid = Project::findOrFail($decryptedData['projectid']);
         $contractid = ContractTemplate::findOrFail($decryptedData['contractid']);
         $vendorid = VendorContract::findOrFail($decryptedData['vendorid']);
-        if($projectvendor->link_status=='Rejected')
+        if($projectvendor->link_status=='Rejected'||$projectvendor->link_status=='Removed')
         {
             return view('errors.link-expired');
         }

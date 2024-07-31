@@ -132,4 +132,28 @@ class ProjectVendorController extends AccountBaseController
 
         return $pdf->download($filename . '.pdf');
     }
+    public function linkstatuschange(Request $request, $id)
+    {
+        $vpro = ProjectVendor::findOrFail($id);
+        $vpro->link_status=$request->value;
+        $vpro->save();
+        return Reply::success(__('Updated Successfully'));
+    }
+    public function resentLink($id)
+    {
+        $vpro = ProjectVendor::findOrFail($id);
+        
+        if($vpro->accepted_date)
+        {
+            $vpro->accepted_date=null;
+        }
+        if($vpro->rejected_date)
+        {
+            $vpro->rejected_date=null;
+        }
+        $vpro->link_status='Sent';
+        $vpro->save();
+        Notification::route('mail', $vpro->vendor_email_address)->notify(new NewVendorWorkOrder($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id));
+        return Reply::success(__('Link Resend'));
+    }
 }

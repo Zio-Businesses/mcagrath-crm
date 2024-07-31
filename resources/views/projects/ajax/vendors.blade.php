@@ -42,7 +42,16 @@
                                 @endif
                             </td>
                             <td>
-                                <a class="copy-vpro">{{$item->link_status}}</a>
+                                <select class="form-control select-picker update-select" name="link_status" id="link_status" data-status-id="{{ $item->id }}">
+                                    <option @selected($item->link_status == 'Accepted') value="Accepted" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Accepted'>
+                                    </option>
+                                    <option @selected($item->link_status == 'Rejected') value="Rejected" data-content='<i class="fa fa-circle mr-2" style="color:#f5c308;"></i>Rejected'>
+                                    </option>
+                                    <option @selected($item->link_status == 'Sent') value="Sent" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Sent'>
+                                    </option>
+                                    <option @selected($item->link_status == 'Removed') data-content='<i class="fa fa-circle mr-2" style="color:#d21010;"></i>Removed'>
+                                    Removed</option>
+                                </select>
                             </td>
                             <td class="text-right pr-20">
                                 <a href="javascript:;" class="text-dark toggle-contact-information" data-target="#contact-information-{{ $item->id }}" data-date="{{$item->id}}">
@@ -173,8 +182,14 @@
                                         <input type="text" id="linkInput" value="{{$item->link}}" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
+
+                                             <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
+                                                data-link-id="{{ $item->id }}">
+                                                <i class="fa fa-paper-plane mr-2"></i>
+                                                @lang('Resend Link')
+                                            </a>
                                             <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;">
-                                                    <i class="fa fa-edit mr-2"></i>
+                                                    <i class="fa fa-copy mr-2"></i>
                                                     @lang('Copy Link')
                                             </a>
                                             <a class="btn btn-primary m-2 btn-xs" href="{{route('projectvendors.download', $item->id)}}"
@@ -188,8 +203,6 @@
                                                 <i class="fa fa-edit mr-2"></i>
                                                 @lang('Save')
                                             </a>
-                                            
-                                            
                                     </div>
                                     
                                 </x-form>
@@ -269,7 +282,6 @@
             type: "POST",
             blockUI: true,
             disableButton: true,
-            buttonSelector: '#save-sow-milestone',
             data: $(contain).serialize(),
             success: function(response) {
                 if (response.status == 'success') {
@@ -279,6 +291,29 @@
         })
 
     });
+    $('.update-select').change(function() {
+        var select = $(this);
+        var id = select.data('status-id');
+        var value = select.val();
+        var url="{{ route('projectvendors.linkstatuschange',':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                blockUI: true,
+                data: {
+                        _token: '{{ csrf_token() }}',
+                        value: value
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+        
+    });
+
 
     $('body').on('click', '.copy-vpro', function() {
         var link = document.getElementById('linkInput').value;
@@ -302,13 +337,24 @@
         
     });
 
-    // $('body').on('click', '.sow-detail', function() {
-    //     var id = $(this).data('sow-id');
-    //     var url = "{{ route('sow.show', ':id') }}";
-    //     url = url.replace(':id', id);
-    //     $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-    //     $.ajaxModal(MODAL_XL, url);
-    // });
+    $('body').on('click', '.relink-vpro', function() {
+        var id = $(this).data('link-id');
+        var url="{{ route('projectvendors.resentlink',':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                blockUI: true,
+                data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+    });
 
     $('.delete-row').click(function() {
 

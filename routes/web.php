@@ -278,6 +278,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('sow', ScopeOfWorkController::class);
             Route::resource('projectvendors', ProjectVendorController::class);
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
+            Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
+            Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');
