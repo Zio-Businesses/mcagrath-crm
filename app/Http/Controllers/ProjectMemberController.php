@@ -11,6 +11,7 @@ use App\Models\ProjectMember;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProjectMemberController extends AccountBaseController
 {
@@ -88,19 +89,35 @@ class ProjectMemberController extends AccountBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        $projectMember = ProjectMember::findOrFail($id);
+        if($request->action=='coordinator'){
+            $projectMember = ProjectMember::findOrFail($id);
 
-        $project = Project::withTrashed()->findOrFail($projectMember->project_id);
+            $project = Project::withTrashed()->findOrFail($projectMember->project_id);
 
-        if ($project->project_admin == $projectMember->user_id) {
-            $project->project_admin = null;
-            $project->save();
+            if ($project->project_admin == $projectMember->user_id) {
+                $project->project_admin = null;
+                $project->save();
+            }
+
+            $projectMember->delete();
         }
-
-        $projectMember->delete();
-
+        if($request->action=='estimator')
+        {
+            $project = Project::findOrFail($request->project);
+            $project->est_users()->detach($id);
+        }
+        if($request->action=='accounting')
+        {
+            $project = Project::findOrFail($request->project);
+            $project->acct_users()->detach($id);
+        }
+        if($request->action=='emanager')
+        {
+            $project = Project::findOrFail($request->project);
+            $project->emanager_users()->detach($id);
+        }
         return Reply::success(__('messages.memberRemovedFromProject'));
     }
 
