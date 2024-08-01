@@ -29,6 +29,13 @@ class UpdateProject extends CoreRequest
     {
         $rules = [
             // 'project_name' => 'required|max:150',
+            'type'=>'required',
+            'priority'=>'required',
+            'category_id'=>'required',
+            'sub_category'=>'required',
+            'deadline'=>'required',
+            'property_address'=>'required',
+            'occupancy_status'=>'required',
             'start_date' => 'required',
             'hours_allocated' => 'nullable|numeric',
             'client_id' => 'requiredIf:client_view_task,true',

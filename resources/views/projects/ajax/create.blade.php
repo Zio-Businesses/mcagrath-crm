@@ -42,7 +42,7 @@
                     </div>
                     <div class="col-md-3">
                         <x-forms.label class="mb-12 mt-3" fieldId="type"
-                                       :fieldLabel="__('Project Type')">
+                                       :fieldLabel="__('Project Type')" fieldRequired="true">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="type" id="type"
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-md-3">
                         <x-forms.label class="mb-12 mt-3" fieldId="priority"
-                                       :fieldLabel="__('Priority')">
+                                       :fieldLabel="__('Priority')" fieldRequired="true">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="priority" id="priority"
@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-md-3">
                         <x-forms.label class="my-3" fieldId="category_id"
-                                       :fieldLabel="__('modules.projects.projectCategory')">
+                                       :fieldLabel="__('modules.projects.projectCategory')" fieldRequired="true">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="category_id" id="project_category_id"
@@ -104,7 +104,7 @@
 
                     <div class="col-md-3">
                         <x-forms.label class="my-3" fieldId="sub_category"
-                                       :fieldLabel="__('Project Sub-Category')">
+                                       :fieldLabel="__('Project Sub-Category')" fieldRequired="true">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="sub_category" id="sub_category"
@@ -185,32 +185,32 @@
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2 " :fieldLabel="__('Street Address')"
-                                      fieldName="street_address" fieldRequired="true" fieldId="street_address"
+                                      fieldName="street_address"  fieldId="street_address"
                                       :fieldPlaceholder="__('Street Address')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('suite # / house #')"
-                                        fieldName="optional" fieldRequired="true" fieldId="optional"
+                                        fieldName="optional"  fieldId="optional"
                                         :fieldPlaceholder="__('optional')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('City')"
-                                      fieldName="city" fieldRequired="true" fieldId="city"
+                                      fieldName="city"  fieldId="city"
                                       :fieldPlaceholder="__('City')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('State')"
-                                      fieldName="state" fieldRequired="true" fieldId="state"
+                                      fieldName="state"  fieldId="state"
                                       :fieldPlaceholder="__('State')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Zip Code')"
-                                      fieldName="zipcode" fieldRequired="true" fieldId="zipcode"
+                                      fieldName="zipcode"  fieldId="zipcode"
                                       :fieldPlaceholder="__('Zip Code')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('County')"
-                                      fieldName="county" fieldRequired="true" fieldId="county"
+                                      fieldName="county"  fieldId="county"
                                       :fieldPlaceholder="__('County')" />
                     </div>
                     <div class="col-md-3">
@@ -232,36 +232,36 @@
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Year Built')"
-                                      fieldName="yearbuilt" fieldRequired="true" fieldId="yearbuilt"
+                                      fieldName="yearbuilt"  fieldId="yearbuilt"
                                       :fieldPlaceholder="__('Year Built')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bedrooms')"
-                                      fieldName="bedrooms" fieldRequired="true" fieldId="bedrooms"
+                                      fieldName="bedrooms"  fieldId="bedrooms"
                                       :fieldPlaceholder="__('Bedrooms')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bathrooms')"
-                                      fieldName="bathrooms" fieldRequired="true" fieldId="bathrooms"
+                                      fieldName="bathrooms"  fieldId="bathrooms"
                                       :fieldPlaceholder="__('bathrooms')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('House Size')"
-                                      fieldName="house_size" fieldRequired="true" fieldId="house_size"
+                                      fieldName="house_size"  fieldId="house_size"
                                       :fieldPlaceholder="__('House Size')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lot Size')"
-                                      fieldName="lotsize" fieldRequired="true" fieldId="lotsize"
+                                      fieldName="lotsize"  fieldId="lotsize"
                                       :fieldPlaceholder="__('Lot Size')" />
                     </div>
                     <div class="col-md-3">
                         <x-forms.label class="my-3" fieldId="occupancy_status"
-                                       :fieldLabel="__('Occupancy Status')">
+                                       :fieldLabel="__('Occupancy Status')" fieldRequired="true">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="occupancy_status" id="occupancy_status"
-                                    data-live-search="true">
+                                    data-live-search="true" >
                                 <option value="">--</option>
                                 @foreach ($occupancystatus as $category)
                                     <option
@@ -274,18 +274,18 @@
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lock Box Location')"
-                                      fieldName="lockboxlocation" fieldRequired="true" fieldId="lockboxlocation"
+                                      fieldName="lockboxlocation"  fieldId="lockboxlocation"
                                       :fieldPlaceholder="__('Lock Box Location')" />
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Lock Box Code')"
-                                      fieldName="lockboxcode" fieldRequired="true" fieldId="lockboxcode"
+                                      fieldName="lockboxcode"  fieldId="lockboxcode"
                                       :fieldPlaceholder="__('Lock Box Code')" />
                     </div>
                         <div class="col-lg-10 mt-2">
                             <div class="row">
                                 <div class="col-lg-10 mb-2">
-                                    <label class='f-14 text-dark-grey mb-12'>Utility Status<sup class="f-14 mr-1">*</sup></label><br>
+                                    <label class='f-14 text-dark-grey mb-12'>Utility Status</label><br>
                                 </div>
                                 <div class="col-lg-3">
                                     <x-forms.checkbox 
@@ -321,34 +321,34 @@
                     <div class="row p-20 d-none" id="contact-information">
                         <div class="col-lg-4 col-md-3">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Name')"
-                                        fieldName="amname" fieldRequired="true" fieldId="amname"
+                                        fieldName="amname"  fieldId="amname"
                                         :fieldPlaceholder="__('Asset Manager Name')" />
                         </div>
                         <div class="col-lg-4 col-md-3">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Phone Number')"
-                                        fieldName="amph" fieldRequired="true" fieldId="amph"
+                                        fieldName="amph"  fieldId="amph"
                                         :fieldPlaceholder="__('Asset Manager Phone Number')" />
                         </div>
                         <div class="col-lg-4 col-md-3">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Asset Manager Email Address')"
-                                        fieldName="amemail" fieldRequired="true" fieldId="amemail"
+                                        fieldName="amemail"  fieldId="amemail"
                                         :fieldPlaceholder="__('Asset Manager Email Address')" />
                         </div>
                         <div class="w-100 m-2" style="border: 1px solid lightgrey; border-radius: 10px; padding: 10px;">
                             <div class="form-group row tenant-row  mx-1">
                                 <div class="col-lg-4 col-md-3">
                                     <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Name')"
-                                                fieldName="tenant_name_1" fieldRequired="true" fieldId="tenant_name_1"
+                                                fieldName="tenant_name_1"  fieldId="tenant_name_1"
                                                 :fieldPlaceholder="__('Tenant 1 Name')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3">
                                     <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Email')"
-                                                fieldName="tenant_email_1" fieldRequired="true" fieldId="tenant_email_1"
+                                                fieldName="tenant_email_1"  fieldId="tenant_email_1"
                                                 :fieldPlaceholder="__('Tenant 1 Email')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3">
                                     <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Tenant 1 Phone')"
-                                                fieldName="tenant_phone_1" fieldRequired="true" fieldId="tenant_phone_1"
+                                                fieldName="tenant_phone_1"  fieldId="tenant_phone_1"
                                                 :fieldPlaceholder="__('Tenant 1 Phone')" />
                                 </div>
                                 <div class="col-lg-4 col-md-3 d-flex align-items-end">
@@ -448,7 +448,7 @@
                         @if ($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added')
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
                                                :fieldLabel="__('Add Project Coordinator')">
                                 </x-forms.label>
 
@@ -480,7 +480,7 @@
                         @endif
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
                                                :fieldLabel="__('Add Project Estimators')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -499,7 +499,7 @@
                         </div>
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
                                                :fieldLabel="__('Add Project Accounting Analyst')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -518,7 +518,7 @@
                         </div>
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label class="my-3" fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
                                                :fieldLabel="__('Add Project Escalation Manager')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -544,17 +544,17 @@
                     <div class="row p-20 d-none" id="accounting-information">
                         <div class="col-lg-4 col-md-3">
                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Not To Exceed')"
-                                        fieldName="nte" fieldRequired="true" fieldId="nte"
+                                        fieldName="nte"  fieldId="nte"
                                         :fieldPlaceholder="__('Not To Exceed')" />
                         </div>
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Submitted Amount')"
-                                      fieldName="bid_submitted_amount" fieldRequired="true" fieldId="bid_submitted_amount"
+                                      fieldName="bid_submitted_amount"  fieldId="bid_submitted_amount"
                                       :fieldPlaceholder="__('Bid Submitted Amount')" />
                         </div>
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')"
-                                      fieldName="bid_approved_amount" fieldRequired="true" fieldId="bid_approved_amount"
+                                      fieldName="bid_approved_amount"  fieldId="bid_approved_amount"
                                       :fieldPlaceholder="__('Bid Approved Amount')" />
                         </div>
                     </div>

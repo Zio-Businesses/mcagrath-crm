@@ -30,6 +30,13 @@ class StoreProject extends CoreRequest
 
         $rules = [
             // 'project_name' => 'required|max:150',
+            'type'=>'required',
+            'priority'=>'required',
+            'category_id'=>'required',
+            'sub_category'=>'required',
+            'deadline'=>'required',
+            'property_address'=>'required',
+            'occupancy_status'=>'required',
             'start_date' => 'required|date_format:"' . $setting->date_format . '"',
             'hours_allocated' => 'nullable|numeric',
             'client_id' => 'requiredIf:client_view_task,true',
