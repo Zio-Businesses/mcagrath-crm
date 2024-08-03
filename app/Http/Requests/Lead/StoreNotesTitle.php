@@ -3,9 +3,9 @@
 namespace App\Http\Requests\Lead;
 
 use App\Http\Requests\CoreRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-
-class StoreVendorRequest extends CoreRequest
+class StoreNotesTitle extends CoreRequest
 {
 
     /**
@@ -17,19 +17,17 @@ class StoreVendorRequest extends CoreRequest
     {
         return true;
     }
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
-
     public function rules()
     {
-        $rules = array();
-        $rules['vendor_name'] = 'required';
-        $rules['vendor_email'] = 'required';
-        $rules['vendor_mobile'] = 'required';
-        return $rules;
+        return [
+            'notes_title' => 'required'
+        ];
     }
 
 }

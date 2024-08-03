@@ -10,6 +10,7 @@ use App\Models\LeadSource;
 use App\Models\PipelineStage;
 use App\Models\LeadStatus;
 use App\Models\User;
+use App\Models\NotesTitle;
 use Illuminate\Http\Request;
 use App\Models\LeadSetting;
 
@@ -40,7 +41,7 @@ class LeadSettingController extends AccountBaseController
         $this->leadAgents = User::whereHas('leadAgent')->with('leadAgent')->get();
         $this->leadCategories = LeadCategory::all();
         $this->leadSettings = LeadSetting::select('status')->where('company_id',$this->company->id)->first();
-
+        $this->notesTitle = NotesTitle::all();
         $this->employees = User::doesntHave('leadAgent')
             ->join('role_user', 'role_user.user_id', '=', 'users.id')
             ->join('roles', 'roles.id', '=', 'role_user.role_id')
@@ -55,6 +56,7 @@ class LeadSettingController extends AccountBaseController
             'agent' => 'lead-settings.ajax.agent',
             'category' => 'lead-settings.ajax.category',
             'method' => 'lead-settings.ajax.method',
+            'notestitle' => 'lead-settings.ajax.notestitle',
             default => 'lead-settings.ajax.source',
         };
 

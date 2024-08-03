@@ -24,16 +24,7 @@
                                <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
                                :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true" :fieldValue="$vendor->vendor_number"></x-forms.tel>
                             </div>
-                            <div class="col-lg-4 col-md-6">
-                                <x-forms.datepicker custom="true" fieldId="contract_start" fieldRequired="true"
-                                        :fieldLabel="__('app.csd')" fieldName="start_date"
-                                        :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->contract_start"/>
-                            </div>
-                            <div class="col-lg-4 col-md-6">
-                                <x-forms.datepicker custom="true" fieldId="contract_end" fieldRequired="true"
-                                        :fieldLabel="__('app.ced')" fieldName="end_date"
-                                        :fieldPlaceholder="__('placeholders.date')" :fieldValue="$vendor->contract_end"/>
-                            </div>
+                            
                             
                             <div class="col-lg-4 col-md-6">
                                 <x-forms.select fieldId="v_status" :fieldLabel="__('Status')"

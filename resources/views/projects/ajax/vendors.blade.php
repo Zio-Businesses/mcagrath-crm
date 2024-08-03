@@ -18,9 +18,14 @@
                     <x-slot name="thead">
                         <th class="pl-20">#</th>
                         <th>@lang('Vendor Name')</th>
-                        <th>@lang('Link Sent By')</th>
+                        <th>@lang('app.mobile')</th>
+                        <th>@lang('app.email')</th>
+                        
                         <th>@lang('Sow')</th>
+                        <th>@lang('Link Sent By')</th>
+                        <th>@lang('Link Date')</th>
                         <th>@lang('Link Status')</th>
+                        
                         <th class="text-right pr-20">@lang('app.action')</th>
                     </x-slot>
 
@@ -32,14 +37,24 @@
                                     data-sow-id="{{ $item->id }}">{{ $item->vendor_name }}</a>
                             </td>
                             <td>
-                                {{ $item->linksentby->name }}
+                                {{$item->vendor_phone}}
                             </td>
+                            <td>
+                                {{$item->vendor_email_address}}
+                            </td>
+                           
                             <td>
                                 @if($item->sow_id)
                                     @foreach($item->sow_id as $sow)
                                         {{ $item->sowname($sow) }}<br/>
                                     @endforeach
                                 @endif
+                            </td>
+                            <td>
+                                {{ $item->linksentby->name }}
+                            </td>
+                            <td>
+                                {{ $item->created_at->format(company()->date_format) }}
                             </td>
                             <td>
                                 <select class="form-control select-picker update-select" name="link_status" id="link_status" data-status-id="{{ $item->id }}">
@@ -60,7 +75,7 @@
                             </td>
                         </tr>
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
-                            <td colspan="6">
+                            <td colspan="9">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <div class="row justify-content-center border rounded mr-0 bg-additional-grey">
                                         <input type="hidden" name="project_id" value="{{ $project->id }}">

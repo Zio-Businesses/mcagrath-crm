@@ -16,35 +16,79 @@ $addProductPermission = user()->permission('add_product');
                     @lang('modules.leadContact.vendorDetails')</h4>
                 <div class="row p-20">
 
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.text :fieldLabel="__('app.name')" fieldName="vendor_name"
-                            fieldId="vendor_name" :fieldPlaceholder="__('placeholders.name')" fieldRequired="true" />
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.text :fieldLabel="__('Company Name')" fieldName="vendor_name"
+                            fieldId="vendor_name" :fieldPlaceholder="__('Company Name')" fieldRequired="true" />
                     </div>
-                    <div class="col-lg-4 col-md-6">
-
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.text :fieldLabel="__('POC')" fieldName="poc"
+                            fieldId="poc" :fieldPlaceholder="__('Poc')" />
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
+                           :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true"></x-forms.tel>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
                         <x-forms.email fieldId="vendor_email" :fieldLabel="__('app.email')"
-                            fieldName="vendor_email" :fieldPlaceholder="__('placeholders.email')" :fieldHelp="__('modules.lead.leadEmailInfo')" fieldRequired="true">
+                            fieldName="vendor_email" :fieldPlaceholder="__('placeholders.email')" :fieldHelp="__('modules.lead.leadEmailInfo')">
                         </x-forms.email>
                     </div>
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.tel fieldId="vendor_mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="vendor_mobile"
-                           :fieldPlaceholder="__('placeholders.mobile')"></x-forms.tel>
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.text fieldId="state" :fieldLabel="__('State')"
+                            fieldName="state" :fieldPlaceholder="__('State')" fieldRequired="true" >
+                        </x-forms.text>
                     </div>
-                    <div class="col-lg-4 col-md-6">
-                       <x-forms.datepicker fieldId="start_date" fieldRequired="true"
-                                            :fieldLabel="__('modules.projects.startDate')" fieldName="start_date"
-                                            
-                                            :fieldPlaceholder="__('placeholders.date')"/>
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.text fieldId="county" :fieldLabel="__('County')"
+                            fieldName="county" :fieldPlaceholder="__('County')" fieldRequired="true">
+                        </x-forms.text>
                     </div>
-                    <div class="col-lg-4 col-md-6">
-                    <x-forms.datepicker fieldId="end_date"
-                                            
-                                            :fieldLabel="__('modules.timeLogs.endDate')" fieldName="end_date"
-                                            :fieldPlaceholder="__('placeholders.date')"/>
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.text fieldId="City" :fieldLabel="__('City')"
+                            fieldName="City" :fieldPlaceholder="__('City')" fieldRequired="true">
+                        </x-forms.text>
                     </div>
-                    
-
-                 </div>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="contractor_type" :fieldLabel="__('Contractor Type')" fieldName="contractor_type" fieldRequired="true" search="true">
+                                <option value="">--</option>
+                                @foreach ($contracttype as $type)
+                                    <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                                @endforeach
+                            </x-forms.select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="lead_source" :fieldLabel="__('Lead Source')" fieldName="lead_source"  search="true">
+                                <option value="">--</option>
+                                @foreach ($leadsource as $type)
+                                    <option value="{{ $type->type }}">{{$type->type}}</option>
+                                @endforeach
+                            </x-forms.select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <x-forms.text fieldId="Website" :fieldLabel="__('Website')"
+                                fieldName="website" :fieldPlaceholder="__('Website')">
+                        </x-forms.text>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                            <x-forms.datepicker fieldId="nxt_date"
+                            :fieldLabel="__('Next Follow Up Date')" fieldName="nxt_date"
+                            :fieldPlaceholder="__('placeholders.date')" />
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="notes_title" :fieldLabel="__('Notes Title')" fieldName="notes_title"  search="true" fieldRequired="true">
+                                <option value="">--</option>
+                                @foreach ($notestitle as $type)
+                                    <option value="{{ $type->notes_title }}">{{$type->notes_title}}</option>
+                                @endforeach
+                            </x-forms.select>
+                    </div>
+                    <div class="col-md-12">
+                        <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Notes')"
+                            fieldName="notes" fieldId="notes" fieldRequired="true"
+                            :fieldPlaceholder="__('Enter notes')">
+                        </x-forms.textarea>
+                    </div>
+                </div>
 
                 <x-form-actions>
                     <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
@@ -65,100 +109,19 @@ $addProductPermission = user()->permission('add_product');
 
 
     $(document).ready(function() {
-        const dp1 = datepicker('#start_date', {
+        $("#save-lead-data-form .select-picker").selectpicker();
+        const dp1 = datepicker('#nxt_date', {
             position: 'bl',
-            onSelect: (instance, date) => {
-                if (typeof dp2.dateSelected !== 'undefined' && dp2.dateSelected.getTime() < date
-                    .getTime()) {
-                    dp2.setDate(date, true)
-                }
-                if (typeof dp2.dateSelected === 'undefined') {
-                    dp2.setDate(date, true)
-                }
-                dp2.setMin(date);
-            },
             ...datepickerConfig
         });
-
-        const dp2 = datepicker('#end_date', {
-            position: 'bl',
-            onSelect: (instance, date) => {
-                dp1.setMax(date);
-            },
-            ...datepickerConfig
         });
 
-        $('.custom-date-picker').each(function(ind, el) {
-            datepicker(el, {
-                position: 'bl',
-                ...datepickerConfig
-            });
-        });
-    });
-
+       
         $('#save-email-form').click(function () {
             var i=1;
-            var email=document.getElementById('vendor_email').value;
-            var url="{{route('vendors.check',':email')}}";
-            url = url.replace(':email', email);
-            if(email.trim()=="")
-            {
-                Swal.fire({
-                icon: 'error',
-                text: '{{ __('Email Field Required!!') }}',
-
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-                });
-                return false;
-            }
-            $.easyAjax({
-                url: url,
-                type: "GET",
-                disableButton: true,
-                blockUI: true,
-                buttonSelector: "#save-lead-form",
-                success: function(response) {
-                    if (response.status == "success") {
-                        Swal.fire({
-                            title: "@lang('Would you like to send the email?')",
-                            text:   "@lang('This email address has previously declined your vendor contract')",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            focusConfirm: false,
-                            confirmButtonText: "@lang('Send')",
-                            cancelButtonText: "@lang('app.cancel')",
-                            customClass: {
-                                confirmButton: 'btn btn-primary mr-3',
-                                cancelButton: 'btn btn-secondary'
-                            },
-                            showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                            },
-                            buttonsStyling: false
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                const url = "{{ route('vendor-crud.store') }}";
-                                var data = $('#save-lead-data-form').serialize();
-                                saveLead(data, url, "#save-email-form",i);
-                            }
-                        });
-                    }
-                    else{
-                        const url = "{{ route('vendor-crud.store') }}";
-                        var data = $('#save-lead-data-form').serialize();
-                        saveLead(data, url, "#save-email-form",i);
-                    }
-                }
-            });
-
+            const url = "{{ route('vendor-crud.store') }}";
+            var data = $('#save-lead-data-form').serialize();
+            saveLead(data, url, "#save-email-form",i);
         });
 
         $('#save-lead-form').click(function() {
@@ -180,7 +143,7 @@ $addProductPermission = user()->permission('add_product');
                 buttonSelector: buttonSelector,
                 data: [data,i],
                 success: function(response) {
-                    window.location.href = response.redirectUrl;
+                    // window.location.href = response.redirectUrl;
                 }
             });
 

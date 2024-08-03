@@ -54,6 +54,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\EmployeeDocController;
 use App\Http\Controllers\ImmigrationController;
 use App\Http\Controllers\LeadCategoryController;
+use App\Http\Controllers\NotesTitleController;
 use App\Http\Controllers\LeaveReportController;
 use App\Http\Controllers\LeavesQuotaController;
 use App\Http\Controllers\MessageFileController;
@@ -474,6 +475,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     // Lead Category
     Route::resource('leadCategory', LeadCategoryController::class);
+
+    //Notes Title
+    Route::resource('notesTitle', NotesTitleController::class);
 
     // Lead Note
     Route::get('lead-notes/ask-for-password/{id}', [LeadNoteController::class, 'askForPassword'])->name('lead-notes.ask_for_password');

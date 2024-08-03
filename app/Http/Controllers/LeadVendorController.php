@@ -22,6 +22,9 @@ use App\DataTables\VendorTrackDataTable;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorContract;
 use Illuminate\Support\Facades\DB;
+use App\Models\LeadSource;
+use App\Models\NotesTitle;
+
 class LeadVendorController extends AccountBaseController
 {
     public function handle()
@@ -29,7 +32,9 @@ class LeadVendorController extends AccountBaseController
         
         $this->pageTitle = __('modules.leadContact.createTitlev');
          $this->view = 'lead-contact.ajax.createvendor';
-
+         $this->contracttype = VendorContract::getContractType();
+         $this->leadsource=LeadSource::all();
+        $this->notestitle=NotesTitle::all();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
        
@@ -52,13 +57,12 @@ class LeadVendorController extends AccountBaseController
         $email = $request->input('vendor_email');
         if($request[1]==1)
         {
-            
             $leadContact = new Vendor();
             $leadContact->vendor_name = $request->vendor_name;
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
-            $leadContact->contract_start=companyToYmd($request->start_date);
-            $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->contract_start=Carbon::today()->format('Y-m-d');
+            $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
             $leadContact->v_status='work in progress';
             $leadContact->created_by=user()->name;
             $leadContact->save();
@@ -71,8 +75,8 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_name = $request->vendor_name;
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
-            $leadContact->contract_start=companyToYmd($request->start_date);
-            $leadContact->contract_end=companyToYmd($request->end_date);
+            $leadContact->contract_start=Carbon::today()->format('Y-m-d');
+            $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
             $leadContact->v_status='email not send';
             $leadContact->created_by=user()->name;
             $leadContact->save();
@@ -114,9 +118,11 @@ class LeadVendorController extends AccountBaseController
     }
     public function edit($id)
     {
+        $this->contracttype = VendorContract::getContractType();
         $this->vendor = Vendor::where('id', '=', $id)->first();
         $this->pageTitle = __('app.update') . ' ' . __('Vendor');
-        $this->vendorStatuses = Vendor::getStatuses(); 
+        $this->vendorStatuses = Vendor::getStatuses();
+        $this->leadsource=LeadSource::all(); 
         $this->view = 'vendortrack.ajax.edit';
 
         if (request()->ajax()) {
@@ -136,10 +142,8 @@ class LeadVendorController extends AccountBaseController
             'vendor_name' => $request->vendor_name,
             'vendor_email'=>$request->vendor_email,
             'vendor_number'=>$request->vendor_mobile,
-            // 'contract_start'=>$v_date->contract_start==$request->start_date? $request->start_date:Carbon::parse(trim($request->start_date))->format('Y-m-d'),
-            // 'contract_end'=>$v_date->contract_end==$request->end_date? $request->end_date:Carbon::parse(trim($request->end_date))->format('Y-m-d'),
-            'contract_start'=>$v_date->contract_start==$request->start_date? $request->start_date:companyToYmd($request->start_date),
-            'contract_end'=>$v_date->contract_end==$request->end_date? $request->end_date:companyToYmd($request->end_date),
+            'contract_start'=>Carbon::today()->format('Y-m-d'),
+            'contract_end'=>Carbon::today()->addYear()->format('Y-m-d'),
             'v_status'=>$request->v_status,
             
         ]);

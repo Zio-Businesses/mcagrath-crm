@@ -37,6 +37,10 @@ $mangeLeadStagePermission = user()->permission('manage_deal_stages');
                                 href="{{ route('lead-settings.index') }}?tab=method" role="tab"
                                 aria-controls="nav-leadAgent" aria-selected="true">@lang('modules.deal.dealMethod')
                             </a>
+                            <a class="nav-item nav-link f-15 method"
+                                href="{{ route('lead-settings.index') }}?tab=notestitle" role="tab"
+                                aria-controls="nav-leadAgent" aria-selected="true">@lang('Notes Title')
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -71,6 +75,9 @@ $mangeLeadStagePermission = user()->permission('manage_deal_stages');
                                 @lang('app.addNewDealCategory')
                             </x-forms.button-primary>
                         @endif
+                        <x-forms.button-primary icon="plus" id="addNotesTitle" class="notestitle-btn mb-2 d-none actionBtn">
+                                @lang('Add New Notes Title')
+                        </x-forms.button-primary>
                     </div>
                 </div>
             </x-slot>
@@ -557,6 +564,66 @@ $mangeLeadStagePermission = user()->permission('manage_deal_stages');
                         success: function(response) {
                             if (response.status == "success") {
                                 $('.row' + id).fadeOut(100);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        /* open add notes title modal */
+        $('body').on('click', '#addNotesTitle', function() {
+            var url = "{{ route('notesTitle.create') }}";
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('body').on('click', '.edit-notestitle', function() {
+            var notesId = $(this).data('notes-id');
+            var url = "{{ route('notesTitle.edit', ':id ') }}";
+            url = url.replace(':id', notesId);
+
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+        $('body').on('click', '.delete-notestitle', function() {
+            var id = $(this).data('notes-id');
+            Swal.fire({
+                title: "@lang('messages.sweetAlertTitle')",
+                text: "@lang('messages.recoverRecord')",
+                icon: 'warning',
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: "@lang('messages.confirmDelete')",
+                cancelButtonText: "@lang('app.cancel')",
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-secondary'
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var url = "{{ route('notesTitle.destroy', ':id') }}";
+                    url = url.replace(':id', id);
+
+                    var token = "{{ csrf_token() }}";
+
+                    $.easyAjax({
+                        type: 'POST',
+                        url: url,
+                        blockUI: true,
+                        data: {
+                            '_token': token,
+                            '_method': 'DELETE'
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                $('.row'+id).fadeOut();
                             }
                         }
                     });
