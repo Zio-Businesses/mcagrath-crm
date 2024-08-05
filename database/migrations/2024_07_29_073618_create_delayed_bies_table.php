@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('delayed_bies', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('dealyed_by')->nullable();
+            $table->string('delayed_by')->nullable();
         });
     }
 

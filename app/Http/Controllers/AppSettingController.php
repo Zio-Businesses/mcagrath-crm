@@ -8,12 +8,16 @@ use App\Models\Company;
 use App\Models\Session;
 use App\Models\Currency;
 use App\Models\GlobalSetting;
+use App\Models\Locations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Requests\Admin\App\UpdateAppSetting;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class AppSettingController extends AccountBaseController
 {
@@ -23,7 +27,7 @@ class AppSettingController extends AccountBaseController
         parent::__construct();
         $this->pageTitle = 'app.menu.appSettings';
         $this->activeSettingMenu = 'app_settings';
-
+        
         $this->middleware(function ($request, $next) {
 
             abort_403(user()->permission('manage_app_setting') !== 'all');
@@ -43,6 +47,7 @@ class AppSettingController extends AccountBaseController
             'file-upload-setting' => 'app-settings.ajax.file-upload-setting',
             'client-signup-setting' => 'app-settings.ajax.client-signup-setting',
             'google-map-setting' => 'app-settings.ajax.map-setting',
+            'location-setting'=>'app-settings.ajax.location-setting',
             default => 'app-settings.ajax.app-setting',
         };
 
@@ -51,16 +56,22 @@ class AppSettingController extends AccountBaseController
         $this->currencies = Currency::all();
         $this->dateObject = now();
         $this->cachedFile = File::exists(base_path('bootstrap/cache/config.php'));
-
         // Not fetching from session
         $this->globalSetting = GlobalSetting::first();
-
         $this->activeTab = $tab ?: 'app-setting';
-
+        
         if (request()->ajax()) {
+            if($tab=='location-setting')
+            {
+                $html = view($this->view, $this->data)->render();
+            
+                return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle, 'activeTab' => $this->activeTab, 'initDataTable' => true, ]);
+            }
+            else{
             $html = view($this->view, $this->data)->render();
-
-            return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle, 'activeTab' => $this->activeTab]);
+            
+            return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle, 'activeTab' => $this->activeTab, 'initDataTable' => false, ]);
+            }
         }
 
         return view('app-settings.index', $this->data);
@@ -226,5 +237,16 @@ class AppSettingController extends AccountBaseController
 
         return Reply::success(__('messages.deleteSuccess'));
     }
+
+    public function getLocations(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Locations::all();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
+
 
 }

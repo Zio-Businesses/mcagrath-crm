@@ -33,6 +33,11 @@
                                aria-controls="nav-ticketTypes" aria-selected="true"
                                ajax="false">@lang('app.googleMapSettings')
                             </a>
+                            <a class="nav-item nav-link f-15 location-setting"
+                               href="{{ route('app-settings.index') }}?tab=location-setting" role="tab"
+                               aria-controls="nav-ticketTypes" aria-selected="true"
+                               ajax="false">@lang('Location Settings')
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -57,12 +62,10 @@
 
         $("body").on("click", "#editSettings .nav a", function(event) {
             event.preventDefault();
-
             $('.nav-item').removeClass('active');
             $(this).addClass('active');
 
             const requestUrl = this.href;
-
             $.easyAjax({
                 url: requestUrl,
                 blockUI: true,
@@ -72,9 +75,15 @@
                     if (response.status === "success") {
                         $('#nav-tabContent .flex-wrap').html(response.html);
                         init('#nav-tabContent');
+                        if(response.initDataTable)
+                        {
+                            window.location.reload();
+                        }
                     }
+                    
                 }
             });
         });
+       
     </script>
 @endpush

@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('scope_of_works', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('project_id')->nullable()->index('project_milestones_project_id_foreign');
-            $table->string('category');
-            $table->string('sub_category');
-            $table->string('contractor_type');
-            $table->text('description');
+            $table->string('category')->nullable();
+            $table->string('sub_category')->nullable();
+            $table->string('sow_title')->nullable();
+            $table->string('contractor_type')->nullable();
+            $table->text('description')->nullable();
             $table->unsignedInteger('added_by')->nullable()->index('project_milestones_added_by_foreign');
             $table->foreign(['added_by'])->references(['id'])->on('users')->onUpdate('CASCADE')->onDelete('SET NULL');
             $table->foreign(['project_id'])->references(['id'])->on('projects')->onUpdate('CASCADE')->onDelete('CASCADE');

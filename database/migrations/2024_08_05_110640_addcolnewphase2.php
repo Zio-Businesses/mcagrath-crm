@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('delayed_bies', function (Blueprint $table) {
-            $table->dropColumn('dealyed_by');
+        Schema::table('vendors', function (Blueprint $table) {
+            $table->string('edited_by')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('delayed_bies', function (Blueprint $table) {
+        Schema::table('vendors', function (Blueprint $table) {
             //
         });
     }

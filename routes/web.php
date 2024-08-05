@@ -130,6 +130,7 @@ use App\Http\Controllers\OccupancyStatusController;
 use App\Http\Controllers\ScopeOfWorkController;
 use App\Http\Controllers\ProjectVendorController;
 use App\Http\Controllers\ProjectDelayedByController;
+use App\Http\Controllers\LocationController;
 use App\Models\AttendanceSetting;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -848,5 +849,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     Route::get('quickbooks/{hash}/callback', [QuickbookController::class, 'callback'])->name('quickbooks.callback');
     Route::get('quickbooks', [QuickbookController::class, 'index'])->name('quickbooks.index');
-    
+
+    //Locations
+
+    Route::get('counties/{state}', [LocationController::class, 'getCounties'])->name('locations.counties');
+    Route::get('cities/{county}', [LocationController::class, 'getCities'])->name('locations.cities');
+    Route::resource('locations', LocationController::class);
 });

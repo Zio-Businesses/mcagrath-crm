@@ -55,6 +55,7 @@ use App\Http\Controllers\SignUpSettingController;
 use App\Http\Controllers\TaxSettingController;
 use App\Http\Controllers\UnitTypeController;
 use App\Http\Controllers\UpdateAppController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function () {
@@ -255,6 +256,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::resource('custom-link-settings', CustomLinkSettingController::class);
 
     Route::resource('sign-up-settings', SignUpSettingController::class)->only(['index', 'update']);
+
+    //app-location settings
+
+    Route::get('location/import-Location', [LocationController::class, 'importLocation'])->name('location.importLocation');
+    Route::post('location/import-store-Location', [LocationController::class, 'importStore'])->name('location.importStore');
+    Route::get('location/get-locations', [AppSettingController::class, 'getLocations'])->name('locations.getLocations');
+
 
 });
 

@@ -33,20 +33,23 @@ $addProductPermission = user()->permission('add_product');
                             fieldName="vendor_email" :fieldPlaceholder="__('placeholders.email')" :fieldHelp="__('modules.lead.leadEmailInfo')">
                         </x-forms.email>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text fieldId="state" :fieldLabel="__('State')"
-                            fieldName="state" :fieldPlaceholder="__('State')" fieldRequired="true" >
-                        </x-forms.text>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="state" :fieldLabel="__('State')" fieldName="state" fieldRequired="true" search="true">
+                                <option value="">--</option>
+                                @foreach ($location as $type)
+                                    <option value="{{ $type->state }}">{{ $type->state }}</option>
+                                @endforeach
+                            </x-forms.select>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text fieldId="county" :fieldLabel="__('County')"
-                            fieldName="county" :fieldPlaceholder="__('County')" fieldRequired="true">
-                        </x-forms.text>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="county" :fieldLabel="__('County')" fieldName="county" fieldRequired="true" search="true">
+                                <option value="">--</option>
+                            </x-forms.select>
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text fieldId="City" :fieldLabel="__('City')"
-                            fieldName="City" :fieldPlaceholder="__('City')" fieldRequired="true">
-                        </x-forms.text>
+                    <div class="col-md-3 col-lg-3">
+                             <x-forms.select fieldId="city" :fieldLabel="__('City')" fieldName="city" fieldRequired="true" search="true">
+                                <option value="">--</option>
+                            </x-forms.select>
                     </div>
                     <div class="col-md-3 col-lg-3">
                              <x-forms.select fieldId="contractor_type" :fieldLabel="__('Contractor Type')" fieldName="contractor_type" fieldRequired="true" search="true">
@@ -65,7 +68,7 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.select>
                     </div>
                     <div class="col-md-3 col-lg-3">
-                        <x-forms.text fieldId="Website" :fieldLabel="__('Website')"
+                        <x-forms.text fieldId="website" :fieldLabel="__('Website')"
                                 fieldName="website" :fieldPlaceholder="__('Website')">
                         </x-forms.text>
                     </div>
@@ -109,14 +112,69 @@ $addProductPermission = user()->permission('add_product');
 
 
     $(document).ready(function() {
-        $("#save-lead-data-form .select-picker").selectpicker();
-        const dp1 = datepicker('#nxt_date', {
-            position: 'bl',
-            ...datepickerConfig
+            $("#save-lead-data-form .select-picker").selectpicker();
+            const dp1 = datepicker('#nxt_date', {
+                position: 'bl',
+                ...datepickerConfig
+            });
+            $('#state').change( function() {
+                    var state_id = $(this).val();
+                    if (state_id) {
+                        fetchCounties(state_id);
+                        $('#county').find('option:not(:first)').remove();
+                    }
+            });
+            $('#county').change( function() {
+                    var county_id = $(this).val();
+                    if (county_id) {
+                        fetchCities(county_id);
+                        $('#city').find('option:not(:first)').remove();
+                    }
+            });
+            function fetchCounties(state) {
+                var url = "{{ route('locations.counties', ':state') }}";
+                url = url.replace(':state', state);
+                $.easyAjax({
+                    url: url,
+                    container: '#save-lead-data-form',
+                    method: 'GET',
+                    blockUI: true,
+                    success: function(data) {
+                        
+                        data.counties.forEach(county => {
+                            $('#county').append(`<option value="${county.county}">${county.county}</option>`);
+                            $('#county').selectpicker('refresh');
+                        });
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+             }
+             function fetchCities(county) {
+                var url = "{{ route('locations.cities', ':county') }}";
+                url = url.replace(':county', county);
+                $.easyAjax({
+                    url: url,
+                    container: '#save-lead-data-form',
+                    method: 'GET',
+                    blockUI: true,
+                    success: function(data) {
+                        data.cities.forEach(cities => {
+                            console.log(data.cities);
+                            
+                            $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
+                            $('#city').selectpicker('refresh');
+                        });
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+             }
         });
-        });
+        
 
-       
         $('#save-email-form').click(function () {
             var i=1;
             const url = "{{ route('vendor-crud.store') }}";
@@ -143,11 +201,13 @@ $addProductPermission = user()->permission('add_product');
                 buttonSelector: buttonSelector,
                 data: [data,i],
                 success: function(response) {
-                    // window.location.href = response.redirectUrl;
+                    window.location.href = response.redirectUrl;
                 }
             });
 
         }
+        
+
 
 
 

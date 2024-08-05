@@ -188,6 +188,21 @@ class Project extends BaseModel
         return $this->hasMany(ProjectMember::class, 'project_id');
     }
 
+    public function est_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_estimators');
+    }
+    
+    public function acct_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_accountings');
+    }
+    
+    public function emanager_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_emanagers');
+    }
+
     public function projectMembersWithoutScope(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'project_members')->using(ProjectMember::class)->withoutGlobalScope(ActiveScope::class);
@@ -469,17 +484,5 @@ class Project extends BaseModel
     {
         return $this->hasMany(MentionUser::class, 'project_id');
     }
-    public function est_users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'project_estimators');
-    }
-    
-    public function acct_users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'project_accountings');
-    }
-    public function emanager_users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'project_emanagers');
-    }
+   
 }

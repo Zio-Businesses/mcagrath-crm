@@ -24,17 +24,19 @@ use App\Notifications\NewVendorContract;
 use Illuminate\Support\Facades\DB;
 use App\Models\LeadSource;
 use App\Models\NotesTitle;
-
+use App\Models\Locations;
+use App\Models\VendorNotes;
 class LeadVendorController extends AccountBaseController
 {
     public function handle()
     {
         
         $this->pageTitle = __('modules.leadContact.createTitlev');
-         $this->view = 'lead-contact.ajax.createvendor';
-         $this->contracttype = VendorContract::getContractType();
-         $this->leadsource=LeadSource::all();
+        $this->view = 'lead-contact.ajax.createvendor';
+        $this->contracttype = VendorContract::getContractType();
+        $this->leadsource=LeadSource::all();
         $this->notestitle=NotesTitle::all();
+        $this->location=Locations::select('state')->distinct()->get();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
        
@@ -59,6 +61,14 @@ class LeadVendorController extends AccountBaseController
         {
             $leadContact = new Vendor();
             $leadContact->vendor_name = $request->vendor_name;
+            $leadContact->poc = $request->poc;
+            $leadContact->state = $request->state;
+            $leadContact->county = $request->county;
+            $leadContact->city = $request->city;
+            $leadContact->contractor_type = $request->contractor_type;
+            $leadContact->lead_source = $request->lead_source;
+            $leadContact->website=$request->website;
+            $leadContact->nxt_date=$request->nxt_date == null ? null : companyToYmd($request->nxt_date);
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=Carbon::today()->format('Y-m-d');
@@ -66,6 +76,12 @@ class LeadVendorController extends AccountBaseController
             $leadContact->v_status='work in progress';
             $leadContact->created_by=user()->name;
             $leadContact->save();
+            $vnotes = new VendorNotes();
+            $vnotes->vendor_id=$leadContact->id;
+            $vnotes->notes_title=$request->notes_title;
+            $vnotes->notes_content=$request->notes;
+            $vnotes->created_by=user()->name;
+            $vnotes->save();
             Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->id));
             $redirectUrl = route('lead-contact.index');
             return Reply::successWithData(__('Saved And Mail Send'), ['redirectUrl' => $redirectUrl]);
@@ -73,6 +89,14 @@ class LeadVendorController extends AccountBaseController
         else{
             $leadContact = new Vendor();
             $leadContact->vendor_name = $request->vendor_name;
+            $leadContact->poc = $request->poc;
+            $leadContact->state = $request->state;
+            $leadContact->county = $request->county;
+            $leadContact->city = $request->city;
+            $leadContact->contractor_type = $request->contractor_type;
+            $leadContact->lead_source = $request->lead_source;
+            $leadContact->website=$request->website;
+            $leadContact->nxt_date=$request->nxt_date == null ? null : companyToYmd($request->nxt_date);
             $leadContact->vendor_email = $request->vendor_email;
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=Carbon::today()->format('Y-m-d');
@@ -80,6 +104,12 @@ class LeadVendorController extends AccountBaseController
             $leadContact->v_status='email not send';
             $leadContact->created_by=user()->name;
             $leadContact->save();
+            $vnotes = new VendorNotes();
+            $vnotes->vendor_id=$leadContact->id;
+            $vnotes->notes_title=$request->notes_title;
+            $vnotes->notes_content=$request->notes;
+            $vnotes->created_by=user()->name;
+            $vnotes->save();
             $redirectUrl = route('lead-contact.index');
             return Reply::successWithData(__('Saved'), ['redirectUrl' => $redirectUrl]);
         }
