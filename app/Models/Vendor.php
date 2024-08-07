@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Vendor extends Model
+class Vendor extends BaseModel
 {
     use HasFactory;
 
@@ -14,6 +15,11 @@ class Vendor extends Model
     protected $casts = [
         'nxt_date' => 'datetime', // Cast payment_methods to an array
     ];
+    
+    public function notetb(): HasMany
+    {
+        return $this->hasMany(VendorNotes::class, 'vendor_id')->orderByDesc('id');
+    }
 
     public function getImageUrlAttribute()
     {
@@ -22,7 +28,7 @@ class Vendor extends Model
     public static function getStatuses()
     {
         return [
-            'work in progress', 'in progress', 'rejected','vendor created','email not send','on hold',
+            'Yet to Call', 'Voicemail', 'Unable to Connect','Incorrect Ph # Listed','Duplicate','Initial Pitch Made','Proposal Link Sent','Declined by Vendor','Rejected by MCG','Non-Responsive','Profile Created','Awaiting Docs','Active',
         ];
     }
     

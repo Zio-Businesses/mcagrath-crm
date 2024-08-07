@@ -47,7 +47,7 @@ class ProjectVendorController extends AccountBaseController
         $this->projecttype=ProjectType::all();
         $this->contract=ContractTemplate::all();
         // $addProjectMilestonePermission = user()->permission('add_project_milestones');
-        // $project = Project::findOrFail($id);
+        $project = Project::findOrFail($id);
        // abort_403(!($addProjectMilestonePermission == 'all' || $project->project_admin == user()->id));
         return view('projects.vendors.create', $this->data);
     }

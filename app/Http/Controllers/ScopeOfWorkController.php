@@ -39,7 +39,7 @@ class ScopeOfWorkController extends AccountBaseController
 
         $this->project = Project::findOrFail($id);
         // $addProjectMilestonePermission = user()->permission('add_project_milestones');
-        // $project = Project::findOrFail($id);
+        $project = Project::findOrFail($id);
        
 
         // abort_403(!($addProjectMilestonePermission == 'all' || $project->project_admin == user()->id));

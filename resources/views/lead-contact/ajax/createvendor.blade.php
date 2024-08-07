@@ -77,6 +77,17 @@ $addProductPermission = user()->permission('add_product');
                             :fieldLabel="__('Next Follow Up Date')" fieldName="nxt_date"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
+                    <div class="col-lg-3 col-md-3">
+                        <x-forms.select fieldId="v_status" :fieldLabel="__('Status')"
+                            fieldName="v_status" search="true">
+                            <option value="">--</option>
+                            @foreach ($vendorStatuses as $status)
+                                <option value="{{ $status }}">
+                                    {{ ucfirst($status) }}
+                                </option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>  
                     <div class="col-md-3 col-lg-3">
                              <x-forms.select fieldId="notes_title" :fieldLabel="__('Notes Title')" fieldName="notes_title"  search="true" fieldRequired="true">
                                 <option value="">--</option>
@@ -161,8 +172,7 @@ $addProductPermission = user()->permission('add_product');
                     blockUI: true,
                     success: function(data) {
                         data.cities.forEach(cities => {
-                            console.log(data.cities);
-                            
+     
                             $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
                             $('#city').selectpicker('refresh');
                         });

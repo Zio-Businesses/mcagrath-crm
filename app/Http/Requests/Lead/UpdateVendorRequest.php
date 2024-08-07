@@ -5,7 +5,7 @@ namespace App\Http\Requests\Lead;
 use App\Http\Requests\CoreRequest;
 
 
-class StoreVendorRequest extends CoreRequest
+class UpdateVendorRequest extends CoreRequest
 {
 
     /**
@@ -31,8 +31,6 @@ class StoreVendorRequest extends CoreRequest
         $rules['city'] = 'required';
         $rules['county'] = 'required';
         $rules['contractor_type'] = 'required';
-        $rules['notes_title'] = 'required';
-        $rules['notes'] = 'required';
         $rules['vendor_mobile'] = 'required';
         return $rules;
     }

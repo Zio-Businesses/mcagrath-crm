@@ -37,22 +37,22 @@ class OneTimeAgreeController extends Controller
         $id = $request->query('id');
         $vendor=Vendor::find($id);
         if($request->status=='accepted'){
-            if($vendor->v_status=='rejected')
-            {
-                return Reply::error(__('Previously Declined Contract.'));
-            }
-            else{
+            // if($vendor->v_status=='rejected')
+            // {
+            //     return Reply::error(__('Previously Declined Contract.'));
+            // }
+            // else{
                     $startDate = $request->query('startdate');
                     $endDate = $request->query('enddate');
                     
-                    $vendor->v_status='in progress';
+                    $vendor->v_status='Accepted';
                     $vendor->save();
                     $redirectUrl = route('front.formv.show', ['startdate' => $startDate, 'enddate' => $endDate,'id'=>$id]);
                     return response()->json(['redirect_url' => $redirectUrl]);
-                }
+                // }
         }
         else{
-            $vendor->v_status='rejected';
+            $vendor->v_status='Declined by Vendor';
             $vendor->save();
             return Reply::success(__('Thank You For Your Time'));
         }
@@ -137,10 +137,9 @@ class OneTimeAgreeController extends Controller
         $vendor->contract_sign=$imageName;
         $vendor->signed_date=date("Y-m-d");
         $vendorst=Vendor::find($request->id);
-        $vendorst->v_status='vendor created';
+        $vendorst->v_status='Profile Created';
         $vendorst->sign=$imageName;
         $vendor->created_by=$vendorst->created_by;
-        Log::info($request);
         $vendorst->save();
         $vendor->save();
         //return Reply::success(__(''));

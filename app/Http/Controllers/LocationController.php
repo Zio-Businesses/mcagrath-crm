@@ -15,7 +15,7 @@ class LocationController extends AccountBaseController
     public function create()
     {
         
-        return view('projects.vendors.create', $this->data);
+        return view('app-settings.create-location-modal', $this->data);
     }
     public function importLocation()
     {
@@ -41,6 +41,34 @@ class LocationController extends AccountBaseController
     {
         $cities = Locations::select('city')->where('county', $county)->distinct()->get();
         return Reply::dataOnly(['cities' => $cities ]);
+    }
+    public function store(Request $request)
+    {
+        $location = new Locations();
+        $location->state=$request->state;
+        $location->city=$request->city;
+        $location->county=$request->county;
+        $location->save();
+        return Reply::success(__('Saved'));
+    }
+    public function edit($id)
+    {
+        $this->locations=Locations::findOrFail($id);
+        return view('app-settings.edit-location-modal', $this->data);
+    }
+    public function update(Request $request,$id)
+    {
+        $location = Locations::findOrFail($id);
+        $location->state=$request->state;
+        $location->city=$request->city;
+        $location->county=$request->county;
+        $location->save();
+        return Reply::success(__('Updated'));
+    }
+    public function destroy($id)
+    {
+        Locations::destroy($id);
+        return Reply::success(__('messages.deleteSuccess'));
     }
 
 }

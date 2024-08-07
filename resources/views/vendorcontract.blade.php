@@ -302,7 +302,7 @@ Neither party may assign or transfer this Agreement without the prior written co
 
         <!-- CARD FOOTER START -->
         
-        @if (!$vendor->sign)
+        @if (!$vendor->sign||$vendor->v_status=='Declined by Vendor')
         <div
             class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
 
@@ -325,7 +325,6 @@ Neither party may assign or transfer this Agreement without the prior written co
 <script>
     
     $('#cancel').click(function () {
-        if (confirm("Thank you for you time and your response is noted.")) {
             var id="{{$id}}";
             $.easyAjax({
                 url: "{{ route('front.form.show') }}",
@@ -341,7 +340,7 @@ Neither party may assign or transfer this Agreement without the prior written co
                     
                 },
             });
-        }
+        
     });
     $('#accept').click(function () {
         if(confirm("By clicking 'I Agree,' I confirm that I have read, understood, and agree to the Terms & Conditions.")){

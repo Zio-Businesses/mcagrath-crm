@@ -520,6 +520,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
     Route::post('proposal/{id}',[LeadVendorController::class,'proposal'])->name('vendortrack.proposal');
+    Route::get('notes/{id}',[LeadVendorController::class,'notes'])->name('vendortrack.notes');
+    Route::get('notescreate/{id}',[LeadVendorController::class,'notescreate'])->name('vendortrack.notescreate');
+    Route::post('notesstore',[LeadVendorController::class,'notesstore'])->name('vendortrack.notesstore');
     Route::resource('vendortrack',LeadVendorController::class);
     Route::resource('clients', ClientController::class);
     Route::resource('vendors',VendorController::class);

@@ -37,12 +37,17 @@ class VendorTrackDataTable extends BaseDataTable
                             <i class="icon-options-vertical icons"></i>
                         </a>            
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-' . $row->id . '" tabindex="0">';
-                    if ($row->v_status=='rejected'||$row->v_status=='email not send') {
+                   
                         $action .= '<a class="dropdown-item send-proposal" href="javascript:;" data-user-send="' . $row->id . '">
                         <i class="fa fa-paper-plane mr-2"></i>
                         ' . trans('app.send_proposal') . '
                         </a>';
-                    }
+
+                        $action .= '<a class="dropdown-item view-notes openRightModal" href="' . route('vendortrack.notes', [$row->id]) . '">
+                        <i class="fa fa-file mr-2"></i>
+                        ' . trans('View Notes') . '
+                        </a>';
+                    
             // if (in_array('admin', user_roles()) && !$row->admin_approval) {
             //     $action .= '<a href="javascript:;" class="dropdown-item verify-user" data-user-id="' . $row->id . '"><i class="fa fa-check mr-2"></i>' . __('app.approve') . '</a>';
             // }

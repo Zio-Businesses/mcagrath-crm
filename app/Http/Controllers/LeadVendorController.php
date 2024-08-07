@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Lead\StoreVendorRequest;
+use App\Http\Requests\Lead\UpdateVendorRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Vendor;
@@ -28,6 +29,7 @@ use App\Models\Locations;
 use App\Models\VendorNotes;
 class LeadVendorController extends AccountBaseController
 {
+
     public function handle()
     {
         
@@ -37,6 +39,7 @@ class LeadVendorController extends AccountBaseController
         $this->leadsource=LeadSource::all();
         $this->notestitle=NotesTitle::all();
         $this->location=Locations::select('state')->distinct()->get();
+        $this->vendorStatuses = Vendor::getStatuses();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
        
@@ -59,6 +62,9 @@ class LeadVendorController extends AccountBaseController
         $email = $request->input('vendor_email');
         if($request[1]==1)
         {
+            $request->validate([
+                'vendor_email' => 'required',
+            ]);
             $leadContact = new Vendor();
             $leadContact->vendor_name = $request->vendor_name;
             $leadContact->poc = $request->poc;
@@ -73,7 +79,7 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=Carbon::today()->format('Y-m-d');
             $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
-            $leadContact->v_status='work in progress';
+            $leadContact->v_status='Proposal Link Sent';
             $leadContact->created_by=user()->name;
             $leadContact->save();
             $vnotes = new VendorNotes();
@@ -87,6 +93,9 @@ class LeadVendorController extends AccountBaseController
             return Reply::successWithData(__('Saved And Mail Send'), ['redirectUrl' => $redirectUrl]);
         }
         else{
+            $request->validate([
+                'v_status' => 'required',
+            ]);
             $leadContact = new Vendor();
             $leadContact->vendor_name = $request->vendor_name;
             $leadContact->poc = $request->poc;
@@ -101,7 +110,7 @@ class LeadVendorController extends AccountBaseController
             $leadContact->vendor_number = $request->vendor_mobile;
             $leadContact->contract_start=Carbon::today()->format('Y-m-d');
             $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
-            $leadContact->v_status='email not send';
+            $leadContact->v_status=$request->v_status;
             $leadContact->created_by=user()->name;
             $leadContact->save();
             $vnotes = new VendorNotes();
@@ -141,7 +150,6 @@ class LeadVendorController extends AccountBaseController
         if ($vendor) {
             // Delete the user
             $vendor->delete();
-
         }
 
         return Reply::success(__('messages.deleteSuccess'));
@@ -150,11 +158,15 @@ class LeadVendorController extends AccountBaseController
     {
         $this->contracttype = VendorContract::getContractType();
         $this->vendor = Vendor::where('id', '=', $id)->first();
-        $this->pageTitle = __('app.update') . ' ' . __('Vendor');
+        $this->pageTitle = __('app.update') . ' ' . __('Vendor Contact Info');
         $this->vendorStatuses = Vendor::getStatuses();
         $this->leadsource=LeadSource::all(); 
         $this->view = 'vendortrack.ajax.edit';
-
+        $this->location=Locations::select('state')->distinct()->get();
+        $this->counties=Locations::select('county')->where('state', $this->vendor->state)->distinct()->get();
+        $this->cities=Locations::select('city')->where('county', $this->vendor->county)->distinct()->get();
+        $this->contracttype = VendorContract::getContractType();
+        $this->leadsource=LeadSource::all();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
         }
@@ -162,7 +174,7 @@ class LeadVendorController extends AccountBaseController
         return view('vendortrack.create', $this->data);
 
     }
-    public function update(StoreVendorRequest $request, $id)
+    public function update(UpdateVendorRequest $request, $id)
     {
         $v_date = Vendor::find($id);
         DB::table('vendors')
@@ -175,7 +187,15 @@ class LeadVendorController extends AccountBaseController
             'contract_start'=>Carbon::today()->format('Y-m-d'),
             'contract_end'=>Carbon::today()->addYear()->format('Y-m-d'),
             'v_status'=>$request->v_status,
-            
+            'poc' => $request->poc,
+            'state' => $request->state,
+            'county' => $request->county,
+            'city' => $request->city,
+            'contractor_type' => $request->contractor_type,
+            'lead_source' => $request->lead_source,
+            'website' => $request->website,
+            'nxt_date' => $request->nxt_date == null ? null : companyToYmd($request->nxt_date),
+            'edited_by'=>user()->name,
         ]);
         $redirectUrl = route('vendortrack.index');
         return Reply::successWithData(__('messages.updateSuccess'), ['redirectUrl' => $redirectUrl]);
@@ -183,10 +203,46 @@ class LeadVendorController extends AccountBaseController
     public function proposal($id)
     {
         $send_email = Vendor::find($id);
-        $send_email->v_status='work in progress';
-        $send_email->save();
-        Notification::route('mail', $send_email->vendor_email)->notify(new NewVendorContract($send_email->id));
-        return Reply::success(__('Mail Send'));
+        if($send_email->vendor_email)
+        { 
+            $send_email->v_status='Proposal Link Sent';
+            $send_email->save();
+            Notification::route('mail', $send_email->vendor_email)->notify(new NewVendorContract($send_email->id));
+            return Reply::success(__('Mail Send'));
+        }
+        else{
+            return Reply::error(__('Email Not Specified.'));
+        }
+    }
+    public function notes($id)
+    {
+       
+        $notes = Vendor::findOrFail($id);
+        $this->vendor=Vendor::findOrFail($id);
+        $this->view = 'vendortrack.ajax.notes';
+        $this->pageTitle = __('Notes');
+        $this->note=$notes->notetb;
+        if (request()->ajax()) {
+            return $this->returnAjax($this->view);
+        }
+
+        return view('vendortrack.create', $this->data);
+    }
+    public function notescreate($id)
+    {
+        $this->notestitle=NotesTitle::all();
+        $this->vendor_id=$id;
+        return view('vendortrack.create-note-modal', $this->data);
+    }
+    public function notesstore(Request $request)
+    {
+            $vnotes = new VendorNotes();
+            $vnotes->vendor_id=$request->vendor_id;
+            $vnotes->notes_title=$request->notes_title;
+            $vnotes->notes_content=$request->notes;
+            $vnotes->created_by=user()->name;
+            $vnotes->save();
+            return Reply::success(__('Saved'));
     }
    
 }
