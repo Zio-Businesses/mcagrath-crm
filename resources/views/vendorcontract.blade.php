@@ -301,14 +301,13 @@ Neither party may assign or transfer this Agreement without the prior written co
         <!-- CARD BODY END -->
 
         <!-- CARD FOOTER START -->
-        
-        @if (!$vendor->sign||$vendor->v_status=='Declined by Vendor')
+        @if (!$vendor->sign && (!$vendor->v_status=='Declined by Vendor'||$vendor->v_status=='Accepted'||$vendor->v_status=='Proposal Link Sent'))
         <div
             class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
 
             <x-forms.button-success class="border-0 mr-3 mb-2" id="accept" icon="check">Accept
             </x-forms.button-success>
-            <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="check">Reject
+            <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="times">Reject
             </x-forms.button-success>
 
         </div>
@@ -335,7 +334,7 @@ Neither party may assign or transfer this Agreement without the prior written co
                 },
                 success: function(response) {
                     setTimeout(() => {
-                        window.close();
+                        window.location.reload();
                     },3000);
                     
                 },

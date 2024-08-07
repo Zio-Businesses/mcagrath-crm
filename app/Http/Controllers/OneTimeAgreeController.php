@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Vendor;
 use App\Models\VendorContract;
 use App\Helper\Files;
+use App\Models\Locations;
 use Illuminate\Support\Facades\File;
 use App\Helper\Reply;
 use App\Http\Requests\vendor\SaveVendorRequest;
@@ -65,6 +66,7 @@ class OneTimeAgreeController extends Controller
         $pageTitle = 'app.menu.contracts';
         $contracttype = VendorContract::getContractType();
         $company = Company::find(1);
+        $location=Locations::select('state')->distinct()->get();;
          return view('vendorcontactform', [
             'id'=>$id,
             'startdate'=>$startdate,
@@ -72,6 +74,7 @@ class OneTimeAgreeController extends Controller
             'company' => $company,
             'pageTitle' => $pageTitle,
             'contracttype'=>$contracttype,
+            'location'=>$location,
         ]);
     }
     public function vendorstore(SaveVendorRequest $request)

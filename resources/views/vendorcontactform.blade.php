@@ -130,19 +130,23 @@
                             <x-forms.text :fieldLabel="__('app.street_address')" fieldName="street_address"
                                 fieldId="street_address" fieldRequired="true" />
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('County')" fieldName="county"
-                                fieldId="county" fieldRequired="true" />
+                        <div class="col-md-6 col-lg-4">
+                             <x-forms.select fieldId="state" :fieldLabel="__('State')" fieldName="state" fieldRequired="true" search="true">
+                                <option value="">--</option>
+                                @foreach ($location as $type)
+                                    <option value="{{ $type->state }}">{{ $type->state }}</option>
+                                @endforeach
+                            </x-forms.select>
                         </div>
-
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
-                                fieldId="city" fieldRequired="true" />
+                        <div class="col-md-6 col-lg-4">
+                                <x-forms.select fieldId="county" :fieldLabel="__('County')" fieldName="county" fieldRequired="true" search="true">
+                                    <option value="">--</option>
+                                </x-forms.select>
                         </div>
-
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.state')" fieldName="state"
-                                fieldId="state" fieldRequired="true" />
+                        <div class="col-md-6 col-lg-4">
+                                <x-forms.select fieldId="city" :fieldLabel="__('City')" fieldName="city" fieldRequired="true" search="true">
+                                    <option value="">--</option>
+                                </x-forms.select>
                         </div>
 
                         <div class="col-lg-4 col-md-6">
@@ -431,10 +435,67 @@ var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
 </script>
 
 <script>
-    $('.dropify').dropify();
-    const MODAL_LG = '#myModal';
-    const MODAL_HEADING = '#modelHeading';
-    
+    $(document).ready(function() {
+        const MODAL_LG = '#myModal';
+        const MODAL_HEADING = '#modelHeading';
+        $("#save-lead-data-form .select-picker").selectpicker();
+        $('.dropify').dropify();
+
+        $('#state').change( function() {
+                var state_id = $(this).val();
+                if (state_id) {
+                    fetchCounties(state_id);
+                    $('#county').find('option:not(:first)').remove();
+                }
+        });
+        $('#county').change( function() {
+                var county_id = $(this).val();
+                if (county_id) {
+                    fetchCities(county_id);
+                    $('#city').find('option:not(:first)').remove();
+                }
+        });
+        function fetchCounties(state) {
+            var url = "{{ route('locations.counties', ':state') }}";
+            url = url.replace(':state', state);
+            $.easyAjax({
+                url: url,
+                container: '#save-lead-data-form',
+                method: 'GET',
+                blockUI: true,
+                success: function(data) {
+                    
+                    data.counties.forEach(county => {
+                        $('#county').append(`<option value="${county.county}">${county.county}</option>`);
+                        $('#county').selectpicker('refresh');
+                    });
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+        function fetchCities(county) {
+            var url = "{{ route('locations.cities', ':county') }}";
+            url = url.replace(':county', county);
+            $.easyAjax({
+                url: url,
+                container: '#save-lead-data-form',
+                method: 'GET',
+                blockUI: true,
+                success: function(data) {
+                    data.cities.forEach(cities => {
+
+                        $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
+                        $('#city').selectpicker('refresh');
+                    });
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+    });
     $('.custom-date-picker').each(function (ind, el) {
 
         datepicker(el, {
