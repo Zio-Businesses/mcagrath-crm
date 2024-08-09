@@ -244,5 +244,9 @@ class LeadVendorController extends AccountBaseController
             $vnotes->save();
             return Reply::success(__('Saved'));
     }
+    public function importLeadVendor()
+    {
+        return view('vendortrack.import-vendor-lead-modal', $this->data);
+    }
    
 }

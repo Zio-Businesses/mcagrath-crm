@@ -307,7 +307,7 @@ Neither party may assign or transfer this Agreement without the prior written co
 
             <x-forms.button-success class="border-0 mr-3 mb-2" id="accept" icon="check">Accept
             </x-forms.button-success>
-            <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="times">Reject
+            <x-forms.button-success id="reject" class="border-0 mr-3 mb-2 btn btn-danger" icon="times">Reject
             </x-forms.button-success>
 
         </div>
@@ -315,6 +315,32 @@ Neither party may assign or transfer this Agreement without the prior written co
         <!-- CARD FOOTER END -->
     </div>
     <!-- INVOICE CARD END -->
+    <div class="modal fade" id="ajaxModel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modelHeading">Reason</h4>
+                </div>
+                <x-form id="Rejection" method="POST" class="ajax-form">
+                    <div class="modal-body">
+                        <div class="form-group my-3">
+                            <div class="col-lg-12 col-md-12">
+                                <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('')"
+                                                fieldName="reason"  fieldId="reason"
+                                                :fieldPlaceholder="__('Type Here')" :fieldHelp="__('Optional. You Can Leave It Blank And Click Submit')"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <x-forms.button-primary class="border-0 mr-3 mb-2" id="submit" icon="check">Submit
+                        </x-forms.button-secondary>
+                        <x-forms.button-secondary id="cancel" class="border-0 mr-3 mb-2" icon="times">Cancel
+                        </x-forms.button-secondary>
+                    </div>    
+                </x-form>  
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -323,24 +349,32 @@ Neither party may assign or transfer this Agreement without the prior written co
 
 <script>
     
-    $('#cancel').click(function () {
-            var id="{{$id}}";
-            $.easyAjax({
+    $('#reject').click(function () {
+            
+            $('#ajaxModel').modal('show');
+    });
+
+    $('#submit').click(function (){
+        var id="{{$id}}";
+        var reason=document.getElementById('reason').value;
+
+         $.easyAjax({
                 url: "{{ route('front.form.show') }}",
                 type: "GET",
+                
                 data:{
                     id:id,
-                    status:'rejected'
+                    status:'rejected',
+                    details: reason,
                 },
                 success: function(response) {
                     setTimeout(() => {
                         window.location.reload();
                     },3000);
-                    
                 },
             });
-        
-    });
+    })
+   
     $('#accept').click(function () {
         if(confirm("By clicking 'I Agree,' I confirm that I have read, understood, and agree to the Terms & Conditions.")){
         var startDate = "{{ $startdate }}";

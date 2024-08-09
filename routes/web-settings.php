@@ -56,6 +56,7 @@ use App\Http\Controllers\TaxSettingController;
 use App\Http\Controllers\UnitTypeController;
 use App\Http\Controllers\UpdateAppController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\VendorSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function () {
@@ -63,7 +64,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('app-settings/deleteSessions', [AppSettingController::class, 'deleteSessions'])->name('app-settings.delete_sessions');
     Route::resource('app-settings', AppSettingController::class);
     Route::resource('profile-settings', ProfileSettingController::class);
-
+    Route::resource('vendor-settings', VendorSettingsController::class);
     /* 2FA */
     Route::get('2fa-codes-download', [TwoFASettingController::class, 'download'])->name('2fa_codes_download');
     Route::get('verify-2fa-password', [TwoFASettingController::class, 'verify'])->name('verify_2fa_password');

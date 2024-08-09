@@ -192,7 +192,7 @@ class GlobalSetting extends BaseModel
     use HasMaskImage;
 
     const CHECKLIST_TOTAL = 6;
-    const SIGNED_ROUTE_EXPIRY = 7; // Days
+    const SIGNED_ROUTE_EXPIRY = 1000; // Days
 
     const APP_LOGO_PATH = 'app-logo';
 

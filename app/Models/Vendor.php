@@ -20,7 +20,10 @@ class Vendor extends BaseModel
     {
         return $this->hasMany(VendorNotes::class, 'vendor_id')->orderByDesc('id');
     }
-
+    public function latestNote()
+    {
+        return $this->hasOne(VendorNotes::class, 'vendor_id')->latest('id');
+    }
     public function getImageUrlAttribute()
     {
         return ($this->sign) ? asset_url_local_s3('vendor/sign/' . $this->sign) : null;

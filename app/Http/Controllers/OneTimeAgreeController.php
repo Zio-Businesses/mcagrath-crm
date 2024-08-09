@@ -54,6 +54,7 @@ class OneTimeAgreeController extends Controller
         }
         else{
             $vendor->v_status='Declined by Vendor';
+            $vendor->reason=$request->details;
             $vendor->save();
             return Reply::success(__('Thank You For Your Time'));
         }

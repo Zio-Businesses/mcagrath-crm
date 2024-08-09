@@ -86,20 +86,68 @@ class VendorTrackDataTable extends BaseDataTable
         $datatables->editColumn('vendor_email', fn($row) => $row->vendor_email);
         $datatables->editColumn('vendor_number', fn($row) => $row->vendor_number);
         $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
-        $datatables->editColumn('created_by', fn($row) => $row->created_by);
-        $datatables->editColumn('status', function($row){
-            return '<div class="media align-items-center">
-                    <div class="media-body">
-                    <td>' .  str_replace('_', ' ', $row->v_status)  . '</td>
-                </div>
-              </div>';
+        $datatables->editColumn('nxt_date', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('updated_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('created_by', function($row){ 
+            return '<div class="media align-items-center" style="width: 150px;">
+                            <div class="media-body">
+                            <td> '. $row->created_by . '</td>
+                        </div>
+                    </div>';
+            
         });
+        $datatables->editColumn('status', function($row){
+            if($row->v_status=='Declined by Vendor'&&$row->reason){
+
+                return '<div class="media align-items-center" style="width: 125px;">
+                        <div class="media-body">
+                        <td> <a href data-toggle="tooltip" style="color:#1d82f5;" data-placement="bottom" title="' .$row->reason .'">'.   $row->v_status . '</a> </td>
+                    </div>
+                </div>';
+            }
+            else{
+
+                return '<div class="media align-items-center" style="width: 125px;">
+                        <div class="media-body">
+                        <td> '.   $row->v_status . ' </td>
+                    </div>
+                </div>';
+            }
+        });
+        $datatables->editColumn('edited_by', function($row){ 
+            return '<div class="media align-items-center" style="width: 150px;">
+                            <div class="media-body">
+                            <td> '. $row->edited_by . '</td>
+                        </div>
+                    </div>';
+            
+        });
+        $datatables->editColumn('latest_note', function($row){
+                if($row->latestNote && $row->latestNote->notes_content){
+                return '<div class="media align-items-center">
+                        <div class="media-body">
+                        <td> <a href data-toggle="tooltip" style="color:#1d82f5;" data-placement="bottom" title="' . $row->latestNote->notes_content .'">'. Carbon::parse($row->latestNote->created_at)->translatedFormat($this->company->date_format) . '</a> 
+                    </div>
+                </div>';
+                }
+                else {
+                    // If there is no latestNote, return a default message or empty string.
+                    return '<div class="media align-items-center">
+                                <div class="media-body">
+                                    N/A
+                                </div>
+                            </div>';
+                }
+            
+                
+        });
+        
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
         // Add Custom Field to datatable
 
-        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check']));
+        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check','latest_note','created_by','edited_by']));
 
         return $datatables;
     }
@@ -167,15 +215,23 @@ class VendorTrackDataTable extends BaseDataTable
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
-            __('app.name') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'title' => __('app.name')],
-            __('app.email') => ['data' => 'vendor_email', 'name' => 'vendor_email', 'title' => __('app.email')],
-            __('app.cell') => ['data' => 'vendor_number', 'name' => 'vendor_number', 'title' => __('app.cell')],
-            
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
-             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
-             __('app.csd') => ['data' => 'contract_start', 'name' => 'contract_start', 'title' => __('app.csd')],
-             __('app.ced') => ['data' => 'contract_end', 'name' => 'contract_end', 'title' => __('app.ced')],
+            __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby'),'width' => '100px'],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
+            __('app.ct_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.ct_type')],
+            __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
+            __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
+            __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
+            
+            __('app.c_name') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'title' => __('app.c_name')],
+            __('app.poc') => ['data' => 'poc', 'name' => 'poc', 'title' => __('app.poc')],
+            __('app.cell') => ['data' => 'vendor_number', 'name' => 'vendor_number', 'title' => __('app.cell')],
+            __('app.email') => ['data' => 'vendor_email', 'name' => 'vendor_email', 'title' => __('app.email')],
+            __('app.nxt_date') => ['data' => 'nxt_date', 'name' => 'nxt_date', 'title' => __('app.nxt_date')],
+            __('app.updatedat') => ['data' => 'updated_at', 'name' => 'updated_at', 'title' => __('app.updatedat')],
+            __('app.edby') => ['data' => 'edited_by', 'name' => 'edited_by', 'title' => __('app.edby')],
+            __('app.ltnote') => ['data' => 'latest_note', 'name' => 'latest_note', 'title' => __('app.ltnote')],
+                 
         ];
 
         $action = [

@@ -166,7 +166,9 @@
         <div class="d-grid d-lg-flex d-md-flex action-bar">
 
             <div id="table-actions" class="flex-grow-1 align-items-center">
-              
+                    <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeadVendor">
+                        @lang('app.importExcel')
+                    </x-forms.button-secondary>
             </div>
 
             <!-- <x-datatable.actions>
@@ -252,6 +254,9 @@
     @include('sections.datatable_js')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
+         $("#file").dropify({
+            messages: dropifyMessages
+        });
         var row_id;
         const showTable = () => {
             window.LaravelDataTables["vendorstrack-table"].draw(false);
@@ -267,6 +272,11 @@
                 showTable();
             }
         });
+        $('#importLeadVendor').click(function () {
+                var url = "{{ route('vendortrack.importLeadVendor') }}";
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
+            });
         $('#reset-filters,#reset-filters-2').click(function() {
             $('#filter-form')[0].reset();
             $('.filter-box .select-picker').selectpicker("refresh");
