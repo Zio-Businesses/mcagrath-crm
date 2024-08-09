@@ -31,8 +31,7 @@
                         :fieldLabel="__('Select WC Waiver Form Template')" fieldName="contract_id" search="true" fieldRequired="true">
                             <option value="">--</option>
                             @foreach ($contract as $category)
-                                <option
-                                    value="{{ $category->id }}">
+                                <option value="{{ $category->id }}" @if($wform){{ $wform->waiver_template === $category->contract_detail ? 'selected' : '' }}@endif>
                                     {{ $category->subject }} 
                                 </option>
                             @endforeach
@@ -50,99 +49,26 @@
 
 @push('scripts')
 
-    <script>
-
-        $('body').on('click', '.delete-category', function () {
-
-            var id = $(this).data('address-id');
-
-            Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.recoverRecord')",
-                icon: 'warning',
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "@lang('messages.confirmDelete')",
-                cancelButtonText: "@lang('app.cancel')",
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-secondary'
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    var url = "{{ route('business-address.destroy', ':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-
-                    $.easyAjax({
-                        type: 'POST',
-                        url: url,
-                        blockUI: true,
-                        data: {
-                            '_token': token,
-                            '_method': 'DELETE'
-                        },
-                        success: function (response) {
-                            if (response.status == "success") {
-                                $('#address-' + id).fadeOut();
-                                init();
-                            }
-                        }
-                    });
-                }
-            });
-        });
-
-        $('body').on('click', '.set_default', function () {
-            var addressId = $(this).data('address-id');
-            var token = "{{ csrf_token() }}";
-
-            $.easyAjax({
-                url: "{{ route('business-address.set_default') }}",
-                type: "POST",
-                data: {
-                    addressId: addressId,
-                    _token: token
-                },
+<script>
+ $(document).ready(function() {
+    $('#contract_id').change(function() {
+        var select = $(this).val();
+        var url="{{ route('vendor-settings.store') }}";
+        $.easyAjax({
+                url: url,
+                type: 'POST',
                 blockUI: true,
-                container: "#nav-tabContent",
-                success: function (response) {
-                    if (response.status == "success") {
+                data: {
+                        _token: '{{ csrf_token() }}',
+                        value: select,
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
                         window.location.reload();
-                    }
-                }
+                    } 
+                },
             });
-        });
-
-        // add new leave type
-        $('#addNewLeaveType').click(function () {
-            var url = "{{ route('business-address.create') }}";
-            $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_XL, url);
-        });
-
-        $(MODAL_LG).on('shown.bs.modal', function () {
-            $('#page_reload').val('true')
-        })
-
-        // add new leave type
-        $('.editNewLeaveType').click(function () {
-
-            var id = $(this).data('address-id');
-
-            var url = "{{ route('business-address.edit', ':id') }}";
-            url = url.replace(':id', id);
-
-            $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_XL, url);
-        });
-
-    </script>
+    });
+});
+</script>
 @endpush

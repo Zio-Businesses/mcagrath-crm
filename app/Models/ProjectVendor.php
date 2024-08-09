@@ -38,22 +38,23 @@ class ProjectVendor extends BaseModel
     }
     public function sowname($data)
     {
-        $scopeofwork= ScopeOfWork::findOrFail($data);
+       
+        $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->sow_title;
     }
     public function sowcategory($data)
     {
-        $scopeofwork= ScopeOfWork::findOrFail($data);
+        $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->category;
     }
     public function sowsubcategory($data)
     {
-        $scopeofwork= ScopeOfWork::findOrFail($data);
+        $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->sub_category;
     }
     public function sowdescription($data)
     {
-        $scopeofwork= ScopeOfWork::findOrFail($data);
+        $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->description;
     }
 

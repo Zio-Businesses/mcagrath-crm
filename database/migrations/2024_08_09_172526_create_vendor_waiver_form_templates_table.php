@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vendor_waiver_form_templates', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('waiver_template');
+            $table->text('waiver_template')->nullable();
         });
     }
 
