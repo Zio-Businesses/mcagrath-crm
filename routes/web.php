@@ -517,7 +517,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
     Route::get('vendorcheck/{email}',[LeadVendorController::class,'vendorcheck'])->name('vendors.check');
     Route::get('vendors/download/{id}', [VendorController::class, 'download'])->name('vendors.download');
+    Route::get('vendors/downloadwaiveform/{id}', [VendorController::class, 'downloadwaiverform'])->name('vendorswaiverform.download');
     Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
+    Route::post('vendors/sendwcform',[VendorController::class,'sendwcform'])->name('vendors.sendwcform');
     Route::get('vendortrack/import-LeadVendor', [LeadVendorController::class, 'importLeadVendor'])->name('vendortrack.importLeadVendor');
     Route::post('vendortrack/import-store-LeadVendor', [LeadVendorController::class, 'importStore'])->name('vendortrack.importStore');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');

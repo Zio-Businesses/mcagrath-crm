@@ -9,11 +9,9 @@ use App\Helper\Reply;
 use App\Models\Project;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
-use App\Models\Notification;
 use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
 use App\Models\VendorContract;
 use Illuminate\Support\Facades\DB;
 use App\Models\ClientDetails;
@@ -24,6 +22,7 @@ use App\Models\UniversalSearch;
 use App\Models\ClientSubCategory;
 use App\Models\PurposeConsentUser;
 use App\Models\Company;
+use App\Models\VendorWaiverFormTemplate;
 use App\DataTables\VendorDataTable;
 use Carbon\Carbon;
 use App\Models\Lead;
@@ -31,6 +30,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\vendor\SaveVendorRequest;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewVendorWaiverForm;
+
 class VendorController extends AccountBaseController
 {
     public function __construct()
@@ -322,5 +324,31 @@ class VendorController extends AccountBaseController
         return $pdf->download($filename . '.pdf');
 
     }
+    
+    public function sendwcform(Request $request)
+    {
+        $vendor= VendorContract::findOrFail($request->id);
+        Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWaiverForm($vendor->id));
+        return Reply::success(__('Mail Send'));
+    }
+    public function downloadwaiverform($id)
+    {
+        $this->vendorid = VendorContract::findOrFail($id);
+        $this->pageTitle = 'app.menu.contracts';
+        $this->pageIcon = 'fa fa-file';
+        $this->company = Company::find(1);
+        $this->templateid = VendorWaiverFormTemplate::first();
+        $pdf = app('dompdf.wrapper');
 
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        App::setLocale('en');
+        Carbon::setLocale('en');
+        $pdf->loadView('vendors.waiverform-pdf', $this->data);
+
+        $filename = 'waiverform-' . $this->vendorid->id;
+
+        return $pdf->download($filename . '.pdf');
+    }
 }

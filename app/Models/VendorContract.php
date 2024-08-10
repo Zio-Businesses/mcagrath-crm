@@ -11,9 +11,11 @@ class VendorContract extends BaseModel
     use HasFactory;
     protected $table = 'vendor_contracts';
     protected $appends = ['image_url'];
+
     public function getImageUrlAttribute()
     {
-        return ($this->company_logo) ? asset_url_local_s3('vendor/logo/' . $this->company_logo) : null;
+        $company=Company::find(1);
+        return ($this->company_logo) ? asset_url_local_s3('vendor/logo/' . $this->company_logo) : $company->logo_url;
     }
     public function getSecondaryImageUrlAttribute()
     {

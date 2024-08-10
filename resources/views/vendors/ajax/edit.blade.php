@@ -176,38 +176,68 @@
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <x-forms.email fieldId="wc_ins_em" :fieldLabel="__('app.WC_Insurance_Carrier_Email_Address')"
-                            fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')"  :fieldValue="$vendor->	wc_insurance_carrier_email_address">
+                            fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')"  :fieldValue="$vendor->wc_insurance_carrier_email_address">
                         </x-forms.email>
                     </div>
-                    
-                    
-                   
-                    
-                        <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                    <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100" style="border: 1px solid lightgrey; border-radius: 10px;">
+                        <label class="f-14 font-weight-bold text-dark-grey float-left"
+                        for="usr" style="position: absolute; top: -11px; left: 11px; background-color: white; padding: 2px 5px;">@lang('Wc Waiver Form')</label>
+                        <x-forms.button-primary id="send-wc-form" class="mr-3 my-2 float-right" icon="check" data-vendor-id="{{ $vendor->id }}">@lang('Send Waiver Form')
+                        </x-forms.button-primary>
+                        <div class="table-responsive">
+                            <x-table class="table-bordered">
+                                <x-slot name="thead">
+                                    <th width="35%">@lang('Form Status')</th>
+                                    <th width="35%">@lang('Last Form Sent Date')</th>
+                                    <th width="35%">@lang('Signed Date')</th>
+                                </x-slot>
+                                @if($vendor->waiver_form_status||$vendor->form_sent_date)
+                                    <tr>
+                                        <td>
+                                            {{$vendor->waiver_form_status}}
+                                        </td>
+                                        <td>  
+                                            {{$vendor->form_sent_date}}
+                                        </td>
+                                        <td>  
+                                             {{$vendor->waiver_signed_date}}
+                                        </td>
+                                    </tr>
+                                @else
+                                    <tr>
+                                        <td colspan="4">
+                                            <x-cards.no-record icon="map-marker-alt" :message="__('messages.noRecordFound')"/>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </x-table>
                         </div>
-                        <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype" fieldRequired="true">
+                    </div>
+                    <div class="col-lg-4 col-md-6 mt-2">
+                        <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mt-2">
+                        <x-forms.select fieldId="contracttype" :fieldLabel="__('Contractor Type')" fieldName="contracttype" fieldRequired="true">
+                            <option value="">--</option>
+                            @foreach ($contracttype as $type)
+                                <option value="{{ $type }}" {{ $vendor->contractor_type === $type ? 'selected' : '' }}>{{ ucfirst($type) }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mt-2">
+                        <x-forms.text :fieldLabel="__('Distance Covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-2">
+                            <x-forms.select fieldId="status" :fieldLabel="__('Status')"
+                                fieldName="status" fieldRequired="true">
                                 <option value="">--</option>
-                                @foreach ($contracttype as $type)
-                                    <option value="{{ $type }}" {{ $vendor->contractor_type === $type ? 'selected' : '' }}>{{ ucfirst($type) }}</option>
+                                @foreach ($vendorStatus as $status)
+                                    <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
+                                        {{ ucwords($status) }}
+                                    </option>
                                 @endforeach
                             </x-forms.select>
-                        </div>
-                        <div class="col-lg-4 col-md-6 mt-2">
-                            <x-forms.text :fieldLabel="__('Distance Covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
-                        </div>
-                        <div class="col-lg-4 col-md-6 mb-2">
-                                <x-forms.select fieldId="status" :fieldLabel="__('Status')"
-                                    fieldName="status" fieldRequired="true">
-                                    <option value="">--</option>
-                                    @foreach ($vendorStatus as $status)
-                                        <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
-                                            {{ ucwords($status) }}
-                                        </option>
-                                    @endforeach
-                                </x-forms.select>
-                        </div>
+                    </div>
                     <div class="col-lg-12 mt-4">
                             <div class="row">
                                 <div class="col-lg-12 mb-2">
@@ -337,6 +367,27 @@
                     }
                 }
             })
+        });
+        $('#send-wc-form').click(function() {
+            var id = $(this).data('vendor-id');
+            var url="{{ route('vendors.sendwcform') }}";
+            $.easyAjax({
+                    url: url,
+                    type: 'POST',
+                    container: '#save-data-form',
+                    blockUI: true,
+                    disableButton: true,
+                    buttonSelector: "#send-wc-form",
+                    data: {
+                            _token: '{{ csrf_token() }}',
+                            id: id,
+                        },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            window.location.reload();
+                        } 
+                    },
+                });
         });
 
         init(RIGHT_MODAL);

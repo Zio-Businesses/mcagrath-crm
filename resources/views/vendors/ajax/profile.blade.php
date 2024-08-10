@@ -97,12 +97,9 @@
                 <p class="mb-0 text-lightest f-14 w-30 d-inline-block text-capitalize">
                     @lang('modules.profile.companyLogo')</p>
                 <p class="mb-0 text-dark-grey f-14 w-70">
-                    @if ($vendorDetail->company_logo)
                         <img data-toggle="tooltip" style="height:50px;"
                     src="{{ $vendorDetail->image_url }}">
-                    @else
-                    --
-                    @endif
+                    
                 </p>
             </div>
 

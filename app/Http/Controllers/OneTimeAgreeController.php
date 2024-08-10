@@ -111,7 +111,7 @@ class OneTimeAgreeController extends Controller
         $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
         $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->payment_methods=json_encode($request->payment_methods);
-        $vendor->status='active';
+        $vendor->status='Active';
         $vendor->contractor_type=$request->contracttype;
         $vendor->distance_covered=$request->dc;
         $vendor->coverage_cities=$request->cc;

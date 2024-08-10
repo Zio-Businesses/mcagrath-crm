@@ -68,7 +68,12 @@ class VendorDataTable extends BaseDataTable
                                 <i class="fa fa-download mr-2"></i>
                                 ' . trans('app.download') . '
                             </a>';
-
+                if($row->waiver_signed_date){
+                $action .= '<a class="dropdown-item" href="' . route('vendorswaiverform.download', $row->id) . '">
+                                <i class="fa fa-download mr-2"></i>
+                                ' . trans('Download Vendor Waiver Form') . '
+                            </a>';
+                }
             $action .= '</div>
                     </div>
                 </div>';

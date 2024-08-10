@@ -21,6 +21,7 @@ use App\Http\Controllers\Payment\FlutterwaveController;
 use App\Http\Controllers\Payment\StripeWebhookController;
 use App\Http\Controllers\PublicLeadGdprController;
 use App\Http\Controllers\PublicWorkOrderController;
+use App\Http\Controllers\PublicWaiverFormCotnroller;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -148,6 +149,8 @@ Route::get('/proposal/{hash}', [HomeController::class, 'proposal'])->name('front
 Route::get('/contract/{hash}', [PublicUrlController::class, 'contractView'])->name('front.contract.show')->middleware('signed');
 Route::get('/ota', [OneTimeAgreeController::class, 'OtaView'])->name('front.ota.show')->middleware('signed');
 Route::get('/wo', [PublicWorkOrderController::class, 'WoView'])->name('front.wo.show')->middleware('signed');
+Route::get('/waiver', [PublicWaiverFormCotnroller::class, 'WaiverView'])->name('front.waiver.show')->middleware('signed');
+Route::post('/waiverstore', [PublicWaiverFormCotnroller::class, 'WaiverStore'])->name('front.waiver.store');
 Route::get('/form-vendor', [OneTimeAgreeController::class, 'vendorfredirect'])->name('front.form.show');
 Route::post('/vendor-store', [OneTimeAgreeController::class, 'vendorstore'])->name('front.vendor.save');
 Route::post('/wostore', [PublicWorkOrderController::class, 'WoStore'])->name('front.wo.store');
