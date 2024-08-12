@@ -24,6 +24,7 @@ use App\Models\PurposeConsentUser;
 use App\Models\Company;
 use App\Models\VendorWaiverFormTemplate;
 use App\DataTables\VendorDataTable;
+use App\DataTables\VendorModuleNotesDataTable;
 use Carbon\Carbon;
 use App\Models\Lead;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\File;
 use App\Http\Requests\vendor\SaveVendorRequest;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorWaiverForm;
+use App\DataTables\ProjectNotesDataTable;
 
 class VendorController extends AccountBaseController
 {
@@ -62,98 +64,36 @@ class VendorController extends AccountBaseController
     }
     public function show($id)
     {
-        // Log::info($id);
-        // $this->client->id = $id;
-        // $this->clientLanguage = LanguageSetting::where('language_code', $this->client->locale)->first();
-        // $this->viewPermission = user()->permission('view_clients');
-        // $this->viewDocumentPermission = user()->permission('view_client_document');
-
-        // if (!$this->client->hasRole('client')) {
-        //     abort(404);
-        // }
-
-        // abort_403(!($this->viewPermission == 'all'
-        //     || ($this->viewPermission == 'added' && $this->client->clientDetails->added_by == user()->id)
-        //     || ($this->viewPermission == 'both' && $this->client->clientDetails->added_by == user()->id)));
-
-       
-
-        // $this->clientStats = $this->clientStats($id);
-        // $this->projectChart = $this->projectChartData($id);
-        // $this->invoiceChart = $this->invoiceChartData($id);
-
-        // $this->earningTotal = Payment::leftJoin('invoices', 'invoices.id', '=', 'payments.invoice_id')
-        //     ->leftJoin('projects', 'projects.id', '=', 'payments.project_id')
-        //     ->where(function ($q) use ($id) {
-        //         $q->where('invoices.client_id', $id);
-        //         $q->orWhere('projects.client_id', $id);
-        //     })->sum('amount');
-
-        // $this->view = 'vendors.ajax.profile';
-
         $tab = request('tab');
 
-        // switch ($tab) {
-        // case 'projects':
-        //     return $this->projects();
-        // case 'invoices':
-        //     return $this->invoices();
-        // case 'payments':
-        //     return $this->payments();
-        // case 'estimates':
-        //     return $this->estimates();
-        // case 'creditnotes':
-        //     return $this->creditnotes();
-        // case 'contacts':
-        //     return $this->contacts();
-        // case 'orders':
-        //     return $this->orders();
-        // case 'documents':
-        //     abort_403(!($this->viewDocumentPermission == 'all'
-        //         || ($this->viewDocumentPermission == 'added' && $this->client->clientDetails->added_by == user()->id)
-        //         || ($this->viewDocumentPermission == 'owned' && $this->client->clientDetails->user_id == user()->id)
-        //         || ($this->viewDocumentPermission == 'both' && ($this->client->clientDetails->added_by == user()->id || $this->client->clientDetails->user_id == user()->id))));
+        $this->vendorDetail = VendorContract::Find($id);
 
-        //     $this->view = 'clients.ajax.documents';
-        //     break;
-        // case 'notes':
-        //     return $this->notes();
-        // case 'tickets':
-        //     return $this->tickets();
-        // case 'gdpr':
-        //     $this->client = User::withoutGlobalScope(ActiveScope::class)->findOrFail($id);
-        //     $this->consents = PurposeConsent::with(['user' => function ($query) use ($id) {
-        //         $query->where('client_id', $id)
-        //             ->orderByDesc('created_at');
-        //     }])->get();
+        $this->pageTitle = $this->vendorDetail->vendor_name;
 
-        //     return $this->gdpr();
-        // default:
-            $this->vendorDetail = VendorContract::Find($id);
-            $this->pageTitle = $this->vendorDetail->vendor_name;
-            $dataArray = json_decode($this->vendorDetail->payment_methods, true); 
-            $sanitizedData = array_map(function ($item) {
-                return str_replace(['[', ']', ','], '', $item);
-            }, $dataArray);
-            $this->joinedData= implode(', ', $sanitizedData);
-            // if (!is_null($this->clientDetail)) {
-            //     $this->clientDetail = $this->clientDetail->withCustomFields();
+        $dataArray = json_decode($this->vendorDetail->payment_methods, true); 
 
-            //     if ($this->clientDetail->getCustomFieldGroupsWithFields()) {
-            //         $this->fields = $this->clientDetail->getCustomFieldGroupsWithFields()->fields;
-            //     }
-            // }
-             
+        $sanitizedData = array_map(function ($item) {
+            return str_replace(['[', ']', ','], '', $item);
+        }, $dataArray);
 
-            $this->view = 'vendors.ajax.profile';
-            // break;
-        //}
+        $this->joinedData= implode(', ', $sanitizedData);
+
+        switch ($tab) {
+            case 'notes':
+                return $this->notes();
+                break;
+            default:
+                $this->view = 'vendors.ajax.profile';
+                break;
+        }
 
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
         }
-
+       
         $this->activeTab = $tab ?: 'profile';
+
+        
 
         return view('vendors.show', $this->data);
     }
@@ -206,6 +146,9 @@ class VendorController extends AccountBaseController
         $vendor->gl_insurance_policy_number=$request->gl_ins_pn;
         $vendor->wc_insurance_policy_number=$request->wc_ins_pn;
         $vendor->county=$request->county;
+        $vendor->license_check=$request->has('license_check')?1:0;
+        $vendor->gl_insurance_check=$request->has('gl_insurance_check')?1:0;
+        $vendor->wc_check=$request->has('wc_check')?1:0;
         if($request->wc_ins_exp!=$vendor->wc_insurance_expiry_date&&!empty(trim($request->wc_ins_exp)))
         {
             
@@ -350,5 +293,24 @@ class VendorController extends AccountBaseController
         $filename = 'waiverform-' . $this->vendorid->id;
 
         return $pdf->download($filename . '.pdf');
+    }
+    public function changevendorstatus(Request $request, $id)
+    {
+        $vendor = VendorContract::findOrFail($id);
+        $vendor->status=$request->value;
+        $vendor->save();
+        return Reply::success(__('Updated'));
+    }
+
+    public function notes()
+    {
+        
+        $dataTable = new VendorModuleNotesDataTable();
+
+        $tab = request('tab');
+        $this->activeTab = $tab ?: 'profile';
+        $this->view = 'vendors.ajax.notes';
+        return $dataTable->render('vendors.show', $this->data);
+
     }
 }

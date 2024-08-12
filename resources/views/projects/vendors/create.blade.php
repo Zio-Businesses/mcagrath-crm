@@ -12,10 +12,16 @@
                             :fieldLabel="__('Select Vendor')" fieldName="vendor_id" search="true" fieldRequired="true">
                                 <option value="">--</option>
                                 @foreach ($vendor as $category)
-                                    <option
-                                        value="{{ $category->id }}">
-                                        {{ $category->vendor_name }} ({{ $category->vendor_email }})
-                                    </option>
+                                    <option value="{{ $category->id }}" data-content='{{ $category->vendor_name}}<span class="d-none">{{$category->vendor_email}}</span><span class="d-none">{{$category->cell}}</span><span class="badge ml-2 text-gray-400" style="background-color: 
+                                    {{ 
+                                        $category->status === 'DNU' ? '#FF0000' : 
+                                        ($category->status === 'Active' ? '#00b5ff' : 
+                                        ($category->status === 'On Hold' ? '#808080' : 
+                                        ($category->status === 'Compliant' ? '#679c0d' : 
+                                        ($category->status === 'Snooze' ? '#FFA500' : 
+                                        ($category->status === 'Non Compliant' ? '#FFFF00' : 
+                                        '#000000')))))
+                                    }};">{{$category->status}}</span>'>
                                 @endforeach
                         </x-forms.select>
                     </div>

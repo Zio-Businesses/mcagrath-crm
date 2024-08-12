@@ -262,7 +262,9 @@
     @include('sections.datatable_js')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
+        
         var row_id;
+        $(".select-picker").selectpicker();
         $('#vendors-table').on('preXhr.dt', function(e, settings, data) {
             const searchText = $('#search-text-field').val();
             data['searchText'] = searchText;
@@ -272,7 +274,28 @@
             window.LaravelDataTables["vendors-table"].draw(false);
         }
 
-        
+        $('#vendors-table').on('change', '.change-vendor-status', function() {
+            var id = $(this).data('row-id');
+            var value =  $(this).val();
+            var url="{{ route('vendors.changevendorstatus',':id') }}";
+            url = url.replace(':id', id);
+            if (id != "" && value != "") {
+            $.easyAjax({
+                    url: url,
+                    type: 'POST',
+                    blockUI: true,
+                    data: {
+                            _token: '{{ csrf_token() }}',
+                            value: value
+                        },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            window.location.reload();
+                        } 
+                    },
+                });
+            }
+        });
 
         $('#search-text-field').on('keyup', function() {
             if ($('#search-text-field').val() != "") {
@@ -292,8 +315,8 @@
         $('body').on('click', '.companysign', function() {
             row_id = $(this).data('user-row');
         //    console.log(row_id);
-             
         })
+
         $('#save-signature').click(function() {
             var token = "{{ csrf_token() }}";
             var url = "{{route('vendors.companysign')}}";
@@ -452,6 +475,7 @@
                 }
             })
         };
+        
 
     </script>
     <script>

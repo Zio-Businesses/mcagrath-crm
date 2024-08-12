@@ -132,6 +132,7 @@ use App\Http\Controllers\ProjectVendorController;
 use App\Http\Controllers\ProjectDelayedByController;
 use App\Http\Controllers\LocationController;
 use App\Models\AttendanceSetting;
+use App\Http\Controllers\VendorModuleNotesController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -523,6 +524,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('vendortrack/import-LeadVendor', [LeadVendorController::class, 'importLeadVendor'])->name('vendortrack.importLeadVendor');
     Route::post('vendortrack/import-store-LeadVendor', [LeadVendorController::class, 'importStore'])->name('vendortrack.importStore');
     Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
+    Route::post('changevendorstatus/{id}',[VendorController::class,'changevendorstatus'])->name('vendors.changevendorstatus');
     Route::post('proposal/{id}',[LeadVendorController::class,'proposal'])->name('vendortrack.proposal');
     Route::get('notes/{id}',[LeadVendorController::class,'notes'])->name('vendortrack.notes');
     Route::get('notescreate/{id}',[LeadVendorController::class,'notescreate'])->name('vendortrack.notescreate');
@@ -532,6 +534,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('vendors',VendorController::class);
     Route::resource('vendor-crud', LeadVendorController::class);
     Route::resource('lead-contact', LeadContactController::class);
+    Route::resource('vendor-module-notes', VendorModuleNotesController::class);
     Route::post('lead-contact/apply-quick-action', [LeadContactController::class, 'applyQuickAction'])->name('lead-contact.apply_quick_action');
 
     Route::get('deals/get-stage/{id}', [DealController::class, 'getStages'])->name('deals.get-stage');

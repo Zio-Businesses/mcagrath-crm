@@ -142,21 +142,21 @@
                     </div>
                     
                     <div class="col-lg-4 col-md-6">
-                    <div class="form-group my-3">
-                            <label class="f-14 text-dark-grey mb-12 w-100 "
-                                for="usr">@lang('app.Workers_Comp_Available')</label>
-                            <div class="d-flex">
-                                <x-forms.radio fieldId="wc-yes" :fieldLabel="__('app.yes')" fieldName="wca"
-                                    fieldValue="yes" :checked="($vendor->Workers_comp_available=='yes') ? 'checked' : ''">
-                                </x-forms.radio>
-                                <x-forms.radio fieldId="wc-no" :fieldLabel="__('app.no')" fieldValue="no"
-                                    fieldName="wca" :checked="($vendor->Workers_comp_available=='no') ? 'checked' : ''"></x-forms.radio>
-                                <x-forms.radio fieldId="wc-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
-                                    fieldName="wca" :checked="($vendor->Workers_comp_available=='not_applicable') ? 'checked' : ''"></x-forms.radio>
-                                <x-forms.radio fieldId="wc-ex" :fieldLabel="__('Exempted')" fieldValue="exempted"
-                                    fieldName="wca" :checked="($vendor->Workers_comp_available=='exempted') ? 'checked' : ''"></x-forms.radio>
-                            </div>
-                    </div>
+                        <div class="form-group my-3">
+                                <label class="f-14 text-dark-grey mb-12 w-100 "
+                                    for="usr">@lang('app.Workers_Comp_Available')</label>
+                                <div class="d-flex">
+                                    <x-forms.radio fieldId="wc-yes" :fieldLabel="__('app.yes')" fieldName="wca"
+                                        fieldValue="yes" :checked="($vendor->Workers_comp_available=='yes') ? 'checked' : ''">
+                                    </x-forms.radio>
+                                    <x-forms.radio fieldId="wc-no" :fieldLabel="__('app.no')" fieldValue="no"
+                                        fieldName="wca" :checked="($vendor->Workers_comp_available=='no') ? 'checked' : ''"></x-forms.radio>
+                                    <x-forms.radio fieldId="wc-na" :fieldLabel="__('app.not_applicable')" fieldValue="not_applicable"
+                                        fieldName="wca" :checked="($vendor->Workers_comp_available=='not_applicable') ? 'checked' : ''"></x-forms.radio>
+                                    <x-forms.radio fieldId="wc-ex" :fieldLabel="__('Exempted')" fieldValue="exempted"
+                                        fieldName="wca" :checked="($vendor->Workers_comp_available=='exempted') ? 'checked' : ''"></x-forms.radio>
+                                </div>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                        <x-forms.datepicker custom="true" fieldId="wc_ins_exp" 
@@ -179,7 +179,7 @@
                             fieldName="wc_ins_em" :fieldPlaceholder="__('placeholders.email')"  :fieldValue="$vendor->wc_insurance_carrier_email_address">
                         </x-forms.email>
                     </div>
-                    <div class="col-lg-12 col-md-12 ntfcn-tab-content-left w-100" style="border: 1px solid lightgrey; border-radius: 10px;">
+                    <div class="col-lg-12 col-md-12 ntfcn-tab-content-left" style="border: 1px solid lightgrey; border-radius: 10px;">
                         <label class="f-14 font-weight-bold text-dark-grey float-left"
                         for="usr" style="position: absolute; top: -11px; left: 11px; background-color: white; padding: 2px 5px;">@lang('Wc Waiver Form')</label>
                         <x-forms.button-primary id="send-wc-form" class="mr-3 my-2 float-right" icon="check" data-vendor-id="{{ $vendor->id }}">@lang('Send Waiver Form')
@@ -213,6 +213,24 @@
                             </x-table>
                         </div>
                     </div>
+                    <div class="col-sm-12 mt-3 py-3"  style="border: 1px solid lightgrey; border-radius: 10px;">
+                        <label class="f-14 font-weight-bold text-dark-grey float-left"
+                        for="usr" style="position: absolute; top: -11px; left: 11px; background-color: white; padding: 2px 5px;">@lang('Verified')</label>
+                            <div class="form-group d-flex">
+                                <div class="mt-2 w-100">
+                                    <x-forms.checkbox fieldId="license_check"
+                                        :fieldLabel="__('License')" fieldName="license_check" :checked="$vendor->license_check" />
+                                </div>
+                                <div class="mt-2 w-100">
+                                    <x-forms.checkbox fieldId="gl_insurance_check"
+                                        :fieldLabel="__('GL Insurance')" fieldName="gl_insurance_check" :checked="$vendor->gl_insurance_check"/>
+                                </div>
+                                <div class="mt-2 w-100">
+                                    <x-forms.checkbox fieldId="wc_check"
+                                        :fieldLabel="__('WC')" fieldName="wc_check" :checked="$vendor->wc_check"/>
+                                </div>
+                            </div>
+                    </div>
                     <div class="col-lg-4 col-md-6 mt-2">
                         <x-forms.text :fieldLabel="__('Coverage By County')" fieldName="cc" fieldId="cc" fieldRequired="true" :fieldHelp="__('Type the counties that you cover')" :fieldValue="$vendor->coverage_cities"/>
                     </div>
@@ -228,15 +246,21 @@
                         <x-forms.text :fieldLabel="__('Distance Covered')" fieldName="dc" fieldId="dc" fieldRequired="true" :fieldHelp="__('in miles')" :fieldValue="$vendor->distance_covered"/>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-2">
-                            <x-forms.select fieldId="status" :fieldLabel="__('Status')"
-                                fieldName="status" fieldRequired="true">
+                        <x-forms.label class="my-3" fieldId="status"
+                                       :fieldLabel="__('Status')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="status" id="status"
+                                    data-live-search="true" @if(!in_array('admin', user_roles()) && $vendor->status=='DNU') disabled @endif>
                                 <option value="">--</option>
-                                @foreach ($vendorStatus as $status)
-                                    <option value="{{ $status }}" {{ $vendor->status === $status ? 'selected' : '' }}>
-                                        {{ ucwords($status) }}
-                                    </option>
-                                @endforeach
-                            </x-forms.select>
+                                <option @selected($vendor->status == 'Active') value="Active" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Active'>
+                                <option @selected($vendor->status == 'Compliant') value="Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Compliant'>
+                                <option @selected($vendor->status == 'Snooze') value="Snooze" data-content='<i class="fa fa-circle mr-2" style="color:#FFA500;"></i>Snooze'>
+                                <option @selected($vendor->status == 'Non Compliant') value="Non Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#FFFF00;"></i>Non Compliant'>
+                                <option @selected($vendor->status == 'DNU') value="DNU" data-content='<i class="fa fa-circle mr-2" style="color:#FF0000;"></i>DNU'>
+                                <option @selected($vendor->status == 'On Hold') value="On Hold" data-content='<i class="fa fa-circle mr-2" style="color:#808080;"></i>On Hold'>
+                            </select>
+                        </x-forms.input-group>
                     </div>
                     <div class="col-lg-12 mt-4">
                             <div class="row">
@@ -322,7 +346,7 @@
 <script>
     $(document).ready(function() {
 
-        
+        $("#save-data-form .select-picker").selectpicker();
         
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
@@ -368,6 +392,7 @@
                 }
             })
         });
+        
         $('#send-wc-form').click(function() {
             var id = $(this).data('vendor-id');
             var url="{{ route('vendors.sendwcform') }}";

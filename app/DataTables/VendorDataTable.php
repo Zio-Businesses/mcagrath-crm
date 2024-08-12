@@ -95,19 +95,34 @@ class VendorDataTable extends BaseDataTable
 
             return '<div class="media align-items-center">
                     <div class="media-body">
-                <h5 class="mb-0 f-13 text-darkest-grey">' . $row->vendor_name . '</h5>
+                <h5 class="mb-0 f-13 text-darkest-grey"><a href="' . route('vendors.show', [$row->id]) . '">' . $row->vendor_name . '</a></h5>
                 <p class="mb-0">' . $signed . '</p>
                 <p class="mb-0">' . $companysign . '</p>
                 </div>
               </div>';
         });
-        // $datatables->editColumn('name', fn($row) => $row->vendor_name );
         $datatables->editColumn('id', fn($row) => $row->id);
         $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
-        // $datatables->editColumn('status', fn($row) => $row->status == 'active' ? Common::active() : Common::inactive());
         $datatables->editColumn('email', fn($row) => $row->vendor_email);
         $datatables->editColumn('company_name', fn($row) => $row->company_name);
         $datatables->editColumn('created_by', fn($row) => $row->created_by);
+        
+        $datatables->editColumn('status', function ($row)
+        {
+            return '
+            <div class="media align-items-center" style="width: 150px;">
+                <select class="form-control select-picker change-vendor-status" data-row-id="' . $row->id . '" ' . ((!in_array("admin", user_roles()) && $row->status == "DNU") ? 'disabled' : '') . '>
+                    <option value="">--</option>
+                    <option value="Active" ' . ($row->status === "Active" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#00b5ff;\'></i>Active">
+                    <option value="Compliant" ' . ($row->status === "Compliant" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#679c0d;\'></i>Compliant">
+                    <option value="Snooze" ' . ($row->status === "Snooze" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#FFA500;\'></i>Snooze">
+                    <option value="Non Compliant" ' . ($row->status === "Non Compliant" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#FFFF00;\'></i>Non Compliant">
+                    <option value="DNU" ' . ($row->status === "DNU" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#FF0000;\'></i>DNU">
+                    <option value="On Hold" ' . ($row->status === "On Hold" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#808080;\'></i>On Hold">
+                </select>
+            </div>';
+        
+        });
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
@@ -130,6 +145,7 @@ class VendorDataTable extends BaseDataTable
             $users = $users->where(function ($query) {
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('vendor_email', 'like', '%' . request('searchText') . '%')
+                    ->orWhere('cell', 'like', '%' . request('searchText') . '%')
                     ->orWhere('company_name', 'like', '%' . request('searchText') . '%')
                     ->orWhere('contractor_type', 'like', '%' . request('searchText') . '%')
                     ->orWhere('status', 'like', '%' . request('searchText') . '%')
@@ -154,7 +170,7 @@ class VendorDataTable extends BaseDataTable
                     .appendTo("#table-actions")
                 }',
                 'fnDrawCallback' => 'function( oSettings ) {
-                  //
+                  $("#vendors-table .select-picker").selectpicker();
                 }',
             ]);
 

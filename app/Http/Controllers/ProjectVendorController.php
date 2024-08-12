@@ -55,6 +55,8 @@ class ProjectVendorController extends AccountBaseController
     public function store(StoreProjectVendor $request)
     {
         $vendor = VendorContract::findOrFail($request->vendor_id);
+        if($vendor->status==='Compliant'){
+
         $vpro= new ProjectVendor();
         $vpro->project_id = $request->project_id;
         $vpro->vendor_name=$vendor->vendor_name;
@@ -73,6 +75,11 @@ class ProjectVendorController extends AccountBaseController
         $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
         Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
         return Reply::success(__('New Vendor Added Successfully'));
+
+        }
+        else{
+            return Reply::error(__('Check Vendor Status'));
+        }
         
     }
     public function update(Request $request, $id)
