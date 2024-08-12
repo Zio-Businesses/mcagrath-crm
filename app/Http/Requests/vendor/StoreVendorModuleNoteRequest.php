@@ -26,7 +26,6 @@ class StoreVendorModuleNoteRequest extends CoreRequest
     public function rules()
     {
         $rules = array();
-        $rules['details'] = 'Required';
         $rules['notes_title'] = 'Required';
         return $rules;
     }
