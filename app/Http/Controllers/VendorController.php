@@ -9,18 +9,10 @@ use App\Helper\Reply;
 use App\Models\Project;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
-use App\Models\ContractType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\VendorContract;
 use Illuminate\Support\Facades\DB;
-use App\Models\ClientDetails;
-use App\Models\ClientCategory;
-use App\Models\PurposeConsent;
-use App\Models\LanguageSetting;
-use App\Models\UniversalSearch;
-use App\Models\ClientSubCategory;
-use App\Models\PurposeConsentUser;
 use App\Models\Company;
 use App\Models\VendorWaiverFormTemplate;
 use App\DataTables\VendorDataTable;
@@ -41,23 +33,12 @@ class VendorController extends AccountBaseController
     {
         parent::__construct();
         $this->pageTitle = 'app.menu.vendors';
-        // $this->middleware(function ($request, $next) {
-        //     abort_403(!in_array('clients', $this->user->modules));
-
-        //     return $next($request);
-        // });
+    
     }
     public function index(VendorDataTable $dataTable)
     {
-    //   Log::info(user()->id);
         if (!request()->ajax()) {
             $this->clients = VendorContract::all();
-            $this->subcategories = ClientSubCategory::all();
-            $this->categories = ClientCategory::all();
-            $this->projects = Project::all();
-            $this->contracts = ContractType::all();
-            $this->countries = countries();
-            $this->totalClients = count($this->clients);
         }
 
         return $dataTable->render('vendors.index', $this->data);

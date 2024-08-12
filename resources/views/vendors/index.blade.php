@@ -59,100 +59,13 @@
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" data-container="body" name="status" id="status">
-                            <option value="all">@lang('app.all')</option>
-                            <option value="active">@lang('app.active')</option>
-                            <option value="deactive">@lang('app.inactive')</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.category')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="filter_category_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                    for="usr">@lang('modules.productCategory.subCategory')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="filter_sub_category_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->id }}">{{ $subcategory->category_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.project')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others select-filter-project">
-                        <select class="form-control select-picker" id="project_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($projects as $project)
-                                <option value="{{ $project->id }}">{{ $project->project_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                    for="usr">@lang('modules.contracts.contractType')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="contract_type_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($contracts as $contract)
-                                <option value="{{ $contract->id }}">{{ $contract->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.country')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="country_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($countries as $country)
-                                <option value="{{ $country->id }}"
-                                    data-content="<span class='flag-icon flag-icon-{{ strtolower($country->iso) }} flag-icon-squared'></span> {{ $country->nicename }}">{{ $country->nicename }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.verify') <i class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-content="@lang('messages.clientFilterVerification')" data-html="true" data-trigger="hover"></i></label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="verification" data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            <option value="yes">@lang('app.yes')</option>
-                            <option value="no">@lang('app.no')</option>
+                            <option value="">--</option>
+                            <option  value="Active" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Active'>
+                            <option  value="Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Compliant'>
+                            <option  value="Snooze" data-content='<i class="fa fa-circle mr-2" style="color:#FFA500;"></i>Snooze'>
+                            <option  value="Non Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#FFFF00;"></i>Non Compliant'>
+                            <option  value="DNU" data-content='<i class="fa fa-circle mr-2" style="color:#FF0000;"></i>DNU'>
+                            <option  value="On Hold" data-content='<i class="fa fa-circle mr-2" style="color:#808080;"></i>On Hold'>
                         </select>
                     </div>
                 </div>
@@ -264,10 +177,21 @@
     <script>
         
         var row_id;
-        $(".select-picker").selectpicker();
         $('#vendors-table').on('preXhr.dt', function(e, settings, data) {
             const searchText = $('#search-text-field').val();
             data['searchText'] = searchText;
+            const status = $('#status').val();
+            data['status'] = status;
+            console.log(status);
+        });
+
+        $('#status').on('change keyup', function() {
+                if ($('#status').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                } else {
+                    $('#reset-filters').addClass('d-none');
+                }
+                showTable();
         });
 
         const showTable = () => {
@@ -361,54 +285,6 @@
         });
 
 
-        $('#quick-action-type').change(function() {
-            const actionValue = $(this).val();
-            if (actionValue !== '') {
-                $('#quick-action-apply').removeAttr('disabled');
-
-                if (actionValue === 'change-status') {
-                    $('.quick-action-field').addClass('d-none');
-                    $('#change-status-action').removeClass('d-none');
-                } else {
-                    $('.quick-action-field').addClass('d-none');
-                }
-            } else {
-                $('#quick-action-apply').attr('disabled', true);
-                $('.quick-action-field').addClass('d-none');
-            }
-        });
-
-        $('#quick-action-apply').click(function() {
-            const actionValue = $('#quick-action-type').val();
-            if (actionValue == 'delete') {
-                Swal.fire({
-                    title: "@lang('messages.sweetAlertTitle')",
-                    text: "@lang('messages.recoverRecord')",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: "@lang('messages.confirmDelete')",
-                    cancelButtonText: "@lang('app.cancel')",
-                    customClass: {
-                        confirmButton: 'btn btn-primary mr-3',
-                        cancelButton: 'btn btn-secondary'
-                    },
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                        backdrop: 'swal2-noanimation'
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        applyQuickAction();
-                    }
-                });
-
-            } else {
-                applyQuickAction();
-            }
-        });
-
         $('body').on('click', '.delete-table-row', function() {
             const id = $(this).data('user-id');
             var token = "{{ csrf_token() }}";
@@ -451,32 +327,6 @@
             
         });
         
-        const applyQuickAction = () => {
-            var rowdIds = $("#clients-table input:checkbox:checked").map(function() {
-                return $(this).val();
-            }).get();
-
-            const url = "{{ route('clients.apply_quick_action') }}?row_ids=" + rowdIds;
-
-            $.easyAjax({
-                url: url,
-                container: '#quick-action-form',
-                type: "POST",
-                disableButton: true,
-                buttonSelector: "#quick-action-apply",
-                data: $('#quick-action-form').serialize(),
-                success: function(response) {
-                    if (response.status == 'success') {
-                        showTable();
-                        resetActionButtons();
-                        deSelectAll();
-                        $('#quick-action-form').hide();
-                    }
-                }
-            })
-        };
-        
-
     </script>
     <script>
         var canvas = document.getElementById('signature-pad');

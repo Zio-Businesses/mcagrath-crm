@@ -111,7 +111,7 @@ class VendorDataTable extends BaseDataTable
         {
             return '
             <div class="media align-items-center" style="width: 150px;">
-                <select class="form-control select-picker change-vendor-status" data-row-id="' . $row->id . '" ' . ((!in_array("admin", user_roles()) && $row->status == "DNU") ? 'disabled' : '') . '>
+                <select class="form-control select-picker change-vendor-status" data-size="5" data-row-id="' . $row->id . '" ' . ((!in_array("admin", user_roles()) && $row->status == "DNU") ? 'disabled' : '') . '>
                     <option value="">--</option>
                     <option value="Active" ' . ($row->status === "Active" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#00b5ff;\'></i>Active">
                     <option value="Compliant" ' . ($row->status === "Compliant" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#679c0d;\'></i>Compliant">
@@ -151,6 +151,10 @@ class VendorDataTable extends BaseDataTable
                     ->orWhere('status', 'like', '%' . request('searchText') . '%')
                     ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
+        }
+
+        if ($request->status != '') {
+            $users = $users->where('status', $request->status);
         }
 
         return $users;
