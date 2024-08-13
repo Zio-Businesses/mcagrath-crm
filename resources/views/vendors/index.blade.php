@@ -182,7 +182,6 @@
             data['searchText'] = searchText;
             const status = $('#status').val();
             data['status'] = status;
-            console.log(status);
         });
 
         $('#status').on('change keyup', function() {

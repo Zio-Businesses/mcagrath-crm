@@ -53,23 +53,11 @@
                 <div class="select-filter mb-4">
                     <div class="select-others">
                         <select class="form-control select-picker" data-container="body" name="status" id="status">
-                            <option value="all">@lang('app.all')</option>
-                            <option value="active">@lang('app.active')</option>
-                            <option value="deactive">@lang('app.inactive')</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.category')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" id="filter_category_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                            <option value="">--</option>
+                            @foreach ($vendorStatuses as $status)
+                                <option value="{{ $status }}">
+                                    {{ ucfirst($status) }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -77,15 +65,16 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                    for="usr">@lang('modules.productCategory.subCategory')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Created By')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
-                        <select class="form-control select-picker" id="filter_sub_category_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($subcategories as $subcategory)
-                                <option value="{{ $subcategory->id }}">{{ $subcategory->category_name }}</option>
+                        <select class="form-control select-picker" id="createdby" data-live-search="true"
+                            data-container="body" data-size="5">
+                            <option value="">--</option>
+                            @foreach ($createdby as $created)
+                                <option value="{{$created->name}}">
+                                    {{$created->name}}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -93,14 +82,16 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.project')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Contractor Type')</label>
                 <div class="select-filter mb-4">
-                    <div class="select-others select-filter-project">
-                        <select class="form-control select-picker" id="project_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($projects as $project)
-                                <option value="{{ $project->id }}">{{ $project->project_name }}</option>
+                    <div class="select-others">
+                        <select class="form-control select-picker" id="contractor_type" data-live-search="true"
+                            data-container="body" data-size="5">
+                            <option value="">--</option>
+                            @foreach ($contracttype as $type)
+                                <option value="{{$type}}">
+                                    {{$type}}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -108,15 +99,16 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                    for="usr">@lang('modules.contracts.contractType')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('State')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
-                        <select class="form-control select-picker" id="contract_type_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($contracts as $contract)
-                                <option value="{{ $contract->id }}">{{ $contract->name }}</option>
+                        <select class="form-control select-picker" id="state" data-live-search="true"
+                            data-container="body" data-size="5">
+                            <option value="">--</option>
+                            @foreach ($state as $states)
+                                <option value="{{$states->state}}">
+                                    {{$states->state}}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -124,15 +116,16 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.country')</label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('County')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
-                        <select class="form-control select-picker" id="country_id" data-live-search="true"
-                            data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            @foreach ($countries as $country)
-                                <option value="{{ $country->id }}"
-                                    data-content="<span class='flag-icon flag-icon-{{ strtolower($country->iso) }} flag-icon-squared'></span> {{ $country->nicename }}">{{ $country->nicename }}</option>
+                        <select class="form-control select-picker" id="county" data-live-search="true"
+                            data-container="body" data-size="5">
+                            <option value="">--</option>
+                            @foreach ($county as $counties)
+                                <option value="{{$counties->county}}">
+                                    {{$counties->county}}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -140,13 +133,17 @@
             </div>
 
             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.verify') <i class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-content="@lang('messages.clientFilterVerification')" data-html="true" data-trigger="hover"></i></label>
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('City')</label>
                 <div class="select-filter mb-4">
                     <div class="select-others">
-                        <select class="form-control select-picker" id="verification" data-container="body" data-size="8">
-                            <option value="all">@lang('app.all')</option>
-                            <option value="yes">@lang('app.yes')</option>
-                            <option value="no">@lang('app.no')</option>
+                        <select class="form-control select-picker" id="city" data-live-search="true"
+                            data-container="body" data-size="5">
+                            <option value="">--</option>
+                            @foreach ($city as $cities)
+                                <option value="{{$cities->city}}">
+                                    {{$cities->city}}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -168,7 +165,7 @@
             <div id="table-actions" class="flex-grow-1 align-items-center">
                     <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeadVendor">
                         @lang('app.importExcel')
-                    </x-forms.button-secondary>
+                    </x-forms.button-secondary>  
             </div>
 
             <!-- <x-datatable.actions>
@@ -205,45 +202,45 @@
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
 
         </div>
-                    <div id="signature-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog d-flex justify-content-center align-items-center modal-xl">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modelHeading">@lang('modules.estimates.cpatureAndConfirmation')</h5>
-                            <button type="button"  class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
+        <div id="signature-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog d-flex justify-content-center align-items-center modal-xl">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modelHeading">@lang('modules.estimates.cpatureAndConfirmation')</h5>
+                <button type="button"  class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
 
-                            <x-form id="acceptEstimate">
-                                <div class="row">
-                                    <div class="col-sm-12 bg-grey p-4 signature">
-                                        <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
-                                        <div class="signature_wrap wrapper border-0 form-control">
-                                            <canvas id="signature-pad" class="signature-pad rounded" width=725 height=150></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-12 p-4 d-none upload-image">
-                                        <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
-                                            fieldId="image" :popover="__('messages.fileFormat.ImageFile')" fieldRequired="true" />
-                                    </div>
-                                    <div class="col-sm-12 mt-3">
-                                        <x-forms.button-secondary id="undo-signature" class="signature">@lang('modules.estimates.undo')</x-forms.button-secondary>
-                                        <x-forms.button-secondary class="ml-2 signature" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
-                                        <x-forms.button-secondary class="ml-2 " id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')
-                                        </x-forms.button-secondary>
-                                    </div>
+                <x-form id="acceptEstimate">
+                    <div class="row">
+                        <div class="col-sm-12 bg-grey p-4 signature">
+                            <x-forms.label fieldId="signature-pad" fieldRequired="true" :fieldLabel="__('modules.estimates.signature')" />
+                            <div class="signature_wrap wrapper border-0 form-control">
+                                <canvas id="signature-pad" class="signature-pad rounded" width=725 height=150></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 p-4 d-none upload-image">
+                            <x-forms.file allowedFileExtensions="png jpg jpeg svg bmp" class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.estimates.signature')" fieldName="image"
+                                fieldId="image" :popover="__('messages.fileFormat.ImageFile')" fieldRequired="true" />
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <x-forms.button-secondary id="undo-signature" class="signature">@lang('modules.estimates.undo')</x-forms.button-secondary>
+                            <x-forms.button-secondary class="ml-2 signature" id="clear-signature">@lang('modules.estimates.clear')</x-forms.button-secondary>
+                            <x-forms.button-secondary class="ml-2 " id="toggle-pad-uploader">@lang('modules.estimates.uploadSignature')
+                            </x-forms.button-secondary>
+                        </div>
 
-                                </div>
-                            </x-form>
-                        </div>
-                        <div class="modal-footer">
-                            <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.cancel')</x-forms.button-cancel>
-                            <x-forms.button-primary id="save-signature" icon="check">@lang('app.sign')</x-forms.button-primary>
-                        </div>
-                        </div>
-                     </div>
                     </div>
+                </x-form>
+            </div>
+            <div class="modal-footer">
+                <x-forms.button-cancel data-dismiss="modal" class="border-0 mr-3">@lang('app.cancel')</x-forms.button-cancel>
+                <x-forms.button-primary id="save-signature" icon="check">@lang('app.sign')</x-forms.button-primary>
+            </div>
+            </div>
+            </div>
+        </div>
         <!-- Task Box End -->
     </div>
     <!-- CONTENT WRAPPER END -->
@@ -254,16 +251,71 @@
     @include('sections.datatable_js')
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
+        
          $("#file").dropify({
             messages: dropifyMessages
         });
         var row_id;
+       
+        $('#vendorstrack-table').on('preXhr.dt', function(e, settings, data) {
+
+            const dateRangePicker = $('#datatableRange').data('daterangepicker');
+            let startDate = $('#datatableRange').val();
+
+            let endDate;
+
+            if (startDate == '') {
+                startDate = null;
+                endDate = null;
+            } else {
+                startDate = dateRangePicker.startDate.format('{{ company()->moment_date_format }}');
+                endDate = dateRangePicker.endDate.format('{{ company()->moment_date_format }}');
+            }
+            const searchText = $('#search-text-field').val();
+            data['searchText'] = searchText;
+            const status = $('#status').val();
+            data['status'] = status;
+            const createdby = $('#createdby').val();
+            data['createdby'] = createdby;
+            const contractor_type = $('#contractor_type').val();
+            data['contractor_type'] = contractor_type;
+            const state = $('#state').val();
+            data['state'] = state;
+            const county = $('#county').val();
+            data['county'] = county;
+            const city = $('#city').val();
+            data['city'] = city;
+            data['startDate'] = startDate;
+            data['endDate'] = endDate;
+            
+        });
+        
         const showTable = () => {
             window.LaravelDataTables["vendorstrack-table"].draw(false);
         }
-        $('#vendorstrack-table').on('preXhr.dt', function(e, settings, data) {
-            const searchText = $('#search-text-field').val();
-            data['searchText'] = searchText;
+        $('#status, #createdby, #contractor_type, #state, #county, #city').on('change keyup', function() {
+                if ($('#status').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                } 
+                else if ($('#createdby').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                }
+                else if ($('#contractor_type').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                }
+                else if ($('#state').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                }
+                else if ($('#county').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                }
+                else if ($('#city').val() !== "") {
+                    $('#reset-filters').removeClass('d-none');
+                }
+                else {
+                    $('#reset-filters').addClass('d-none');
+                }
+                showTable();
         });
 
         $('#search-text-field').on('keyup', function() {
@@ -282,56 +334,8 @@
             $('.filter-box .select-picker').selectpicker("refresh");
             $('#reset-filters').addClass('d-none');
             showTable();
-        });
-
-        $('#quick-action-type').change(function() {
-            const actionValue = $(this).val();
-            if (actionValue !== '') {
-                $('#quick-action-apply').removeAttr('disabled');
-
-                if (actionValue === 'change-status') {
-                    $('.quick-action-field').addClass('d-none');
-                    $('#change-status-action').removeClass('d-none');
-                } else {
-                    $('.quick-action-field').addClass('d-none');
-                }
-            } else {
-                $('#quick-action-apply').attr('disabled', true);
-                $('.quick-action-field').addClass('d-none');
-            }
-        });
-
-        $('#quick-action-apply').click(function() {
-            const actionValue = $('#quick-action-type').val();
-            if (actionValue == 'delete') {
-                Swal.fire({
-                    title: "@lang('messages.sweetAlertTitle')",
-                    text: "@lang('messages.recoverRecord')",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: "@lang('messages.confirmDelete')",
-                    cancelButtonText: "@lang('app.cancel')",
-                    customClass: {
-                        confirmButton: 'btn btn-primary mr-3',
-                        cancelButton: 'btn btn-secondary'
-                    },
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                        backdrop: 'swal2-noanimation'
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        applyQuickAction();
-                    }
-                });
-
-            } else {
-                applyQuickAction();
-            }
-        });
-
+        });    
+        
         $('body').on('click', '.send-proposal', function() {
             const id = $(this).data('user-send');
             var token = "{{ csrf_token() }}";
@@ -357,42 +361,51 @@
             const id = $(this).data('user-id');
             var token = "{{ csrf_token() }}";
             Swal.fire({
-                            title: "@lang('messages.sweetAlertTitle')",
-                            text:   "@lang('messages.recoverRecord')",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            focusConfirm: false,
-                            confirmButtonText: "@lang('messages.confirmDelete')",
-                            cancelButtonText: "@lang('app.cancel')",
-                            customClass: {
-                                confirmButton: 'btn btn-primary mr-3',
-                                cancelButton: 'btn btn-secondary'
-                            },
-                            showClass: {
-                                popup: 'swal2-noanimation',
-                                backdrop: 'swal2-noanimation'
-                            },
-                            buttonsStyling: false
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                var url = "{{ route('vendortrack.destroy', ':id') }}";
-                                url = url.replace(':id', id);
-                                $.easyAjax({
-                                    type: 'POST',
-                                    url: url,
-                                    data: {
-                                        '_token': token,
-                                        '_method': 'DELETE'
-                                    },
-                                    success: function(response) {
-                                        if (response.status == "success") {
-                                            showTable();
-                                        }
-                                    }
-                                });
+                title: "@lang('messages.sweetAlertTitle')",
+                text:   "@lang('messages.recoverRecord')",
+                icon: 'warning',
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: "@lang('messages.confirmDelete')",
+                cancelButtonText: "@lang('app.cancel')",
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-secondary'
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('vendortrack.destroy', ':id') }}";
+                    url = url.replace(':id', id);
+                    $.easyAjax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            '_token': token,
+                            '_method': 'DELETE'
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                showTable();
                             }
-                        });
-            
+                        }
+                    });
+                }
+            });   
+        });
+
+        $( document ).ready(function() {
+            @if (!is_null(request('start')) && !is_null(request('end')))
+            $('#datatableRange').val('{{ request('start') }}' +
+            ' @lang("app.to") ' + '{{ request('end') }}');
+            $('#datatableRange').data('daterangepicker').setStartDate("{{ request('start') }}");
+            $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
+                showTable();
+            @endif
         });
         
 

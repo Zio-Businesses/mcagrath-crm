@@ -18,6 +18,8 @@ use App\Models\LanguageSetting;
 use App\Models\UniversalSearch;
 use App\Models\ClientSubCategory;
 use App\Models\PurposeConsentUser;
+use App\Models\EmployeeDetails;
+use App\Models\User;
 use Carbon\Carbon;
 use App\DataTables\VendorTrackDataTable;
 use Illuminate\Support\Facades\Notification;
@@ -130,17 +132,22 @@ class LeadVendorController extends AccountBaseController
         // $this->addClientPermission = user()->permission('add_clients');
 
         // abort_403(!in_array($viewPermission, ['all', 'added', 'both']));
-
+       
+        
         if (!request()->ajax()) {
-            
+            $ids = EmployeeDetails::pluck('user_id');
             $this->subcategories = ClientSubCategory::all();
             $this->categories = ClientCategory::all();
             $this->projects = Project::all();
             $this->contracts = ContractType::all();
             $this->countries = countries();
-            
+            $this->vendorStatuses = Vendor::getStatuses();
+            $this->createdby = User::whereIn('id', $ids)->get();
+            $this->contracttype = VendorContract::getContractType();
+            $this->state=Locations::select('state')->distinct()->get();
+            $this->county=Locations::select('county')->distinct()->get();
+            $this->city=Locations::select('city')->distinct()->get();
         }
-
         return $dataTable->render('vendortrack.index', $this->data);
     }
     public function destroy($id)

@@ -170,6 +170,34 @@ class VendorTrackDataTable extends BaseDataTable
             });
         }
 
+        if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
+            $startDate = companyToDateString($request->startDate);
+            $users = $users->where(DB::raw('DATE(`created_at`)'), '>=', $startDate);
+        }
+
+        if ($request->endDate !== null && $request->endDate != 'null' && $request->endDate != '') {
+            $endDate = companyToDateString($request->endDate);
+            $users = $users->where(DB::raw('DATE(`created_at`)'), '<=', $endDate);
+        }
+        if ($request->status != '') {
+            $users = $users->where('v_status', $request->status);
+        }
+        if ($request->createdby != '') {
+            $users = $users->where('created_by', $request->createdby);
+        }
+        if ($request->contractor_type != '') {
+            $users = $users->where('contractor_type', $request->contractor_type);
+        }
+        if ($request->state != '') {
+            $users = $users->where('state', $request->state);
+        }
+        if ($request->county != '') {
+            $users = $users->where('county', $request->county);
+        }
+        if ($request->city != '') {
+            $users = $users->where('city', $request->city);
+        }
+
         return $users;
     }
 
