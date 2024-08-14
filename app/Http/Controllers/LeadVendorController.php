@@ -29,6 +29,9 @@ use App\Models\LeadSource;
 use App\Models\NotesTitle;
 use App\Models\Locations;
 use App\Models\VendorNotes;
+use App\Imports\LeadVendorImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class LeadVendorController extends AccountBaseController
 {
 
@@ -213,6 +216,8 @@ class LeadVendorController extends AccountBaseController
         if($send_email->vendor_email)
         { 
             $send_email->v_status='Proposal Link Sent';
+            $send_email->contract_start=Carbon::today()->format('Y-m-d');
+            $send_email->contract_end=Carbon::today()->addYear()->format('Y-m-d');
             $send_email->save();
             Notification::route('mail', $send_email->vendor_email)->notify(new NewVendorContract($send_email->id));
             return Reply::success(__('Mail Send'));
@@ -254,6 +259,18 @@ class LeadVendorController extends AccountBaseController
     public function importLeadVendor()
     {
         return view('vendortrack.import-vendor-lead-modal', $this->data);
+    }
+
+    public function importStore(Request $request)
+    {
+        
+        $request->validate([
+            'file' => 'required|mimes:xlsx'
+        ]);
+
+        Excel::import(new LeadVendorImport, $request->file('file'));
+
+        return Reply::success(__('messages.updateSuccess'));
     }
    
 }

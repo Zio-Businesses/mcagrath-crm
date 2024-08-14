@@ -120,6 +120,7 @@
                     $('#county').find('option:not(:first)').remove();
                     $('#city').find('option:not(:first)').remove();
                     fetchCounties(state_id);
+                    console.log('id');
                 }
         });
 

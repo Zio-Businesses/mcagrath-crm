@@ -216,30 +216,4 @@ $addProductPermission = user()->permission('add_product');
             });
 
         }
-        
-
-
-
-
-    //     $('body').on('click', '.add-lead-source', function() {
-    //         var url = '{{ route('lead-source-settings.create') }}';
-    //         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-    //         $.ajaxModal(MODAL_LG, url);
-    //     });
-
-    //     $('.toggle-other-details').click(function() {
-    //         $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
-    //         $('#other-details').toggleClass('d-none');
-    //     });
-
-    //     init(RIGHT_MODAL);
-    // });
-
-    // function checkboxChange(parentClass, id){
-    //     var checkedData = '';
-    //     $('.'+parentClass).find("input[type= 'checkbox']:checked").each(function () {
-    //         checkedData = (checkedData !== '') ? checkedData+', '+$(this).val() : $(this).val();
-    //     });
-    //     $('#'+id).val(checkedData);
-    // }
 </script>
