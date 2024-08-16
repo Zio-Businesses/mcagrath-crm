@@ -32,7 +32,7 @@ class LeadVendorImport implements ToModel, WithChunkReading, WithHeadingRow, Wit
             'vendor_number'=>$row['vendor_number'],
             'poc'=>$row['poc'],
             'website'=>$row['website'],
-            'nxt_date'=>Date::excelToDateTimeObject($row['nxt_date'])->format('Y-m-d'),
+            'nxt_date'=>$row['nxt_date']?Date::excelToDateTimeObject($row['nxt_date'])->format('Y-m-d'):null,
             'notes'=>$row['notes'],
             'notes_title'=>$row['notes_title'],
             'lead_source'=>$row['lead_source'],

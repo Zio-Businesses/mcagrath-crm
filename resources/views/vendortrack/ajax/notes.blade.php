@@ -28,7 +28,20 @@
                     <i class="fa fa-ellipsis-h"></i>
                 </a>
             </div>   
-            @endforeach       
+            @endforeach   
+            @if($vendor->notes_title)
+                <div class="col-lg-2 col-md-2 mt-2 ml-2 rounded" style="background-color: white;">
+                    <h4 class="mb-0 p-2 f-21 font-weight-normal text-capitalize border-bottom-grey">{{$vendor->notes_title}}</h4>
+                    <p class="mt-3 px-2 pt-2 border-bottom-grey">
+                        <span class="note-preview ">
+                            {{ Str::limit($vendor->notes, 10, '...') }}
+                        </span>
+                    </p>
+                    <a href="javascript:;"  class="show-more float-right"  data-fullnote="{{ $vendor->notes }}" data-createdby="{{ $vendor->created_by }}" data-createdat="{{$vendor->created_at->format(company()->date_format)}}" data-title="{{$vendor->notes_title}}">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </a>
+                </div>   
+            @endif    
         </div>
     </div>
 </div>
@@ -41,7 +54,7 @@
             </div>
             <div class="modal-body">
                 <p id="fullNoteText" class=" border-bottom-grey pb-2"></p>
-                <p id="createdby"></p>
+                <p id="createdbyname"></p>
                 <p id="createdat"></p>
             </div>
         </div>
@@ -60,7 +73,7 @@
                 var createdat = this.getAttribute('data-createdat');
                 var title = this.getAttribute('data-title');
                 document.getElementById('fullNoteText').textContent = fullNote;
-                document.getElementById('createdby').textContent = createdby;
+                document.getElementById('createdbyname').textContent = createdby;
                 document.getElementById('createdat').textContent = createdat;
                 document.getElementById('noteModalLabel').textContent = title;
                 $('#noteModal').modal('show');

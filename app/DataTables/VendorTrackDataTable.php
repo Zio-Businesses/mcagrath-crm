@@ -86,8 +86,8 @@ class VendorTrackDataTable extends BaseDataTable
         $datatables->editColumn('vendor_email', fn($row) => $row->vendor_email);
         $datatables->editColumn('vendor_number', fn($row) => $row->vendor_number);
         $datatables->editColumn('created_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
-        $datatables->editColumn('nxt_date', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
-        $datatables->editColumn('updated_at', fn($row) => Carbon::parse($row->created_at)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('nxt_date', fn($row) => $row->nxt_date?Carbon::parse($row->nxt_date)->translatedFormat($this->company->date_format):'');
+        $datatables->editColumn('updated_at', fn($row) => Carbon::parse($row->updated_at)->translatedFormat($this->company->date_format));
         $datatables->editColumn('created_by', function($row){ 
             return '<div class="media align-items-center" style="width: 150px;">
                             <div class="media-body">

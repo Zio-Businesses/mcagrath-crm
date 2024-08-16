@@ -27,7 +27,7 @@
                     </div>
                     
                     <div class="col-md-3 col-lg-3">
-                        <x-forms.select fieldId="state" :fieldLabel="__('State')" fieldName="state" fieldRequired="true" search="true">
+                        <x-forms.select fieldId="states" :fieldLabel="__('State')" fieldName="state" fieldRequired="true" search="true">
                         <option value="">--</option>
                         @foreach ($location as $locations)
                             <option @selected($vendor->state == $locations->state) value="{{ $locations->state }}">
@@ -36,7 +36,7 @@
                         </x-forms.select>
                     </div>
                     <div class="col-md-3 col-lg-3">
-                            <x-forms.select fieldId="county" :fieldLabel="__('County')" fieldName="county" fieldRequired="true" search="true">
+                            <x-forms.select fieldId="counties" :fieldLabel="__('County')" fieldName="county" fieldRequired="true" search="true">
                                 <option value="">--</option>
                                 @foreach ($counties as $locations)
                                     <option @selected($vendor->county == $locations->county) value="{{ $locations->county }}">
@@ -45,7 +45,7 @@
                             </x-forms.select>
                     </div>
                     <div class="col-md-3 col-lg-3">
-                            <x-forms.select fieldId="city" :fieldLabel="__('City')" fieldName="city" fieldRequired="true" search="true">
+                            <x-forms.select fieldId="cities" :fieldLabel="__('City')" fieldName="city" fieldRequired="true" search="true">
                                 <option value="">--</option>
                                 @foreach ($cities as $locations)
                                     <option @selected($vendor->city == $locations->city) value="{{ $locations->city }}">
@@ -114,21 +114,20 @@
                 ...datepickerConfig
             });
 
-        $('#state').change( function() {
+        $('#states').change( function() {
                 var state_id = $(this).val();
                 if (state_id) {
-                    $('#county').find('option:not(:first)').remove();
-                    $('#city').find('option:not(:first)').remove();
                     fetchCounties(state_id);
-                    console.log('id');
+                    $('#counties').find('option:not(:first)').remove();
+                    $('#cities').find('option:not(:first)').remove();
                 }
         });
 
-        $('#county').change( function() {
+        $('#counties').change( function() {
                 var county_id = $(this).val();
                 if (county_id) {
                     fetchCities(county_id);
-                    $('#city').find('option:not(:first)').remove();
+                    $('#cities').find('option:not(:first)').remove();
                 }
         });
 
@@ -143,9 +142,9 @@
                     success: function(data) {
                         
                         data.counties.forEach(county => {
-                            $('#county').append(`<option value="${county.county}">${county.county}</option>`);
-                            $('#county').selectpicker('refresh');
-                            $('#city').selectpicker('refresh');
+                            $('#counties').append(`<option value="${county.county}">${county.county}</option>`);
+                            $('#counties').selectpicker('refresh');
+                            $('#cities').selectpicker('refresh');
                         });
                     },
                     error: function(error) {
@@ -165,8 +164,8 @@
                     success: function(data) {
                         data.cities.forEach(cities => {
         
-                            $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
-                            $('#city').selectpicker('refresh');
+                            $('#cities').append(`<option value="${cities.city}">${cities.city}</option>`);
+                            $('#cities').selectpicker('refresh');
                         });
                     },
                     error: function(error) {
