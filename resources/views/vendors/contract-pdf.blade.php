@@ -256,7 +256,7 @@
     </style>
 </head>
 
-<body class="content-wrapper">
+<body id="body" class="h-100">
     <table class="bg-white" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
         <tbody>
             <!-- Table Row Start -->
@@ -270,11 +270,11 @@
             <tr>
                 <td>
                     <p class="line-height mt-1 mb-0 f-14 text-black">
-                        {{ $company->company_name }}<br>
-                        @if (!is_null($company))
-                            {!! nl2br($company->defaultAddress->address) !!}<br>
-                            {{ $company->company_phone }}
-                        @endif
+                    {{ $company->company_name }}<br>
+                    {!! nl2br($company->defaultAddress->address) !!}<br>
+                    Phone #: {{ $company->company_phone }}<br>
+                    Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                    Website: <a href="{{$company->website}}">{{ $company->website }}</a>
 
                     </p>
                 </td>

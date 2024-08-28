@@ -438,64 +438,69 @@ var fieldIds = ['#gl_ins_exp', '#wc_ins_exp', '#license_exp'];
     $(document).ready(function() {
         const MODAL_LG = '#myModal';
         const MODAL_HEADING = '#modelHeading';
-        $("#save-lead-data-form .select-picker").selectpicker();
+        
         $('.dropify').dropify();
-
-        $('#state').change( function() {
-                var state_id = $(this).val();
-                if (state_id) {
-                    fetchCounties(state_id);
-                    $('#county').find('option:not(:first)').remove();
-                }
+        $('#state').on('change', function(event) {
+        event.preventDefault();
+            var state_id = $(this).val();
+            if (state_id) {
+                
+                fetchCounties(state_id);
+                $('#county').find('option:not(:first)').remove();
+            }
         });
-        $('#county').change( function() {
-                var county_id = $(this).val();
-                if (county_id) {
-                    fetchCities(county_id);
-                    $('#city').find('option:not(:first)').remove();
-                }
-        });
-        function fetchCounties(state) {
-            var url = "{{ route('locations.counties', ':state') }}";
-            url = url.replace(':state', state);
-            $.easyAjax({
-                url: url,
-                container: '#save-lead-data-form',
-                method: 'GET',
-                blockUI: true,
-                success: function(data) {
-                    
-                    data.counties.forEach(county => {
-                        $('#county').append(`<option value="${county.county}">${county.county}</option>`);
-                        $('#county').selectpicker('refresh');
-                    });
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
-        }
-        function fetchCities(county) {
-            var url = "{{ route('locations.cities', ':county') }}";
-            url = url.replace(':county', county);
-            $.easyAjax({
-                url: url,
-                container: '#save-lead-data-form',
-                method: 'GET',
-                blockUI: true,
-                success: function(data) {
-                    data.cities.forEach(cities => {
 
-                        $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
-                        $('#city').selectpicker('refresh');
-                    });
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
-        }
     });
+
+    
+    $('#county').change( function() {
+            var county_id = $(this).val();
+            if (county_id) {
+                event.preventDefault();
+                fetchCities(county_id);
+                $('#city').find('option:not(:first)').remove();
+            }
+    });
+    function fetchCounties(state) {
+        var url = "{{ route('locations.counties', ':state') }}";
+        url = url.replace(':state', state);
+        $.easyAjax({
+            url: url,
+            container: '#save-lead-data-form',
+            type: 'GET',
+            blockUI: true,
+            success: function(data) {
+                
+                data.counties.forEach(county => {
+                    $('#county').append(`<option value="${county.county}">${county.county}</option>`);
+                    $('#county').selectpicker('refresh');
+                });
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
+    function fetchCities(county) {
+        var url = "{{ route('locations.cities', ':county') }}";
+        url = url.replace(':county', county);
+        $.easyAjax({
+            url: url,
+            container: '#save-lead-data-form',
+            type: 'GET',
+            blockUI: true,
+            success: function(data) {
+                data.cities.forEach(cities => {
+
+                    $('#city').append(`<option value="${cities.city}">${cities.city}</option>`);
+                    $('#city').selectpicker('refresh');
+                });
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    }
     $('.custom-date-picker').each(function (ind, el) {
 
         datepicker(el, {

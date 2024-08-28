@@ -107,6 +107,28 @@
 
 <script>
     $(document).ready(function() {
+        $('#vendor_mobile').on('input', function () {
+                let value = $(this).val().replace(/[^0-9]/g, '');  // Remove non-digit characters
+                if (value.length > 10) {
+                    value = value.slice(0, 10);  // Limit to 10 digits
+                }
+                $(this).val(value);
+                
+                if (value.length === 10) {
+                    $('#save-form').prop('disabled', false);
+
+                } 
+                else if (value.length===0)
+                {
+                    $('#save-form').prop('disabled', false);
+
+                }
+                else {
+                    $('#save-form').prop('disabled', true);
+
+                }
+
+            });
         $("#save-data-form .select-picker").selectpicker();
 
         const dp1 = datepicker('#nxt_date', {

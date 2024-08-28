@@ -31,7 +31,7 @@ class Vendor extends BaseModel
     public static function getStatuses()
     {
         return [
-            'Yet to Call', 'Voicemail', 'Unable to Connect','Incorrect Ph # Listed','Duplicate','Initial Pitch Made','Proposal Link Sent','Declined by Vendor','Rejected by MCG','Non-Responsive','Profile Created','Awaiting Docs','Active',
+            'Yet to Call', 'Voicemail', 'Unable to Connect','Incorrect Ph # Listed','Duplicate','Initial Pitch Made','Proposal Link Sent','Declined by Vendor','Rejected by MCG','Non-Responsive','Profile Created',
         ];
     }
     

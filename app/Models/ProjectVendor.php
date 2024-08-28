@@ -57,5 +57,12 @@ class ProjectVendor extends BaseModel
         $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->description;
     }
+    
+    public function vendorimage($id)
+    {
+        $image = VendorContract::findOrFail($id);
+        
+        return $image->image_url;
+    }
 
 }

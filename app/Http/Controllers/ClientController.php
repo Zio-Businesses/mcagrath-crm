@@ -639,7 +639,7 @@ class ClientController extends AccountBaseController
     {
         if ($id != 0) {
             $projects = Project::where('client_id', $id)->get();
-            $options = BaseModel::options($projects, null, 'project_name');
+            $options = BaseModel::options($projects, null, 'project_short_code');
 
         }
         else {

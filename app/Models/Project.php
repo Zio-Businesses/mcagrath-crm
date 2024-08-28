@@ -160,6 +160,7 @@ class Project extends BaseModel
         'work_schedule_date'=>'datetime',
         'work_schedule_re_date'=>'datetime',
         'work_completion_date'=>'datetime',
+        
     ];
 
     protected $guarded = ['id'];
@@ -267,6 +268,7 @@ class Project extends BaseModel
     {
         return $this->belongsTo(PropertyDetails::class, 'property_details_id');
     }
+    
     public function projectContacts(): BelongsTo
     {
         return $this->belongsTo(ProjectContact::class, 'project_contacts_id');

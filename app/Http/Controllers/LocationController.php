@@ -10,7 +10,7 @@ use App\Helper\Reply;
 use App\Imports\LocationsImport;
 use Illuminate\Support\Facades\Log;
 
-class LocationController extends AccountBaseController
+class LocationController extends Controller
 {
     public function create()
     {

@@ -142,7 +142,7 @@ $addProductPermission = user()->permission('add_product');
                         </x-forms.label>
                         <div class="input-group">
                             <input type="hidden" name="project_id" id="project_id" value="{{ $project->id }}">
-                            <input type="text" value="{{ $project->project_name }}"
+                            <input type="text" value="{{ $project->project_short_code }}"
                                 class="form-control height-35 f-15 readonly-background" readonly>
                         </div>
                     </div>
@@ -925,7 +925,6 @@ $addProductPermission = user()->permission('add_product');
 <!-- CREATE INVOICE END -->
 <script>
     $(document).ready(function() {
-
         let defaultImage = '';
         let lastIndex = 0;
 
@@ -1087,6 +1086,7 @@ $addProductPermission = user()->permission('add_product');
                 success: function(response) {
                     if (response.status == 'success') {
                         $('#project_id').html(response.data);
+                        console.log(response.data);
                         $('#project_id').selectpicker('refresh');
                     }
                 }
