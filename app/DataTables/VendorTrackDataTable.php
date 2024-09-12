@@ -141,13 +141,32 @@ class VendorTrackDataTable extends BaseDataTable
             
                 
         });
+        $datatables->editColumn('website', function($row){
+                if($row->website){
+                return '<div class="media align-items-center">
+                        <div class="media-body">
+                        <td> <a href="' . $row->website .'" data-toggle="tooltip" style="color:#1d82f5;" data-placement="bottom" title="' . $row->website .'">Link</a> 
+                    </div>
+                </div>';
+                }
+                else {
+                    // If there is no latestNote, return a default message or empty string.
+                    return '<div class="media align-items-center">
+                                <div class="media-body">
+                                    --
+                                </div>
+                            </div>';
+                }
+            
+                
+        });
         
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
         // Add Custom Field to datatable
 
-        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check','latest_note','created_by','edited_by']));
+        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check','latest_note','created_by','edited_by','website']));
 
         return $datatables;
     }
@@ -255,10 +274,13 @@ class VendorTrackDataTable extends BaseDataTable
             __('app.poc') => ['data' => 'poc', 'name' => 'poc', 'title' => __('app.poc')],
             __('app.cell') => ['data' => 'vendor_number', 'name' => 'vendor_number', 'title' => __('app.cell')],
             __('app.email') => ['data' => 'vendor_email', 'name' => 'vendor_email', 'title' => __('app.email')],
+            __('app.menu.leadSource') => ['data' => 'lead_source', 'name' => 'lead_source', 'title' => __('app.menu.leadSource')],
+            __('app.website') => ['data' => 'website', 'name' => 'website', 'title' => __('app.website')],
             __('app.nxt_date') => ['data' => 'nxt_date', 'name' => 'nxt_date', 'title' => __('app.nxt_date')],
             __('app.updatedat') => ['data' => 'updated_at', 'name' => 'updated_at', 'title' => __('app.updatedat')],
             __('app.edby') => ['data' => 'edited_by', 'name' => 'edited_by', 'title' => __('app.edby')],
             __('app.ltnote') => ['data' => 'latest_note', 'name' => 'latest_note', 'title' => __('app.ltnote')],
+            
                  
         ];
 

@@ -3,16 +3,19 @@
         <x-form id="save-vendor-note-data-form">
             <div class="add-client bg-white rounded">
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
-                    @lang('Project Note Details')</h4>
+                    @lang('Vendor Note Details')</h4>
 
                 <input type="hidden" name="vendors_id" value="{{ $vendors->id }}">
 
                 <div class="row p-20">
 
                     <div class="col-md-6">
-                        <x-forms.text fieldId="notes_title" :fieldLabel="__('modules.client.noteTitle')" fieldName="notes_title"
-                            fieldRequired="true" :fieldPlaceholder="__('placeholders.note')">
-                        </x-forms.text>
+                        <x-forms.select fieldId="notes_title" :fieldLabel="__('Notes Title')" fieldName="notes_title"  search="true" fieldRequired="true">
+                            <option value="">--</option>
+                            @foreach ($notestitle as $type)
+                                <option value="{{ $type->notes_title }}">{{$type->notes_title}}</option>
+                            @endforeach
+                        </x-forms.select>
                     </div>
 
                 </div>

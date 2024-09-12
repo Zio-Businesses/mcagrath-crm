@@ -23,6 +23,7 @@ use App\Http\Controllers\PublicLeadGdprController;
 use App\Http\Controllers\PublicWorkOrderController;
 use App\Http\Controllers\PublicWaiverFormCotnroller;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LocationController;
 
 Route::get('/', function () {
     return redirect(route('login'));
@@ -159,3 +160,9 @@ Route::get('/estimate/{hash}', [PublicUrlController::class, 'estimateView'])->na
 Route::get('/invoice/{hash}', [HomeController::class, 'invoice'])->name('front.invoice')->middleware('signed');
 Route::get('/task-board/{hash}', [HomeController::class, 'taskboard'])->name('front.taskboard');
 Route::get('/task/{id}', [HomeController::class, 'taskDetail'])->name('front.task_detail');
+
+//Locations
+
+Route::get('counties/{state}', [LocationController::class, 'getCounties'])->name('locations.counties');
+Route::get('cities/{county}', [LocationController::class, 'getCities'])->name('locations.cities');
+Route::resource('locations', LocationController::class);

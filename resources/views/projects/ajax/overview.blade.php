@@ -15,7 +15,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
             @if (!$project->trashed())
                 <div class="ml-lg-3 ml-md-0 ml-0 mr-3 mr-lg-0 mr-md-3">
                     @if ($editProjectPermission == 'all' || ($editProjectPermission == 'added' && $project->added_by == user()->id) || ($project->project_admin == user()->id))
-                        <select class="form-control select-picker change-status height-35">
+                        <select class="form-control select-picker change-status height-35" disabled>
                             @foreach ($projectStatus as $status)
                                 <option
                                 data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"

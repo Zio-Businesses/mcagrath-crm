@@ -189,7 +189,7 @@
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Property Type</h5>
-                        <p>{{$projectid->type}}</p>
+                        <p>{{$projectid->propertyDetails->property_type}}</p>
                     </div>
                 </div>
                 
@@ -248,7 +248,7 @@
                 </div>
                 @endforeach
                 <hr class="custom-line">
-                <h5 class="f-13 font-weight-bold mb-4">WORK ORDER INSTRUCTIONS: PLEASE READ CAREFULLY:</h5>
+                <!--<h5 class="f-13 font-weight-bold mb-4">WORK ORDER INSTRUCTIONS: PLEASE READ CAREFULLY:</h5>-->
                 <div class="ql-editor p-0 pb-3">{!! $contractid->contract_detail !!}</div>
             </div>
             

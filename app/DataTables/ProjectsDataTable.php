@@ -13,6 +13,7 @@ use App\Models\ProjectStatusSetting;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectsDataTable extends BaseDataTable
 {
@@ -132,7 +133,6 @@ class ProjectsDataTable extends BaseDataTable
             }
 
             $members = '<div class="position-relative">';
-
             if (count($row->members) > 0) {
                 foreach ($row->members as $key => $member) {
                     if ($key < 4) {
@@ -144,9 +144,71 @@ class ProjectsDataTable extends BaseDataTable
 
                 }
             }
-            else if ($this->addProjectMemberPermission == 'all') {
-                $members .= '<a href="' . route('projects.show', $row->id) . '?tab=members" class="f-12 text-dark-grey"><i class="fa fa-plus" ></i> ' . __('modules.projects.addMemberTitle') . '</a>';
+            if (count($row->est_users) > 0) {
+                foreach ($row->est_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
 
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->acct_users) > 0) {
+                foreach ($row->acct_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->emanager_users) > 0) {
+                foreach ($row->emanager_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            // else if ($this->addProjectMemberPermission == 'all') {
+            //     $members .= '<a href="' . route('projects.show', $row->id) . '?tab=members" class="f-12 text-dark-grey"><i class="fa fa-plus" ></i> ' . __('modules.projects.addMemberTitle') . '</a>';
+
+            // }
+            // else {
+
+            //     $members .= '--';
+            // }
+
+            if (count($row->members) > 4) {
+                $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->id) . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
+            }
+
+            $members .= '</div>';
+
+            return $members;
+        }
+        );
+
+        $datatables->addColumn('vendors', function ($row) {
+         
+            $members = '<div class="position-relative">';
+            if (count($row->projectvendor) > 0) {
+                foreach ($row->projectvendor as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->vendor_name . '" src="https://www.w3schools.com/howto/img_avatar.png">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('vendors.show', $member->vendor_id??'') . '">' . $img . '</a></div> ';
+                    }
+
+                }
             }
             else {
 
@@ -154,7 +216,7 @@ class ProjectsDataTable extends BaseDataTable
             }
 
             if (count($row->members) > 4) {
-                $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->id) . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
+                $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('vendors.show', $member->vendor_id??'') . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
             }
 
             $members .= '</div>';
@@ -180,7 +242,6 @@ class ProjectsDataTable extends BaseDataTable
 
         $datatables->editColumn('project_name', function ($row) {
             $pin = '';
-
             if (($row->pinned_project)) {
                 $pin .= '<span class="badge badge-secondary"><i class="fa fa-thumbtack"></i> ' . __('app.pinned') . '</span>';
             }
@@ -199,12 +260,46 @@ class ProjectsDataTable extends BaseDataTable
         $datatables->editColumn('start_date', fn($row) => $row->start_date?->translatedFormat($this->company->date_format));
 
         $datatables->editColumn('deadline', fn($row) => Common::dateColor($row->deadline));
-
+        $datatables->editColumn('bsdate', fn($row) => $row->bid_submitted?->translatedFormat($this->company->date_format));
+        $datatables->editColumn('brdate', fn($row) => $row->bid_rejected?->translatedFormat($this->company->date_format));
+        $datatables->editColumn('badate', fn($row) => $row->bid_approval?->translatedFormat($this->company->date_format));
+        $datatables->editColumn('wcd', fn($row) => $row->work_completion_date?->translatedFormat($this->company->date_format));
         $datatables->addColumn('client_name', fn($row) => $row->client?->name_salutation ?? '-');
         $datatables->addColumn('client_email', fn($row) => $row->client?->email ?? '-');
-
         $datatables->addColumn('project_status', fn($row) => __('app' . $row->status));
         $datatables->editColumn('client_id', fn($row) => $row->client_id ? view('components.client', ['user' => $row->client]) : '');
+        $datatables->editColumn('inspectiondt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->inspection_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->inspection_time ? Carbon::createFromFormat('H:i:s', $row->inspection_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
+        $datatables->editColumn('rinspectiondt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->re_inspection_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->re_inspection_time ? Carbon::createFromFormat('H:i:s', $row->re_inspection_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
+        $datatables->editColumn('wsdt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->work_schedule_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->work_schedule_time ? Carbon::createFromFormat('H:i:s', $row->work_schedule_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
+        $datatables->editColumn('wrsdt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->work_schedule_re_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->work_schedule_re_time ? Carbon::createFromFormat('H:i:s', $row->work_schedule_re_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
         $datatables->addColumn('status', function ($row) use ($projectStatus) {
             $projectUsers = $row->members->pluck('user_id')->toArray();
 
@@ -218,9 +313,7 @@ class ProjectsDataTable extends BaseDataTable
                 $statusColor = 'success';
             }
 
-            $status = '<p><div class="progress" style="height: 15px;">
-                <div class="progress-bar f-12 bg-' . $statusColor . '" role="progressbar" style="width: ' . $row->completion_percent . '%;" aria-valuenow="' . $row->completion_percent . '" aria-valuemin="0" aria-valuemax="100">' . $row->completion_percent . '%</div>
-              </div></p>';
+            $status = '';
 
             if ($this->editProjectsPermission == 'all'
                 || ($this->editProjectsPermission == 'added' && user()->id == $row->added_by)
@@ -229,7 +322,7 @@ class ProjectsDataTable extends BaseDataTable
                 || ($this->editProjectsPermission == 'both' && (user()->id == $row->client_id || user()->id == $row->added_by))
                 || ($this->editProjectsPermission == 'both' && in_array(user()->id, $projectUsers) && in_array('employee', user_roles()))
             ) {
-                $status .= '<select class="form-control select-picker change-status" data-project-id="' . $row->id . '">';
+                $status .= '<select class="form-control select-picker change-status" disabled data-project-id="' . $row->id . '">';
 
                 foreach ($projectStatus as $item) {
                     $status .= '<option ';
@@ -284,7 +377,7 @@ class ProjectsDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Project::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline','rinspectiondt','inspectiondt','wsdt','wrsdt','vendors'], $customFieldColumns));
 
         return $datatables;
     }
@@ -313,13 +406,17 @@ class ProjectsDataTable extends BaseDataTable
             ->leftJoin('users', 'project_members.user_id', 'users.id')
             ->leftJoin('users as client', 'projects.client_id', 'users.id')
             ->leftJoin('mention_users', 'mention_users.project_id', 'projects.id')
+            ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
+            ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
-              projects.completion_percent, projects.project_budget, projects.currency_id,
+              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,
+              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
+              property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
+              projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
            ( select count("id") from pinned where pinned.project_id = projects.id and pinned.user_id = ' . user()->id . ') as pinned_project'
             );
-
         if ($request->pinned == 'pinned') {
             $model->join('pinned', 'pinned.project_id', 'projects.id');
             $model->where('pinned.user_id', user()->id);
@@ -499,21 +596,42 @@ class ProjectsDataTable extends BaseDataTable
                 'visible' => !in_array('client', user_roles())
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => false, 'title' => '#'],
-            __('modules.taskCode') => ['data' => 'project_short_code', 'name' => 'project_short_code', 'title' => __('modules.taskCode')],
-            __('modules.projects.projectName') => ['data' => 'project_name', 'name' => 'project_name', 'exportable' => false, 'width' => '20%', 'title' => __('modules.projects.projectName')],
-            __('app.project') => ['data' => 'project', 'name' => 'project_name', 'visible' => false, 'title' => __('app.project')],
-            __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
-            __('modules.projects.projectMembers') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'title' => __('modules.projects.projectMembers')],
-            __('modules.projects.startDate') => ['data' => 'start_date', 'name' => 'start_date', 'title' => __('modules.projects.startDate'), 'width' => '12%'],
-            __('app.deadline') => ['data' => 'deadline', 'name' => 'deadline', 'title' => __('app.deadline'), 'width' => '12%'],
-            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client'), 'visible' => !in_array('client', user_roles())],
-            __('app.customers') => ['data' => 'client_name', 'name' => 'client_id', 'visible' => false, 'title' => __('app.customers')],
-
-            __('app.client') . ' ' . __('app.email') => ['data' => 'client_email', 'name' => 'client_id', 'visible' => false, 'title' => __('app.client') . ' ' . __('app.email')],
-            // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
             __('app.completion') => ['data' => 'completion_export', 'name' => 'completion_export', 'visible' => false, 'title' => __('app.completion')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'width' => '16%', 'exportable' => false, 'title' => __('app.status')],
-            __('app.project') . ' ' . __('app.status') => ['data' => 'project_status', 'name' => 'status', 'visible' => false, 'title' => __('app.project') . ' ' . __('app.status')]
+            __('app.project') . ' ' . __('app.status') => ['data' => 'project_status', 'name' => 'status', 'visible' => false, 'title' => __('app.project') . ' ' . __('app.status')],
+            __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
+           
+            __('app.wno') => ['data' => 'project_short_code', 'name' => 'project_short_code', 'title' => __('app.wno')],
+            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client'), 'visible' => !in_array('client', user_roles())],
+            __('app.customers') => ['data' => 'client_name', 'name' => 'client_id', 'visible' => false, 'title' => __('app.customers')],
+            __('app.client') . ' ' . __('app.email') => ['data' => 'client_email', 'name' => 'client_id', 'visible' => false, 'title' => __('app.client') . ' ' . __('app.email')],
+            __('modules.projects.projectMembers') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'title' => __('modules.projects.projectMembers')],
+            __('app.ptype') => ['data' => 'type', 'name' => 'type', 'title' => __('app.ptype')],
+            __('app.priority') => ['data' => 'priority', 'name' => 'priority', 'title' => __('app.priority')],
+            __('app.pcategory') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('app.pcategory')],
+            __('app.psubcategory') => ['data' => 'sub_category', 'name' => 'sub_category', 'title' => __('app.psubcategory')],
+            __('app.streetaddress') => ['data' => 'street_address', 'name' => 'street_address', 'title' => __('app.streetaddress')],
+            __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
+            __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
+            __('app.zipcode') => ['data' => 'zipcode', 'name' => 'zipcode', 'title' => __('app.zipcode')],
+            __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
+            __('app.menu.vendors') => ['data' => 'vendors', 'name' => 'vendors', 'exportable' => false, 'width' => '15%', 'title' => __('app.menu.vendors')],
+            __('app.pdate') => ['data' => 'start_date', 'name' => 'start_date', 'title' => __('app.pdate'), 'width' => '12%'],
+            __('app.due') => ['data' => 'deadline', 'name' => 'deadline', 'title' => __('app.due'), 'width' => '12%'],
+            __('app.inspectiondt') => ['data' => 'inspectiondt', 'name' => 'inspectiondt', 'title' => __('app.inspectiondt'), 'width' => '12%'],
+            __('app.rinspectiondt') => ['data' => 'rinspectiondt', 'name' => 'rinspectiondt', 'title' => __('app.rinspectiondt'), 'width' => '12%'],
+            __('app.bsdate') => ['data' => 'bsdate', 'name' => 'bsdate', 'title' => __('app.bsdate'), 'width' => '12%'],
+            __('app.brdate') => ['data' => 'brdate', 'name' => 'brdate', 'title' => __('app.brdate'), 'width' => '12%'],
+            __('app.badate') => ['data' => 'badate', 'name' => 'badate', 'title' => __('app.badate'), 'width' => '12%'],
+            __('app.wsdt') => ['data' => 'wsdt', 'name' => 'wsdt', 'title' => __('app.wsdt'), 'width' => '12%'],
+            __('app.wrsdt') => ['data' => 'wrsdt', 'name' => 'wrsdt', 'title' => __('app.wrsdt'), 'width' => '12%'],
+            __('app.wcd') => ['data' => 'wcd', 'name' => 'wcd', 'title' => __('app.wcd')],
+            __('app.nte') => ['data' => 'nte', 'name' => 'nte', 'title' => __('app.nte')],
+            __('app.bsa') => ['data' => 'bid_submitted_amount', 'name' => 'bid_submitted_amount', 'title' => __('app.bsa')],
+            __('app.baa') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('app.baa')],
+            __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
+            // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
+            
         ];
 
         $action = [

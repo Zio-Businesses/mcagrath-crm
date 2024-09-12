@@ -576,7 +576,6 @@
 
     var add_project_files = "{{ $addProjectFilePermission }}";
     var add_project_note_permission = "{{ $addProjectNotePermission }}";
-        console.log("{{$employees}}");
     $(document).ready(function () {
           let tenantCount = 1;
 
@@ -594,7 +593,6 @@
             $(this).closest('.tenant-row').find('input').val('');
             $(this).closest('.tenant-fields').hide();
             tenantCount--;
-            console.log(tenantCount);
             if (tenantCount < 5) {
                 $('.add-more').show();
             }

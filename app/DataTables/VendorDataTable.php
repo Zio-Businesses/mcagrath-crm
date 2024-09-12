@@ -208,6 +208,7 @@ class VendorDataTable extends BaseDataTable
             __('app.phone') => ['data' => 'cell', 'name' => 'cell', 'title' => __('app.phone')],
             __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
+            __('app.city') => ['data' => 'city', 'name' => 'city', 'title' => __('app.city')],
             __('app.contractor_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.contractor_type')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],

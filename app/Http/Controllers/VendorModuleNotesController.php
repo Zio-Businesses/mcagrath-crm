@@ -9,6 +9,7 @@ use App\Models\VendorModuleNotes;
 use App\Http\Requests\vendor\StoreVendorModuleNoteRequest;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Reply;
+use App\Models\NotesTitle;
 
 class VendorModuleNotesController extends AccountBaseController
 {
@@ -27,7 +28,7 @@ class VendorModuleNotesController extends AccountBaseController
         
         $this->vendors = VendorContract::findOrFail(request('vendorid'));
 
-
+        $this->notestitle=NotesTitle::all();
         $this->view = 'vendors.notes.create';
 
         if (request()->ajax()) {
@@ -70,8 +71,8 @@ class VendorModuleNotesController extends AccountBaseController
        
         $this->note = VendorModuleNotes::findOrFail($id);
         
-        $this->pageTitle = __('app.editProjectNote');
-
+        $this->pageTitle = __('Edit Vendor Note');
+        $this->notestitle=NotesTitle::all();
         $this->view = 'vendors.notes.edit';
 
         if (request()->ajax()) {

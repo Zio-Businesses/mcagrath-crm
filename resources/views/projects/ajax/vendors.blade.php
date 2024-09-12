@@ -194,7 +194,7 @@
                                                         :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$item->bid_approved_amount"/>
                                         </div>
                                         
-                                        <input type="text" id="linkInput" value="{{$item->link}}" class="d-none">
+                                        <input type="text" id="linkInput-{{ $item->id }}" value="{{$item->link}}" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
 
@@ -203,7 +203,8 @@
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 @lang('Resend Link')
                                             </a>
-                                            <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;">
+                                            <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;"
+                                            data-row-id="{{ $item->id }}">
                                                     <i class="fa fa-copy mr-2"></i>
                                                     @lang('Copy Link')
                                             </a>
@@ -331,7 +332,8 @@
 
 
     $('body').on('click', '.copy-vpro', function() {
-        var link = document.getElementById('linkInput').value;
+        var id = $(this).data('row-id');
+        var link = document.getElementById('linkInput-'+id).value;
         navigator.clipboard.writeText(link).then(function() {
             Swal.fire({
                 icon: 'success',

@@ -123,6 +123,31 @@ $addProductPermission = user()->permission('add_product');
 
 
     $(document).ready(function() {
+        
+            $('#vendor_mobile').on('input', function () {
+                let value = $(this).val().replace(/[^0-9]/g, '');  // Remove non-digit characters
+                if (value.length > 10) {
+                    value = value.slice(0, 10);  // Limit to 10 digits
+                }
+                $(this).val(value);
+                
+                if (value.length === 10) {
+                    $('#save-lead-form').prop('disabled', false);
+                    $('#save-email-form').prop('disabled', false);
+                } 
+                else if (value.length===0)
+                {
+                    $('#save-lead-form').prop('disabled', false);
+                    $('#save-email-form').prop('disabled', false);
+                }
+                else {
+                    $('#save-lead-form').prop('disabled', true);
+                    $('#save-email-form').prop('disabled', true);
+                }
+
+            });
+            
+
             $("#save-lead-data-form .select-picker").selectpicker();
             const dp1 = datepicker('#nxt_date', {
                 position: 'bl',

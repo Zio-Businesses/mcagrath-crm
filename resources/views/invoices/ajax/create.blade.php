@@ -79,7 +79,7 @@ $addProductPermission = user()->permission('add_product');
             </div>
             <!-- DUE DATE END -->
             <!-- FREQUENCY START -->
-            <div class="col-md-3">
+            <div class="col-md-3 d-none">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="currency_id" :fieldLabel="__('modules.invoices.currency')">
                     </x-forms.label>
@@ -100,7 +100,7 @@ $addProductPermission = user()->permission('add_product');
                 </div>
             </div>
             <!-- FREQUENCY END -->
-            <div class="col-md-2">
+            <div class="col-md-2 d-none">
                 <x-forms.label fieldId="exchange_rate" :fieldLabel="__('modules.currencySettings.exchangeRate')" fieldRequired="true">
                 </x-forms.label>
                 <input type="number" id="exchange_rate" name="exchange_rate"
@@ -142,7 +142,7 @@ $addProductPermission = user()->permission('add_product');
                         </x-forms.label>
                         <div class="input-group">
                             <input type="hidden" name="project_id" id="project_id" value="{{ $project->id }}">
-                            <input type="text" value="{{ $project->project_name }}"
+                            <input type="text" value="{{ $project->project_short_code }}"
                                 class="form-control height-35 f-15 readonly-background" readonly>
                         </div>
                     </div>
@@ -177,7 +177,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- PROJECT END -->
             @endif
 
-            <div class="col-md-4">
+            <div class="col-md-4 d-none">
                 <div class="form-group c-inv-select mb-4">
                     <x-forms.label fieldId="calculate_tax" :fieldLabel="__('modules.invoices.calculateTax')">
                     </x-forms.label>
@@ -302,7 +302,7 @@ $addProductPermission = user()->permission('add_product');
                 </div>
             </div>
             @if(in_array('products', user_modules()) || in_array('purchase', user_modules()))
-                <div class="col-md-3">
+                <div class="col-md-3 d-none">
                     <div class="form-group c-inv-select mb-4">
                     <x-forms.input-group>
                         <select class="form-control select-picker" data-live-search="true" data-size="8"
@@ -610,6 +610,7 @@ $addProductPermission = user()->permission('add_product');
                 @endforeach
             @else
                 <!-- DESKTOP DESCRIPTION TABLE START -->
+                 
                 <div class="d-flex px-4 py-3 c-inv-desc item-row">
 
                     <div class="c-inv-desc-table w-100 d-lg-flex d-md-flex d-block">
@@ -627,7 +628,7 @@ $addProductPermission = user()->permission('add_product');
                                     <td width="10%" class="border-0" align="right">
                                         @lang("modules.invoices.unitPrice")
                                     </td>
-                                    <td width="13%" class="border-0" align="right">@lang('modules.invoices.tax')
+                                    <td width="13%" class="border-0 d-none" align="right">@lang('modules.invoices.tax')
                                     </td>
                                     <td width="17%" class="border-0 bblr-mbl" align="right">
                                         @lang('modules.invoices.amount')</td>
@@ -667,7 +668,7 @@ $addProductPermission = user()->permission('add_product');
                                             class="f-14 border-0 w-100 text-right cost_per_item form-control" placeholder="0.00"
                                             value="0" name="cost_per_item[]">
                                     </td>
-                                    <td class="border-bottom-0">
+                                    <td class="border-bottom-0 d-none">
                                         <div class="select-others height-35 rounded border-0">
                                             <select id="multiselect" name="taxes[0][]" multiple="multiple"
                                                 class="select-picker type customSequence border-0" data-size="3">
@@ -690,7 +691,7 @@ $addProductPermission = user()->permission('add_product');
                                         <textarea class="f-14 border p-3 rounded w-100 desktop-description form-control" name="item_summary[]"
                                             placeholder="@lang('placeholders.invoices.description')"></textarea>
                                     </td>
-                                    <td class="border-left-0">
+                                    <td class="border-left-0 d-none">
                                         <input type="file" class="dropify" name="invoice_item_image[]" data-allowed-file-extensions="png jpg jpeg bmp" data-messages-default="test" data-height="70" />
                                         <input type="hidden" name="invoice_item_image_url[]">
                                     </td>
@@ -925,7 +926,6 @@ $addProductPermission = user()->permission('add_product');
 <!-- CREATE INVOICE END -->
 <script>
     $(document).ready(function() {
-
         let defaultImage = '';
         let lastIndex = 0;
 
@@ -1087,6 +1087,7 @@ $addProductPermission = user()->permission('add_product');
                 success: function(response) {
                     if (response.status == 'success') {
                         $('#project_id').html(response.data);
+                        console.log(response.data);
                         $('#project_id').selectpicker('refresh');
                     }
                 }

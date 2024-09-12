@@ -100,9 +100,11 @@
                     <tr class="inv-num">
                         <td class="f-14 text-dark">
                             <p class="mt-3 mb-0">
-                                {{ $company->company_name }}<br>
-                                {!! nl2br($company->defaultAddress->address) !!}<br>
-                                {{ $company->company_phone }}
+                            {{ $company->company_name }}<br>
+                            {!! nl2br($company->defaultAddress->address) !!}<br>
+                            Phone #: {{ $company->company_phone }}<br>
+                            Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                            Website: <a href="{{$company->website}}">{{ $company->website }}</a>
                             </p><br>
                         </td>
                     </tr>

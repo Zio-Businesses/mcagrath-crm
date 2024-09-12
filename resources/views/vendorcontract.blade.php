@@ -100,9 +100,11 @@
                     <tr class="inv-num">
                         <td class="f-14 text-dark">
                             <p class="mt-3 mb-0">
-                                {{ $company->company_name }}<br>
-                                {!! nl2br($company->defaultAddress->address) !!}<br>
-                                {{ $company->company_phone }}
+                            {{ $company->company_name }}<br>
+                            {!! nl2br($company->defaultAddress->address) !!}<br>
+                            Phone #: {{ $company->company_phone }}<br>
+                            Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
+                            Website: <a href="{{$company->website}}">{{ $company->website }}</a>
                             </p><br>
                         </td>
                         <td align="right">
@@ -284,7 +286,7 @@ Neither party may assign or transfer this Agreement without the prior written co
 
     XVI.         NON-DISCLOSURE AGREEMENT:
 
- <strong>MCGRATH CONSULTING</strong> is a private network and we hire you and will pay you for the work order and you are to follow up with us and only be concerned about any financial information regarding this work order with us only. You are NOT to contact our tenant or provide any information to the tenant nor our client. If you do so by going against our trust Agreement The First Infraction will Be $15000 And the second one will be $50000 and termination. You are also agreeing for our attorney's fee, collections and fine, you agree to pay us and remunerate us in full without fail.
+ <strong>MCGRATH CONSULTING</strong> operates as a private network. We will hire you and compensate you for the work order. You are required to communicate exclusively with us regarding this work order and must not engage with our tenant or provide any information to the tenant or our client. Breach of this agreement will result in direct termination of this contract and your vendor profile there by restricting you from receiving future work orders.
 
  
                 </div>
@@ -351,7 +353,11 @@ Neither party may assign or transfer this Agreement without the prior written co
     
     $('#reject').click(function () {
             
-            $('#ajaxModel').modal('show');
+        $('#ajaxModel').modal('show');
+    });
+    $('#cancel,#submit').click(function () {
+            
+        window.location.reload();
     });
 
     $('#submit').click(function (){

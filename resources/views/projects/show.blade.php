@@ -55,10 +55,10 @@ $projectArchived = $project->trashed();
                     @endif
 
                     @if ($viewProjectMilestonePermission == 'all' || $viewProjectMilestonePermission == 'added' || ($viewProjectMilestonePermission == 'owned' && user()->id == $project->client_id))
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=milestones'"
-                            :text="__('modules.projects.milestones')" class="milestones" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=milestones'"-->
+                        <!--    :text="__('modules.projects.milestones')" class="milestones" />-->
+                        <!--</li>-->
                     @endif
                         <li>
                             <x-tab :href="route('projects.show', $project->id).'?tab=sow'"
@@ -70,20 +70,20 @@ $projectArchived = $project->trashed();
                         </li>
 
                     @if (in_array('tasks', user_modules()) && ($viewTasksPermission == 'all' || ($viewTasksPermission == 'added' && user()->id == $project->added_by) || ($viewTasksPermission == 'owned' && user()->id == $project->client_id)))
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=tasks'" :text="__('app.menu.tasks')" class="tasks"
-                            ajax="false" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=tasks'" :text="__('app.menu.tasks')" class="tasks"-->
+                        <!--    ajax="false" />-->
+                        <!--</li>-->
 
                         @if (!$projectArchived)
-                            <li>
-                                <x-tab :href="route('projects.show', $project->id).'?tab=taskboard'" :text="__('modules.tasks.taskBoard')" class="taskboard" ajax="false" />
-                            </li>
+                            <!--<li>-->
+                            <!--    <x-tab :href="route('projects.show', $project->id).'?tab=taskboard'" :text="__('modules.tasks.taskBoard')" class="taskboard" ajax="false" />-->
+                            <!--</li>-->
 
                             @if ($viewGanttPermission == 'all' || ($viewGanttPermission == 'added' && user()->id == $project->added_by) || ($viewGanttPermission == 'owned' && user()->id == $project->client_id))
-                                <li>
-                                    <x-tab :href="route('projects.show', $project->id).'?tab=gantt'" :text="__('modules.projects.viewGanttChart')" class="gantt" />
-                                </li>
+                                <!--<li>-->
+                                <!--    <x-tab :href="route('projects.show', $project->id).'?tab=gantt'" :text="__('modules.projects.viewGanttChart')" class="gantt" />-->
+                                <!--</li>-->
                             @endif
                         @endif
                     @endif
@@ -101,9 +101,9 @@ $projectArchived = $project->trashed();
                     @endif
 
                     @if (in_array('timelogs', user_modules()) && ($viewProjectTimelogPermission == 'all' || ($viewProjectTimelogPermission == 'added' && user()->id == $project->added_by) || ($viewProjectTimelogPermission == 'owned' && user()->id == $project->client_id)))
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=timelogs'" :text="__('app.menu.timeLogs')" class="timelogs" ajax="false" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=timelogs'" :text="__('app.menu.timeLogs')" class="timelogs" ajax="false" />-->
+                        <!--</li>-->
                     @endif
 
                     @if (in_array('expenses', user_modules()) && ($viewExpensePermission == 'all' || ($viewExpensePermission == 'added' && user()->id == $project->added_by) || ($viewExpensePermission == 'owned' && user()->id == $project->client_id)))
@@ -140,16 +140,16 @@ $projectArchived = $project->trashed();
                     @endif
 
                     @if ($viewRatingPermission != 'none' && !is_null($project->client_id))
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=rating'" :text="__('modules.projects.rating')" class="rating" ajax="false" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=rating'" :text="__('modules.projects.rating')" class="rating" ajax="false" />-->
+                        <!--</li>-->
                     @endif
 
                     @if($viewBurndownChartPermission != 'none' || $project->project_admin == user()->id)
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=burndown-chart'"
-                                :text="__('modules.projects.burndownChart')" class="burndown-chart" ajax="false" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=burndown-chart'"-->
+                        <!--        :text="__('modules.projects.burndownChart')" class="burndown-chart" ajax="false" />-->
+                        <!--</li>-->
                     @endif
 
                     @if (!in_array('client', user_roles()))
@@ -160,9 +160,9 @@ $projectArchived = $project->trashed();
                     @endif
 
                     @if ($viewNotePermission != 'none' )
-                        <li>
-                            <x-tab :href="route('projects.show', $project->id).'?tab=tickets'" :text="__('app.menu.tickets')" class="tickets" ajax="false" />
-                        </li>
+                        <!--<li>-->
+                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=tickets'" :text="__('app.menu.tickets')" class="tickets" ajax="false" />-->
+                        <!--</li>-->
                     @endif
                 </ul>
             </nav>

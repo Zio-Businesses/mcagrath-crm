@@ -3,10 +3,10 @@
 
 <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>@lang($pageTitle)</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ $company->favicon_url }}">
+    
+    
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="{{ $company->favicon_url }}">
     <meta name="theme-color" content="#ffffff">
@@ -55,8 +55,13 @@
             font-weight: bold;
             src: url("{{ storage_path('fonts/BeVietnamPro-bold.ttf') }}") format('truetype');
         }
-
-       
+        @font-face {
+            font-family: 'DejaVuSans';
+            font-style: normal;
+            font-weight: normal;
+            src: url("{{ storage_path('fonts/DejaVuSans-Oblique.ttf') }}") format('truetype');
+        }
+        
 
        body {
             margin: 0;
@@ -65,25 +70,6 @@
 
         }
         
-        :root {
-            --fc-border-color: #E8EEF3;
-            --fc-button-text-color: #99A5B5;
-            --fc-button-border-color: #99A5B5;
-            --fc-button-bg-color: #ffffff;
-            --fc-button-active-bg-color: #171f29;
-            --fc-today-bg-color: #f2f4f7;
-        }
-
-        .preloader-container {
-            height: 100vh;
-            width: 100%;
-            margin-left: 0;
-            margin-top: 0;
-        }
-
-        .fc a[data-navlink] {
-            color: #99a5b5;
-        }
         .heading-table-left {
             padding: 6px;
             font-weight: bold;
@@ -110,6 +96,15 @@
         .pt-2
         {
             padding-top:25px;
+        }
+        ol {
+            line-height: 1;
+            position: relative;
+        }
+        ol > li > p {
+            margin-top: 0;
+            position: relative;
+            top: 7px;
         }
 
     </style>
@@ -173,72 +168,72 @@
                     
                 </div>
                 <div class="pt-2">
-                <table style="border-collapse: collapse; width: 100%;" >
-                    <thead>
-                        <tr>
-                            <th style="padding: 10px;  text-align: left; width:12.5%;">Work Order #</th>
-                            <th style="padding: 10px;  text-align: left; width:12.5%;">Priority</th>
-                            <th style="padding: 10px;  text-align: left; width:12.5%;">Project Type</th>
-                            <th style="padding: 10px;  text-align: left; width:12.5%;">Street Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 10px;  width:12.5%;">{{$projectid->project_short_code}}</td>
-                            <td style="padding: 10px;  width:12.5%;">{{$projectid->priority}}</td>
-                            <td style="padding: 10px;  width:12.5%;">{{$projectvendor->project_type}}</td>
-                            <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->street_address}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                    <table style="border-collapse: collapse; width: 100%;" >
+                        <thead>
+                            <tr>
+                                <th style="padding: 10px;  text-align: left; width:12.5%;">Work Order #</th>
+                                <th style="padding: 10px;  text-align: left; width:12.5%;">Priority</th>
+                                <th style="padding: 10px;  text-align: left; width:12.5%;">Project Type</th>
+                                <th style="padding: 10px;  text-align: left; width:12.5%;">Street Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px;  width:12.5%;">{{$projectid->project_short_code}}</td>
+                                <td style="padding: 10px;  width:12.5%;">{{$projectid->priority}}</td>
+                                <td style="padding: 10px;  width:12.5%;">{{$projectvendor->project_type}}</td>
+                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->street_address}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                     
                     <!-- Second row with 2 columns -->
                     <div class="pt-2">
-                    <table style="border-collapse: collapse; width: 100%;">
-                        <thead>
-                            <tr>
-                                @if($projectid->propertyDetails->optional)
-                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Suite # / House #</th>
-                                @endif
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">City</th>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">State</th>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">Zipcode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                @if($projectid->propertyDetails->optional)
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->optional}}</td>
-                                @endif
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->city}}</td>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->state}}</td>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->zipcode}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table style="border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr>
+                                    @if($projectid->propertyDetails->optional)
+                                        <th style="padding: 10px;  text-align: left; width:12.5%;">Suite # / House #</th>
+                                    @endif
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">City</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">State</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Zipcode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @if($projectid->propertyDetails->optional)
+                                        <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->optional}}</td>
+                                    @endif
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->city}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->state}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->zipcode}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="pt-2">
-                    <table style="border-collapse: collapse; width: 100%;">
-                        <thead>
-                            <tr>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">County</th>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">Project Category</th>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">Project Sub-Category</th>
-                                <th style="padding: 10px;  text-align: left; width:12.5%;">Property Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->county}}</td>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->category->category_name}}</td>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->sub_category}}</td>
-                                <td style="padding: 10px;  width:12.5%;">{{$projectid->type}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table style="border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">County</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Project Category</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Project Sub-Category</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Property Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->county}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->category->category_name}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->sub_category}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->property_type}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     
                     <!-- Third row with 3 columns -->
@@ -260,22 +255,22 @@
                     </div>
                     <hr class="custom-line">
                     <div class="row">
-                    <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
-                        <thead>
-                            <tr>
-                                <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Date</th>
-                                <th style="padding: 10px;  text-align: left; width: 33.33%;">Due Date</th>
-                                <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding: 10px; ">{{$projectid->start_date->translatedFormat($company->date_format) }}</td>
-                                <td style="padding: 10px; ">{{$projectvendor->due_date->translatedFormat($company->date_format) }}</td>
-                                <td style="padding: 10px; ">{{currency_format($projectvendor->project_amount, $contractid->currency->id) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Date</th>
+                                    <th style="padding: 10px;  text-align: left; width: 33.33%;">Due Date</th>
+                                    <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; ">{{$projectid->start_date->translatedFormat($company->date_format) }}</td>
+                                    <td style="padding: 10px; ">{{$projectvendor->due_date->translatedFormat($company->date_format) }}</td>
+                                    <td style="padding: 10px; ">{{currency_format($projectvendor->project_amount, $contractid->currency->id) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="row mt-2" style="border-collapse: collapse; width: 100%; margin-top: 20px;">
                         <table>
