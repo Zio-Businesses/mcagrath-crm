@@ -272,6 +272,7 @@
             word-wrap: break-word;
             word-break: break-all;
         }
+
 </style>
     @if($invoiceSetting->locale == 'th')
     <style>
@@ -327,6 +328,18 @@
                         </td>
                     </tr>
                 @endif
+                @if($invoice->project)
+                    <tr>
+                        <td class="heading-table-left">Project Date</td>
+                        <td class="heading-table-right">@if($invoice->project->start_date){{$invoice->project->start_date->translatedFormat($company->date_format)??''}}@endif</td>
+                    </tr>
+                
+               
+                    <tr>
+                        <td class="heading-table-left">Work Completion Date</td>
+                        <td class="heading-table-right">@if($invoice->project->work_completion_date){{$invoice->project->work_completion_date->translatedFormat($company->date_format)??''}}@endif</td>
+                    </tr>
+                @endif
             </table>
         </td>
     </tr>
@@ -347,7 +360,7 @@
                     {{ $company->company_email }}<br>
                 @endif
                 @if ($company->website)
-                    {{ str_replace(['https://', 'http://'], '', $company->website) }} <br>
+                    {{ $company->website }} <br>
                 @endif
                 @if ($invoiceSetting->show_gst == 'yes' && $invoice->address->tax_number)
                     {{ $invoice->address->tax_name }}: {{ $invoice->address->tax_number }}
@@ -456,15 +469,13 @@
         <td height="10" colspan={{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}></td>
     </tr>
     <tr class="main-table-heading text-grey">
-        <td colspan=2>Work Order #</td>
-        <td width="40%">Property Address</td>
-        <td align="right" colspan=2>Project Date</td>
+        <td width="40%">Work Order #</td>
+        <td colspan=4>Property Address</td>
         <!-- <td align="right">@lang('modules.invoices.tax')</td> -->
     </tr>
     <tr class="f-12 main-table-items text-black">
-        <td colspan=2>{{$invoice->project->project_short_code??''}}</td>
-        <td>{{$invoice->project->propertyDetails->property_address??''}}</td>
-        <td align="right" colspan=2>{{$invoice->project->start_date->translatedFormat($company->date_format)??''}}</td>
+        <td width="40%">{{$invoice->project->project_short_code??''}}</td>
+        <td colspan=4>{{$invoice->project->propertyDetails->property_address??''}}</td>
     </tr>
 </table>
 @endif
@@ -755,16 +766,23 @@
     </table>
 @endif
 <br/>
-<br/>
-<table class="bg-white" border="0" cellpadding="2" cellspacing="2" width="100%" role="presentation">
-    @if($invoice->files)
-        @foreach($invoice->files as $file)
-            @if ($file->icon == 'images')
-            <img src="{{ $file->file_url }}" width="150" height="150" class="img-thumbnail" style="margin: 10px;">
+@if($invoice->files)
+<table width="100%" class="f-14 b-collapse">
+    @php $counter = 0; @endphp
+    @foreach($invoice->files as $file)
+        @if ($file->icon == 'images')
+            @if ($counter % 4 == 0) <!-- Open new row after every 4 images -->
+                </tr><tr>
             @endif
-        @endforeach
-    @endif
+            <td  style="padding-bottom: 10px;">
+                <img src="{{ $file->file_url }}" width="150" height="150" class="img-thumbnail">
+                <div class="f-11" style="width: 150px; word-wrap: break-word;">{{ $file->filename }}</div>
+            </td>
+            @php $counter++; @endphp
+        @endif
+    @endforeach
 </table>
+@endif
 </body>
 
 </html>
