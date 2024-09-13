@@ -34,7 +34,7 @@ $addProductPermission = user()->permission('add_product');
         <!-- INVOICE NUMBER, DATE, DUE DATE, FREQUENCY START -->
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- INVOICE NUMBER START -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label class="mb-12" fieldId="invoice_number"
                         :fieldLabel="__('modules.invoices.invoiceNumber')" fieldRequired="true">
@@ -52,7 +52,7 @@ $addProductPermission = user()->permission('add_product');
 
             <!-- INVOICE NUMBER END -->
             <!-- INVOICE DATE START -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="due_date" :fieldLabel="__('modules.invoices.invoiceDate')">
                     </x-forms.label>
@@ -66,7 +66,7 @@ $addProductPermission = user()->permission('add_product');
             </div>
             <!-- INVOICE DATE END -->
             <!-- DUE DATE START -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="due_date" :fieldLabel="__('app.dueDate')"></x-forms.label>
                     <div class="input-group ">
@@ -194,7 +194,7 @@ $addProductPermission = user()->permission('add_product');
             </div>
 
             @if($linkInvoicePermission == 'all')
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <div class="form-group c-inv-select mb-4">
                         <x-forms.label fieldId="bank_account_id" :fieldLabel="__('app.bankaccount')">
                         </x-forms.label>
@@ -213,7 +213,7 @@ $addProductPermission = user()->permission('add_product');
                             </select>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-4 mt-3"></div>
             @endif
 
@@ -222,7 +222,7 @@ $addProductPermission = user()->permission('add_product');
 
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- BILLING ADDRESS START -->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="form-group c-inv-select mb-0">
                     <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.billingAddress')</label>
@@ -238,10 +238,10 @@ $addProductPermission = user()->permission('add_product');
                         @endif
                     </p>
                 </div>
-            </div>
+            </div> -->
             <!-- BILLING ADDRESS END -->
             <!-- SHIPPING ADDRESS START -->
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
                     <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                         for="usr">@lang('modules.invoices.shippingAddress') </label>
@@ -261,10 +261,10 @@ $addProductPermission = user()->permission('add_product');
                             name="shipping_address" id="shipping_address">@if (isset($invoice) && $invoice->client) {!! nl2br($invoice->client->clientDetails->shipping_address) !!} @endif</textarea>
                     </p>
                 </div>
-            </div>
+            </div> -->
             <!-- SHIPPING ADDRESS END -->
 
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <div class="form-group c-inv-select mb-4">
                     <x-forms.label fieldId="company_address_id" :fieldLabel="__('modules.invoices.generatedBy')">
                     </x-forms.label>
@@ -278,7 +278,7 @@ $addProductPermission = user()->permission('add_product');
                         </select>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- CLIENT, PROJECT, GST, BILLING, SHIPPING ADDRESS END -->
 
@@ -768,14 +768,14 @@ $addProductPermission = user()->permission('add_product');
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>@lang('modules.invoices.tax')</td>
+                                        <!-- <td>@lang('modules.invoices.tax')</td>
                                         <td colspan="2" class="p-0 border-0">
                                             <table width="100%" id="invoice-taxes">
                                                 <tr>
                                                     <td colspan="2"><span class="tax-percent">0.00</span></td>
                                                 </tr>
                                             </table>
-                                        </td>
+                                        </td> -->
 
                                     </tr>
                                     <tr class="bg-amt-grey f-16 f-w-500">
@@ -793,8 +793,8 @@ $addProductPermission = user()->permission('add_product');
         <!-- TOTAL, DISCOUNT END -->
 
         <!-- NOTE AND TERMS AND CONDITIONS START -->
-        <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
-            <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
+        <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3 ">
+            <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3 d-none">
                 <x-forms.label fieldId="" class="text-capitalize" :fieldLabel="__('modules.invoices.note')">
                 </x-forms.label>
                 <textarea class="form-control" name="note" id="note" rows="4"
@@ -1230,7 +1230,7 @@ $addProductPermission = user()->permission('add_product');
             item += `
                     <td width="10%" class="border-0" align="right">@lang("modules.invoices.qty")</td>
                     <td width="10%" class="border-0" align="right">@lang("modules.invoices.unitPrice")</td>
-                    <td width="13%" class="border-0" align="right">@lang("modules.invoices.tax")</td>
+                    
                     <td width="17%" class="border-0 bblr-mbl" align="right">@lang("modules.invoices.amount")</td>
                 </tr>
                 <tr>
@@ -1259,17 +1259,7 @@ $addProductPermission = user()->permission('add_product');
                 <td class="border-bottom-0">
                 <input type="number" min="1" class="f-14 border-0 w-100 text-right cost_per_item" placeholder="0.00" value="0" name="cost_per_item[]">
                 </td>
-                <td class="border-bottom-0">
-                <div class="select-others height-35 rounded border-0">
-                <select id="multiselect${i}" name="taxes[${i}][]" multiple="multiple" class="select-picker type customSequence" data-size="3">
-            @foreach ($taxes as $tax)
-                <option data-rate="{{ $tax->rate_percent }}" data-tax-text="{{ $tax->tax_name .':'. $tax->rate_percent }}%" value="{{ $tax->id }}">
-                    {{ $tax->tax_name }}:{{ $tax->rate_percent }}%</option>
-            @endforeach
-
-                </select>
-                </div>
-                </td>
+             
                 <td rowspan="2" align="right" valign="top" class="bg-amt-grey btrr-bbrr">
                 <span class="amount-html">0.00</span>
                 <input type="hidden" class="amount" name="amount[]" value="0">
@@ -1278,10 +1268,6 @@ $addProductPermission = user()->permission('add_product');
                 <tr class="d-none d-md-table-row d-lg-table-row">
                     <td colspan="{{ $invoiceSetting->hsn_sac_code_show ? 4 : 3 }}" class="dash-border-top bblr">
                         <textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]" placeholder="@lang("placeholders.invoices.description")"></textarea>
-                    </td>
-                    <td class="border-left-0">
-                        <input type="file" class="dropify" id="dropify${i}" name="invoice_item_image[]" data-allowed-file-extensions="png jpg jpeg bmp" data-messages-default="test" data-height="70" />
-                        <input type="hidden" name="invoice_item_image_url[]">
                     </td>
                 </tr>
                 </tbody>

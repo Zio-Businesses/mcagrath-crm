@@ -209,10 +209,10 @@
                                 <td class="border-right-0 border-left-0" align="right">
                                     @lang('modules.invoices.unitPrice') ({{ $invoice->currency->currency_code }})
                                 </td>
-                                <td class="border-right-0 border-left-0"
-                                    align="right">@lang('modules.invoices.tax')</td>
+                                <!-- <td class="border-right-0 border-left-0"
+                                    align="right">@lang('modules.invoices.tax')</td> -->
                                 <td class="border-left-0" align="right"
-                                    width="{{ $invoiceSetting->hsn_sac_code_show ? '17%' : '20%' }}">
+                                    colspan=2>
                                     @lang('modules.invoices.amount')
                                     ({{ $invoice->currency->currency_code }})
                                 </td>
@@ -230,8 +230,8 @@
                                             @endif</td>
                                         <td align="right">
                                             {{ currency_format($item->unit_price, $invoice->currency_id, false) }}</td>
-                                        <td align="right">{{ $item->tax_list }}</td>
-                                        <td align="right">
+                                        <!-- <td align="right">{{ $item->tax_list }}</td> -->
+                                        <td align="right" colspan=2>
                                             {{ currency_format($item->amount, $invoice->currency_id, false) }}
                                         </td>
                                     </tr>
@@ -423,13 +423,13 @@
                     <td height="30" colspan="2"></td>
                 </tr>
                 <tr>
-                    <td>@lang('app.note')</td>
+                    <!-- <td>@lang('app.note')</td> -->
                     <td style="text-align: right;">@lang('modules.invoiceSettings.invoiceTerms')</td>
                 </tr>
                 <tr>
-                    <td style="vertical-align: text-top">
+                    <!-- <td style="vertical-align: text-top">
                         <p class="text-dark-grey">{!! !empty($invoice->note) ? nl2br($invoice->note) : '--' !!}</p>
-                    </td>
+                    </td> -->
                     <td style="text-align: right;">
                         <p class="text-dark-grey">{!! nl2br($invoiceSetting->invoice_terms) !!}</p>
                     </td>

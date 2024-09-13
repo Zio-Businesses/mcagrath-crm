@@ -25,7 +25,7 @@
                 <input type="hidden" name="do_it_later" id="doItLater" value="direct">
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- INVOICE NUMBER START -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label class="mb-12" fieldId="invoice_number"
                                    :fieldLabel="__('modules.invoices.invoiceNumber')" fieldRequired="true">
@@ -38,7 +38,7 @@
             </div>
             <!-- INVOICE NUMBER END -->
             <!-- INVOICE DATE START -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="due_date" :fieldLabel="__('modules.invoices.invoiceDate')">
                     </x-forms.label>
@@ -52,7 +52,7 @@
             </div>
             <!-- INVOICE DATE END -->
             <!-- DUE DATE START -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="due_date" :fieldLabel="__('app.dueDate')"></x-forms.label>
                     <div class="input-group ">
@@ -65,7 +65,7 @@
             </div>
             <!-- DUE DATE END -->
             <!-- FREQUENCY START -->
-            <div class="col-md-3">
+            <div class="col-md-3 d-none">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="currency_id" :fieldLabel="__('modules.invoices.currency')">
                     </x-forms.label>
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <!-- FREQUENCY END -->
-            <div class="col-md-3">
+            <div class="col-md-3 d-none">
                 <x-forms.label fieldId="exchange_rate" :fieldLabel="__('modules.currencySettings.exchangeRate')" fieldRequired="true">
                 </x-forms.label>
                 <input type="number" id="exchange_rate" name="exchange_rate"
@@ -115,7 +115,7 @@
                             @if($invoice?->client?->projects)
                                 @foreach ($invoice->client->projects as $item)
                                     <option @if ($invoice->project_id == $item->id) selected @endif value="{{ $item->id }}">
-                                        {{ $item->project_name }}</option>
+                                        {{ $item->project_short_code }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -124,7 +124,7 @@
             </div>
             <!-- PROJECT END -->
 
-            <div class="col-md-4">
+            <div class="col-md-4 d-none">
                 <div class="form-group c-inv-select mb-4">
                     <x-forms.label fieldId="calculate_tax" :fieldLabel="__('modules.invoices.calculateTax')">
                     </x-forms.label>
@@ -139,7 +139,7 @@
             </div>
 
             @if($linkInvoicePermission == 'all')
-                <div class="col-md-4">
+                <div class="col-md-4 d-none">
                     <div class="form-group c-inv-select my-4">
                         <x-forms.label fieldId="bank_account_id" :fieldLabel="__('app.menu.bankaccount')">
                         </x-forms.label>
@@ -184,7 +184,7 @@
 
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- BILLING ADDRESS START -->
-            <div class="col-md-4">
+            <div class="col-md-4 d-none">
                 <div class="form-group c-inv-select mb-0">
                     <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                            for="usr">@lang('modules.invoices.billingAddress')</label>
@@ -193,7 +193,7 @@
             </div>
             <!-- BILLING ADDRESS END -->
             <!-- SHIPPING ADDRESS START -->
-            <div class="col-md-4">
+            <div class="col-md-4 d-none">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
                     <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                            for="usr">@lang('modules.invoices.shippingAddress')</label>
@@ -213,7 +213,7 @@
             </div>
             <!-- SHIPPING ADDRESS END -->
 
-            <div class="col-md-4">
+            <div class="col-md-4 d-none">
                 <div class="form-group c-inv-select mb-4">
                     <x-forms.label fieldId="company_address_id" :fieldLabel="__('modules.invoices.generatedBy')">
                     </x-forms.label>
@@ -252,7 +252,7 @@
                 </div>
             </div>
             @if(in_array('products', user_modules()) || in_array('purchase', user_modules()))
-                <div class="col-md-3">
+                <div class="col-md-3 d-none">
                     <div class="form-group c-inv-select mb-4">
                     <x-forms.input-group>
                         <select class="form-control select-picker" data-live-search="true" data-size="8" id="add-products" title="{{ __('app.menu.selectProduct') }}">
@@ -309,7 +309,7 @@
                                 <td width="10%" class="border-0" align="right">@lang('modules.invoices.qty')</td>
                                 <td width="10%" class="border-0" align="right">
                                     @lang("modules.invoices.unitPrice")</td>
-                                <td width="13%" class="border-0" align="right">@lang('modules.invoices.tax')
+                                <td width="13%" class="border-0 d-none" align="right">@lang('modules.invoices.tax')
                                 </td>
                                 <td width="17%" class="border-0 bblr-mbl" align="right">
                                     @lang('modules.invoices.amount')</td>
@@ -356,7 +356,7 @@
                                            class="f-14 border-0 w-100 text-right cost_per_item form-control" placeholder="0.00"
                                            value="{{ $item->unit_price }}" name="cost_per_item[]">
                                 </td>
-                                <td class="border-bottom-0">
+                                <td class="border-bottom-0 d-none">
                                     <div class="select-others height-35 rounded border-0">
                                         <select id="multiselect{{ $key }}"
                                                 name="taxes[{{ $key }}][]" multiple="multiple"
@@ -383,7 +383,7 @@
                                         <textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]"
                                                   placeholder="@lang('placeholders.invoices.description')">{{ $item->item_summary }}</textarea>
                                 </td>
-                                <td class="border-left-0">
+                                <td class="border-left-0 d-none">
                                     <input type="file"
                                            class="dropify"
                                            name="invoice_item_image[]"
@@ -471,7 +471,7 @@
                                         id="discount_amount">{{ number_format((float) $invoice->discount, 2, '.', '') }}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="d-none">
                                 <td>@lang('modules.invoices.tax')</td>
                                 <td colspan="2" class="p-0">
                                     <table width="100%" id="invoice-taxes">
@@ -501,7 +501,7 @@
 
         <!-- NOTE AND TERMS AND CONDITIONS START -->
         <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
-            <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
+            <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3 d-none">
                 <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                        for="usr">@lang('modules.invoices.note')</label>
                 <textarea class="form-control" name="note" id="note" rows="4"
@@ -926,7 +926,7 @@
                 item +=
                 `<td width="10%" class="border-0" align="right">@lang("modules.invoices.qty")</td>
                 <td width="10%" class="border-0" align="right">@lang("modules.invoices.unitPrice")</td>
-                <td width="13%" class="border-0" align="right">@lang("modules.invoices.tax")</td>
+                <td width="13%" class="border-0 d-none" align="right">@lang("modules.invoices.tax")</td>
                 <td width="17%" class="border-0 bblr-mbl" align="right">@lang("modules.invoices.amount")</td>
                 </tr>
                 <tr>
@@ -958,7 +958,7 @@
                 '<td class="border-bottom-0">' +
                 '<input type="number" min="1" class="f-14 border-0 w-100 text-right cost_per_item form-control" placeholder="0.00" value="0" name="cost_per_item[]">' +
                 '</td>' +
-                '<td class="border-bottom-0">' +
+                '<td class="border-bottom-0 d-none">' +
                 '<div class="select-others height-35 rounded border-0">' +
                 '<select id="multiselect' + i + '" name="taxes[' + i +
                 '][]" multiple="multiple" class="select-picker type customSequence" data-size="3">'
@@ -979,7 +979,7 @@
                 '<td colspan="{{ $invoiceSetting->hsn_sac_code_show ? 4 : 3 }}" class="dash-border-top bblr">' +
                 '<textarea class="f-14 border-0 w-100 desktop-description" name="item_summary[]" placeholder="@lang("placeholders.invoices.description")"></textarea>' +
                 '</td>' +
-                '<td td class="border-left-0">' +
+                '<td td class="border-left-0 d-none">' +
                 '<input type="file" class="dropify" id="dropify'+i+'" name="invoice_item_image[]" data-allowed-file-extensions="png jpg jpeg bmp" data-messages-default="test" data-height="70""/><input type="hidden" name="invoice_item_image_url[]">' +
                 '</td>' +
                 '</tr>' +

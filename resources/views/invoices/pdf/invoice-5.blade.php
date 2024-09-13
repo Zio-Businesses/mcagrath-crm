@@ -292,7 +292,10 @@
 </head>
 
 <body class="content-wrapper">
+
 <table class="bg-white" border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
+
+
     <tbody>
     <!-- Table Row Start -->
     <tr>
@@ -302,7 +305,7 @@
             <table class="text-black mt-1 f-11 b-collapse rightaligned">
                 <tr>
                     <td class="heading-table-left">@lang('modules.invoices.invoiceNumber')</td>
-                    <td class="heading-table-right">{{ $invoice->invoice_number }}</td>
+                    <td class="heading-table-right">{{ str_replace(['INV#'], '', $invoice->invoice_number) }}</td>
                 </tr>
                 @if ($creditNote)
                     <tr>
@@ -334,18 +337,18 @@
             <p class="line-height mb-0 ">
                 <span class="text-grey text-capitalize">@lang('modules.invoices.billedFrom')</span><br>
                 {{ $company->company_name }}<br>
-                @if ($company->company_email)
-                    {{ $company->company_email }}<br>
-                @endif
-
-                @if ($company->company_phone)
-                    {{ $company->company_phone }}<br>
-                @endif
-
                 @if (!is_null($company) && $invoice->address)
                     {!! nl2br($invoice->address->address) !!}<br>
                 @endif
-
+                @if ($company->company_phone)
+                    {{ $company->company_phone }}<br>
+                @endif
+                @if ($company->company_email)
+                    {{ $company->company_email }}<br>
+                @endif
+                @if ($company->website)
+                    {{ str_replace(['https://', 'http://'], '', $company->website) }} <br>
+                @endif
                 @if ($invoiceSetting->show_gst == 'yes' && $invoice->address->tax_number)
                     {{ $invoice->address->tax_name }}: {{ $invoice->address->tax_number }}
                 @endif
@@ -447,7 +450,24 @@
     </tr>
     </tbody>
 </table>
-
+@if($invoice->project)
+<table width="100%" class="f-14 b-collapse">
+    <tr>
+        <td height="10" colspan={{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}></td>
+    </tr>
+    <tr class="main-table-heading text-grey">
+        <td colspan=2>Work Order #</td>
+        <td width="40%">Property Address</td>
+        <td align="right" colspan=2>Project Date</td>
+        <!-- <td align="right">@lang('modules.invoices.tax')</td> -->
+    </tr>
+    <tr class="f-12 main-table-items text-black">
+        <td colspan=2>{{$invoice->project->project_short_code??''}}</td>
+        <td>{{$invoice->project->propertyDetails->property_address??''}}</td>
+        <td align="right" colspan=2>{{$invoice->project->start_date->translatedFormat($company->date_format)??''}}</td>
+    </tr>
+</table>
+@endif
 <table width="100%" class="f-14 b-collapse">
     <tr>
         <td height="10" colspan={{ $invoiceSetting->hsn_sac_code_show ? '6' : '5' }}></td>
@@ -460,9 +480,9 @@
         @endif
         <td align="right">@lang('modules.invoices.qty')</td>
         <td align="right">@lang('modules.invoices.unitPrice')</td>
-        <td align="right">@lang('modules.invoices.tax')</td>
+        <!-- <td align="right">@lang('modules.invoices.tax')</td> -->
         <td align="right"
-            width="{{ $invoiceSetting->hsn_sac_code_show ? '20%' : '23%' }}">@lang('modules.invoices.amount')
+            colspan=2>@lang('modules.invoices.amount')
             ({{ $invoice->currency->currency_code }})
         </td>
     </tr>
@@ -481,9 +501,9 @@
                 <td align="right" width="10%" class="border-bottom-0">{{ $item->quantity }}@if($item->unit)<br><span class="f-11 text-dark-grey">{{ $item->unit->unit_type }}</span>@endif</td>
                 <td align="right"
                     class="border-bottom-0">{{ currency_format($item->unit_price, $invoice->currency_id, false) }}</td>
-                <td align="right" class="border-bottom-0">{{ $item->tax_list }}</td>
+                    <!-- <td align="right" class="border-bottom-0">{{ $item->tax_list }}</td> -->
                 <td align="right" class="border-bottom-0"
-                    width="{{ $invoiceSetting->hsn_sac_code_show ? '20%' : '23%' }}">
+                    colspan=2>
                     {{ currency_format($item->amount, $invoice->currency_id, false) }}</td>
             </tr>
             <!-- Table Row End -->
@@ -504,11 +524,13 @@
         @endif
     @endforeach
     <!-- Table Row Start -->
+     
     <tr>
         <td class="total-box" align="right" colspan="{{ $invoiceSetting->hsn_sac_code_show ? '5' : '4' }}">
             <table width="100%" border="0" class="b-collapse">
                 <!-- Table Row Start -->
                 <tr align="right" class="text-grey">
+                
                     <td width="50%" class="subtotal">@lang('modules.invoices.subTotal')</td>
                 </tr>
                 <!-- Table Row End -->
@@ -651,7 +673,7 @@
 
 <p>
     <div style="margin-top: 10px;" class="f-11 line-height text-grey">
-        <b>@lang('modules.invoiceSettings.invoiceTerms')</b><br>{!! nl2br($invoiceSetting->invoice_terms) !!}
+        {!! nl2br($invoiceSetting->invoice_terms) !!}
     </div>
 </p>
 
@@ -689,6 +711,7 @@
             </tr>
         @endforeach
     </table>
+    
     </div>
 
 @endif
@@ -731,7 +754,17 @@
         @endforelse
     </table>
 @endif
-
+<br/>
+<br/>
+<table class="bg-white" border="0" cellpadding="2" cellspacing="2" width="100%" role="presentation">
+    @if($invoice->files)
+        @foreach($invoice->files as $file)
+            @if ($file->icon == 'images')
+            <img src="{{ $file->file_url }}" width="150" height="150" class="img-thumbnail" style="margin: 10px;">
+            @endif
+        @endforeach
+    @endif
+</table>
 </body>
 
 </html>
