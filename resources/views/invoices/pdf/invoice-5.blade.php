@@ -766,23 +766,87 @@
     </table>
 @endif
 <br/>
+@php
+function downloadImageLocally($url) {
+    // Create a temporary file name
+    $tempPath = storage_path('app/tmp/' . uniqid() . '.jpg');
+
+    // Download the file from S3 to the temporary path
+    $imageContent = file_get_contents($url);
+    if ($imageContent !== false) {
+        file_put_contents($tempPath, $imageContent);
+        return $tempPath;
+    }
+
+    return false;
+}
+
+function correctImageOrientation($path) {
+    if (function_exists('exif_read_data')) {
+        $exif = @exif_read_data($path);
+        if ($exif && isset($exif['Orientation'])) {
+            $orientation = $exif['Orientation'];
+            $image = imagecreatefromjpeg($path); // Assume the image is JPEG
+            switch ($orientation) {
+                case 3:
+                    $image = imagerotate($image, 180, 0);
+                    break;
+                case 6:
+                    $image = imagerotate($image, -90, 0);
+                    break;
+                case 8:
+                    $image = imagerotate($image, 90, 0);
+                    break;
+            }
+            // Save the corrected image temporarily
+            imagejpeg($image, $path); // Overwrite the original file
+            imagedestroy($image);
+        }
+    }
+    return $path;
+}
+
+@endphp
+
+<!-- Inside the rendering section -->
 @if($invoice->files)
-<table width="100%" class="f-14 b-collapse">
-    @php $counter = 0; @endphp
+<table width="100%" class="f-14 b-collapse" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+    <tr>
+    @php
+        $counter = 0;
+        $tempFiles = []; // Array to keep track of temporary files
+    @endphp
     @foreach($invoice->files as $file)
         @if ($file->icon == 'images')
-            @if ($counter % 4 == 0) <!-- Open new row after every 4 images -->
+            @if ($counter % 4 == 0 && $counter != 0) <!-- Close the row after every 4th image -->
                 </tr><tr>
             @endif
-            <td  style="padding-bottom: 10px;">
-                <img src="{{ $file->file_url }}" width="150" height="150" class="img-thumbnail">
-                <div class="f-11" style="width: 150px; word-wrap: break-word;">{{ $file->filename }}</div>
+            @php
+                // Download the image locally from S3
+                $localImagePath = downloadImageLocally($file->file_url);
+                
+                if ($localImagePath) {
+                    // Correct the orientation if needed
+                    $correctedImageUrl = correctImageOrientation($localImagePath);
+                    $tempFiles[] = $correctedImageUrl; // Track the temporary file
+                }
+            @endphp
+            <td style="padding: 5px; text-align: center; vertical-align: top; border: 1px solid #ddd;">
+                @if (isset($correctedImageUrl))
+                    <img src="{{ $correctedImageUrl }}" width="150" height="150" style="margin: 0 auto; display: inline-block;">
+                @else
+                    <span>Image not available</span>
+                @endif
+                <div class="f-11" style="width: 150px; word-wrap: break-word; text-align: center; margin-top: 5px;">{{ $file->filename }}</div>
             </td>
             @php $counter++; @endphp
         @endif
     @endforeach
+    </tr>
 </table>
+
 @endif
+
 </body>
 
 </html>
