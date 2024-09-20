@@ -14,6 +14,7 @@ use App\Models\Currency;
 use App\Models\Estimate;
 use App\Models\UnitType;
 use App\Models\EstimateItem;
+use App\Models\Project;
 use App\Models\InvoiceItems;
 use Illuminate\Http\Request;
 use App\Models\AcceptEstimate;
@@ -69,6 +70,7 @@ class EstimateController extends AccountBaseController
         $this->lastEstimate = Estimate::lastEstimateNumber() + 1;
         $this->invoiceSetting = invoice_setting();
         $this->zero = '';
+        $this->project = request('project_id') ? Project::findOrFail(request('project_id')) : null;
 
         if (strlen($this->lastEstimate) < $this->invoiceSetting->estimate_digit) {
             $condition = $this->invoiceSetting->estimate_digit - strlen($this->lastEstimate);
@@ -98,6 +100,9 @@ class EstimateController extends AccountBaseController
 
         $this->client = isset(request()->default_client) ? User::findOrFail(request()->default_client) : null;
 
+        if (request('client_id')) {
+            $this->client = User::withoutGlobalScope(ActiveScope::class)->findOrFail(request('client_id'));
+        }
         $isClient = User::isClient(user()->id);
 
         if ($isClient) {
@@ -152,6 +157,7 @@ class EstimateController extends AccountBaseController
         $estimate = new Estimate();
         $estimate->client_id = $request->client_id;
         $estimate->valid_till = companyToYmd($request->valid_till);
+        $estimate->project_id=$request->project_id;
         $estimate->sub_total = round($request->sub_total, 2);
         $estimate->total = round($request->total, 2);
         $estimate->currency_id = $request->currency_id;

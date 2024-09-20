@@ -7,6 +7,7 @@ use App\DataTables\ArchiveTasksDataTable;
 use App\DataTables\DiscussionDataTable;
 use App\DataTables\ExpensesDataTable;
 use App\DataTables\InvoicesDataTable;
+use App\DataTables\EstimatesDataTable;
 use App\DataTables\OrdersDataTable;
 use App\DataTables\PaymentsDataTable;
 use App\DataTables\ProjectNotesDataTable;
@@ -843,6 +844,8 @@ class ProjectController extends AccountBaseController
         case 'vendors':
             $this->view = 'projects.ajax.vendors';
             break;
+        case 'estimates':
+            return $this->estimates();
         case 'taskboard':
             session()->forget('pusher_settings');
             $this->view = 'projects.ajax.taskboard';
@@ -1157,6 +1160,20 @@ class ProjectController extends AccountBaseController
         $this->activeTab = $tab ?: 'overview';
 
         $this->view = 'projects.ajax.invoices';
+
+        return $dataTable->render('projects.show', $this->data);
+    }
+
+    public function estimates()
+    {
+        $dataTable = new EstimatesDataTable($this->onlyTrashedRecords);
+        $viewPermission = user()->permission('view_project_invoices');
+        abort_403(!in_array($viewPermission, ['all', 'added', 'owned']));
+
+        $tab = request('tab');
+        $this->activeTab = $tab ?: 'overview';
+
+        $this->view = 'projects.ajax.estimates';
 
         return $dataTable->render('projects.show', $this->data);
     }

@@ -532,6 +532,54 @@
         </div>
     </div>
 </div>
+@if (count($invoice->files) > 0)
+    <div class="bg-white mt-4 pl-3 pt-3">
+        <h5>{{ __('modules.invoiceFiles') }}</h5>
+        <div class="d-flex flex-wrap" id="estimates-file-list">
+            @forelse($invoice->files as $file)
+                <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
+                    @if ($file->icon == 'images')
+                        <img src="{{ $file->file_url }}">
+                    @else
+                        <i class="fa {{ $file->icon }} text-lightest"></i>
+                    @endif
+
+                   
+                        <x-slot name="action">
+                            <div class="dropdown ml-auto file-action">
+                                <button
+                                    class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
+                                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+
+                                <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
+                                     aria-labelledby="dropdownMenuLink" tabindex="0">
+                                   
+                                        @if ($file->icon = 'images')
+                                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                               target="_blank"
+                                               href="{{ $file->file_url }}">@lang('app.view')</a>
+                                        @endif
+                                        <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                           href="{{ route('client-estimates-files.download', md5($file->id)) }}">@lang('app.download')</a>
+                                 
+
+                                   
+                                        <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
+                                           data-row-id="{{ $file->id }}" href="javascript:;">@lang('app.delete')</a>
+                                   
+                                </div>
+                            </div>
+                        </x-slot>
+                </x-file-card>
+            @empty
+                <x-cards.no-record :message="__('messages.noFileUploaded')" icon="file"/>
+            @endforelse
+
+        </div>
+    </div>
+@endif
 
 
 @push('scripts')
@@ -761,5 +809,47 @@
                 }
             });
         });
+        $('body').on('click', '.delete-file', function () {
+        let id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('client-estimates-files.destroy', ':id') }}";
+                url = url.replace(':id', id);
+
+                var token = "{{ csrf_token() }}";
+
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
     </script>
 @endpush

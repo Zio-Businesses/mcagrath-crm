@@ -95,6 +95,11 @@ class Estimate extends BaseModel
     protected $with = ['currency'];
 
     const CUSTOM_FIELD_MODEL = 'App\Models\Estimate';
+    
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'project_id')->withTrashed();
+    }
 
     public function items(): HasMany
     {
@@ -150,6 +155,11 @@ class Estimate extends BaseModel
     public static function lastEstimateNumber()
     {
         return (int)Estimate::latest()->first()?->original_estimate_number ?? 0;
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(ClientEstimatesFiles::class, 'estimates_id')->orderByDesc('id');
     }
 
 }

@@ -207,6 +207,7 @@ use App\Models\GoogleCalendarModule;
 use App\Models\Holiday;
 use App\Models\Invoice;
 use App\Models\InvoiceFiles;
+use App\Models\ClientEstimatesFiles;
 use App\Models\InvoiceSetting;
 use App\Models\Issue;
 use App\Models\KnowledgeBase;
@@ -417,6 +418,7 @@ use App\Observers\TaskCategoryObserver;
 use App\Observers\TaskCommentObserver;
 use App\Observers\TaskFileObserver;
 use App\Observers\InvoiceFileObserver;
+use App\Observers\ClientEstimatesFilesObserver;
 use App\Observers\LeadPipelineObserver;
 use App\Observers\LeadStageObserver;
 use App\Observers\TaskLabelListObserver;
@@ -607,6 +609,7 @@ class EventServiceProvider extends ServiceProvider
         TaskComment::class => [TaskCommentObserver::class],
         TaskFile::class => [TaskFileObserver::class],
         InvoiceFiles::class => [InvoiceFileObserver::class],
+        ClientEstimatesFiles::class=>[ClientEstimatesFilesObserver::class],
         TaskLabelList::class => [TaskLabelListObserver::class],
         TaskNote::class => [TaskNoteObserver::class],
         TaskUser::class => [TaskUserObserver::class],

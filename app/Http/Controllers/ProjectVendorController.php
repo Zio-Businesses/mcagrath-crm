@@ -68,7 +68,7 @@ class ProjectVendorController extends AccountBaseController
         $vpro->link_sent_by=user()->id;
         $vpro->project_amount=$request->project_amount;
         $vpro->add_notes=$request->add_notes;
-        $vpro->project_type=$request->project_type;
+        $vpro->project_type=$request->project_vendor_type;
         $vpro->contract_id=$request->contract_id;
         $vpro->link_status='Sent';
         $vpro->save();

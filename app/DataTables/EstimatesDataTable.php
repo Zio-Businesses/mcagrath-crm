@@ -132,6 +132,13 @@ class EstimatesDataTable extends BaseDataTable
             return $row->name;
         });
 
+        $datatables->editColumn('project_name', function ($row) {
+            if ($row->project_id != null) {
+                return '<a href="' . route('projects.show', $row->project_id) . '" class="text-darkest-grey">' . $row->project->project_short_code . '</a>';
+            }
+
+            return '--';
+        });
 
         $datatables->editColumn('name', function ($row) {
             return view('components.client', [
@@ -183,7 +190,7 @@ class EstimatesDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Estimate::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'estimate_number'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'estimate_number','project_name'], $customFieldColumns));
 
         return $datatables;
     }
@@ -196,7 +203,15 @@ class EstimatesDataTable extends BaseDataTable
         $request = $this->request();
 
         $this->firstEstimate = Estimate::orderBy('id', 'desc')->first();
-        $model = Estimate::with('client', 'client.session', 'company:id')
+        $model = Estimate::with(
+            [
+                'project' => function ($q) {
+                    $q->withTrashed();
+                    $q->select('id', 'project_name', 'project_short_code', 'client_id', 'deleted_at');
+                },
+            ]
+        )
+            ->with('client', 'client.session', 'company:id')
             ->join('client_details', 'estimates.client_id', '=', 'client_details.user_id')
             ->join('currencies', 'currencies.id', '=', 'estimates.currency_id')
             ->join('users', 'users.id', '=', 'estimates.client_id')
@@ -217,9 +232,13 @@ class EstimatesDataTable extends BaseDataTable
                 'estimates.added_by',
                 'estimates.hash',
                 'invoices.estimate_id',
-                'estimates.created_at'
+                'estimates.created_at',
+                'estimates.project_id'
             ]);
 
+        if ($request->projectID != 'all' && !is_null($request->projectID)) {
+            $model = $model->where('estimates.project_id', '=', $request->projectID);
+        }
         if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
             $startDate = companyToDateString($request->startDate);
             $model = $model->where(DB::raw('DATE(estimates.`valid_till`)'), '>=', $startDate);
@@ -317,6 +336,7 @@ class EstimatesDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => false],
             __('app.estimate') . '#' => ['data' => 'estimate_number', 'name' => 'estimate_number', 'title' => __('app.estimate')],
             __('app.client') => ['data' => 'name', 'name' => 'users.name', 'exportable' => false, 'title' => __('app.client'), 'visible' => !in_array('client', user_roles())],
+            __('app.project') => ['data' => 'project_name', 'name' => 'project.project_name', 'title' => __('app.project')],
             __('app.customers') => ['data' => 'client_name', 'name' => 'users.name', 'visible' => false, 'title' => __('app.customers')],
             __('app.email') => ['data' => 'email', 'name' => 'users.email',  'visible' => false, 'title' => __('app.email')],
             __('modules.invoices.total') => ['data' => 'total', 'name' => 'total', 'title' => __('modules.invoices.total')],

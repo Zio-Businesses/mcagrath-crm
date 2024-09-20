@@ -130,7 +130,7 @@ use App\Http\Controllers\OccupancyStatusController;
 use App\Http\Controllers\ScopeOfWorkController;
 use App\Http\Controllers\ProjectVendorController;
 use App\Http\Controllers\ProjectDelayedByController;
-
+use App\Http\Controllers\ClientEstimatesFilesController;
 use App\Models\AttendanceSetting;
 use App\Http\Controllers\VendorModuleNotesController;
 
@@ -345,6 +345,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('invoice-files/download/{id}', [InvoiceFilesController::class, 'download'])->name('invoice-files.download');
     Route::resource('invoice-files', InvoiceFilesController::class);
 
+    /*CLIENT ESTIMATE FILES*/
+    Route::get('client-estimates-files/download/{id}', [ClientEstimatesFilesController::class, 'download'])->name('client-estimates-files.download');
+    Route::resource('client-estimates-files', ClientEstimatesFilesController::class);
 
     /* Payments */
     Route::get('orders/offline-payment-modal', [OrderController::class, 'offlinePaymentModal'])->name('orders.offline_payment_modal');

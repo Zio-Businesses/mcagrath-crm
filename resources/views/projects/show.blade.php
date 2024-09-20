@@ -68,6 +68,10 @@ $projectArchived = $project->trashed();
                             <x-tab :href="route('projects.show', $project->id).'?tab=vendors'"
                             :text="__('Vendors')" class="vendors" />
                         </li>
+                        <li>
+                            <x-tab :href="route('projects.show', $project->id).'?tab=estimates'"
+                            :text="__('Estimates')" class="estimates" ajax="false"/>
+                        </li>
 
                     @if (in_array('tasks', user_modules()) && ($viewTasksPermission == 'all' || ($viewTasksPermission == 'added' && user()->id == $project->added_by) || ($viewTasksPermission == 'owned' && user()->id == $project->client_id)))
                         <!--<li>-->

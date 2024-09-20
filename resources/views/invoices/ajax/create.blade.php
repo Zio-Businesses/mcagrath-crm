@@ -1087,7 +1087,7 @@ $addProductPermission = user()->permission('add_product');
                 success: function(response) {
                     if (response.status == 'success') {
                         $('#project_id').html(response.data);
-                        console.log(response.data);
+                        
                         $('#project_id').selectpicker('refresh');
                     }
                 }

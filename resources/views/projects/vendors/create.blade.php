@@ -25,10 +25,15 @@
                                 @endforeach
                         </x-forms.select>
                     </div>
-                    <div class="col-md-6">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Project Type')"
-                            fieldName="project_type" fieldId="project_type" :fieldValue="$project->type" 
-                            :fieldPlaceholder="__('Project Type')" fieldReadOnly/>                  
+                    <div class="col-md-6">  
+                        <x-forms.select fieldId="project_vendor_type"
+                            :fieldLabel="__('Project Category')" fieldName="project_vendor_type" search="true">
+                                <option value="">--</option>
+                                @foreach ($projecttype as $category)
+                                    <option @selected($project->type == $category->type) value="{{ $category->type }}">
+                                        {{ $category->type }}</option>
+                                @endforeach
+                        </x-forms.select>              
                     </div>
                     <div class="col-md-6" id="add_members">
                         <x-forms.select fieldId="addsow" :fieldLabel="__('Select Scope Of Works')" fieldName="sow_id[]" search="true" multiple="true" fieldRequired="true">
