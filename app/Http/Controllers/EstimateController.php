@@ -434,8 +434,10 @@ class EstimateController extends AccountBaseController
         if ($request->custom_fields_data) {
             $estimate->updateCustomFieldData($request->custom_fields_data);
         }
-
-        return Reply::redirect(route('estimates.index'), __('messages.updateSuccess'));
+        
+        $redirectUrl = route('estimates.index');
+        
+        return Reply::successWithData(__('messages.updateSuccess'), ['estimateId' => $estimate->id, 'redirectUrl' => $redirectUrl]);
     }
 
     public function destroy($id)
@@ -480,7 +482,8 @@ class EstimateController extends AccountBaseController
         $pdfOption = $this->domPdfObjectForDownload($id);
         $pdf = $pdfOption['pdf'];
         $filename = $pdfOption['fileName'];
-
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
         return $pdf->download($filename . '.pdf');
     }
 

@@ -1,7 +1,7 @@
 @php
 $addProductPermission = user()->permission('add_product');
 @endphp
-
+<link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
 @if (!in_array('clients', user_modules()))
     <x-alert class="mb-3" type="danger" icon="exclamation-circle"><span>@lang('messages.enableClientModule')</span>
         <x-forms.link-secondary icon="arrow-left" :link="route('estimates.index')">@lang('app.back')</x-forms.link-secondary>
@@ -51,7 +51,7 @@ $addProductPermission = user()->permission('add_product');
             <!-- INVOICE DATE END -->
 
             <!-- FREQUENCY START -->
-            <div class="col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 d-none">
                 <div class="form-group c-inv-select mb-lg-0 mb-md-0 mb-4">
                     <x-forms.label fieldId="currency_id" :fieldLabel="__('modules.invoices.currency')">
                     </x-forms.label>
@@ -67,13 +67,6 @@ $addProductPermission = user()->permission('add_product');
                     </div>
                 </div>
             </div>
-            <!-- FREQUENCY END -->
-        </div>
-        <hr class="m-0 border-top-grey">
-
-        <div class="row px-lg-4 px-md-4 px-3 pt-3">
-
-            <!-- CLIENT START -->
             <div class="col-md-4">
                 <x-forms.label fieldId="client_id" :fieldLabel="__('app.client')" fieldRequired="true">
                 </x-forms.label>
@@ -87,22 +80,33 @@ $addProductPermission = user()->permission('add_product');
                     </select>
                 </div>
             </div>
-            <!-- CLIENT END -->
-
             <div class="col-md-4">
                 <div class="form-group c-inv-select mb-4">
-                    <x-forms.label fieldId="calculate_tax" :fieldLabel="__('modules.invoices.calculateTax')">
+                    <x-forms.label fieldId="project_id" :fieldLabel="__('app.project')">
                     </x-forms.label>
                     <div class="select-others height-35 rounded">
                         <select class="form-control select-picker" data-live-search="true" data-size="8"
-                            name="calculate_tax" id="calculate_tax">
-                            <option value="after_discount">@lang('modules.invoices.afterDiscount')</option>
-                            <option value="before_discount" @if ($estimate->calculate_tax == 'before_discount') selected @endif>
-                                @lang('modules.invoices.beforeDiscount')</option>
+                            name="project_id" id="project_id">
+                            <option value="">--</option>
+                            @if($estimate?->client?->projects)
+                            @foreach ($estimate->client->projects as $item)
+                                <option @if ($estimate->project_id == $item->id) selected @endif value="{{ $item->id }}">
+                                    {{ $item->project_short_code }}</option>
+                            @endforeach
+                        @endif
                         </select>
                     </div>
                 </div>
             </div>
+            <!-- FREQUENCY END -->
+        </div>
+        <hr class="m-0 border-top-grey">
+
+        <div class="row px-lg-4 px-md-4 px-3 pt-3">
+
+            <!-- CLIENT START -->
+           
+            <!-- CLIENT END -->
 
             <div class="col-md-12 my-3">
                 <div class="form-group">
@@ -155,32 +159,7 @@ $addProductPermission = user()->permission('add_product');
                     </x-forms.input-group>
                 </div>
             </div>
-            @if(in_array('products', user_modules()) || in_array('purchase', user_modules()))
-                <div class="col-md-3">
-                    <div class="form-group c-inv-select mb-4">
-                    <x-forms.input-group>
-                        <select class="form-control select-picker" data-live-search="true" data-size="8" id="add-products" title="{{ __('app.menu.selectProduct') }}">
-                            @foreach ($products as $item)
-                                <option data-content="{{ $item->name }}" value="{{ $item->id }}">
-                                    {{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                        <x-slot name="preappend">
-                            <a href="javascript:;"
-                                class="btn btn-outline-secondary border-grey toggle-product-category"
-                                data-toggle="tooltip" data-original-title="{{ __('modules.productCategory.filterByCategory') }}"><i class="fa fa-filter"></i></a>
-                        </x-slot>
-                        @if ($addProductPermission == 'all' || $addProductPermission == 'added')
-                            <x-slot name="append">
-                                <a href="{{ route('products.create') }}" data-redirect-url="no"
-                                    class="btn btn-outline-secondary border-grey openRightModal"
-                                    data-toggle="tooltip" data-original-title="{{ __('modules.dashboard.addNewProduct') }}">@lang('app.add')</a>
-                            </x-slot>
-                        @endif
-                    </x-forms.input-group>
-                    </div>
-                </div>
-            @endif
+            
         </div>
 
         <div id="sortable">
@@ -204,8 +183,7 @@ $addProductPermission = user()->permission('add_product');
                                     </td>
                                     <td width="10%" class="border-0" align="right">
                                         @lang("modules.invoices.unitPrice")</td>
-                                    <td width="13%" class="border-0" align="right">@lang('modules.invoices.tax')
-                                    </td>
+                                    
                                     <td width="17%" class="border-0 bblr-mbl" align="right">
                                         @lang('modules.invoices.amount')</td>
                                 </tr>
@@ -250,7 +228,7 @@ $addProductPermission = user()->permission('add_product');
                                             class="f-14 border-0 w-100 text-right cost_per_item form-control" placeholder="0.00"
                                             value="{{ $item->unit_price }}" name="cost_per_item[]">
                                     </td>
-                                    <td class="border-bottom-0">
+                                    <!-- <td class="border-bottom-0">
                                         <div class="select-others height-35 rounded border-0">
                                             <select id="multiselect" name="taxes[{{ $key }}][]"
                                                 multiple="multiple" class="select-picker type customSequence border-0"
@@ -263,7 +241,7 @@ $addProductPermission = user()->permission('add_product');
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </td>
+                                    </td> -->
                                     <td rowspan="2" align="right" valign="top" class="bg-amt-grey btrr-bbrr">
                                         <span
                                             class="amount-html">{{ number_format((float) $item->amount, 2, '.', '') }}</span>
@@ -277,7 +255,7 @@ $addProductPermission = user()->permission('add_product');
                                         <textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]"
                                             placeholder="@lang('placeholders.invoices.description')">{{ $item->item_summary }}</textarea>
                                     </td>
-                                    <td class="border-left-0">
+                                    <!-- <td class="border-left-0">
                                         <input type="file"
                                         class="dropify"
                                         name="invoice_item_image[]"
@@ -292,7 +270,7 @@ $addProductPermission = user()->permission('add_product');
                                         @endif
                                         />
                                         <input type="hidden" name="invoice_item_image_url[]" value="{{ $item->estimateItemImage ? $item->estimateItemImage->file : '' }}">
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </tbody>
                         </table>
@@ -365,7 +343,7 @@ $addProductPermission = user()->permission('add_product');
                                                 id="discount_amount">{{ number_format((float) $estimate->discount, 2, '.', '') }}</span>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td>@lang('modules.invoices.tax')</td>
                                         <td colspan="2" class="p-0">
                                             <table width="100%" id="invoice-taxes">
@@ -375,7 +353,7 @@ $addProductPermission = user()->permission('add_product');
                                             </table>
                                         </td>
 
-                                    </tr>
+                                    </tr> -->
                                     <tr class="bg-amt-grey f-16 f-w-500">
                                         <td colspan="2">@lang('modules.invoices.total')</td>
                                         <td><span
@@ -395,12 +373,12 @@ $addProductPermission = user()->permission('add_product');
 
         <!-- NOTE AND TERMS AND CONDITIONS START -->
         <div class="d-flex flex-wrap px-lg-4 px-md-4 px-3 py-3">
-            <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
+            <!-- <div class="col-md-6 col-sm-12 c-inv-note-terms p-0 mb-lg-0 mb-md-0 mb-3">
                 <label class="f-14 text-dark-grey mb-12 text-capitalize w-100"
                     for="usr">@lang('modules.invoices.note')</label>
                 <textarea class="form-control" name="note" id="note" rows="4"
                     placeholder="@lang('placeholders.invoices.note')">{{ $estimate->note }}</textarea>
-            </div>
+            </div> -->
             <div class="col-md-6 col-sm-12 p-0 c-inv-note-terms">
                 <x-forms.label fieldId="" :fieldLabel="__('modules.invoiceSettings.invoiceTerms')">
                 </x-forms.label>
@@ -408,6 +386,13 @@ $addProductPermission = user()->permission('add_product');
                     {!! nl2br($invoiceSetting->invoice_terms) !!}
                 </p>
             </div>
+        </div>
+        <div class="row px-lg-4 px-md-4 px-3 py-3">
+            <!-- INVOICE NUMBER START -->
+            <div class="col-md-12">
+                <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.menu.addFile')" fieldName="file" fieldId="file-upload-dropzone"/>
+            </div>
+            <input type="hidden" name="estimateId" id="estimateId">
         </div>
         <!-- NOTE AND TERMS AND CONDITIONS END -->
 
@@ -430,6 +415,88 @@ $addProductPermission = user()->permission('add_product');
 
 <script>
     $(document).ready(function() {
+        let defaultImage = '';
+        let lastIndex = 0;
+
+        Dropzone.autoDiscover = false;
+        //Dropzone class
+        invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
+            dictDefaultMessage: "{{ __('app.dragDrop') }}",
+            url: "{{ route('client-estimates-files.store') }}",
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            paramName: "file",
+            maxFilesize: DROPZONE_MAX_FILESIZE,
+            maxFiles: DROPZONE_MAX_FILES,
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            addRemoveLinks: true,
+            parallelUploads: DROPZONE_MAX_FILES,
+            acceptedFiles: DROPZONE_FILE_ALLOW,
+            init: function () {
+                invoiceDropzone = this;
+            }
+        });
+        invoiceDropzone.on('sending', function (file, xhr, formData) {
+            const estimateId = $('#estimateId').val();
+            console.log(estimateId);
+            formData.append('estimates_id', estimateId);
+            formData.append('default_image', defaultImage);
+            $.easyBlockUI();
+        });
+        invoiceDropzone.on('uploadprogress', function () {
+            $.easyBlockUI();
+        });
+        invoiceDropzone.on('queuecomplete', function () {
+            window.location.href = '{{ route("estimates.index") }}';
+        });
+        invoiceDropzone.on('removedfile', function () {
+            var grp = $('div#file-upload-dropzone').closest(".form-group");
+            var label = $('div#file-upload-box').siblings("label");
+            $(grp).removeClass("has-error");
+            $(label).removeClass("is-invalid");
+        });
+        invoiceDropzone.on('error', function (file, message) {
+            invoiceDropzone.removeFile(file);
+            var grp = $('div#file-upload-dropzone').closest(".form-group");
+            var label = $('div#file-upload-box').siblings("label");
+            $(grp).find(".help-block").remove();
+            var helpBlockContainer = $(grp);
+
+            if (helpBlockContainer.length == 0) {
+                helpBlockContainer = $(grp);
+            }
+
+            helpBlockContainer.append('<div class="help-block invalid-feedback">' + message + '</div>');
+            $(grp).addClass("has-error");
+            $(label).addClass("is-invalid");
+
+        });
+        invoiceDropzone.on('addedfile', function (file) {
+            lastIndex++;
+
+            const div = document.createElement('div');
+            div.className = 'form-check-inline custom-control custom-radio mt-2 mr-3';
+            const input = document.createElement('input');
+            input.className = 'custom-control-input';
+            input.type = 'radio';
+            input.name = 'default_image';
+            input.id = 'default-image-' + lastIndex;
+            input.value = file.name;
+            if (lastIndex == 1) {
+                input.checked = true;
+            }
+            div.appendChild(input);
+
+            var label = document.createElement('label');
+            label.className = 'custom-control-label pt-1 cursor-pointer';
+            label.innerHTML = "@lang('modules.makeDefaultImage')";
+            label.htmlFor = 'default-image-' + lastIndex;
+            div.appendChild(label);
+
+            file.previewTemplate.appendChild(div);
+        });
 
         $('.toggle-product-category').click(function() {
             $('.product-category-filter').toggleClass('d-none');
@@ -712,7 +779,19 @@ $addProductPermission = user()->permission('add_product');
                 buttonSelector: ".save-form",
                 redirect: true,
                 file: true,
-                data: $('#saveInvoiceForm').serialize()
+                data: $('#saveInvoiceForm').serialize(),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
+                            estimateId = response.estimateId;
+                            $('#estimateId').val(response.estimateId);
+                            invoiceDropzone.processQueue();
+                        }
+                        else {
+                            window.location.href = response.redirectUrl;
+                        }
+                    }
+                }
             })
         });
 
@@ -773,6 +852,37 @@ $addProductPermission = user()->permission('add_product');
             });
             return str;
         }
+
+    $('#client_id').change(function() {
+            var id = $(this).val();
+            changeClient(id);
+    });
+    function changeClient(id) {
+
+        if (id == '') {
+            id = 0;
+        }
+
+        var url = "{{ route('clients.project_list', ':id') }}";
+        url = url.replace(':id', id);
+        var token = "{{ csrf_token() }}";
+
+        $.easyAjax({
+            url: url,
+            container: '#saveInvoiceForm',
+            type: "POST",
+            blockUI: true,
+            data: {
+                _token: token
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    $('#project_id').html(response.data);
+                    $('#project_id').selectpicker('refresh');
+                }
+            }
+        });
+    }
 
 </script>
 

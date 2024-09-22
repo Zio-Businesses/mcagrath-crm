@@ -105,7 +105,6 @@
 
     <!-- MAIN CONTAINER START -->
     <section class="bg-additional-grey" id="fullscreen">
-
         <div class="preloader-container d-flex justify-content-center align-items-center">
             <div class="spinner-border" role="status" aria-hidden="true"></div>
         </div>
@@ -225,7 +224,7 @@
                                                 @lang("modules.invoices.unitPrice")
                                                 ({{ $estimate->currency->currency_code }})
                                             </td>
-                                            <td class="border-left-0" align="right">@lang("modules.invoices.tax")</td>
+                                            <!-- <td class="border-left-0" align="right">@lang("modules.invoices.tax")</td> -->
                                             <td class="border-left-0" align="right">
                                                 @lang("modules.invoices.amount")
                                                 ({{ $estimate->currency->currency_code }})
@@ -245,7 +244,7 @@
                                                     <td align="right">
                                                         {{ currency_format($item->unit_price, $estimate->currency_id, false) }}
                                                     </td>
-                                                    <td align="right">{{ $item->tax_list }}</td>
+                                                    <!-- <td align="right">{{ $item->tax_list }}</td> -->
                                                     <td align="right">
                                                         {{ currency_format($item->amount, $estimate->currency_id, false) }}
                                                     </td>
@@ -418,14 +417,14 @@
                                 <td height="30" colspan="2"></td>
                             </tr>
                             <tr>
-                                <td style="vertical-align: text-top">
+                                <!-- <td style="vertical-align: text-top">
                                     <table>
                                         <tr>@lang('app.note')</tr>
                                         <tr>
                                             <p class="text-dark-grey">{!! $estimate->note ?? '--' !!}</p>
                                         </tr>
                                     </table>
-                                </td>
+                                </td> -->
                                 <td align="right">
                                     <table>
                                         <tr>@lang('modules.invoiceSettings.invoiceTerms')</tr>
@@ -462,7 +461,86 @@
                             @endif
                         </table>
                     </div>
+                    @php
+                    function downloadImageLocally($url) {
+                        // Create a temporary file name
+                        $tempPath = storage_path('app/tmp/' . uniqid() . '.jpg');
 
+                        // Download the file from S3 to the temporary path
+                        $imageContent = file_get_contents($url);
+                        if ($imageContent !== false) {
+                            file_put_contents($tempPath, $imageContent);
+                            return $tempPath;
+                        }
+
+                        return false;
+                    }
+
+                    function correctImageOrientation($path) {
+                        if (function_exists('exif_read_data')) {
+                            $exif = @exif_read_data($path);
+                            if ($exif && isset($exif['Orientation'])) {
+                                $orientation = $exif['Orientation'];
+                                $image = imagecreatefromjpeg($path); // Assume the image is JPEG
+                                switch ($orientation) {
+                                    case 3:
+                                        $image = imagerotate($image, 180, 0);
+                                        break;
+                                    case 6:
+                                        $image = imagerotate($image, -90, 0);
+                                        break;
+                                    case 8:
+                                        $image = imagerotate($image, 90, 0);
+                                        break;
+                                }
+                                // Save the corrected image temporarily
+                                imagejpeg($image, $path); // Overwrite the original file
+                                imagedestroy($image);
+                            }
+                        }
+                        return $path;
+                    }
+
+                    @endphp
+
+                    <!-- Inside the rendering section -->
+                    @if($estimate->files)
+                    <table width="100%" class="f-14 b-collapse" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                        @php
+                            $counter = 0;
+                            $tempFiles = []; // Array to keep track of temporary files
+                        @endphp
+                        @foreach($estimate->files as $file)
+                            @if ($file->icon == 'images')
+                                @if ($counter % 4 == 0 && $counter != 0) <!-- Close the row after every 4th image -->
+                                    </tr><tr>
+                                @endif
+                                @php
+                                    // Download the image locally from S3
+                                    $localImagePath = downloadImageLocally($file->file_url);
+                                    
+                                    if ($localImagePath) {
+                                        // Correct the orientation if needed
+                                        $correctedImageUrl = correctImageOrientation($localImagePath);
+                    
+                                    }
+                                @endphp
+                                <td style="padding: 5px; text-align: center; vertical-align: top; border: 1px solid #ddd;">
+                                    @if (isset($correctedImageUrl))
+                                        <img src="data:image/png;base64,{{ base64_encode(file_get_contents( "$correctedImageUrl" )) }}" width="150" height="150" style="margin: 0 auto; display: inline-block;"/>
+                                    @else
+                                        <span>Image not available</span>
+                                    @endif
+                                    <div class="f-11" style="width: 150px; word-wrap: break-word; text-align: center; margin-top: 5px;">{{ $file->filename }}</div>
+                                </td>
+                                @php $counter++; @endphp
+                            @endif
+                        @endforeach
+                        </tr>
+                    </table>
+                    @endif
+                    
                     @if ($estimate->sign)
                         <div class="row">
                             <div class="col-sm-12 mt-4">
