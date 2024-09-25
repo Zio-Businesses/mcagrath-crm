@@ -23,4 +23,10 @@ class vendor_estimates extends BaseModel
     {
         return (int)vendor_estimates::latest()->first()?->original_estimate_number ?? 0;
     }
+    
+    public function formatEstimateNumber()
+    {
+        $invoiceSettings = (company()) ? company()->invoiceSetting : $this->company->invoiceSetting;
+        return \App\Helper\NumberFormat::estimate($this->estimate_number, $invoiceSettings);
+    }
 }

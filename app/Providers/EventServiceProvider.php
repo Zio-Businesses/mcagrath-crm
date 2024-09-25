@@ -299,6 +299,7 @@ use App\Models\UserInvitation;
 use App\Models\UserLeadboardSetting;
 use App\Models\UserPermission;
 use App\Models\UserTaskboardSetting;
+use App\Models\vendor_estimates;
 use App\Observers\AcceptEstimateObserver;
 use App\Observers\AppreciationObserver;
 use App\Observers\AttendanceObserver;
@@ -419,6 +420,7 @@ use App\Observers\TaskCommentObserver;
 use App\Observers\TaskFileObserver;
 use App\Observers\InvoiceFileObserver;
 use App\Observers\ClientEstimatesFilesObserver;
+use App\Observers\VendorEstimateObserver;
 use App\Observers\LeadPipelineObserver;
 use App\Observers\LeadStageObserver;
 use App\Observers\TaskLabelListObserver;
@@ -610,6 +612,7 @@ class EventServiceProvider extends ServiceProvider
         TaskFile::class => [TaskFileObserver::class],
         InvoiceFiles::class => [InvoiceFileObserver::class],
         ClientEstimatesFiles::class=>[ClientEstimatesFilesObserver::class],
+        vendor_estimates::class=>[VendorEstimateObserver::class],
         TaskLabelList::class => [TaskLabelListObserver::class],
         TaskNote::class => [TaskNoteObserver::class],
         TaskUser::class => [TaskUserObserver::class],
