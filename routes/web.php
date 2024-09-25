@@ -133,6 +133,7 @@ use App\Http\Controllers\ProjectDelayedByController;
 use App\Http\Controllers\ClientEstimatesFilesController;
 use App\Models\AttendanceSetting;
 use App\Http\Controllers\VendorModuleNotesController;
+use App\Http\Controllers\VendorEstimateController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -516,9 +517,14 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::post('import/process', [LeadContactController::class, 'importProcess'])->name('lead-contact.import.process');
     });
 
+    // Vendor Estimates
+    Route::resource('vendor-estimates', VendorEstimateController::class);
+
+    
     // deals route
     Route::get('lead-handle',[LeadVendorController::class,'handle'])->name('lead-vendor.handle');
     Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
+    Route::post('vendors/vendor-list/{id}', [VendorController::class, 'vendorList'])->name('vendors.vendors_list');
     Route::get('vendorcheck/{email}',[LeadVendorController::class,'vendorcheck'])->name('vendors.check');
     Route::get('vendors/download/{id}', [VendorController::class, 'download'])->name('vendors.download');
     Route::get('vendors/downloadwaiveform/{id}', [VendorController::class, 'downloadwaiverform'])->name('vendorswaiverform.download');
@@ -619,7 +625,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('estimates/decline/{id}', [EstimateController::class, 'decline'])->name('estimates.decline');
     Route::get('estimates/add-item', [EstimateController::class, 'addItem'])->name('estimates.add_item');
     Route::resource('estimates', EstimateController::class);
-
 
     // Proposals
     Route::get('proposals/delete-image', [ProposalController::class, 'deleteProposalItemImage'])->name('proposals.delete_image');
@@ -863,5 +868,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('quickbooks/{hash}/callback', [QuickbookController::class, 'callback'])->name('quickbooks.callback');
     Route::get('quickbooks', [QuickbookController::class, 'index'])->name('quickbooks.index');
 
-
+    // Vendor Estimates
+    Route::resource('vendor-estimates', VendorEstimateController::class);
+    Route::get('vendorestimates',[VendorEstimateController::class,'index'])->name('vendorestimates.index');
 });

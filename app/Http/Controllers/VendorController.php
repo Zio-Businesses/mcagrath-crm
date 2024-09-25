@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Helper\Files;
 use App\Helper\Reply;
 use App\Models\Project;
+use App\Models\ProjectVendor;
+use App\Models\BaseModel;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
@@ -293,5 +295,19 @@ class VendorController extends AccountBaseController
         $this->view = 'vendors.ajax.notes';
         return $dataTable->render('vendors.show', $this->data);
 
+    }
+
+    public function vendorList($id)
+    {
+        if ($id != 0) {
+            $vendor = ProjectVendor::where('project_id', $id)->where('link_status', 'accepted')->get();
+            $options = BaseModel::optionsvendor($vendor, null, 'vendor_name');
+            \Log::info($options);
+        }
+        else {
+            $options = '<option value="">--</option>';
+        }
+
+        return Reply::dataOnly(['status' => 'success', 'data' => $options]);
     }
 }

@@ -36,7 +36,7 @@ class EstimateController extends AccountBaseController
     public function __construct()
     {
         parent::__construct();
-        $this->pageTitle = 'app.menu.estimates';
+        $this->pageTitle = 'Client Estimates';
         $this->pageIcon = 'ti-file';
         $this->middleware(function ($request, $next) {
             abort_403(!in_array('estimates', $this->user->modules));

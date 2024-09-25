@@ -64,5 +64,9 @@ class ProjectVendor extends BaseModel
         
         return $image->image_url;
     }
+    public function vendors(): BelongsTo
+    {
+        return $this->belongsTo(VendorContract::class, 'vendor_id');
+    }
 
 }
