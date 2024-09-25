@@ -31,6 +31,7 @@ use App\Models\Locations;
 use App\Models\VendorNotes;
 use App\Imports\LeadVendorImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\ContractorType;
 
 class LeadVendorController extends AccountBaseController
 {
@@ -40,7 +41,7 @@ class LeadVendorController extends AccountBaseController
         
         $this->pageTitle = __('modules.leadContact.createTitlev');
         $this->view = 'lead-contact.ajax.createvendor';
-        $this->contracttype = VendorContract::getContractType();
+        $this->contracttype = ContractorType::all();
         $this->leadsource=LeadSource::all();
         $this->notestitle=NotesTitle::all();
         $this->location=Locations::select('state')->distinct()->get();
@@ -146,7 +147,7 @@ class LeadVendorController extends AccountBaseController
             $this->countries = countries();
             $this->vendorStatuses = Vendor::getStatuses();
             $this->createdby = User::whereIn('id', $ids)->get();
-            $this->contracttype = VendorContract::getContractType();
+            $this->contracttype = ContractorType::all();
             $this->state=Locations::select('state')->distinct()->get();
             $this->county=Locations::select('county')->distinct()->get();
             $this->city=Locations::select('city')->distinct()->get();
@@ -166,7 +167,7 @@ class LeadVendorController extends AccountBaseController
     }
     public function edit($id)
     {
-        $this->contracttype = VendorContract::getContractType();
+        $this->contracttype = ContractorType::all();
         $this->vendor = Vendor::where('id', '=', $id)->first();
         $this->pageTitle = __('app.update') . ' ' . __('Vendor Contact Info');
         $this->vendorStatuses = Vendor::getStatuses();
@@ -175,7 +176,6 @@ class LeadVendorController extends AccountBaseController
         $this->location=Locations::select('state')->distinct()->get();
         $this->counties=Locations::select('county')->where('state', $this->vendor->state)->distinct()->get();
         $this->cities=Locations::select('city')->where('county', $this->vendor->county)->distinct()->get();
-        $this->contracttype = VendorContract::getContractType();
         $this->leadsource=LeadSource::all();
         if (request()->ajax()) {
             return $this->returnAjax($this->view);

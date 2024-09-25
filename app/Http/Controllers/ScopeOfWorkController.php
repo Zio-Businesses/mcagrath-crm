@@ -11,6 +11,7 @@ use App\Models\ProjectCategory;
 use App\Models\VendorContract;
 use App\Models\ScopeOfWork;
 use Illuminate\Support\Facades\Log;
+use App\Models\ContractorType;
 
 class ScopeOfWorkController extends AccountBaseController
 {
@@ -20,7 +21,7 @@ class ScopeOfWorkController extends AccountBaseController
         $this->pageTitle = 'app.menu.projects';
         $this->subcategories=ProjectSubCategory::all();
         $this->categories = ProjectCategory::all();
-        $this->contracttype = VendorContract::getContractType();
+        $this->contracttype = ContractorType::all();
         $this->middleware(function ($request, $next) {
             abort_403(!in_array('projects', $this->user->modules));
 

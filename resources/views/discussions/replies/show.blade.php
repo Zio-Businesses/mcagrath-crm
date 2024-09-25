@@ -22,17 +22,19 @@
     @endphp
     {{-- clients.show --}}
     <div class="card ticket-message border-0 rounded-bottom
-        @if (user()->id == $replyUser->id) bg-white-shade @endif
+        @if (user()->id == $replyUser?->id) bg-white-shade @endif
         " id="message-{{ $message->id }}">
         <div class="card-horizontal">
+
             <div class="card-img">
-                <a href="{{ route(($replyUser->hasRole('client') ? 'clients.show' : 'employees.show'), $replyUser->id) }}"><img class=""
-                        src="{{ $replyUser->image_url }}" alt="{{ $replyUser->name }}"></a>
+                <a href="{{ route(($replyUser?->hasRole('client') ? 'clients.show' : 'employees.show'), $replyUser??3) }}"><img class=""
+                        src="{{ $replyUser?->image_url }}" alt="{{ $replyUser?->name }}"></a>
+                        
             </div>
             <div class="card-body border-0 pl-0">
                 <div class="d-flex">
-                    <a href="{{ route(($replyUser->hasRole('client') ? 'clients.show' : 'employees.show'), $replyUser->id) }}">
-                        <h4 class="card-title f-15 f-w-500 text-dark mr-3">{{ $replyUser->name }}</h4>
+                    <a href="{{ route(($replyUser?->hasRole('client') ? 'clients.show' : 'employees.show'), $replyUser??3) }}">
+                        <h4 class="card-title f-15 f-w-500 text-dark mr-3">{{ $replyUser?->name }}</h4>
                     </a>
                     <p class="card-date f-11 text-lightest mb-0 mr-3">
                         {{ $message->created_at->timezone(company()->timezone)->translatedFormat(company()->date_format . ' ' . company()->time_format) }}
@@ -49,12 +51,12 @@
                             <a class="dropdown-item add-reply" data-row-id="{{ $message->id }}"
                                 data-discussion-id="{{ $discussion->id }}" href="javascript:;">@lang('app.reply')</a>
 
-                            @if ($key != 0 && is_null($discussion->best_answer_id) && $discussion->user_id == $replyUser->id)
+                            @if ($key != 0 && is_null($discussion->best_answer_id) && $discussion->user_id == $replyUser?->id)
                                 <a class="dropdown-item set-best-answer" data-row-id="{{ $message->id }}"
                                     href="javascript:;">@lang('modules.discussions.bestReply')</a>
                             @endif
 
-                            @if ($replyUser->id == user()->id)
+                            @if ($replyUser?->id == user()->id)
                                 <a class="dropdown-item edit-reply" data-row-id="{{ $message->id }}"
                                     data-discussion-id="{{ $discussion->id }}"
                                     href="javascript:;">@lang('app.edit')</a>

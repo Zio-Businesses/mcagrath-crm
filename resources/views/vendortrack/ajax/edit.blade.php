@@ -57,8 +57,8 @@
                             <x-forms.select fieldId="contractor_type" :fieldLabel="__('Contractor Type')" fieldName="contractor_type" fieldRequired="true" search="true">
                                 <option value="">--</option>
                                 @foreach ($contracttype as $ct)
-                                    <option @selected($vendor->contractor_type == $ct) value="{{ $ct }}">
-                                        {{ ucfirst($ct) }}</option>
+                                    <option @selected($vendor->contractor_type == $ct->contractor_type) value="{{ $ct->contractor_type }}">
+                                        {{ $ct->contractor_type }}</option>
                                 @endforeach
                             </x-forms.select>
                     </div>

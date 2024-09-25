@@ -134,6 +134,7 @@ use App\Http\Controllers\ClientEstimatesFilesController;
 use App\Models\AttendanceSetting;
 use App\Http\Controllers\VendorModuleNotesController;
 use App\Http\Controllers\VendorEstimateController;
+use App\Http\Controllers\ContractorTypeController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -234,6 +235,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectCategory', ProjectCategoryController::class);
     Route::resource('projectSubCategory', ProjectSubCategoryController::class);
     Route::resource('projectType', ProjectTypeController::class);
+    Route::resource('ContractorType', ContractorTypeController::class);
     Route::resource('projectPriority', ProjectPriorityController::class);
     Route::resource('delayedBy', ProjectDelayedByController::class);
     Route::resource('propertyType', PropertyTypeController::class);

@@ -14,6 +14,7 @@ use App\Models\ProjectPriority;
 use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
 use App\Models\DelayedBy;
+use App\Models\ContractorType;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
@@ -24,6 +25,8 @@ use App\Http\Requests\Project\StorePropertyType;
 use App\Http\Requests\Project\StoreOccupancyStatus;
 use App\Http\Requests\Project\StoreDelayedBy;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Project\StoreContractorType;
+
 class ProjectSettingController extends AccountBaseController
 {
 
@@ -77,7 +80,10 @@ class ProjectSettingController extends AccountBaseController
                 $this->delayedBy = DelayedBy::all();
                 $this->view = 'project-settings.ajax.delayedby';
                 break; 
-            
+        case 'contractortype':
+                $this->contractortype = ContractorType::all();
+                $this->view = 'project-settings.ajax.contractortype';
+                break;
         default:
             $this->projectSetting = ProjectSetting::first();
             $this->view = 'project-settings.ajax.sendReminder';
@@ -228,6 +234,10 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.create-delayed-by-settings-modal', $this->data);
     }
+    public function createContractorType()
+    {
+        return view('project-settings.create-contractor-type-settings-modal', $this->data);
+    }
     
     public function saveProjectCategory(StoreProjectCategory $request)
     {
@@ -285,10 +295,17 @@ class ProjectSettingController extends AccountBaseController
 
     public function saveDelayedBy(StoreDelayedBy $request)
     {
-       
         $dy = new DelayedBy();
         $dy->delayed_by = $request->delayed_by;
         $dy->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+
+    public function saveContractorType(StoreContractorType $request)
+    {
+        $ct = new ContractorType();
+        $ct->contractor_type = $request->contractor_type;
+        $ct->save();
         return Reply::success(__('messages.recordSaved'));
     }
 }

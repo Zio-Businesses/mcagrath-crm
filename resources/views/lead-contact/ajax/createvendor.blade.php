@@ -55,7 +55,7 @@ $addProductPermission = user()->permission('add_product');
                              <x-forms.select fieldId="contractor_type" :fieldLabel="__('Contractor Type')" fieldName="contractor_type" fieldRequired="true" search="true">
                                 <option value="">--</option>
                                 @foreach ($contracttype as $type)
-                                    <option value="{{ $type }}">{{ ucfirst($type) }}</option>
+                                    <option value="{{ $type->contractor_type }}">{{ $type->contractor_type }}</option>
                                 @endforeach
                             </x-forms.select>
                     </div>

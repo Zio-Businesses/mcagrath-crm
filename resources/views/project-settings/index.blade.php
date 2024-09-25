@@ -60,8 +60,11 @@
                                href="{{ route('project-settings.index') }}?tab=delayedby" role="tab"
                                aria-controls="nav-delayedby"
                                aria-selected="true">@lang('Delayed By')
+                            </a> <a class="nav-item nav-link f-15 contractortype"
+                               href="{{ route('project-settings.index') }}?tab=contractortype" role="tab"
+                               aria-controls="nav-contractortypr"
+                               aria-selected="true">@lang('Contractor Type')
                             </a>
-
 
                         </div>
                       
@@ -109,6 +112,9 @@
                         </x-forms.button-primary>
                         <x-forms.button-primary icon="plus" id="addDelayedBy"
                                     class="delayedby-btn d-none mb-2 actionBtn"> @lang('Add Delayed By')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addContractorType"
+                                    class="contractortype-btn d-none mb-2 actionBtn"> @lang('Add Contractor Type')
                         </x-forms.button-primary>
                     </div>
 

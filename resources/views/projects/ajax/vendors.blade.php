@@ -51,7 +51,7 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $item->linksentby->name }}
+                                {{ $item->linksentby->name??'' }}
                             </td>
                             <td>
                                 {{ $item->created_at->format(company()->date_format) }}

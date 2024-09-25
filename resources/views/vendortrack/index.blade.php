@@ -89,8 +89,8 @@
                             data-container="body" data-size="5">
                             <option value="">--</option>
                             @foreach ($contracttype as $type)
-                                <option value="{{$type}}">
-                                    {{$type}}
+                                <option value="{{$type->contracor_type}}">
+                                    {{$type->contractor_type}}
                                 </option>
                             @endforeach
                         </select>
