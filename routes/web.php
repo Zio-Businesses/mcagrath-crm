@@ -135,6 +135,7 @@ use App\Models\AttendanceSetting;
 use App\Http\Controllers\VendorModuleNotesController;
 use App\Http\Controllers\VendorEstimateController;
 use App\Http\Controllers\ContractorTypeController;
+use App\Http\Controllers\VendorProjectController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -282,6 +283,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);
             Route::resource('sow', ScopeOfWorkController::class);
+            Route::resource('vendorproject', VendorProjectController::class);
             Route::resource('projectvendors', ProjectVendorController::class);
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');

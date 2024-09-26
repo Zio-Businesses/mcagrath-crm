@@ -27,7 +27,7 @@
                                     data-sow-id="{{ $item->id }}">{{ $item->sow_title }}</a>
                             </td>
                             <td>
-                                {{$item->added->name}}
+                                {{$item->added->name??''}}
                             </td>
                             <td>
                                 {{$item->created_at->translatedFormat(company()->date_format)}}

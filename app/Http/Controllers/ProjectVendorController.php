@@ -55,7 +55,7 @@ class ProjectVendorController extends AccountBaseController
     public function store(StoreProjectVendor $request)
     {
         $vendor = VendorContract::findOrFail($request->vendor_id);
-        if($vendor->status==='Compliant'){
+        if($vendor->status==='Compliant'||$vendor->status=='Non Compliant'){
 
         $vpro= new ProjectVendor();
         $vpro->project_id = $request->project_id;

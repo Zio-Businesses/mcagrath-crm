@@ -32,13 +32,32 @@ class ProjectVendor extends BaseModel
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
+
+    public function client()
+    {
+        return $this->hasOneThrough(
+            User::class, // The related model (Client model)
+            Project::class, // The intermediate model (Project model)
+            'id', // Foreign key on the projects table (project_id)
+            'id', // Foreign key on the users table (client_id)
+            'project_id', // Local key on the project_vendors table (project_id)
+            'client_id' // Local key on the projects table
+        )->withoutGlobalScope(ActiveScope::class);
+    }
+   
+
+    public function projectshort($data)
+    {
+        $project_short_code = Project::withTrashed()->without('members')->select('project_short_code')->find($data);
+        return $project_short_code->project_short_code;
+    }
+    
     public function linksentby(): BelongsTo
     {
         return $this->belongsTo(User::class, 'link_sent_by');
     }
     public function sowname($data)
-    {
-       
+    {  
         $scopeofwork= ScopeOfWork::withTrashed()->find($data);
         return $scopeofwork->sow_title;
     }
