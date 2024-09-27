@@ -14,7 +14,7 @@ class VendorContract extends BaseModel
 
     public function getImageUrlAttribute()
     {
-        $company=Company::find(1);
+        $company=company();
         return ($this->company_logo) ? asset_url_local_s3('vendor/logo/' . $this->company_logo) : $company->logo_url;
     }
     public function getSecondaryImageUrlAttribute()

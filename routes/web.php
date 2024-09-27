@@ -283,7 +283,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);
             Route::resource('sow', ScopeOfWorkController::class);
-            Route::resource('vendorproject', VendorProjectController::class);
+            
             Route::resource('projectvendors', ProjectVendorController::class);
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
@@ -875,4 +875,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     // Vendor Estimates
     Route::resource('vendor-estimates', VendorEstimateController::class);
     Route::get('vendorestimates',[VendorEstimateController::class,'index'])->name('vendorestimates.index');
+
+    //Project - Vendors
+    Route::resource('vendorproject', VendorProjectController::class);
 });

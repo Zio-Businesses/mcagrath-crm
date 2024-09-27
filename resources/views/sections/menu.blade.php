@@ -136,8 +136,9 @@
                 @endif
                 @if (in_array('projects', user_modules()) && $sidebarUserPermissions['view_projects'] != 5 && $sidebarUserPermissions['view_projects'] != 'none')
                     <x-sub-menu-item :link="route('projects.index')" :text="__('app.menu.projects')" />
-                @endif
                     <x-sub-menu-item :link="route('vendorproject.index')" :text="__('Projects - Vendors')" />
+                @endif
+                  
                 {{-- @if (!in_array('client', user_roles())) --}}
                 @if (in_array('tasks', user_modules()) && $sidebarUserPermissions['view_tasks'] != 5 && $sidebarUserPermissions['view_tasks'] != 'none')
                     <x-sub-menu-item :link="route('tasks.index')" :text="__('app.menu.tasks')" />

@@ -29,7 +29,8 @@ class VendorProjectDataTable extends BaseDataTable
       
         
         $datatables->editColumn('id', fn($row) => $row->id);
-        $datatables->editColumn('client_id', fn($row) => $row->client?->id? view('components.client', ['user' => $row->client]) : '');
+        $datatables->editColumn('client_id', fn($row) => $row->client?->id ? view('components.client', ['user' => $row->client]) : '');
+        $datatables->editColumn('vendor_id', fn($row) => $row?->vendors ? view('components.vendor', ['vendor' => $row->vendors]) : '');
         $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?$row->project->propertyDetails->property_address:'N/A');
         $datatables->editColumn('created_at', fn($row) => $row->created_at?Carbon::parse($row->created_at)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('updated_at', fn($row) => $row->updated_at?Carbon::parse($row->updated_at)->translatedFormat($this->company->date_format):'N/A');
@@ -48,23 +49,26 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->editColumn('work_completion_date', fn($row) => $row->work_completion_date?Carbon::parse($row->work_completion_date)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('work_ecd', fn($row) => $row->work_ecd?Carbon::parse($row->work_ecd)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('due_date', fn($row) => $row->due_date?Carbon::parse($row->due_date)->translatedFormat($this->company->date_format):'N/A');
+        $datatables->editColumn('nte', fn($row) => $row->project->nte?$row->project->nte:'N/A');
+        $datatables->editColumn('bid_submitted_amount', fn($row) => $row->project->bid_submitted_amount?$row->project->bid_submitted_amount:'N/A');
+        $datatables->editColumn('p_bid_approved_amount', fn($row) => $row->project->bid_approved_amount?$row->project->bid_approved_amount:'N/A');
         $datatables->editColumn('project', function ($row) {
             if($row->project_id){
-            return '<a href="' . route('projects.show', $row->project_id) . '" style="color:black;">' . $row->projectshort($row->project_id) . '</a>';
+            return '<a href="' . route('projects.show', $row->project_id) . '" style="color:black;">' . $row->project->project_short_code . '</a>';
             }
             else{
                 return null;
             }
         });
 
-        $datatables->editColumn('sow_name', function ($row) {
-            if($row->sow_id){
-                foreach($row->sow_id as $sow){
-                    $sowname[]= $row->sowname($sow);
-                }
-            }
-            return $sowname;
-        });
+        // $datatables->editColumn('sow_name', function ($row) {
+        //     if($row->sow_id){
+        //         foreach($row->sow_id as $sow){
+        //             $sowname[]= $row->sowname($sow);
+        //         }
+        //     }
+        //     return $sowname;
+        // });
         $datatables->editColumn('wo_status', function ($row) {
             if($row->wo_status==null){
                return ProjectStatusSetting::where('default_status', true)->value('status_name');
@@ -91,9 +95,10 @@ class VendorProjectDataTable extends BaseDataTable
         $request = $this->request();
         $users = ProjectVendor::query()
         ->leftJoin('projects', 'projects.id', '=', 'project_vendors.project_id')
-        ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') // Join projects table
-        ->with(['client', 'project']) // Eager load client and project relationships for better performance
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address');
+        ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
+        ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
+        ->with(['client', 'project','vendors','project.members']) // Eager load client and project relationships for better performance
+        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id');
 
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
@@ -103,6 +108,30 @@ class VendorProjectDataTable extends BaseDataTable
                 ->orWhere('property_details.property_address', 'like', '%' . request('searchText') . '%')
                 ->orWhere('vendor_phone', 'like', '%' . request('searchText') . '%');
             });
+        }
+
+        if (!is_null($request->employee_id) && $request->employee_id != 'all') {
+            $users->where(
+                function ($query) {
+                    return $query->where('project_members.user_id', request()->employee_id);
+                }
+            );
+        }
+
+        if (!is_null($request->client_id) && $request->client_id != 'all') {
+            $users->where('projects.client_id', $request->client_id);
+        }
+
+        if (!is_null($request->vendor_id) && $request->vendor_id != '--') {
+            $users->where('vendor_id', $request->vendor_id);
+        }
+
+        if (!is_null($request->link_id) && $request->link_id != '--') {
+            $users->where('link_status', $request->link_id);
+        }
+
+        if (!is_null($request->wo_status) && $request->wo_status != '--') {
+            $users->where('wo_status', $request->wo_status);
         }
 
         return $users;
@@ -141,19 +170,17 @@ class VendorProjectDataTable extends BaseDataTable
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
-            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '65%', 'exportable' => false, 'title' => __('app.client')],
+            __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
+            __('Link Status') => ['data' => 'link_status', 'name' => 'link_status', 'title' => __('Link Status')], 
+            __('Wo Status') => ['data' => 'wo_status', 'name' => 'wo_status', 'title' => __('Wo Status')],  
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
-            __('Vendor Name') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'title' => __('Vendor Name')],
-            __('Vendor Phone') => ['data' => 'vendor_phone', 'name' => 'vendor_phone', 'title' => __('Vendor Phone')],
-            __('Vendor Email Address') => ['data' => 'vendor_email_address', 'name' => 'vendor_email_address', 'title' => __('Vendor Email Address')],
-            __('SOW') => ['data' => 'sow_name', 'name' => 'sow_id', 'title' => __('SOW')],
+            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],
+
             __('Project Category') => ['data' => 'project_type', 'name' => 'project_type', 'title' => __('Project Category')],
-            __('Project Amount') => ['data' => 'project_amount', 'name' => 'project_amount', 'title' => __('Project Amount')],
-            __('Bid Approved Amount') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('Bid Approved Amount')],
-            __('Link Status') => ['data' => 'link_status', 'name' => 'link_status', 'title' => __('Link Status')],   
+
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
-            __('Wo Status') => ['data' => 'wo_status', 'name' => 'wo_status', 'title' => __('Wo Status')],
+         
             __('Inspection Date') => ['data' => 'inspection_date', 'name' => 'inspection_date', 'title' => __('Inspection Date')],
             __('Inspection Time') => ['data' => 'inspection_time', 'name' => 'inspection_time', 'title' => __('Inspection Time')],
             __('Re Inspection Date') => ['data' => 're_inspection_date', 'name' => 're_inspection_date', 'title' => __('Re Inspection Date')],
@@ -168,8 +195,12 @@ class VendorProjectDataTable extends BaseDataTable
             __('Work Schedule Re Time') => ['data' => 'work_schedule_re_time', 'name' => 'work_schedule_re_time', 'title' => __('Work Schedule Re Time')],
             __('Work Completion Date') => ['data' => 'work_completion_date', 'name' => 'work_completion_date', 'title' => __('Work Completion Date')],
             __('Work ECD') => ['data' => 'work_ecd', 'name' => 'work_ecd', 'title' => __('Work ECD')],
-            
-
+            __('Project Amount') => ['data' => 'project_amount', 'name' => 'project_amount', 'title' => __('Project Amount')],
+            __('Vendor Bid Approved Amount') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('Vendor Bid Approved Amount')],
+            __('Not To Exceed') => ['data' => 'nte', 'name' => 'nte', 'title' => __('Not To Exceed')],
+            __('Project Bid Submitted Amount') => ['data' => 'bid_submitted_amount', 'name' => 'bid_submitted_amount', 'title' => __('Project Bid Submitted Amount')],
+            __('Project Bid Approved Amount') => ['data' => 'p_bid_approved_amount', 'name' => 'p_bid_approved_amount', 'title' => __('Project Bid Approved Amount')],
+           
         ];
 
         

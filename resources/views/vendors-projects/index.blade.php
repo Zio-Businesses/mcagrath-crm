@@ -14,18 +14,18 @@
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(4),
-    #vendors-projects-table td:nth-child(4) {
+    #vendors-projects-table th:nth-child(7),
+    #vendors-projects-table td:nth-child(7) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(8),
-    #vendors-projects-table td:nth-child(8) {
-        width: 500px !important; /* Force the width */
-        max-width: 500px !important;
-        min-width: 500px !important;
+    #vendors-projects-table th:nth-child(6),
+    #vendors-projects-table td:nth-child(6) {
+        width: 300px !important; /* Force the width */
+        max-width: 300px !important;
+        min-width: 300px !important;
     }
 
     /* Ensure the table layout allows the column to respect the width */
@@ -60,6 +60,93 @@
                 @lang('app.clearFilters')
             </x-forms.button-secondary>
         </div>
+        <x-filters.more-filter-box>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.projectMember')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="employee_id" id="employee_id"
+                            data-live-search="true" data-container="body" data-size="8">
+                            @if ($allEmployees->count() > 1 || in_array('admin', user_roles()))
+                                <option value="all">@lang('app.all')</option>
+                            @endif
+                            @foreach ($allEmployees as $employee)
+                                    <x-user-option :user="$employee" :selected="request('assignee') == 'me' && $employee->id == user()->id"/>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.clientName')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="client_id" id="client_id" data-container="body"
+                            data-size="8">
+                            @if (!in_array('client', user_roles()))
+                                <option selected value="all">@lang('app.all')</option>
+                            @endif
+                            @foreach ($clients as $client)
+                                <x-user-option :user="$client" />
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Vendor Name')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="vendor_id" id="vendor_id" data-container="body"
+                            data-size="8" data-live-search="true">
+                            @if (!in_array('client', user_roles()))
+                                <option selected value="--">--</option>
+                            @endif
+                            @foreach ($vendor as $vendors)
+                                <x-vendor-option :vendors="$vendors" />
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Link Status')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="link_id" id="link_id" data-container="body"
+                            data-size="5">
+                            <option selected value="--">--</option>
+                            <option value="Accepted" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Accepted'>
+                            </option>
+                            <option value="Rejected" data-content='<i class="fa fa-circle mr-2" style="color:#f5c308;"></i>Rejected'>
+                            </option>
+                            <option value="Sent" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Sent'>
+                            </option>
+                            <option value="Removed" data-content='<i class="fa fa-circle mr-2" style="color:#d21010;"></i>Removed'>
+                            Removed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Work Order Status')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="wo_status" id="wo_status" data-container="body"
+                            data-size="5">
+                            <option selected value="--">--</option>
+                            @foreach ($projectStatus as $status)
+                                <option
+                                data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"
+                                value="{{$status->status_name}}">
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </x-filters.more-filter-box>
+        
     </x-filters.filter-box-moded>
 
 @endsection
@@ -99,21 +186,54 @@
 
     });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
         
-        var row_id;
         $('#vendors-projects-table').on('preXhr.dt', function(e, settings, data) {
             const searchText = $('#search-text-field').val();
             data['searchText'] = searchText;
             const status = $('#status').val();
             data['status'] = status;
+            var employee_id = $('#employee_id').val();
+            data['employee_id'] = employee_id;
+            var clientID = $('#client_id').val();
+            data['client_id'] = clientID;
+            var vendorID = $('#vendor_id').val();
+            data['vendor_id'] = vendorID;
+            var linkID = $('#link_id').val();
+            data['link_id'] = linkID;
+            var woStatus = $('#wo_status').val();
+            data['wo_status'] = woStatus;
+            
         });
+
+       
+      
+        $('#client_id, #employee_id, #vendor_id,#link_id,#wo_status').on('change keyup',
+            function() {
+                if ($('#employee_id').val() != "all") {
+                    $('#reset-filters').removeClass('d-none');
+                    showTable();
+                } else if ($('#client_id').val() != "all") {
+                    $('#reset-filters').removeClass('d-none');
+                    showTable();
+                }else if ($('#vendor_id').val() != "--") {
+                    $('#reset-filters').removeClass('d-none');
+                    showTable();
+                }else if ($('#link_id').val() != "--") {
+                    $('#reset-filters').removeClass('d-none');
+                    showTable();
+                } else if ($('#wo_status').val() != "--") {
+                    $('#reset-filters').removeClass('d-none');
+                    showTable();
+                }  else {
+                    $('#reset-filters').addClass('d-none');
+                    showTable();
+                }
+            });
 
         const showTable = () => {
             window.LaravelDataTables["vendors-projects-table"].draw(false);
         }
-
 
         $('#search-text-field').on('keyup', function() {
             if ($('#search-text-field').val() != "") {
