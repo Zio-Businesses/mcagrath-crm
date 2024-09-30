@@ -5,7 +5,14 @@
 @endpush
 
 @section('filter-section')
-
+<style>
+    #vendor-estimates-table th:nth-child(2),
+    #vendor-estimates-table td:nth-child(2) {
+        width: 300px !important; /* Force the width */
+        max-width: 300px !important;
+        min-width: 300px !important;
+    }
+</style>
     <x-filters.filter-box>
         <!-- DATE START -->
         <div class="select-box d-flex pr-2 border-right-grey border-right-grey-sm-0">
@@ -105,31 +112,8 @@ $addEstimatePermission = user()->permission('add_estimates');
 
 @push('scripts')
     @include('sections.datatable_js')
-    <script src="{{ asset('vendor/jquery/clipboard.min.js') }}"></script>
     <script>
-        var clipboard = new ClipboardJS('.btn-copy');
-
-        clipboard.on('success', function(e) {
-            Swal.fire({
-                icon: 'success',
-                text: '@lang("app.copied")',
-                toast: true,
-                position: 'top-end',
-                timer: 3000,
-                timerProgressBar: true,
-                showConfirmButton: false,
-                customClass: {
-                    confirmButton: 'btn btn-primary',
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-            })
-        });
-    </script>
-    <script>
-        $('#invoices-table').on('preXhr.dt', function(e, settings, data) {
+        $('#vendor-estimates-table').on('preXhr.dt', function(e, settings, data) {
             var dateRangePicker = $('#datatableRange').data('daterangepicker');
             var startDate = $('#datatableRange').val();
 
@@ -150,7 +134,7 @@ $addEstimatePermission = user()->permission('add_estimates');
             data['searchText'] = searchText;
         });
         const showTable = () => {
-            window.LaravelDataTables["invoices-table"].draw(false);
+            window.LaravelDataTables["vendor-estimates-table"].draw(false);
         }
 
         $('#filter-status')
@@ -180,93 +164,27 @@ $addEstimatePermission = user()->permission('add_estimates');
             showTable();
         });
 
-        $('#quick-action-type').change(function() {
-            const actionValue = $(this).val();
-            if (actionValue != '') {
-                $('#quick-action-apply').removeAttr('disabled');
-
-                if (actionValue == 'change-status') {
-                    $('.quick-action-field').addClass('d-none');
-                    $('#change-status-action').removeClass('d-none');
-                } else {
-                    $('.quick-action-field').addClass('d-none');
-                }
-            } else {
-                $('#quick-action-apply').attr('disabled', true);
-                $('.quick-action-field').addClass('d-none');
-            }
-        });
-
-        $('#quick-action-apply').click(function() {
-            const actionValue = $('#quick-action-type').val();
-            if (actionValue == 'delete') {
-                Swal.fire({
-                    title: "@lang('messages.sweetAlertTitle')",
-                    text: "@lang('messages.recoverRecord')",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    focusConfirm: false,
-                    confirmButtonText: "@lang('messages.confirmDelete')",
-                    cancelButtonText: "@lang('app.cancel')",
-                    customClass: {
-                        confirmButton: 'btn btn-primary mr-3',
-                        cancelButton: 'btn btn-secondary'
+        $('#vendor-estimates-table').on('change', '.change-cbid', function() {
+            var id = $(this).data('row-id');
+            var value =  $(this).val();
+            var url="{{ route('vendors.changecbid',':id') }}";
+            url = url.replace(':id', id);
+            if (id != "" && value != "") {
+            $.easyAjax({
+                    url: url,
+                    type: 'POST',
+                    blockUI: true,
+                    data: {
+                            _token: '{{ csrf_token() }}',
+                            value: value
+                        },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            window.location.reload();
+                        } 
                     },
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                        backdrop: 'swal2-noanimation'
-                    },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        applyQuickAction();
-                    }
                 });
-
-            } else {
-                applyQuickAction();
             }
-        });
-
-        $('body').on('click', '.change-status', function() {
-            var id = $(this).data('estimate-id');
-            Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.estimateCancelText')",
-                icon: 'warning',
-                showCancelButton: true,
-                focusConfirm: false,
-                confirmButtonText: "@lang('messages.confirmCancel')",
-                cancelButtonText: "@lang('app.cancel')",
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-secondary'
-                },
-                showClass: {
-                    popup: 'swal2-noanimation',
-                    backdrop: 'swal2-noanimation'
-                },
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('estimates.change_status', ':id') }}";
-                    url = url.replace(':id', id);
-
-                    var token = "{{ csrf_token() }}";
-
-                    $.easyAjax({
-                        type: 'GET',
-                        url: url,
-                        container: '#invoices-table',
-                        blockUI: true,
-                        success: function(response) {
-                            if (response.status == "success") {
-                                window.LaravelDataTables["invoices-table"].draw(false);
-                            }
-                        }
-                    });
-                }
-            });
         });
 
         $('body').on('click', '.delete-table-row', function() {
@@ -290,7 +208,7 @@ $addEstimatePermission = user()->permission('add_estimates');
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('estimates.destroy', ':id') }}";
+                    var url = "{{ route('vendor-estimates.destroy', ':id') }}";
                     url = url.replace(':id', id);
 
                     var token = "{{ csrf_token() }}";
@@ -313,52 +231,6 @@ $addEstimatePermission = user()->permission('add_estimates');
             });
         });
 
-        const applyQuickAction = () => {
-            var rowdIds = $("#invoices-table input:checkbox:checked").map(function() {
-                return $(this).val();
-            }).get();
-
-            var url = "{{ route('invoices.apply_quick_action') }}?row_ids=" + rowdIds;
-
-            $.easyAjax({
-                url: url,
-                container: '#quick-action-form',
-                type: "POST",
-                disableButton: true,
-                buttonSelector: "#quick-action-apply",
-                data: $('#quick-action-form').serialize(),
-                blockUI: true,
-                success: function(response) {
-                    if (response.status == 'success') {
-                        showTable();
-                        resetActionButtons();
-                    }
-                }
-            })
-        };
-
-        $('body').on('click', '.sendButton', function() {
-            var id = $(this).data('estimate-id');
-            var url = "{{ route('estimates.send_estimate', ':id') }}";
-            url = url.replace(':id', id);
-
-            var token = "{{ csrf_token() }}";
-
-            $.easyAjax({
-                type: 'POST',
-                url: url,
-                container: '#invoices-table',
-                blockUI: true,
-                data: {
-                    '_token': token
-                },
-                success: function(response) {
-                    if (response.status == "success") {
-                        window.LaravelDataTables["invoices-table"].draw(false);
-                    }
-                }
-            });
-        });
 
     </script>
 @endpush

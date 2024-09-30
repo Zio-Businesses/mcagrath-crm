@@ -300,9 +300,13 @@ class VendorController extends AccountBaseController
     public function vendorList($id)
     {
         if ($id != 0) {
-            $vendor = ProjectVendor::where('project_id', $id)->where('link_status', 'accepted')->get();
+            $vendor =ProjectVendor::where('project_id', $id)
+            ->where('link_status', 'accepted')
+            ->select('vendor_id','vendor_name') // replace 'column_name' with the actual column you want distinct values from
+            ->distinct()
+            ->get();
             $options = BaseModel::optionsvendor($vendor, null, 'vendor_name');
-            \Log::info($options);
+            // \Log::info($options);
         }
         else {
             $options = '<option value="">--</option>';

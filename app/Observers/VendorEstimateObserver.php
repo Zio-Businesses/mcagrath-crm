@@ -77,12 +77,6 @@ class VendorEstimateObserver
                 $unitId = request()->unit_id;
                 $product = request()->product_id;
                 $amount = request()->amount;
-                // $tax = request()->taxes;
-                // $invoice_item_image = request()->invoice_item_image;
-                // $invoice_item_image_delete = request()->invoice_item_image_delete;
-                // $invoice_item_image_url = request()->invoice_item_image_url;
-                // $invoiceOldImage = request()->image_id;
-                // $invoiceTemplateImage = request()->templateImage_id;
 
                 foreach (request()->item_name as $key => $item) :
                     if (!is_null($item)) {
@@ -100,40 +94,6 @@ class VendorEstimateObserver
                                 
                             ]
                         );
-
-
-                        /* Invoice file save here */
-
-                        // if ((isset($invoice_item_image[$key]) && $invoice_item_image[$key] != 'yes') || isset($invoice_item_image_url[$key])) {
-                        //     EstimateItemImage::create(
-                        //         [
-                        //             'estimate_item_id' => $estimateItem->id,
-                        //             'filename' => isset($invoice_item_image[$key]) ? $invoice_item_image[$key]->getClientOriginalName() : null,
-                        //             'hashname' => isset($invoice_item_image[$key]) ? Files::uploadLocalOrS3($invoice_item_image[$key], EstimateItemImage::FILE_PATH . '/' . $estimateItem->id . '/') : null,
-                        //             'size' => isset($invoice_item_image[$key]) ? $invoice_item_image[$key]->getSize() : null,
-                        //             'external_link' => isset($invoice_item_image[$key]) ? null : ($invoice_item_image_url[$key] ?? null),
-                        //         ]
-                        //     );
-
-                        // }
-
-                        // $image = true;
-
-                        // if (isset($invoice_item_image_delete[$key])) {
-                        //     $image = false;
-                        // }
-
-                        // if ($image && (isset(request()->image_id[$key]) && $invoiceOldImage[$key] != '')) {
-                        //     $estimateOldImg = EstimateItemImage::with('item')->where('id', request()->image_id[$key])->first();
-
-                        //     $this->duplicateImageStore($estimateOldImg, $estimateItem);
-                        // }
-
-                        // if ($image && (isset(request()->templateImage_id[$key]) && $invoiceTemplateImage[$key] != '')) {
-                        //     $estimateTemplateImg = EstimateTemplateItemImage::where('id', request()->templateImage_id[$key])->first();
-
-                        //     $this->duplicateTemplateImageStore($estimateTemplateImg, $estimateItem);
-                        // }
 
                     }
 

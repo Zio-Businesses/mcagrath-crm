@@ -354,6 +354,7 @@ class EstimateController extends AccountBaseController
         $estimate->client_id = $request->client_id;
         $estimate->valid_till = companyToYmd($request->valid_till);
         $estimate->sub_total = round($request->sub_total, 2);
+        $estimate->project_id=$request->project_id;
         $estimate->total = round($request->total, 2);
         $estimate->discount = round($request->discount_value, 2);
         $estimate->discount_type = $request->discount_type;
@@ -379,7 +380,7 @@ class EstimateController extends AccountBaseController
             // Step2&3 - Find old invoices items, update it and check if images are newer or older
             foreach ($items as $key => $item) {
                 $invoice_item_id = isset($item_ids[$key]) ? $item_ids[$key] : 0;
-
+                
                 try {
                     $estimateItem = EstimateItem::findOrFail($invoice_item_id);
                 }

@@ -12,7 +12,7 @@ $addProductPermission = user()->permission('add_product');
 <div class="bg-white rounded b-shadow-4 create-inv">
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
-        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('app.estimateDetails')</h4>
+        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('Client Estimate Details')</h4>
     </div>
     <!-- HEADING END -->
     <hr class="m-0 border-top-grey">
@@ -658,7 +658,6 @@ $addProductPermission = user()->permission('add_product');
             item +=
                 `<td width="10%" class="border-0" align="right">@lang("modules.invoices.qty")</td>
                 <td width="10%" class="border-0" align="right">@lang("modules.invoices.unitPrice")</td>
-                <td width="13%" class="border-0" align="right">@lang("modules.invoices.tax")</td>
                 <td width="17%" class="border-0 bblr-mbl" align="right">@lang("modules.invoices.amount")</td>
                 </tr>` +
                 '<tr>' +
@@ -688,18 +687,7 @@ $addProductPermission = user()->permission('add_product');
                 '<td class="border-bottom-0">' +
                 '<input type="number" min="1" class="f-14 border-0 w-100 text-right cost_per_item form-control" placeholder="0.00" value="0" name="cost_per_item[]">' +
                 '</td>' +
-                '<td class="border-bottom-0">' +
-                '<div class="select-others height-35 rounded border-0">' +
-                '<select id="multiselect' + i + '" name="taxes[' + i +
-                '][]" multiple="multiple" class="select-picker type customSequence" data-size="3">'
-            @foreach ($taxes as $tax)
-                +'<option data-rate="{{ $tax->rate_percent }}" data-tax-text="{{ $tax->tax_name .':'. $tax->rate_percent }}%" value="{{ $tax->id }}">'
-                    +'{{ $tax->tax_name }}:{{ $tax->rate_percent }}%</option>'
-            @endforeach
-                +
-                '</select>' +
-                '</div>' +
-                '</td>' +
+                
                 '<td rowspan="2" align="right" valign="top" class="bg-amt-grey btrr-bbrr">' +
                 '<span class="amount-html">0.00</span>' +
                 '<input type="hidden" class="amount" name="amount[]" value="0">' +
@@ -709,9 +697,7 @@ $addProductPermission = user()->permission('add_product');
                 '<td colspan="{{ $invoiceSetting->hsn_sac_code_show ? 4 : 3 }}" class="dash-border-top bblr">' +
                 '<textarea class="f-14 border-0 w-100 desktop-description form-control" name="item_summary[]" placeholder="@lang("placeholders.invoices.description")"></textarea>' +
                 '</td>' +
-                '<td td class="border-left-0">' +
-                '<input type="file" class="dropify" id="dropify'+i+'" name="invoice_item_image[]" data-allowed-file-extensions="png jpg jpeg bmp" data-messages-default="test" data-height="70""/><input type="hidden" name="invoice_item_image_url[]">' +
-                '</td>' +
+                
                 '</tr>' +
                 '</tbody>' +
                 '</table>' +

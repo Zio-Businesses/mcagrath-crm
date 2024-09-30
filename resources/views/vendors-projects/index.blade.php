@@ -14,15 +14,15 @@
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(7),
-    #vendors-projects-table td:nth-child(7) {
+    #vendors-projects-table th:nth-child(8),
+    #vendors-projects-table td:nth-child(8) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;
     }
 
-    #vendors-projects-table th:nth-child(6),
-    #vendors-projects-table td:nth-child(6) {
+    #vendors-projects-table th:nth-child(7),
+    #vendors-projects-table td:nth-child(7) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;

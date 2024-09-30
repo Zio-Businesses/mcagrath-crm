@@ -29,4 +29,24 @@ class vendor_estimates extends BaseModel
         $invoiceSettings = (company()) ? company()->invoiceSetting : $this->company->invoiceSetting;
         return \App\Helper\NumberFormat::estimate($this->estimate_number, $invoiceSettings);
     }
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'project_id');
+    }
+    public function vendors(): BelongsTo
+    {
+        return $this->belongsTo(VendorContract::class, 'vendor_id');
+    }
+    public function items(): HasMany
+    {
+        return $this->hasMany(vendor_estimates_items::class, 'vendor_estimate_id');
+    }
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'currency_id');
+    }
+    public function files(): HasMany
+    {
+        return $this->hasMany(VendorEstimateFiles::class, 'vendor_estimates_id')->orderByDesc('id');
+    }
 }

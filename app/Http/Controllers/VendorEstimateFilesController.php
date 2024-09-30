@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Helper\Files;
 use App\Helper\Reply;
 use App\Traits\IconTrait;
-use Illuminate\Http\Request;
-use App\Models\ClientEstimatesFiles;
+use App\Models\VendorEstimateFiles;
 
-class ClientEstimatesFilesController extends AccountBaseController
+class VendorEstimateFilesController extends AccountBaseController
 {
     use IconTrait;
 
@@ -19,9 +20,6 @@ class ClientEstimatesFilesController extends AccountBaseController
         $this->pageTitle = 'app.menu.invoice';
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -29,10 +27,10 @@ class ClientEstimatesFilesController extends AccountBaseController
             $defaultImage = null;
 
             foreach ($request->file as $fileData) {
-                $file = new ClientEstimatesFiles();
-                $file->estimates_id = $request->estimates_id;
+                $file = new VendorEstimateFiles();
+                $file->vendor_estimates_id = $request->estimates_id;
 
-                $filename = Files::uploadLocalOrS3($fileData, ClientEstimatesFiles::FILE_PATH);
+                $filename = Files::uploadLocalOrS3($fileData, VendorEstimateFiles::FILE_PATH);
 
                 $file->filename = $fileData->getClientOriginalName();
                 $file->hashname = $filename;
@@ -50,15 +48,16 @@ class ClientEstimatesFilesController extends AccountBaseController
      */
     public function destroy($id)
     {
-        $file = ClientEstimatesFiles::findOrFail($id);
+        
+        $file = VendorEstimateFiles::findOrFail($id);
         $this->deletePermission = user()->permission('delete_invoices');
         abort_403(!($this->deletePermission == 'all' || ($this->deletePermission == 'added' && $file->added_by == user()->id)));
 
-        Files::deleteFile($file->hashname, 'client-estimates-files/' . $file->estimates_id);
+        Files::deleteFile($file->hashname, 'vendor-estimate-files/' . $file->vendor_estimates_id);
 
-        ClientEstimatesFiles::destroy($id);
+        VendorEstimateFiles::destroy($id);
 
-        $this->files = ClientEstimatesFiles::where('estimates_id', $file->estimates_id)->orderByDesc('id')->get();
+        $this->files = VendorEstimateFiles::where('vendor_estimates_id', $file->vendor_estimates_id)->orderByDesc('id')->get();
         // $view = view('estimates.ajax.show', $this->data)->render();
 
         return Reply::success(__('messages.deleteSuccess'));
@@ -66,12 +65,11 @@ class ClientEstimatesFilesController extends AccountBaseController
 
     public function download($id)
     {
-        $file = ClientEstimatesFiles::whereRaw('md5(id) = ?', $id)->firstOrFail();
+        $file = VendorEstimateFiles::whereRaw('md5(id) = ?', $id)->firstOrFail();
 
         $this->viewPermission = user()->permission('view_invoices');
         abort_403(!($this->viewPermission == 'all' || ($this->viewPermission == 'added' && $file->added_by == user()->id)));
 
-        return download_local_s3($file, 'client-estimates-files/' . $file->hashname);
+        return download_local_s3($file, 'vendor-estimate-files/' . $file->hashname);
     }
-
 }

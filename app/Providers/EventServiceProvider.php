@@ -208,6 +208,7 @@ use App\Models\Holiday;
 use App\Models\Invoice;
 use App\Models\InvoiceFiles;
 use App\Models\ClientEstimatesFiles;
+use App\Models\VendorEstimateFiles;
 use App\Models\InvoiceSetting;
 use App\Models\Issue;
 use App\Models\KnowledgeBase;
@@ -420,6 +421,7 @@ use App\Observers\TaskCommentObserver;
 use App\Observers\TaskFileObserver;
 use App\Observers\InvoiceFileObserver;
 use App\Observers\ClientEstimatesFilesObserver;
+use App\Observers\VendorEstimatesFilesObserver;
 use App\Observers\VendorEstimateObserver;
 use App\Observers\LeadPipelineObserver;
 use App\Observers\LeadStageObserver;
@@ -612,6 +614,7 @@ class EventServiceProvider extends ServiceProvider
         TaskFile::class => [TaskFileObserver::class],
         InvoiceFiles::class => [InvoiceFileObserver::class],
         ClientEstimatesFiles::class=>[ClientEstimatesFilesObserver::class],
+        VendorEstimateFiles::class=>[VendorEstimatesFilesObserver::class],
         vendor_estimates::class=>[VendorEstimateObserver::class],
         TaskLabelList::class => [TaskLabelListObserver::class],
         TaskNote::class => [TaskNoteObserver::class],

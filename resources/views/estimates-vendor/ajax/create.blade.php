@@ -371,7 +371,7 @@
         //Dropzone class
         invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
             dictDefaultMessage: "{{ __('app.dragDrop') }}",
-            url: "{{ route('client-estimates-files.store') }}",
+            url: "{{ route('vendor-estimates-files.store') }}",
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
@@ -397,7 +397,7 @@
             $.easyBlockUI();
         });
         invoiceDropzone.on('queuecomplete', function () {
-            window.location.href = '{{ route("estimates.index") }}';
+            window.location.href = '{{ route("vendor-estimates.index") }}';
         });
         invoiceDropzone.on('removedfile', function () {
             var grp = $('div#file-upload-dropzone').closest(".form-group");
@@ -446,68 +446,6 @@
             file.previewTemplate.appendChild(div);
         });
 
-        $('.toggle-product-category').click(function() {
-            $('.product-category-filter').toggleClass('d-none');
-        });
-
-        $('#product_category_id').on('change', function(){
-            var categoryId = $(this).val();
-            var url = "{{route('invoices.product_category', ':id')}}",
-            url = (categoryId) ? url.replace(':id', categoryId) : url.replace(':id', null);;
-            $.easyAjax({
-                url : url,
-                type : "GET",
-                container: '#saveInvoiceForm',
-                blockUI: true,
-                success: function (response) {
-                    if (response.status == 'success') {
-                        var options = [];
-                        var rData = [];
-                        rData = response.data;
-                        $.each(rData, function(index, value) {
-                            var selectData = '';
-                            selectData = '<option value="' + value.id + '">' + value.name +
-                                '</option>';
-                            options.push(selectData);
-                        });
-                        $('#add-products').html(
-                            '<option value="" class="form-control" >{{  __('app.menu.selectProduct') }}</option>' +
-                            options);
-                        $('#add-products').selectpicker('refresh');
-                    }
-                }
-            });
-        });
-
-        $('.itemImage').on('change', function(e) {
-            console.log($('#' + e.target.id).data('item-id'));
-            $('#imageId_' + $('#' + e.target.id).data('item-id')).val('');
-
-        })
-
-        $(".itemOldImage").next(".dropify-clear").trigger("click");
-        var file = $('#sortable .dropify').dropify({
-            messages: dropifyMessages
-        });
-
-
-        file.on("dropify.afterClear", function(event, element) {
-            var elementID = element.element.id;
-            var elementName = element.element.name;
-            var elementIndex = element.element.dataset.index;
-            if (elementName.indexOf("[]") > -1) {
-                elementName = elementName.replace("[]", "");
-            }
-            if ($("#" + elementID + "_delete").length == 0) {
-                $("#" + elementID).after(
-                    '<input type="hidden" name="' +
-                    elementName +
-                    '_delete[' + elementIndex + ']" id="' +
-                    elementID +
-                    '_delete" value="yes">'
-                );
-            }
-        });
 
         const hsn_status = "{{ $invoiceSetting->hsn_sac_code_show }}";
         const defaultClient = "{{ request('default_client') }}";
@@ -527,51 +465,6 @@
             ...datepickerConfig
         });
 
-        const resetAddProductButton = () => {
-            $("#add-products").val('').selectpicker("refresh");
-        };
-
-        $('#add-products').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
-            e.stopImmediatePropagation()
-            var id = $(this).val();
-            if (previousValue != id && id != '') {
-                addProduct(id);
-                resetAddProductButton();
-            }
-        });
-
-        function addProduct(id) {
-            var currencyId = $('#currency_id').val();
-
-            $.easyAjax({
-                url: "{{ route('estimates.add_item') }}",
-                type: "GET",
-                data: {
-                    id: id,
-                    currencyId: currencyId
-                },
-                blockUI: true,
-                success: function(response) {
-                    if ($('input[name="item_name[]"]').val() == '') {
-                        $("#sortable .item-row").remove();
-                    }
-                    $(response.view).hide().appendTo("#sortable").fadeIn(500);
-                    calculateTotal();
-
-                    var noOfRows = $(document).find('#sortable .item-row').length;
-                    var i = $(document).find('.item_name').length - 1;
-                    var itemRow = $(document).find('#sortable .item-row:nth-child(' + noOfRows +
-                        ') select.type');
-                    itemRow.attr('id', 'multiselect' + i);
-                    itemRow.attr('name', 'taxes[' + i + '][]');
-                    $(document).find('#multiselect' + i).selectpicker();
-
-                    $(document).find('#dropify' + i).dropify({
-                        messages: dropifyMessages
-                    });
-                }
-            });
-        }
 
         $(document).on('click', '#add-item', function() {
 
@@ -699,17 +592,18 @@
                 file: true,
                 data: $('#saveInvoiceForm').serialize(),
                 success: function(response) {
-                    // if (response.status == 'success') {
-                    //     if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
-                    //         estimateId = response.estimateId;
-                    //         $('#estimateId').val(response.estimateId);
-                    //         (response.add_more == true) ? localStorage.setItem("redirect_estimate", window.location.href) : localStorage.setItem("redirect_estimate", response.redirectUrl);
-                    //         invoiceDropzone.processQueue();
-                    //     }
-                    //     else {
-                    //         window.location.href = response.redirectUrl;
-                    //     }
-                    // }
+                    if (response.status == 'success') {
+                        if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
+                            estimateId = response.estimateId;
+                            $('#estimateId').val(response.estimateId);
+                            console.log(estimateId);
+                            (response.add_more == true) ? localStorage.setItem("redirect_estimate", window.location.href) : localStorage.setItem("redirect_estimate", response.redirectUrl);
+                            invoiceDropzone.processQueue();
+                        }
+                        else {
+                            window.location.href = response.redirectUrl;
+                        }
+                    }
                 }
             })
         });

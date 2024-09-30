@@ -136,7 +136,7 @@ use App\Http\Controllers\VendorModuleNotesController;
 use App\Http\Controllers\VendorEstimateController;
 use App\Http\Controllers\ContractorTypeController;
 use App\Http\Controllers\VendorProjectController;
-
+use App\Http\Controllers\VendorEstimateFilesController;
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
 
@@ -521,8 +521,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::post('import/process', [LeadContactController::class, 'importProcess'])->name('lead-contact.import.process');
     });
 
-    // Vendor Estimates
-    Route::resource('vendor-estimates', VendorEstimateController::class);
+    
 
     
     // deals route
@@ -874,8 +873,15 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
     // Vendor Estimates
     Route::resource('vendor-estimates', VendorEstimateController::class);
-    Route::get('vendorestimates',[VendorEstimateController::class,'index'])->name('vendorestimates.index');
+    Route::get('vendor-estimates/download/{id}', [VendorEstimateController::class, 'download'])->name('vendor-estimates.download');
+    Route::post('vendor-estimates/cbid/{id}',[VendorEstimateController::class,'changecbid'])->name('vendors.changecbid');
 
     //Project - Vendors
     Route::resource('vendorproject', VendorProjectController::class);
+
+    //Vendor Estimate Files
+     /*CLIENT ESTIMATE FILES*/
+     Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');
+     Route::resource('vendor-estimates-files', VendorEstimateFilesController::class);
+ 
 });
