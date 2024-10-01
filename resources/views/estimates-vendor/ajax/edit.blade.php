@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
 
 <!-- CREATE INVOICE START -->
+
 <div class="bg-white rounded b-shadow-4 create-inv">
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
@@ -17,6 +18,7 @@
         @method('PUT')
         <!-- INVOICE NUMBER, DATE, DUE DATE, FREQUENCY START -->
         <div class="row px-lg-4 px-md-4 px-3 py-3">
+            <input type="hidden" name="projectID" id="projectID" value="{{$projectID}}">
             <!-- INVOICE NUMBER START -->
             <div class="col-md-6 col-lg-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
@@ -360,7 +362,8 @@
         
         let defaultImage = '';
         let lastIndex = 0;
-
+        var projectID=$('#projectID').val();
+        
         Dropzone.autoDiscover = false;
         //Dropzone class
         invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
@@ -391,7 +394,8 @@
             $.easyBlockUI();
         });
         invoiceDropzone.on('queuecomplete', function () {
-            window.location.href = '{{ route("vendor-estimates.index") }}';
+            
+            window.location.href = projectID ? '{{ route("projects.show", ["project" => ":projectID", "tab" => "vendor_estimates"]) }}'.replace(':projectID', projectID):'{{ route("vendor-estimates.index") }}';
         });
         invoiceDropzone.on('removedfile', function () {
             var grp = $('div#file-upload-dropzone').closest(".form-group");

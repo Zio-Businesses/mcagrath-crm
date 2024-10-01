@@ -40,7 +40,11 @@ class VendorEstimatesDataTable extends BaseDataTable
 
                 $action .= '<a href="' . route('vendor-estimates.show', [$row->id]) . '" class="dropdown-item"><i class="fa fa-eye mr-2"></i>' . __('app.view') . '</a>';
 
-                $action .= '<a class="dropdown-item" href="' . route('vendor-estimates.edit', [$row->id]) . '">
+                $action .= '<a class="dropdown-item ';
+
+                $action .= request()->projectID ? 'openRightModal' : '';
+
+                $action .= '" href="' . route('vendor-estimates.edit', [$row->id]) . '?projectID=' . request()->projectID . ' ">
                                 <i class="fa fa-edit mr-2"></i>
                                 ' . trans('app.edit') . '
                             </a>';
@@ -88,12 +92,16 @@ class VendorEstimatesDataTable extends BaseDataTable
             </div>';
         
         });
+        $datatables->addColumn('estimate_number', function ($row) {
+            return '<a href="' . route('vendor-estimates.show', $row->id) . '" class="text-darkest-grey">' . $row->estimate_number . '</a>';
+        });
+        
         
         $datatables->addIndexColumn();
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
        
-        $datatables->rawColumns(array_merge(['project','action','cbid']));
+        $datatables->rawColumns(array_merge(['project','action','cbid','estimate_number']));
         return $datatables;
     }
 
@@ -104,17 +112,24 @@ class VendorEstimatesDataTable extends BaseDataTable
     public function query(vendor_estimates $model)
     {
         $request = $this->request();
-        $users = vendor_estimates::query();
+        $users = vendor_estimates::query()
+        ->leftJoin('projects', 'projects.id', '=', 'vendor_estimates.project_id')
+        ->leftJoin('vendor_contracts', 'vendor_contracts.id', '=', 'vendor_estimates.vendor_id')
+        ->with(['project','vendors'])
+        ->select('vendor_estimates.*', 'projects.project_short_code','vendor_contracts.vendor_name','vendor_contracts.vendor_email','vendor_contracts.cell');
 
-        // if ($request->searchText != '') {
-        //     $users = $users->where(function ($query) {
-        //         $query->where('projects.project_short_code', 'like', '%' . request('searchText') . '%')
-        //         ->orWhere('vendor_name', 'like', '%' . request('searchText') . '%')
-        //         ->orWhere('vendor_email_address', 'like', '%' . request('searchText') . '%')
-        //         ->orWhere('property_details.property_address', 'like', '%' . request('searchText') . '%')
-        //         ->orWhere('vendor_phone', 'like', '%' . request('searchText') . '%');
-        //     });
-        // }
+        if ($request->searchText != '') {
+            $users = $users->where(function ($query) {
+                $query->where('projects.project_short_code', 'like', '%' . request('searchText') . '%')
+                ->orWhere('vendor_contracts.vendor_name', 'like', '%' . request('searchText') . '%')
+                ->orWhere('vendor_contracts.vendor_email', 'like', '%' . request('searchText') . '%')
+                ->orWhere('vendor_contracts.cell', 'like', '%' . request('searchText') . '%')
+                ->orWhere('estimate_number', 'like', '%' . request('searchText') . '%');
+            });
+        }
+        if ($request->projectID != 'all' && !is_null($request->projectID)) {
+            $users = $users->where('vendor_estimates.project_id', '=', $request->projectID);
+        }
 
         // if (!is_null($request->employee_id) && $request->employee_id != 'all') {
         //     $users->where(

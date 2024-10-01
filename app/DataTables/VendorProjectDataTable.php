@@ -61,6 +61,65 @@ class VendorProjectDataTable extends BaseDataTable
                 return null;
             }
         });
+        $datatables->addColumn('members', function ($row) {
+            if ($row->public) {
+                return '--';
+            }
+
+            $members = '<div class="position-relative">';
+            if (count($row->project?->members) > 0) {
+                foreach ($row->project?->members as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->user->name . '" src="' . $member->user->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->user->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->project?->est_users) > 0) {
+                foreach ($row->project?->est_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->project?->acct_users) > 0) {
+                foreach ($row->project?->acct_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->project?->emanager_users) > 0) {
+                foreach ($row->project?->emanager_users as $key => $member) {
+                    if ($key < 4) {
+                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+
+                        $position = $key > 0 ? 'position-absolute' : '';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                    }
+
+                }
+            }
+            if (count($row->project?->members) > 4) {
+                $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->id) . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
+            }
+
+            $members .= '</div>';
+
+            return $members;
+        }
+        );
 
         // $datatables->editColumn('sow_name', function ($row) {
         //     if($row->sow_id){
@@ -83,7 +142,7 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
        
-        $datatables->rawColumns(array_merge(['project']));
+        $datatables->rawColumns(array_merge(['project','members']));
         return $datatables;
     }
 
@@ -170,6 +229,7 @@ class VendorProjectDataTable extends BaseDataTable
             
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
+            __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
             __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
             __('Link Status') => ['data' => 'link_status', 'name' => 'link_status', 'title' => __('Link Status')], 
@@ -177,12 +237,10 @@ class VendorProjectDataTable extends BaseDataTable
             __('Project Status') => ['data' => 'project_status', 'name' => 'project_status', 'title' => __('Project Status')],
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
             __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],
-
+           
             __('Project Category') => ['data' => 'project_type', 'name' => 'project_type', 'title' => __('Project Category')],
-
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
-         
             __('Inspection Date') => ['data' => 'inspection_date', 'name' => 'inspection_date', 'title' => __('Inspection Date')],
             __('Inspection Time') => ['data' => 'inspection_time', 'name' => 'inspection_time', 'title' => __('Inspection Time')],
             __('Re Inspection Date') => ['data' => 're_inspection_date', 'name' => 're_inspection_date', 'title' => __('Re Inspection Date')],

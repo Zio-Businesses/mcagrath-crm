@@ -355,7 +355,7 @@
                 </ul>
             </div>
 
-            <x-forms.button-cancel :link="route('estimates.index')" class="border-0 ml-3">@lang('app.cancel')
+            <x-forms.button-cancel :link="route('vendor-estimates.index')" class="border-0 ml-3">@lang('app.cancel')
             </x-forms.button-cancel>
 
         </div>

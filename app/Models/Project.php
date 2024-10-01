@@ -259,6 +259,11 @@ class Project extends BaseModel
         return $this->hasMany(ProjectVendor::class, 'project_id')->orderByDesc('id');
     }
 
+    public function vendor_estimates(): HasMany
+    {
+        return $this->hasMany(vendor_estimates::class, 'project_id')->orderByDesc('id');
+    }
+
     public function incompleteMilestones(): HasMany
     {
         return $this->hasMany(ProjectMilestone::class, 'project_id')->whereNot('status', 'complete')->orderByDesc('id');

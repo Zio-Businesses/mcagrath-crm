@@ -7,8 +7,15 @@
 @section('filter-section')
 <style>
 
-#vendors-projects-table th:nth-child(3),
-    #vendors-projects-table td:nth-child(3) {
+#vendors-projects-table th:nth-child(4),
+    #vendors-projects-table td:nth-child(4) {
+        width: 300px !important; /* Force the width */
+        max-width: 300px !important;
+        min-width: 300px !important;
+    }
+
+    #vendors-projects-table th:nth-child(9),
+    #vendors-projects-table td:nth-child(9) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;
@@ -16,13 +23,6 @@
 
     #vendors-projects-table th:nth-child(8),
     #vendors-projects-table td:nth-child(8) {
-        width: 300px !important; /* Force the width */
-        max-width: 300px !important;
-        min-width: 300px !important;
-    }
-
-    #vendors-projects-table th:nth-child(7),
-    #vendors-projects-table td:nth-child(7) {
         width: 300px !important; /* Force the width */
         max-width: 300px !important;
         min-width: 300px !important;

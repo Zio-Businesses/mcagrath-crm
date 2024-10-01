@@ -8,7 +8,7 @@
 <div class="bg-white rounded b-shadow-4 create-inv">
     <!-- HEADING START -->
     <div class="px-lg-4 px-md-4 px-3 py-3">
-        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('app.estimateDetails')</h4>
+        <h4 class="mb-0 f-21 font-weight-normal text-capitalize">@lang('Vendor Estimate Details')</h4>
     </div>
     <!-- HEADING END -->
     <hr class="m-0 border-top-grey">
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <!-- @if (isset($project) && !is_null($project))
+                @if (isset($project) && !is_null($project))
                     <div class="form-group mb-4">
                         <x-forms.label fieldId="due_date" :fieldLabel="__('app.project')">
                         </x-forms.label>
@@ -57,21 +57,21 @@
                                 class="form-control height-35 f-15 readonly-background" readonly>
                         </div>
                     </div>
-                    @else -->
-                    <div class="form-group c-inv-select mb-4">
-                        <x-forms.label fieldId="project_id" :fieldLabel="__('app.project')">
-                        </x-forms.label>
-                        <div class="select-others height-35 rounded">
-                            <select class="form-control select-picker" data-live-search="true" data-size="8"
-                                name="project_id" id="project_id">
-                                <option value="">--</option>
-                                @foreach ($projects as $item)
-                                    <option value="{{ $item->id }}">{{ $item->project_short_code }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                @else
+                <div class="form-group c-inv-select mb-4">
+                    <x-forms.label fieldId="project_id" :fieldLabel="__('app.project')">
+                    </x-forms.label>
+                    <div class="select-others height-35 rounded">
+                        <select class="form-control select-picker" data-live-search="true" data-size="8"
+                            name="project_id" id="project_id">
+                            <option value="">--</option>
+                            @foreach ($projects as $item)
+                                <option value="{{ $item->id }}">{{ $item->project_short_code }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                <!-- @endif -->
+                </div>
+                @endif
             </div>
             <div class="col-md-6 col-lg-4 d-none">
                 <div class="form-group c-inv-select mb-4">
@@ -106,12 +106,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 mt-2 py-4">
-                <x-forms.checkbox 
-                :fieldLabel="__('Considered For Bid')" 
-                fieldName="cbid" 
-                fieldId="cbid" />
-            </div>
+
             <!-- CLIENT END -->
 
             <!-- <div class="col-md-6 col-lg-4">
@@ -357,6 +352,7 @@
         <!-- CANCEL SAVE SEND END -->
 
     </x-form>
+    
     <!-- FORM END -->
 </div>
 <!-- CREATE INVOICE END -->
@@ -366,7 +362,7 @@
         
         let defaultImage = '';
         let lastIndex = 0;
-
+        
         Dropzone.autoDiscover = false;
         //Dropzone class
         invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
@@ -668,8 +664,14 @@
             var id = $(this).val();
             changeVendor(id);
     });
-    function changeVendor(id) {
 
+    var projectId = $('#project_id').val();
+    
+    if (projectId) {
+        changeVendor(projectId);
+    }
+
+    function changeVendor(id) {
         if (id == '') {
             id = 0;
         }
@@ -677,21 +679,19 @@
         var url = "{{ route('vendors.vendors_list', ':id') }}";
         url = url.replace(':id', id);
         var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
+        $.ajax({
             url: url,
-            container: '#saveInvoiceForm',
             type: "POST",
-            blockUI: true,
             data: {
-                _token: token
+                _token: token // Pass CSRF token
             },
             success: function(response) {
-                if (response.status == 'success') {
+                if (response.status === 'success') {
+                    // Update the HTML of #vendor_id with the response data
                     $('#vendor_id').html(response.data);
                     $('#vendor_id').selectpicker('refresh');
                 }
-            }
+            },
         });
     }
 

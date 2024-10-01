@@ -45,19 +45,13 @@ class VendorEstimateController extends AccountBaseController
 
         abort_403(!in_array($this->addPermission, ['all', 'added']));
 
-        // if (request('estimate') != '') {
-        //     $this->estimateId = request('estimate');
-        //     $this->type = 'estimate';
-        //     $this->estimate = Estimate::with('items', 'items.estimateItemImage', 'client', 'unit', 'client.projects' )->findOrFail($this->estimateId);
-        // }
-
         $this->pageTitle = __('modules.estimates.createEstimate');
         $this->currencies = Currency::all();
         $this->lastEstimate = vendor_estimates::lastEstimateNumber() + 1;
         $this->invoiceSetting = invoice_setting();
         $this->zero = '';
-        $this->projecttab = request('project_id') ? Project::findOrFail(request('project_id')) : null;
-        $this->projects=Project::all();
+        $this->project=request('project_id') ? Project::findOrFail(request('project_id')) : null;
+        $this->projects= Project::all();
         if (strlen($this->lastEstimate) < $this->invoiceSetting->estimate_digit) {
             $condition = $this->invoiceSetting->estimate_digit - strlen($this->lastEstimate);
 
@@ -66,10 +60,7 @@ class VendorEstimateController extends AccountBaseController
             }
         }
 
-        // $this->taxes = Tax::all();
-        // $this->products = Product::all();
-        // $this->categories = ProductCategory::all();
-        // $this->template = EstimateTemplate::all();
+
         $this->units = UnitType::all();
 
         $this->estimateTemplate = request('template') ? EstimateTemplate::findOrFail(request('template')) : null;
@@ -150,6 +141,7 @@ class VendorEstimateController extends AccountBaseController
 
     public function edit($id)
     {
+        $this->projectID=request()->input('projectID');
         $this->estimate = vendor_estimates::findOrFail($id);
 
         $this->editPermission = user()->permission('edit_estimates');
@@ -179,6 +171,7 @@ class VendorEstimateController extends AccountBaseController
     
     public function update(Request $request, $id)
     {
+        
         $items = $request->item_name;
         $itemsSummary = $request->item_summary;
         $hsn_sac_code = $request->hsn_sac_code;
@@ -281,9 +274,9 @@ class VendorEstimateController extends AccountBaseController
 
             }
         }
-
         
-        $redirectUrl = route('vendor-estimates.index');
+        
+        $redirectUrl = $request->projectID ? route('projects.show', ['project' => $request->projectID, 'tab' => 'vendor_estimates']) : route('vendor-estimates.index');
         
         return Reply::successWithData(__('messages.updateSuccess'), ['estimateId' => $estimate->id, 'redirectUrl' => $redirectUrl]);
     }

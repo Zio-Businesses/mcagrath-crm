@@ -25,7 +25,7 @@
         <!-- DATE END -->
 
         <!-- CLIENT START -->
-        <div class="select-box d-flex py-2 px-lg-2 px-md-2 px-0 border-right-grey border-right-grey-sm-0">
+        <!-- <div class="select-box d-flex py-2 px-lg-2 px-md-2 px-0 border-right-grey border-right-grey-sm-0">
             <p class="mb-0 pr-2 f-14 text-dark-grey d-flex align-items-center">@lang('app.status')</p>
             <div class="select-status">
                 <select class="form-control select-picker" id="filter-status">
@@ -36,7 +36,7 @@
                     <option value="draft">@lang('modules.estimates.draft')</option>
                 </select>
             </div>
-        </div>
+        </div> -->
         <!-- CLIENT END -->
 
         <!-- SEARCH BY TASK START -->
