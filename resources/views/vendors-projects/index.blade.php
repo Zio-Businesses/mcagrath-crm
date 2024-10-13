@@ -145,6 +145,23 @@
                     </div>
                 </div>
             </div>
+             <div class="more-filter-items">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Project Status')</label>
+                <div class="select-filter mb-4">
+                    <div class="select-others">
+                        <select class="form-control select-picker" name="project_status" id="project_status" data-container="body"
+                            data-size="5">
+                            <option selected value="--">--</option>
+                            @foreach ($projectStatus as $status)
+                                <option
+                                data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"
+                                value="{{$status->status_name}}">
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
         </x-filters.more-filter-box>
         
     </x-filters.filter-box-moded>
@@ -203,12 +220,14 @@
             data['link_id'] = linkID;
             var woStatus = $('#wo_status').val();
             data['wo_status'] = woStatus;
+            var projectStatus = $('#project_status').val();
+            data['project_status'] = projectStatus;
             
         });
 
        
       
-        $('#client_id, #employee_id, #vendor_id,#link_id,#wo_status').on('change keyup',
+        $('#client_id, #employee_id, #vendor_id,#link_id,#wo_status, #project_status').on('change keyup',
             function() {
                 if ($('#employee_id').val() != "all") {
                     $('#reset-filters').removeClass('d-none');
@@ -223,7 +242,12 @@
                     $('#reset-filters').removeClass('d-none');
                     showTable();
                 } else if ($('#wo_status').val() != "--") {
+                    
                     $('#reset-filters').removeClass('d-none');
+                    showTable();
+                }  else if ($('#project_status').val() != "--") {
+                    $('#reset-filters').removeClass('d-none');
+                    
                     showTable();
                 }  else {
                     $('#reset-filters').addClass('d-none');

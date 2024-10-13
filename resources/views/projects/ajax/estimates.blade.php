@@ -34,10 +34,10 @@ $addInvoicePermission = user()->permission('add_invoices');
                         <select class="form-control select-picker" name="status" id="status" data-live-search="true"
                             data-size="8">
                             <option value="all">@lang('app.all')</option>
-                            <option value="unpaid">@lang('app.unpaid')</option>
-                            <option value="paid">@lang('app.paid')</option>
-                            <option value="partial">@lang('app.partial')</option>
-                            <option value="canceled">@lang('app.canceled')</option>
+                            <option value="waiting">@lang('modules.estimates.waiting')</option>
+                            <option value="accepted">@lang('modules.estimates.accepted')</option>
+                            <option value="declined">@lang('modules.estimates.declined')</option>
+                            <option value="draft">@lang('modules.estimates.draft')</option>
                         </select>
                     </div>
                     <!-- STATUS END -->
@@ -83,7 +83,29 @@ $addInvoicePermission = user()->permission('add_invoices');
 </div>
 <!-- ROW END -->
 @include('sections.datatable_js')
+<script src="{{ asset('vendor/jquery/clipboard.min.js') }}"></script>
+<script>
+    var clipboard = new ClipboardJS('.btn-copy');
 
+    clipboard.on('success', function(e) {
+        Swal.fire({
+            icon: 'success',
+            text: '@lang("app.copied")',
+            toast: true,
+            position: 'top-end',
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            customClass: {
+                confirmButton: 'btn btn-primary',
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+        })
+    });
+</script>
 <script>
     $('#invoices-table').on('preXhr.dt', function(e, settings, data) {
 
@@ -135,7 +157,7 @@ $addInvoicePermission = user()->permission('add_invoices');
 
 
     $('body').on('click', '.delete-table-row', function() {
-        var id = $(this).data('invoice-id');
+        var id = $(this).data('estimate-id');
         Swal.fire({
             title: "@lang('messages.sweetAlertTitle')",
             text: "@lang('messages.recoverRecord')",
@@ -153,157 +175,57 @@ $addInvoicePermission = user()->permission('add_invoices');
                 backdrop: 'swal2-noanimation'
             },
             buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var url = "{{ route('invoices.destroy', ':id') }}";
-                url = url.replace(':id', id);
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('estimates.destroy', ':id') }}";
+                    url = url.replace(':id', id);
 
-                var token = "{{ csrf_token() }}";
+                    var token = "{{ csrf_token() }}";
 
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        '_token': token,
-                        '_method': 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.status == "success") {
-                            showTable();
+                    $.easyAjax({
+                        type: 'POST',
+                        url: url,
+                        blockUI: true,
+                        data: {
+                            '_token': token,
+                            '_method': 'DELETE'
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                showTable();
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
 
 
-    $('body').on('click', '.unpaidAndPartialPaidCreditNote', function() {
-        var id = $(this).data('invoice-id');
-
-        Swal.fire({
-            title: "@lang('messages.confirmation.createCreditNotes')",
-            text: "@lang('messages.creditText')",
-            icon: 'warning',
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: "@lang('app.yes')",
-            cancelButtonText: "@lang('app.cancel')",
-            customClass: {
-                confirmButton: 'btn btn-primary mr-3',
-                cancelButton: 'btn btn-secondary'
-            },
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var url = "{{ route('creditnotes.create') }}?invoice=:id";
-                url = url.replace(':id', id);
-
-                location.href = url;
-            }
-        });
-    });
 
     $('body').on('click', '.sendButton', function() {
-        var id = $(this).data('invoice-id');
-        var url = "{{ route('invoices.send_invoice', ':id') }}";
-        url = url.replace(':id', id);
+            var id = $(this).data('estimate-id');
+            var url = "{{ route('estimates.send_estimate', ':id') }}";
+            url = url.replace(':id', id);
 
-        var token = "{{ csrf_token() }}";
+            var token = "{{ csrf_token() }}";
 
-        $.easyAjax({
-            type: 'POST',
-            url: url,
-            container: '#invoices-table',
-            blockUI: true,
-            data: {
-                '_token': token
-            },
-            success: function(response) {
-                if (response.status == "success") {
-                    window.LaravelDataTables["invoices-table"].draw(false);
-                }
-            }
-        });
-    });
-
-    $('body').on('click', '.reminderButton', function() {
-        var id = $(this).data('invoice-id');
-        var url = "{{ route('invoices.payment_reminder', ':id') }}";
-        url = url.replace(':id', id);
-
-        var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
-            type: 'GET',
-            container: '#invoices-table',
-            blockUI: true,
-            url: url,
-            success: function(response) {
-                if (response.status == "success") {
-                    $.unblockUI();
-                    window.LaravelDataTables["invoices-table"].draw(false);
-                }
-            }
-        });
-    });
-
-    $('body').on('click', '.invoice-upload', function() {
-        var invoiceId = $(this).data('invoice-id');
-        const url = "{{ route('invoices.file_upload') }}?invoice_id=" + invoiceId;
-        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-        $.ajaxModal(MODAL_LG, url);
-    });
-
-    $('body').on('click', '#recurring-invoice', function() {
-        window.location.href = "{{ route('recurring-invoices.index') }} ";
-    });
-
-    $('body').on('click', '#timelog-invoice', function() {
-        window.location.href = "{{ route('invoices.create', ['type' => 'timelog']) }} ";
-    });
-
-    $('body').on('click', '.cancel-invoice', function() {
-        var id = $(this).data('invoice-id');
-        Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.invoiceText')",
-            icon: 'warning',
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: "@lang('app.yes')",
-            cancelButtonText: "@lang('app.cancel')",
-            customClass: {
-                confirmButton: 'btn btn-primary mr-3',
-                cancelButton: 'btn btn-secondary'
-            },
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-                var url = "{{ route('invoices.update_status', ':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-
-                $.easyAjax({
-                    type: 'GET',
-                    url: url,
-                    success: function(response) {
-                        if (response.status == "success") {
-                            showTable();
-                        }
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '#invoices-table',
+                blockUI: true,
+                data: {
+                    '_token': token
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.LaravelDataTables["invoices-table"].draw(false);
                     }
-                });
-            }
+                }
+            });
         });
-    });
+
+
+
+
 </script>

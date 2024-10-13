@@ -158,7 +158,7 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
         ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
         ->with(['client', 'project','vendors','project.members']) // Eager load client and project relationships for better performance
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id');
+        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status');
 
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
@@ -192,6 +192,10 @@ class VendorProjectDataTable extends BaseDataTable
 
         if (!is_null($request->wo_status) && $request->wo_status != '--') {
             $users->where('wo_status', $request->wo_status);
+        }
+        
+        if (!is_null($request->project_status) && $request->project_status != '--') {
+            $users->where('projects.status', $request->project_status);
         }
 
         return $users;
