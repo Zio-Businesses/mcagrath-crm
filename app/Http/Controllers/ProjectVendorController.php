@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorWorkOrder;
 use App\Http\Requests\Project\StoreProjectVendor;
 use Illuminate\Support\Facades\App;
+use App\Notifications\ProjectVendorRemoved;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -143,6 +144,9 @@ class ProjectVendorController extends AccountBaseController
     {
         $vpro = ProjectVendor::findOrFail($id);
         $vpro->link_status=$request->value;
+        if($request->value=='Removed'){
+            Notification::route('mail', $vpro->vendor_email_address)->notify(new ProjectVendorRemoved($vpro->id));
+        }
         $vpro->save();
         return Reply::success(__('Updated Successfully'));
     }

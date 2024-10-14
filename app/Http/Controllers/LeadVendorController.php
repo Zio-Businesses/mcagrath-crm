@@ -21,6 +21,7 @@ use App\Models\PurposeConsentUser;
 use App\Models\EmployeeDetails;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use App\DataTables\VendorTrackDataTable;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorContract;
@@ -68,35 +69,41 @@ class LeadVendorController extends AccountBaseController
         $email = $request->input('vendor_email');
         if($request[1]==1)
         {
-            $request->validate([
-                'vendor_email' => 'required',
-            ]);
-            $leadContact = new Vendor();
-            $leadContact->vendor_name = $request->vendor_name;
-            $leadContact->poc = $request->poc;
-            $leadContact->state = $request->state;
-            $leadContact->county = $request->county;
-            $leadContact->city = $request->city;
-            $leadContact->contractor_type = $request->contractor_type;
-            $leadContact->lead_source = $request->lead_source;
-            $leadContact->website=$request->website;
-            $leadContact->nxt_date=$request->nxt_date == null ? null : companyToYmd($request->nxt_date);
-            $leadContact->vendor_email = $request->vendor_email;
-            $leadContact->vendor_number = $request->vendor_mobile;
-            $leadContact->contract_start=Carbon::today()->format('Y-m-d');
-            $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
-            $leadContact->v_status='Proposal Link Sent';
-            $leadContact->created_by=user()->name;
-            $leadContact->save();
-            $vnotes = new VendorNotes();
-            $vnotes->vendor_id=$leadContact->id;
-            $vnotes->notes_title=$request->notes_title;
-            $vnotes->notes_content=$request->notes;
-            $vnotes->created_by=user()->name;
-            $vnotes->save();
-            Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->id));
-            $redirectUrl = route('lead-contact.index');
-            return Reply::successWithData(__('Saved And Mail Send'), ['redirectUrl' => $redirectUrl]);
+            try{
+                $request->validate([
+                    'vendor_email' => 'required',
+                ]);
+                $leadContact = new Vendor();
+                $leadContact->vendor_name = $request->vendor_name;
+                $leadContact->poc = $request->poc;
+                $leadContact->state = $request->state;
+                $leadContact->county = $request->county;
+                $leadContact->city = $request->city;
+                $leadContact->contractor_type = $request->contractor_type;
+                $leadContact->lead_source = $request->lead_source;
+                $leadContact->website=$request->website;
+                $leadContact->nxt_date=$request->nxt_date == null ? null : companyToYmd($request->nxt_date);
+                $leadContact->vendor_email = $request->vendor_email;
+                $leadContact->vendor_number = $request->vendor_mobile;
+                $leadContact->contract_start=Carbon::today()->format('Y-m-d');
+                $leadContact->contract_end=Carbon::today()->addYear()->format('Y-m-d');
+                $leadContact->v_status='Proposal Link Sent';
+                $leadContact->created_by=user()->name;
+                $leadContact->save();
+                $vnotes = new VendorNotes();
+                $vnotes->vendor_id=$leadContact->id;
+                $vnotes->notes_title=$request->notes_title;
+                $vnotes->notes_content=$request->notes;
+                $vnotes->created_by=user()->name;
+                $vnotes->save();
+                Notification::route('mail', $email)->notify(new NewVendorContract($leadContact->id));
+                $redirectUrl = route('lead-contact.index');
+                return Reply::successWithData(__('Saved And Mail Send'), ['redirectUrl' => $redirectUrl]);
+            }
+            catch (Exception){
+                Vendor::destroy($leadContact->id);
+                return Reply::error(__('Invalid Email'));
+            }
         }
         else{
             $request->validate([

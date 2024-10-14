@@ -300,7 +300,12 @@ $addProductPermission = user()->permission('add_product');
             buttonSelector: buttonSelector,
             data: [data,i],
             success: function(response) {
+                if( typeof response.redirectUrl !== 'undefined'){
                 window.location.href = response.redirectUrl;
+                }
+                else{
+                    window.location.reload();
+                }
             }
         });
 
