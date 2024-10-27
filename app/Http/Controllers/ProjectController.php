@@ -621,6 +621,8 @@ class ProjectController extends AccountBaseController
         $project->nte=$request->nte;
         $project->bid_submitted_amount=$request->bid_submitted_amount;
         $project->bid_approved_amount=$request->bid_approved_amount;
+        $project->invoiced_amount=$request->iamt;
+        $project->vendor_amount=$request->vamt;
         $project->type=$request->type;
         $project->priority=$request->priority;
         $project->sub_category=$request->sub_category;

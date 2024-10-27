@@ -841,6 +841,16 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                                       fieldName="bid_approved_amount" fieldRequired="true" fieldId="bid_approved_amount"
                                       :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$project->bid_approved_amount"/>
                         </div>
+                        <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')"
+                                      fieldName="iamt" fieldId="iamt"
+                                      :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="$project->invoiced_amount"/>
+                        </div>
+                        <div class="col-lg-4 col-md-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Vendor Amount')"
+                                      fieldName="vamt" fieldId="vamt"
+                                      :fieldPlaceholder="__('Vendor Amount')" :fieldValue="$project->vendor_amount"/>
+                        </div>
                     </div>
                 <x-form-actions>
                     <x-forms.button-primary id="save-project-form" class="mr-3" icon="check">@lang('app.save')

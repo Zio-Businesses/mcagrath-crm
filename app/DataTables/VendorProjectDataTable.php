@@ -158,7 +158,8 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
         ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
         ->with(['client', 'project','vendors','project.members']) // Eager load client and project relationships for better performance
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status');
+        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status')
+        ->groupBy('project_vendors.id');
 
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {

@@ -224,6 +224,19 @@ class ProjectsDataTable extends BaseDataTable
             return $members;
         }
         );
+        $datatables->addColumn('vendors_name', function ($row) {
+            $members = [];
+
+            if (count($row->projectvendor) > 0) {
+
+                foreach ($row->projectvendor as $member) {
+                    $members[] = $member->vendor_name;
+                }
+
+                return implode(',', $members);
+            }
+        }
+        );
         $datatables->addColumn('name', function ($row) {
             $members = [];
 
@@ -411,7 +424,7 @@ class ProjectsDataTable extends BaseDataTable
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
               projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,
-              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
+              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.invoiced_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
@@ -616,6 +629,7 @@ class ProjectsDataTable extends BaseDataTable
             __('app.zipcode') => ['data' => 'zipcode', 'name' => 'zipcode', 'title' => __('app.zipcode')],
             __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
             __('app.menu.vendors') => ['data' => 'vendors', 'name' => 'vendors', 'exportable' => false, 'width' => '15%', 'title' => __('app.menu.vendors')],
+            __('Vendor') => ['data' => 'vendors_name', 'name' => 'vendors_name', 'visible' => false, 'title' => __('Vendor')],
             __('app.pdate') => ['data' => 'start_date', 'name' => 'start_date', 'title' => __('app.pdate'), 'width' => '12%'],
             __('app.due') => ['data' => 'deadline', 'name' => 'deadline', 'title' => __('app.due'), 'width' => '12%'],
             __('app.inspectiondt') => ['data' => 'inspectiondt', 'name' => 'inspectiondt', 'title' => __('app.inspectiondt'), 'width' => '12%'],
@@ -629,6 +643,8 @@ class ProjectsDataTable extends BaseDataTable
             __('app.nte') => ['data' => 'nte', 'name' => 'nte', 'title' => __('app.nte')],
             __('app.bsa') => ['data' => 'bid_submitted_amount', 'name' => 'bid_submitted_amount', 'title' => __('app.bsa')],
             __('app.baa') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('app.baa')],
+            __('Invoiced Amount') => ['data' => 'invoiced_amount', 'name' => 'invoiced_amount', 'title' => __('Invoiced Amount')],
+            __('Vendor Amount') => ['data' => 'vendor_amount', 'name' => 'vendor_amount', 'title' => __('Vendor Amount')],
             __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
             // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
             
