@@ -136,7 +136,9 @@ use App\Http\Controllers\VendorModuleNotesController;
 use App\Http\Controllers\VendorEstimateController;
 use App\Http\Controllers\ContractorTypeController;
 use App\Http\Controllers\VendorProjectController;
+use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
+
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
 
@@ -237,6 +239,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectSubCategory', ProjectSubCategoryController::class);
     Route::resource('projectType', ProjectTypeController::class);
     Route::resource('ContractorType', ContractorTypeController::class);
+    Route::resource('CancelledReason', CancelledReasonController::class);
     Route::resource('projectPriority', ProjectPriorityController::class);
     Route::resource('delayedBy', ProjectDelayedByController::class);
     Route::resource('propertyType', PropertyTypeController::class);

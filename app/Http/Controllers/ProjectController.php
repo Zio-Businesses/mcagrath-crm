@@ -52,6 +52,7 @@ use App\Models\TaskUser;
 use App\Models\TaskboardColumn;
 use App\Models\ProjectSubCategory;
 use App\Models\ProjectPriority;
+use App\Models\CancelledReason;
 use App\Models\ProjectType;
 use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
@@ -540,6 +541,7 @@ class ProjectController extends AccountBaseController
         $this->clients = User::allClients(null, false, ($this->editPermission == 'all' ? 'all' : null));
         $this->categories = ProjectCategory::all();
         $this->currencies = Currency::all();
+        $this->cancelledreason = CancelledReason::all();
         $this->teams = Team::all();
         $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
         $this->subcategories=ProjectSubCategory::all();
@@ -607,6 +609,8 @@ class ProjectController extends AccountBaseController
         $project->project_summary = trim_editor($request->project_summary);
         $project->start_date = companyToYmd($request->start_date);
         $project->inspection_date = $request->inspection_date == null ? null : companyToYmd($request->inspection_date);
+        $project->cancelled_date = $request->cancelled_date == null ? null : companyToYmd($request->cancelled_date);
+        $project->cancelled_reason = $request->cancelled_reason;
         $project->inspection_time = $request->inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->inspection_time)->format('H:i:s');
         $project->re_inspection_date = $request->re_inspection_date == null ? null : companyToYmd($request->re_inspection_date);
         $project->re_inspection_time = $request->re_inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->re_inspection_time)->format('H:i:s');
@@ -621,7 +625,6 @@ class ProjectController extends AccountBaseController
         $project->nte=$request->nte;
         $project->bid_submitted_amount=$request->bid_submitted_amount;
         $project->bid_approved_amount=$request->bid_approved_amount;
-        $project->invoiced_amount=$request->iamt;
         $project->vendor_amount=$request->vamt;
         $project->type=$request->type;
         $project->priority=$request->priority;
@@ -846,6 +849,7 @@ class ProjectController extends AccountBaseController
             break;
         case 'vendors':
             $this->view = 'projects.ajax.vendors';
+            $this->cancelledreason = CancelledReason::all();
             break;
         case 'estimates':
             return $this->estimates();

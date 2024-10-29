@@ -46,8 +46,7 @@ class ProjectsDataTable extends BaseDataTable
     public function dataTable($query)
     {
         $projectStatus = ProjectStatusSetting::get();
-
-
+        $currencyId = company()->currency_id;
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
 
@@ -271,12 +270,13 @@ class ProjectsDataTable extends BaseDataTable
                 </div>';
         });
         $datatables->editColumn('start_date', fn($row) => $row->start_date?->translatedFormat($this->company->date_format));
-
+        $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->issue_date->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
         $datatables->editColumn('deadline', fn($row) => Common::dateColor($row->deadline));
         $datatables->editColumn('bsdate', fn($row) => $row->bid_submitted?->translatedFormat($this->company->date_format));
         $datatables->editColumn('brdate', fn($row) => $row->bid_rejected?->translatedFormat($this->company->date_format));
         $datatables->editColumn('badate', fn($row) => $row->bid_approval?->translatedFormat($this->company->date_format));
         $datatables->editColumn('wcd', fn($row) => $row->work_completion_date?->translatedFormat($this->company->date_format));
+        $datatables->editColumn('cancelled_date', fn($row) => $row->cancelled_date?->translatedFormat($this->company->date_format));
         $datatables->addColumn('client_name', fn($row) => $row->client?->name_salutation ?? '-');
         $datatables->addColumn('client_email', fn($row) => $row->client?->email ?? '-');
         $datatables->addColumn('project_status', fn($row) => __('app' . $row->status));
@@ -288,6 +288,17 @@ class ProjectsDataTable extends BaseDataTable
                     <td> '. ($row->inspection_time ? Carbon::createFromFormat('H:i:s', $row->inspection_time)->format($this->company->time_format) : null) . '</td>
                     </div>
                       ';
+        });
+        
+         $datatables->editColumn('total', function ($row) use ($currencyId){
+            
+            if ($row->latestInvoice?->total)
+            {
+             return currency_format($row->latestInvoice?->total, $currencyId);
+            }
+            else {
+                return 'N/A';
+            }
         });
         $datatables->editColumn('rinspectiondt', function ($row){
             return '
@@ -423,8 +434,8 @@ class ProjectsDataTable extends BaseDataTable
             ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
-              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,
-              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.invoiced_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
+              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,
+              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
@@ -491,7 +502,7 @@ class ProjectsDataTable extends BaseDataTable
                 }
             );
         }
-
+        
         if ($this->viewProjectPermission == 'added') {
             $model->where(
                 function ($query) {
@@ -643,8 +654,11 @@ class ProjectsDataTable extends BaseDataTable
             __('app.nte') => ['data' => 'nte', 'name' => 'nte', 'title' => __('app.nte')],
             __('app.bsa') => ['data' => 'bid_submitted_amount', 'name' => 'bid_submitted_amount', 'title' => __('app.bsa')],
             __('app.baa') => ['data' => 'bid_approved_amount', 'name' => 'bid_approved_amount', 'title' => __('app.baa')],
-            __('Invoiced Amount') => ['data' => 'invoiced_amount', 'name' => 'invoiced_amount', 'title' => __('Invoiced Amount')],
+            __('Invoiced Date') => ['data' => 'invoiced_date', 'name' => 'invoiced_date', 'title' => __('Invoiced Date')],
+            __('Invoiced Amount') => ['data' => 'total', 'name' => 'total', 'title' => __('Invoiced Amount')],
             __('Vendor Amount') => ['data' => 'vendor_amount', 'name' => 'vendor_amount', 'title' => __('Vendor Amount')],
+            __('Cancelled Date') => ['data' => 'cancelled_date', 'name' => 'cancelled_date', 'title' => __('Cancelled Date')],
+            __('Cancelled Reason') => ['data' => 'cancelled_reason', 'name' => 'cancelled_reason', 'title' => __('Cancelled Reason')],
             __('app.delayedby') => ['data' => 'delayed_by', 'name' => 'delayed_by', 'title' => __('app.delayedby')],
             // Hide __('app.progress') => ['data' => 'completion_percent', 'name' => 'completion_percent', 'exportable' => false, 'title' => __('app.progress')],
             

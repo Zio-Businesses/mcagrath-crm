@@ -160,6 +160,8 @@ class Project extends BaseModel
         'work_schedule_date'=>'datetime',
         'work_schedule_re_date'=>'datetime',
         'work_completion_date'=>'datetime',
+        'invoiced_date'=>'datetime',
+        'cancelled_date'=>'datetime',
         
     ];
 
@@ -229,6 +231,14 @@ class Project extends BaseModel
         return $this->hasMany(Invoice::class, 'project_id')->orderByDesc('id');
     }
 
+    public function latestInvoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class, 'project_id')
+                    ->whereIn('status', ['paid', 'unpaid'])
+                    ->latest('id')
+                    ->select(['project_id', 'issue_date', 'total']);// equivalent to orderByDesc('id') and limits the results to one.
+    }
+    
     public function contracts(): HasMany
     {
         return $this->hasMany(Contract::class, 'project_id')->orderByDesc('id');

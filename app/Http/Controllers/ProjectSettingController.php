@@ -15,6 +15,7 @@ use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
 use App\Models\DelayedBy;
 use App\Models\ContractorType;
+use App\Models\CancelledReason;
 use App\Http\Requests\StoreStatusSettingRequest;
 use App\Http\Requests\Project\StoreProjectCategory;
 use App\Http\Requests\Project\StoreProjectSubCategory;
@@ -24,6 +25,7 @@ use App\Http\Requests\Project\StoreProjectPriority;
 use App\Http\Requests\Project\StorePropertyType;
 use App\Http\Requests\Project\StoreOccupancyStatus;
 use App\Http\Requests\Project\StoreDelayedBy;
+use App\Http\Requests\Project\StoreCancelledReason;
 use Illuminate\Support\Facades\Log;
 use App\Http\Requests\Project\StoreContractorType;
 
@@ -83,6 +85,10 @@ class ProjectSettingController extends AccountBaseController
         case 'contractortype':
                 $this->contractortype = ContractorType::all();
                 $this->view = 'project-settings.ajax.contractortype';
+                break;
+        case 'cancelledreason':
+                $this->cancelledreason = CancelledReason::all();
+                $this->view = 'project-settings.ajax.cancelledreason';
                 break;
         default:
             $this->projectSetting = ProjectSetting::first();
@@ -238,6 +244,10 @@ class ProjectSettingController extends AccountBaseController
     {
         return view('project-settings.create-contractor-type-settings-modal', $this->data);
     }
+    public function createCancelledReason()
+    {
+        return view('project-settings.create-cancelled-reason-settings-modal', $this->data);
+    }
     
     public function saveProjectCategory(StoreProjectCategory $request)
     {
@@ -306,6 +316,13 @@ class ProjectSettingController extends AccountBaseController
         $ct = new ContractorType();
         $ct->contractor_type = $request->contractor_type;
         $ct->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+    public function saveCancelledReason(StoreCancelledReason $request)
+    {
+        $cr = new CancelledReason();
+        $cr->cancelled_reason = $request->cancelled_reason;
+        $cr->save();
         return Reply::success(__('messages.recordSaved'));
     }
 }

@@ -50,6 +50,9 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->editColumn('work_completion_date', fn($row) => $row->work_completion_date?Carbon::parse($row->work_completion_date)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('work_ecd', fn($row) => $row->work_ecd?Carbon::parse($row->work_ecd)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('due_date', fn($row) => $row->due_date?Carbon::parse($row->due_date)->translatedFormat($this->company->date_format):'N/A');
+        $datatables->editColumn('cancelled_date', fn($row) => $row->cancelled_date?Carbon::parse($row->cancelled_date)->translatedFormat($this->company->date_format):'N/A');
+        $datatables->editColumn('invoiced_date', fn($row) => $row->invoiced_date?Carbon::parse($row->invoiced_date)->translatedFormat($this->company->date_format):'N/A');
+        $datatables->editColumn('paid_date', fn($row) => $row->paid_date?Carbon::parse($row->paid_date)->translatedFormat($this->company->date_format):'N/A');
         $datatables->editColumn('nte', fn($row) => $row->project->nte?$row->project->nte:'N/A');
         $datatables->editColumn('bid_submitted_amount', fn($row) => $row->project->bid_submitted_amount?$row->project->bid_submitted_amount:'N/A');
         $datatables->editColumn('p_bid_approved_amount', fn($row) => $row->project->bid_approved_amount?$row->project->bid_approved_amount:'N/A');
@@ -129,9 +132,10 @@ class VendorProjectDataTable extends BaseDataTable
         //     }
         //     return $sowname;
         // });
-        $datatables->editColumn('wo_status', function ($row) {
+        $status=ProjectStatusSetting::where('default_status', true)->value('status_name');
+        $datatables->editColumn('wo_status', function ($row) use ($status) {
             if($row->wo_status==null){
-               return ProjectStatusSetting::where('default_status', true)->value('status_name');
+               return $status;
             }
             else{
                 return $row->wo_status;
@@ -153,11 +157,10 @@ class VendorProjectDataTable extends BaseDataTable
     public function query(ProjectVendor $model)
     {
         $request = $this->request();
-        $users = ProjectVendor::query()
+        $users = ProjectVendor::with(['client', 'project','vendors','project.members'])
         ->leftJoin('projects', 'projects.id', '=', 'project_vendors.project_id')
         ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
         ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
-        ->with(['client', 'project','vendors','project.members']) // Eager load client and project relationships for better performance
         ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status')
         ->groupBy('project_vendors.id');
 
@@ -241,8 +244,7 @@ class VendorProjectDataTable extends BaseDataTable
             __('Wo Status') => ['data' => 'wo_status', 'name' => 'wo_status', 'title' => __('Wo Status')],
             __('Project Status') => ['data' => 'project_status', 'name' => 'project_status', 'title' => __('Project Status')],
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
-            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],
-           
+            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],  
             __('Project Category') => ['data' => 'project_type', 'name' => 'project_type', 'title' => __('Project Category')],
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
@@ -265,7 +267,12 @@ class VendorProjectDataTable extends BaseDataTable
             __('Not To Exceed') => ['data' => 'nte', 'name' => 'nte', 'title' => __('Not To Exceed')],
             __('Project Bid Submitted Amount') => ['data' => 'bid_submitted_amount', 'name' => 'bid_submitted_amount', 'title' => __('Project Bid Submitted Amount')],
             __('Project Bid Approved Amount') => ['data' => 'p_bid_approved_amount', 'name' => 'p_bid_approved_amount', 'title' => __('Project Bid Approved Amount')],
-           
+            __('Vendor Cancelled Date') => ['data' => 'cancelled_date', 'name' => 'cancelled_date', 'title' => __('Vendor Cancelled Date')],
+            __('Vendor Cancelled Reason') => ['data' => 'cancelled_reason', 'name' => 'cancelled_reason', 'title' => __('Vendor Cancelled Reason')],
+            __('Vendor Invoiced Date') => ['data' => 'invoiced_date', 'name' => 'invoiced_date', 'title' => __('Vendor Invoiced Date')],
+            __('Vendor Invoiced Amount') => ['data' => 'invoiced_amount', 'name' => 'invoiced_amount', 'title' => __('Vendor Invoiced Amount')],
+            __('Vendor Paid Date') => ['data' => 'paid_date', 'name' => 'paid_date', 'title' => __('Vendor Paid Date')],
+            __('Vendor Paid Amount') => ['data' => 'paid_amount', 'name' => 'paid_amount', 'title' => __('Vendor Paid Amount')],
         ];
 
         

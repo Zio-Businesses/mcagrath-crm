@@ -193,6 +193,49 @@
                                                         fieldName="bid_approved_amount"  fieldId="bid_approved_amount-{{ $item->id }}"
                                                         :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$item->bid_approved_amount"/>
                                         </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <x-forms.datepicker fieldId="cancelled_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Cancelled Date')" fieldName="cancelled_date"
+                                                :fieldValue="($item->cancelled_date ? $item->cancelled_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <x-forms.label class="mb-12 mt-3" fieldId="cancelled_reason"
+                                                        :fieldLabel="__('Cancelled Reason')">
+                                            </x-forms.label>
+                                            <x-forms.input-group>
+                                                <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason"
+                                                        data-live-search="true">
+                                                        <option value="">--</option>
+                                                    @foreach ($cancelledreason as $category)
+                                                        <option @selected($item->cancelled_reason == $category->cancelled_reason) value="{{ $category->cancelled_reason}}">
+                                                        {{ $category->cancelled_reason }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </x-forms.input-group>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <x-forms.datepicker fieldId="invoiced_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Invoiced Date')" fieldName="invoiced_date"
+                                                :fieldValue="($item->invoiced_date ? $item->invoiced_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-lg-3 col-md-3">
+                                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')"
+                                                        fieldName="invoiced_amount"  fieldId="invoiced_amount-{{ $item->id }}"
+                                                        :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="$item->invoiced_amount"/>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <x-forms.datepicker fieldId="paid_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Paid Date')" fieldName="paid_date"
+                                                :fieldValue="($item->paid_date ? $item->paid_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-lg-3 col-md-3">
+                                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Paid Amount')"
+                                                fieldName="paid_amount"  fieldId="paid_amount-{{ $item->id }}"
+                                                :fieldPlaceholder="__('Paid Amount')" :fieldValue="$item->paid_amount"/>
+                                        </div>
                                         
                                         <input type="text" id="linkInput-{{ $item->id }}" value="{{$item->link}}" class="d-none">
                                     </div>

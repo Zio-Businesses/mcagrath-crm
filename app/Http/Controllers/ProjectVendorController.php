@@ -19,6 +19,7 @@ use App\Notifications\NewVendorWorkOrder;
 use App\Http\Requests\Project\StoreProjectVendor;
 use Illuminate\Support\Facades\App;
 use App\Notifications\ProjectVendorRemoved;
+use App\Models\CancelledReason;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -104,6 +105,12 @@ class ProjectVendorController extends AccountBaseController
         $vpro->work_completion_date = $request->work_completion_date == null ? null : companyToYmd($request->work_completion_date);
         $vpro->work_ecd = $request->work_ecd == null ? null : companyToYmd($request->work_ecd);
         $vpro->bid_approved_amount = $request->bid_approved_amount;
+        $vpro->cancelled_date = $request->cancelled_date == null ? null : companyToYmd($request->cancelled_date);
+        $vpro->cancelled_reason = $request->cancelled_reason;
+        $vpro->invoiced_date = $request->invoiced_date == null ? null : companyToYmd($request->invoiced_date);
+        $vpro->invoiced_amount = $request->invoiced_amount;
+        $vpro->paid_date = $request->paid_date == null ? null : companyToYmd($request->paid_date);
+        $vpro->paid_amount = $request->paid_amount;
         $vpro->save();
         $this->logProjectActivity($request->project_id, 'messages.vendorupdated');
 

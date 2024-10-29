@@ -64,6 +64,10 @@
                                href="{{ route('project-settings.index') }}?tab=contractortype" role="tab"
                                aria-controls="nav-contractortypr"
                                aria-selected="true">@lang('Contractor Type')
+                            </a> <a class="nav-item nav-link f-15 cancelledreason"
+                               href="{{ route('project-settings.index') }}?tab=cancelledreason" role="tab"
+                               aria-controls="nav-cancelledreason"
+                               aria-selected="true">@lang('Cancelled Reason')
                             </a>
 
                         </div>
@@ -115,6 +119,9 @@
                         </x-forms.button-primary>
                         <x-forms.button-primary icon="plus" id="addContractorType"
                                     class="contractortype-btn d-none mb-2 actionBtn"> @lang('Add Contractor Type')
+                        </x-forms.button-primary>
+                        <x-forms.button-primary icon="plus" id="addCancelledReason"
+                                    class="cancelledreason-btn d-none mb-2 actionBtn"> @lang('Add Cancelled Reason')
                         </x-forms.button-primary>
                     </div>
 

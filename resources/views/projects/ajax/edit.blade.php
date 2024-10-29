@@ -219,7 +219,34 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->work_completion_date ? $project->work_completion_date->format(company()->date_format) : '')"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
-
+                    <div class="col-md-3 col-lg-3">
+                        <x-forms.datepicker fieldId="cancelled_date" custom="true"
+                            :fieldLabel="__('Cancelled Date')" fieldName="cancelled_date"
+                            :fieldValue="($project->cancelled_date ? $project->cancelled_date->format(company()->date_format) : '')"
+                            :fieldPlaceholder="__('placeholders.date')" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-forms.label class="mb-12 mt-3" fieldId="cancelled_reason"
+                                       :fieldLabel="__('Cancelled Reason')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason"
+                                    data-live-search="true">
+                                    <option value="">--</option>
+                                @foreach ($cancelledreason as $category)
+                                    <option @selected($project->cancelled_reason == $category->cancelled_reason) value="{{ $category->cancelled_reason}}">
+                                    {{ $category->cancelled_reason }}</option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
+                    <div class="col-md-3">
+                        <x-forms.text :fieldLabel="__('Invoiced Date')" fieldReadOnly
+                            :fieldPlaceholder="__('placeholders.date')" fieldName="invoiced_date"
+                            fieldId="invoiced_date" 
+                            :fieldValue="($project->latestInvoice?->issue_date ? $project->latestInvoice->issue_date->timezone(company()->timezone)->format(company()->date_format) : '')" />
+                               
+                    </div>
                     <div class="col-md-4">
 
                         <x-forms.input-group>
@@ -842,9 +869,9 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                                       :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$project->bid_approved_amount"/>
                         </div>
                         <div class="col-lg-4 col-md-3">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')"
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')" fieldReadOnly
                                       fieldName="iamt" fieldId="iamt"
-                                      :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="$project->invoiced_amount"/>
+                                      :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="currency_format($project->latestInvoice?->total, $project->currency_id)"/>
                         </div>
                         <div class="col-lg-4 col-md-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Vendor Amount')"

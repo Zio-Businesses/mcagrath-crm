@@ -27,6 +27,9 @@ class ProjectVendor extends BaseModel
         'due_date'=>'datetime',
         'accepted_date'=>'datetime',
         'rejected_date'=>'datetime',
+        'cancelled_date'=>'datetime',
+        'invoiced_date'=>'datetime',
+        'paid_date'=>'datetime',
     ];
     public function project(): BelongsTo
     {
