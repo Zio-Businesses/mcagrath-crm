@@ -139,6 +139,9 @@ use App\Http\Controllers\VendorProjectController;
 use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
 use App\Http\Controllers\ProjectCustomFilterController;
+use App\Http\Controllers\ProjectVendorCustomFilterController;
+use App\Http\Controllers\VendorCustomFilterController;
+use App\Http\Controllers\LeadVendorCustomFilterController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -889,4 +892,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
  
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);
+     Route::post('project-filter/change-status/{id}',[ProjectCustomFilterController::class,'changestatus'])->name('project-filter.change-status');
+
+     //Project-Vendor-custom-filter 
+     Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
+     Route::post('projectvendor-filter/change-status/{id}',[ProjectVendorCustomFilterController::class,'changestatus'])->name('projectvendor-filter.change-status');
+
+     //Vendor-custom-filter 
+     Route::resource('vendor-filter', VendorCustomFilterController::class);
+     Route::post('vendor-filter/change-status/{id}',[VendorCustomFilterController::class,'changestatus'])->name('vendor-filter.change-status');
+
+      //Lead-Vendor-custom-filter 
+      Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
+      Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
 });

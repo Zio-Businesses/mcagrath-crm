@@ -5,6 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ProjectCustomFilter;
+use App\Models\ProjectCategory;
+use App\Models\ProjectSubCategory;
+use App\Models\ProjectType;
+use App\Models\ProjectPriority;
+use App\Models\Team;
+use App\Models\ProjectStatusSetting;
+use App\Models\DelayedBy;
+use App\Models\PropertyDetails; 
+use App\Models\User;
 use Exception;
 use App\Helper\Reply;
 
@@ -43,34 +52,66 @@ class ProjectCustomFilterController extends AccountBaseController
     }
     public function destroy($id)
     {
-        try {
-            
-            $pcf = ProjectCustomFilter::where('user_id', $id)->first();
+        ProjectCustomFilter::destroy($id);
+        return Reply::success(__('Deleted Successfully'));
+    }
+    public function edit($id)
+    {
+        $viewPermission = user()->permission('view_projects');
+        abort_403((!in_array($viewPermission, ['all', 'added', 'owned', 'both'])));
 
-            if (!$pcf) {
-                $pcf = new ProjectCustomFilter();
-            }
-            $pcf->filter_on = null;
-            $pcf->start_date = null;
-            $pcf->end_date = null;
-            $pcf->project_category = null;
-            $pcf->project_sub_category = null;
-            $pcf->project_type = null;
-            $pcf->project_priority = null;
-            $pcf->project_status = null;
-            $pcf->delayed_by = null;
-            $pcf->client_id = null;
-            $pcf->city = null;
-            $pcf->county = null;
-            $pcf->state = null;
-            $pcf->project_members = null;
-            $pcf->save();
-    
-            return Reply::success(__('Filter Reset'));
-            
-        } catch (Exception $e) {
-            return Reply::error(__('An error occurred while resetting the filter.'));
+        if (in_array('client', user_roles())) {
+            $this->clients = User::client();
         }
+        else {
+            $this->clients = User::allClients();
+            $this->allEmployees = User::allEmployees(null, true, ($viewPermission == 'all' ? 'all' : null));
+        }
+        $this->filter = ProjectCustomFilter::findOrFail($id);
+        $this->categories = ProjectCategory::all();
+        $this->subcategories=ProjectSubCategory::all();
+        $this->projecttype=ProjectType::all();
+        $this->projectpriority=ProjectPriority::all();
+        $this->departments = Team::all();
+        $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
+        $this->delayedby=DelayedBy::all();
+        $this->city = PropertyDetails::distinct()->pluck('city');
+        $this->county = PropertyDetails::distinct()->pluck('county');
+        $this->state = PropertyDetails::distinct()->pluck('state');
+        return view('projects.edit-filter', $this->data);
+    }
+    public function update(Request $request, $id)
+    {
+        $pcf = ProjectCustomFilter::findOrFail($id);
+        $pcf->filter_on = $request->custom_date_filter_on;
+        $pcf->start_date = $request->filterstartDate;
+        $pcf->end_date = $request->filterendDate;
+        $pcf->project_category = $request->filter_category_id;
+        $pcf->project_sub_category = $request->filter_sub_category;
+        $pcf->project_type = $request->filter_type;
+        $pcf->project_priority = $request->filter_priority;
+        $pcf->project_status = $request->filter_status;
+        $pcf->delayed_by = $request->filter_delayed;
+        $pcf->client_id = $request->filter_client;
+        $pcf->city = $request->filter_city;
+        $pcf->county = $request->filter_county;
+        $pcf->state = $request->filter_state;
+        $pcf->project_members = $request->filter_members;
+        $pcf->name=$request->filter_name;
+        $pcf->save();
+        return Reply::success(__('Filter Updated'));
+    }
+    public function changestatus($id){
+        $projectFilter = ProjectCustomFilter::where('user_id', user()->id)->get();
+        foreach ($projectFilter as $filter)
+        {
+            $filter->status='inactive';
+            $filter->save();
+        }
+        $filter = ProjectCustomFilter::findOrFail($id);
+        $filter->status = 'active';
+        $filter->save();
+        return Reply::success(__('Filter Applied'));
     }
     
 }

@@ -48,7 +48,6 @@ class ProjectsDataTable extends BaseDataTable
     public function dataTable($query)
     {
         $projectStatus = ProjectStatusSetting::get();
-        $currencyId = company()->currency_id;
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
 
@@ -200,8 +199,8 @@ class ProjectsDataTable extends BaseDataTable
         $datatables->addColumn('vendors', function ($row) {
          
             $members = '<div class="position-relative">';
-            if (count($row->projectvendor) > 0) {
-                foreach ($row->projectvendor as $key => $member) {
+            if (count($row->projectvendortable) > 0) {
+                foreach ($row->projectvendortable as $key => $member) {
                     if ($key < 4) {
                         $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->vendor_name . '" src="https://www.w3schools.com/howto/img_avatar.png">';
 
@@ -228,9 +227,9 @@ class ProjectsDataTable extends BaseDataTable
         $datatables->addColumn('vendors_name', function ($row) {
             $members = [];
 
-            if (count($row->projectvendor) > 0) {
+            if (count($row->projectvendortable) > 0) {
 
-                foreach ($row->projectvendor as $member) {
+                foreach ($row->projectvendortable as $member) {
                     $members[] = $member->vendor_name;
                 }
 
@@ -292,11 +291,11 @@ class ProjectsDataTable extends BaseDataTable
                       ';
         });
         
-         $datatables->editColumn('total', function ($row) use ($currencyId){
+         $datatables->editColumn('total', function ($row){
             
             if ($row->latestInvoice?->total)
             {
-             return currency_format($row->latestInvoice?->total, $currencyId);
+             return currency_format($row->latestInvoice?->total, $row->currency_id);
             }
             else {
                 return 'N/A';
@@ -429,7 +428,7 @@ class ProjectsDataTable extends BaseDataTable
         }
 
         $model = $model
-            ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser')
+            ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser','projectvendortable')
             ->leftJoin('project_members', 'project_members.project_id', 'projects.id')
             ->leftJoin('users', 'project_members.user_id', 'users.id')
             ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
@@ -588,7 +587,7 @@ class ProjectsDataTable extends BaseDataTable
     {
         try{
             $customfilter = ProjectCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
-            
+
             if($customfilter->start_date!=''&& $customfilter->end_date!='')
             {
                 $model->whereBetween(DB::raw("DATE(projects.`{$customfilter->filter_on}`)"), [$customfilter->start_date, $customfilter->end_date]);

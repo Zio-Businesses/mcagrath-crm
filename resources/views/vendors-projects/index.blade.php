@@ -38,133 +38,77 @@
     .table-responsive {
         overflow-x: auto; /* Enable horizontal scrolling */
     }
+
+    .dropdown{
+        position :static;  
+    } 
+    .button-wrapper::-webkit-scrollbar {
+        display: none; /* Hides the scrollbar */
+    }
 </style>
 
-    <x-filters.filter-box-moded>
-        <div class="task-search d-flex  py-1 px-lg-3 px-0 align-items-center">
-            <form class="w-100 mr-1 mr-lg-0 mr-md-1 ml-md-1 ml-0 ml-lg-0">
-                <div class="input-group bg-grey rounded">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text border-0 bg-additional-grey">
-                            <i class="fa fa-search f-13 text-dark-grey"></i>
-                        </span>
-                    </div>
-                    <input type="text" class="form-control f-14 p-1 border-additional-grey" id="search-text-field"
-                        placeholder="@lang('app.startTyping')">
+<x-filters.filter-box-moded>
+    <div class="task-search d-flex  py-1 px-lg-3 px-0 align-items-center">
+        <form class="w-100 mr-1 mr-lg-0 mr-md-1 ml-md-1 ml-0 ml-lg-0">
+            <div class="input-group bg-grey rounded">
+                <div class="input-group-prepend">
+                    <span class="input-group-text border-0 bg-additional-grey">
+                        <i class="fa fa-search f-13 text-dark-grey"></i>
+                    </span>
                 </div>
-            </form>
-        </div>
+                <input type="text" class="form-control f-14 p-1 border-additional-grey" id="search-text-field"
+                    placeholder="@lang('app.startTyping')">
+            </div>
+        </form>
+    </div>
 
-        <div class="select-box d-flex py-1 px-lg-2 px-md-2 px-0">
-            <x-forms.button-secondary class="btn-xs d-none" id="reset-filters" icon="times-circle">
-                @lang('app.clearFilters')
-            </x-forms.button-secondary>
+    <div class="select-box d-flex py-1 px-lg-2 px-md-2 px-0">
+        <x-forms.button-secondary class="btn-xs d-none" id="reset-filters" icon="times-circle">
+            @lang('app.clearFilters')
+        </x-forms.button-secondary>
+    </div>     
+</x-filters.filter-box-moded>
+<div class="container-fluid d-flex position-relative border-bottom-grey">
+    <!-- Left Scroll Button -->
+    <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
+    <!-- Scrollable Button Wrapper -->
+    <div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
+    @foreach ($projectVendorFilter as $filter)
+    <!-- Buttons in a horizontal line -->
+        <div class="task_view mx-1">
+            
+            <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
+            <div class="dropdown">
+                <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
+                    type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="icon-options-vertical icons"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" 
+                    aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                        <a class="dropdown-item apply-filter" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="bi bi-save2 mr-2"></i>
+                            @lang('Apply')
+                        </a>
+                        <a class="dropdown-item edit-filter" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-edit mr-2"></i>
+                            @lang('app.edit')
+                        </a>
+                        <a class="dropdown-item delete-row" href="javascript:;"
+                            data-row-id="{{$filter->id}}">
+                            <i class="fa fa-trash mr-2"></i>
+                            @lang('app.delete')
+                        </a>
+                </div>
+            </div>
         </div>
-        <x-filters.more-filter-box>
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.projectMember')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="employee_id" id="employee_id"
-                            data-live-search="true" data-container="body" data-size="8">
-                            @if ($allEmployees->count() > 1 || in_array('admin', user_roles()))
-                                <option value="all">@lang('app.all')</option>
-                            @endif
-                            @foreach ($allEmployees as $employee)
-                                    <x-user-option :user="$employee" :selected="request('assignee') == 'me' && $employee->id == user()->id"/>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.clientName')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="client_id" id="client_id" data-container="body"
-                            data-size="8">
-                            @if (!in_array('client', user_roles()))
-                                <option selected value="all">@lang('app.all')</option>
-                            @endif
-                            @foreach ($clients as $client)
-                                <x-user-option :user="$client" />
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Vendor Name')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="vendor_id" id="vendor_id" data-container="body"
-                            data-size="8" data-live-search="true">
-                            @if (!in_array('client', user_roles()))
-                                <option selected value="--">--</option>
-                            @endif
-                            @foreach ($vendor as $vendors)
-                                <x-vendor-option :vendors="$vendors" />
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Link Status')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="link_id" id="link_id" data-container="body"
-                            data-size="5">
-                            <option selected value="--">--</option>
-                            <option value="Accepted" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Accepted'>
-                            </option>
-                            <option value="Rejected" data-content='<i class="fa fa-circle mr-2" style="color:#f5c308;"></i>Rejected'>
-                            </option>
-                            <option value="Sent" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Sent'>
-                            </option>
-                            <option value="Removed" data-content='<i class="fa fa-circle mr-2" style="color:#d21010;"></i>Removed'>
-                            Removed</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Work Order Status')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="wo_status" id="wo_status" data-container="body"
-                            data-size="5">
-                            <option selected value="--">--</option>
-                            @foreach ($projectStatus as $status)
-                                <option
-                                data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"
-                                value="{{$status->status_name}}">
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-             <div class="more-filter-items">
-                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Project Status')</label>
-                <div class="select-filter mb-4">
-                    <div class="select-others">
-                        <select class="form-control select-picker" name="project_status" id="project_status" data-container="body"
-                            data-size="5">
-                            <option selected value="--">--</option>
-                            @foreach ($projectStatus as $status)
-                                <option
-                                data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"
-                                value="{{$status->status_name}}">
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </x-filters.more-filter-box>
-        
-    </x-filters.filter-box-moded>
+        @endforeach
+    </div>
+    <!-- Right Scroll Button -->
+    <button class="btn btn-dark" id="scrollRightBtn" style="display: none; right: 0;">&#9654;</button>
+</div>
 
 @endsection
 
@@ -172,13 +116,9 @@
 
     <!-- CONTENT WRAPPER START -->
     <div class="content-wrapper">
-        <!-- Add Task Export Buttons Start -->
-        <div class="d-grid d-lg-flex d-md-flex action-bar float-right mb-4">
-            <div class="btn-group mt-2 mt-lg-0 mt-md-0 ml-0 ml-lg-3 ml-md-3" role="group">
-                <a href="{{ route('vendorproject.index') }}" class="btn btn-secondary f-14 btn-active show-clients" data-toggle="tooltip"
-                    data-original-title="@lang('Projects - Vendors')"><i class="side-icon bi bi-list-ul"></i></a>
-            </div>
-        </div>
+        
+        <a class="btn btn-secondary f-14 float-right mb-3" data-toggle="tooltip" id="custom-filter"
+        data-original-title="@lang('Custom Filter')"><i class="side-icon bi bi-filter"></i></a>
 
         <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
 
@@ -187,92 +127,319 @@
         </div>
         <!-- Task Box End -->
     </div>
-    <!-- CONTENT WRAPPER END -->
+    <div class="modal fade" id="CustomFilterModal" aria-hidden="true" >
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modelHeading">Custom Filter</h4>
+                </div>
+                <div class="modal-body"> 
+                    <x-form id="save-project-filter-form">
+                        <input type="hidden" name="user_id" value=" {{user()->id}} ">
+                        <input type="hidden" name="startDate" id="startDate">
+                        <input type="hidden" name="endDate" id="endDate">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <x-forms.text :fieldLabel="__('Filter Name')"
+                                      fieldName="filter_name" fieldRequired="true" fieldId="filter_name"
+                                      :fieldPlaceholder="__('Enter filter name')"/>
+                                </div>
+                               
+                                <div class="col-md-4 mt-3">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Link Sent Date')</label>
+                                    <div class="select-status d-flex">
+                                        <input type="text" class="position-relative  form-control p-2 text-left border-additional-grey"
+                                        placeholder="@lang('placeholders.dateRange')" id="customRange">
+                                    </div>
+                                </div>
+                            
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('modules.projects.projectCategory')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_category_id[]" id="filter_category_id"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}" >
+                                                {{ $category->category_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                             
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Members')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_members[]" id="filter_members"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($allEmployees as $category)
+                                            <option value="{{ $category->id }}" >
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Client')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_client[]" id="filter_client"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($clients as $category)
+                                            <option value="{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Vendors')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_vendor[]" id="filter_vendor"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($projectpriority as $category)
+                                            <option value="{{ $category->priority }}">
+                                                {{ $category->priority }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                              
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Project Status')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_status[]" id="filter_status"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($projectStatus as $category)
+                                            <option value="{{ $category->status_name }}">
+                                                {{ $category->status_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                  
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Delayed By')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_delayed[]" id="filter_delayed"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($delayedby as $category)
+                                            <option value="{{ $category->delayed_by }}">
+                                                {{ $category->delayed_by }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Client')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_client[]" id="filter_client"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($clients as $category)
+                                            <option value="{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('City')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_city[]" id="filter_city"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($city as $category)
+                                            <option value="{{ $category }}" >
+                                                {{ $category }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('County')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_county[]" id="filter_county"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($county as $category)
+                                            <option value="{{ $category }}" >
+                                                {{ $category }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('State')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_state[]" id="filter_state"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($state as $category)
+                                            <option value="{{ $category }}" >
+                                                {{ $category }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                        for="usr">@lang('Members')</label>
+                                    <div class="mb-4">
+                                    <select class="form-control select-picker" name="filter_members[]" id="filter_members"
+                                            data-live-search="true" data-container="body" data-size="8" multiple>
+                                        @foreach ($allEmployees as $category)
+                                            <option value="{{ $category->id }}" >
+                                                {{ $category->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </x-form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="clear">Reset</button>
+                    <button type="button" class="btn btn-secondary" id="close">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-filter">Save Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @push('scripts')
     @include('sections.datatable_js')
-    <script>
-    $(document).ready(function() {
-        var table = $('#vendors-projects-table').DataTable(); // Ensure you're selecting the correct table ID
+<script>
+$(document).ready(function () {
+    var startDate = '';
+    var endDate = '';
 
-        // Enable horizontal scrolling and disable automatic width
-        table.settings()[0].oFeatures.bAutoWidth = true; // Disable auto width
-        table.settings()[0].oScroll.sX = "100%"; // Enable horizontal scroll
-
+    $('#customRange').daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        },
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
     });
-    </script>
-    <script>
+    
+    $('#customRange').on('apply.daterangepicker', function(ev, picker) {
+        // Get start and end dates
+        startDate = picker.startDate.format('YYYY-MM-DD');
+        document.getElementById('startDate').value=startDate;
+        endDate = picker.endDate.format('YYYY-MM-DD');
+        document.getElementById('endDate').value=endDate;
         
-        $('#vendors-projects-table').on('preXhr.dt', function(e, settings, data) {
-            const searchText = $('#search-text-field').val();
-            data['searchText'] = searchText;
-            const status = $('#status').val();
-            data['status'] = status;
-            var employee_id = $('#employee_id').val();
-            data['employee_id'] = employee_id;
-            var clientID = $('#client_id').val();
-            data['client_id'] = clientID;
-            var vendorID = $('#vendor_id').val();
-            data['vendor_id'] = vendorID;
-            var linkID = $('#link_id').val();
-            data['link_id'] = linkID;
-            var woStatus = $('#wo_status').val();
-            data['wo_status'] = woStatus;
-            var projectStatus = $('#project_status').val();
-            data['project_status'] = projectStatus;
-            
-        });
+        $(this).val(picker.startDate.format('{{ company()->moment_date_format }}') + ' - ' + picker.endDate.format('{{ company()->moment_date_format }}'));
+        
+    });
+    $('#custom-filter').click(function () {
+        $('#CustomFilterModal').modal('show');
+    });
 
-       
-      
-        $('#client_id, #employee_id, #vendor_id,#link_id,#wo_status, #project_status').on('change keyup',
-            function() {
-                if ($('#employee_id').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#client_id').val() != "all") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                }else if ($('#vendor_id').val() != "--") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                }else if ($('#link_id').val() != "--") {
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                } else if ($('#wo_status').val() != "--") {
-                    
-                    $('#reset-filters').removeClass('d-none');
-                    showTable();
-                }  else if ($('#project_status').val() != "--") {
-                    $('#reset-filters').removeClass('d-none');
-                    
-                    showTable();
-                }  else {
-                    $('#reset-filters').addClass('d-none');
-                    showTable();
-                }
-            });
+    $('#close').click(function () {
+        $('#CustomFilterModal').modal('hide');
+    });
 
-        const showTable = () => {
-            window.LaravelDataTables["vendors-projects-table"].draw(false);
+    const buttonWrapper = document.getElementById('buttonWrapper');
+    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+    const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+    function updateScrollButtons() {
+        // Check if the content overflows the button wrapper
+        if (buttonWrapper.scrollWidth > buttonWrapper.clientWidth) {
+            scrollLeftBtn.style.display = 'block';
+            scrollRightBtn.style.display = 'block';
+        } else {
+            scrollLeftBtn.style.display = 'none';
+            scrollRightBtn.style.display = 'none';
         }
+    }
+    updateScrollButtons();
 
-        $('#search-text-field').on('keyup', function() {
-            if ($('#search-text-field').val() != "") {
-                $('#reset-filters').removeClass('d-none');
-                showTable();
-            }
+    $('#scrollLeftBtn').click(function() {
+        buttonWrapper.scrollBy({
+            left: -200, // Adjust as needed
+            behavior: 'smooth'
         });
-       
-        $('#reset-filters,#reset-filters-2').click(function() {
-            $('#filter-form')[0].reset();
-            $('.filter-box .select-picker').selectpicker("refresh");
-            $('#reset-filters').addClass('d-none');
-            showTable();
-        });
+    });
 
-      
-    </script>
+    $('#scrollRightBtn').click(function() {
+        buttonWrapper.scrollBy({
+            left: 200, // Adjust as needed
+            behavior: 'smooth'
+        });
+    });
+
+    window.addEventListener('resize', updateScrollButtons);
+
+});
+</script>
+<script>
+$(document).ready(function() {
+    var table = $('#vendors-projects-table').DataTable(); // Ensure you're selecting the correct table ID
+
+    // Enable horizontal scrolling and disable automatic width
+    table.settings()[0].oFeatures.bAutoWidth = true; // Disable auto width
+    table.settings()[0].oScroll.sX = "100%"; // Enable horizontal scroll
+
+});
+</script>
+<script>
+$('#vendors-projects-table').on('preXhr.dt', function(e, settings, data) {
+    const searchText = $('#search-text-field').val();
+    data['searchText'] = searchText;
+    
+});
+
+const showTable = () => {
+    window.LaravelDataTables["vendors-projects-table"].draw(false);
+}
+
+$('#search-text-field').on('keyup', function() {
+    if ($('#search-text-field').val() != "") {
+        $('#reset-filters').removeClass('d-none');
+        showTable();
+    }
+});
+
+$('#reset-filters,#reset-filters-2').click(function() {
+    $('#filter-form')[0].reset();
+    $('.filter-box .select-picker').selectpicker("refresh");
+    $('#reset-filters').addClass('d-none');
+    showTable();
+});    
+</script>
 @endpush

@@ -121,13 +121,8 @@ class ProjectController extends AccountBaseController
             $this->city = PropertyDetails::distinct()->pluck('city');
             $this->county = PropertyDetails::distinct()->pluck('county');
             $this->state = PropertyDetails::distinct()->pluck('state');
-            try{
-                $this->projectFilter = ProjectCustomFilter::where('user_id', user()->id)->get();
-                if (!$this->projectFilter) {
-                    $this->projectFilter = new ProjectCustomFilter();
-                }
-            }
-            catch (Exception){}
+            $this->projectFilter = ProjectCustomFilter::where('user_id', user()->id)->get();
+            
         }
 
         return $dataTable->render('projects.index', $this->data);

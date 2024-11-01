@@ -7,8 +7,8 @@
 @section('filter-section')
 <style>
     .dropdown{
-        position :static;
-    }
+        position :static;  
+    } 
     .button-wrapper::-webkit-scrollbar {
         display: none; /* Hides the scrollbar */
     }
@@ -41,26 +41,31 @@
         <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
         <!-- Scrollable Button Wrapper -->
         <div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
-        @foreach (range(1, 20) as $i)
+        @foreach ($projectFilter as $filter)
         <!-- Buttons in a horizontal line -->
             <div class="task_view mx-1">
-                <a href="javascript:;" data-sow-id=""
-                    class="taskView sow-detail text-darkest-grey f-w-500">@lang('app.view')</a>
+                
+                <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
                 <div class="dropdown">
                     <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
-                        type="link" id="dropdownMenuLink-" data-toggle="dropdown"
+                        type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="icon-options-vertical icons"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right"
-                        aria-labelledby="dropdownMenuLink-" tabindex="0" style="position: fixed; z-index: 1050;">
-                                <a class="dropdown-item edit-sow" href="javascript:;"
-                                    data-row-id="">
-                                    <i class="fa fa-edit mr-2"></i>
-                                    @lang('app.edit')
-                                </a>
+                    <div class="dropdown-menu dropdown-menu-right" 
+                        aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                            <a class="dropdown-item apply-filter" href="javascript:;"
+                                data-row-id="{{$filter->id}}">
+                                <i class="bi bi-save2 mr-2"></i>
+                                @lang('Apply')
+                            </a>
+                            <a class="dropdown-item edit-filter" href="javascript:;"
+                                data-row-id="{{$filter->id}}">
+                                <i class="fa fa-edit mr-2"></i>
+                                @lang('app.edit')
+                            </a>
                             <a class="dropdown-item delete-row" href="javascript:;"
-                                data-row-id="">
+                                data-row-id="{{$filter->id}}">
                                 <i class="fa fa-trash mr-2"></i>
                                 @lang('app.delete')
                             </a>
@@ -453,40 +458,113 @@ $deleteProjectPermission = user()->permission('delete_projects');
          $('#close').click(function () {
             $('#CustomFilterModal').modal('hide');
          });
-            const buttonWrapper = document.getElementById('buttonWrapper');
-            const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-            const scrollRightBtn = document.getElementById('scrollRightBtn');
+        const buttonWrapper = document.getElementById('buttonWrapper');
+        const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+        const scrollRightBtn = document.getElementById('scrollRightBtn');
 
-            function updateScrollButtons() {
-                // Check if the content overflows the button wrapper
-                if (buttonWrapper.scrollWidth > buttonWrapper.clientWidth) {
-                    scrollLeftBtn.style.display = 'block';
-                    scrollRightBtn.style.display = 'block';
-                } else {
-                    scrollLeftBtn.style.display = 'none';
-                    scrollRightBtn.style.display = 'none';
-                }
+        function updateScrollButtons() {
+            // Check if the content overflows the button wrapper
+            if (buttonWrapper.scrollWidth > buttonWrapper.clientWidth) {
+                scrollLeftBtn.style.display = 'block';
+                scrollRightBtn.style.display = 'block';
+            } else {
+                scrollLeftBtn.style.display = 'none';
+                scrollRightBtn.style.display = 'none';
             }
-            updateScrollButtons();
+        }
+        updateScrollButtons();
 
-            // Scroll function definitions
-            function scrollLeft() {
-                buttonWrapper.scrollBy({
-                    left: -200, // Adjust as needed
-                    behavior: 'smooth'
-                });
-            }
-
-            function scrollRight() {
-                buttonWrapper.scrollBy({
-                    left: 200, // Adjust as needed
-                    behavior: 'smooth'
-                });
-            }
-
-            // Update the visibility of scroll buttons when resizing the window
-            window.addEventListener('resize', updateScrollButtons);
+        $('#scrollLeftBtn').click(function() {
+            buttonWrapper.scrollBy({
+                left: -200, // Adjust as needed
+                behavior: 'smooth'
             });
+        });
+
+        $('#scrollRightBtn').click(function() {
+            buttonWrapper.scrollBy({
+                left: 200, // Adjust as needed
+                behavior: 'smooth'
+            });
+        });
+
+        window.addEventListener('resize', updateScrollButtons);
+
+        $('body').on('click', '.edit-filter', function() {
+            var id = $(this).data('row-id');
+
+            var url = "{{ route('project-filter.edit', ':id') }}";
+            url = url.replace(':id', id);
+
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+            
+        });
+
+        $('body').on('click', '.delete-row', function() {
+            var id = $(this).data('row-id');
+            Swal.fire({
+                title: "@lang('messages.sweetAlertTitle')",
+                text: "@lang('messages.recoverRecord')",
+                icon: 'warning',
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: "@lang('messages.confirmDelete')",
+                cancelButtonText: "@lang('app.cancel')",
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-secondary'
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('project-filter.destroy', ':id') }}";
+                    url = url.replace(':id', id);
+                    var token = "{{ csrf_token() }}";
+                    $.easyAjax({
+                        type: 'POST',
+                        url: url,
+                        container: '.content-wrapper',
+                        blockUI: true,
+                        data: {
+                            '_token': token,
+                            '_method': 'DELETE'
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        $('body').on('click', '.apply-filter', function() {
+
+            var id = $(this).data('row-id');
+            var url = "{{ route('project-filter.change-status',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+    });
     </script>
 
     <script>
