@@ -138,6 +138,7 @@ use App\Http\Controllers\ContractorTypeController;
 use App\Http\Controllers\VendorProjectController;
 use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
+use App\Http\Controllers\ProjectCustomFilterController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -883,8 +884,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('vendorproject', VendorProjectController::class);
 
     //Vendor Estimate Files
-     /*CLIENT ESTIMATE FILES*/
      Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');
      Route::resource('vendor-estimates-files', VendorEstimateFilesController::class);
  
+     //Project-custom-filter 
+     Route::resource('project-filter', ProjectCustomFilterController::class);
 });

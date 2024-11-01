@@ -14,6 +14,8 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Exception;
+use App\Models\ProjectCustomFilter;
 
 class ProjectsDataTable extends BaseDataTable
 {
@@ -270,7 +272,7 @@ class ProjectsDataTable extends BaseDataTable
                 </div>';
         });
         $datatables->editColumn('start_date', fn($row) => $row->start_date?->translatedFormat($this->company->date_format));
-        $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->issue_date->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
+        $datatables->editColumn('invoiced_date', fn($row) => $row->latestInvoice?->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format));
         $datatables->editColumn('deadline', fn($row) => Common::dateColor($row->deadline));
         $datatables->editColumn('bsdate', fn($row) => $row->bid_submitted?->translatedFormat($this->company->date_format));
         $datatables->editColumn('brdate', fn($row) => $row->bid_rejected?->translatedFormat($this->company->date_format));
@@ -418,16 +420,24 @@ class ProjectsDataTable extends BaseDataTable
 
         if ($request->startFilterDate !== null && $request->startFilterDate != 'null' && $request->startFilterDate != '') {
             $startFilterDate = companyToDateString($request->startFilterDate);
+        
         }
 
         if ($request->endFilterDate !== null && $request->endFilterDate != 'null' && $request->endFilterDate != '') {
             $endFilterDate = companyToDateString($request->endFilterDate);
+        
         }
 
         $model = $model
             ->with('members', 'members.user', 'client', 'client.clientDetails', 'currency', 'client.session', 'mentionUser')
             ->leftJoin('project_members', 'project_members.project_id', 'projects.id')
             ->leftJoin('users', 'project_members.user_id', 'users.id')
+            ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
+            ->leftJoin('users as estimators', 'project_estimators.user_id', 'estimators.id')
+            ->leftJoin('project_accountings', 'project_accountings.project_id', 'projects.id')
+            ->leftJoin('users as accountants', 'project_accountings.user_id', 'accountants.id')
+            ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
+            ->leftJoin('users as emanagers', 'project_emanagers.user_id', 'emanagers.id')
             ->leftJoin('users as client', 'projects.client_id', 'users.id')
             ->leftJoin('mention_users', 'mention_users.project_id', 'projects.id')
             ->leftJoin('property_details', 'projects.property_details_id', 'property_details.id')
@@ -445,6 +455,8 @@ class ProjectsDataTable extends BaseDataTable
             $model->join('pinned', 'pinned.project_id', 'projects.id');
             $model->where('pinned.user_id', user()->id);
         }
+
+        $model = self::customFilter($model);
 
         if (!is_null($request->status) && $request->status != 'all') {
 
@@ -554,6 +566,7 @@ class ProjectsDataTable extends BaseDataTable
                 function ($query) {
                     $query->where('projects.project_name', 'like', '%' . request('searchText') . '%')
                         ->orWhere('users.name', 'like', '%' . request('searchText') . '%')
+                        ->orWhere('property_details.street_address', 'like', '%' . request('searchText') . '%')
                         ->orWhere('projects.project_short_code', 'like', '%' . request('searchText') . '%'); // project short code
                 }
             );
@@ -568,6 +581,69 @@ class ProjectsDataTable extends BaseDataTable
         $model->groupBy('projects.id');
         $model->orderbyRaw('pinned_project desc');
 
+        return $model;
+    }
+
+    public function customFilter($model)
+    {
+        try{
+            $customfilter = ProjectCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+            
+            if($customfilter->start_date!=''&& $customfilter->end_date!='')
+            {
+                $model->whereBetween(DB::raw("DATE(projects.`{$customfilter->filter_on}`)"), [$customfilter->start_date, $customfilter->end_date]);
+            }
+            if($customfilter->project_category!='')
+            {
+                $model->whereIn('projects.category_id', $customfilter->project_category)->get();
+            }
+            if($customfilter->project_sub_category!='')
+            {
+                $model->whereIn('projects.sub_category', $customfilter->project_sub_category)->get();
+            }
+            if($customfilter->project_type!='')
+            {
+                $model->whereIn('projects.type', $customfilter->project_type)->get();
+            }
+            if($customfilter->project_priority!='')
+            {
+                $model->whereIn('projects.priority', $customfilter->project_priority)->get();
+            }
+            if($customfilter->project_status!='')
+            {
+                $model->whereIn('projects.status', $customfilter->project_status)->get();
+            }
+            if($customfilter->delayed_by!='')
+            {
+                $model->whereIn('projects.delayed_by', $customfilter->delayed_by)->get();
+            }
+            if($customfilter->client_id!='')
+            {
+                $model->whereIn('projects.client_id', $customfilter->client_id)->get();
+            }
+            if($customfilter->state!='')
+            {
+                $model->whereIn('property_details.state', $customfilter->state)->get();
+            }
+            if($customfilter->city!='')
+            {
+                $model->whereIn('property_details.city', $customfilter->city)->get();
+            }
+            if($customfilter->county!='')
+            {
+                $model->whereIn('property_details.county', $customfilter->county)->get();
+            }
+            if($customfilter->project_members!='')
+            {
+                $model->whereIn('project_members.user_id', $customfilter->project_members)
+                ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
+                ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
+                ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
+                ->get();
+                
+            }
+        }
+        catch (Exception){}
         return $model;
     }
 

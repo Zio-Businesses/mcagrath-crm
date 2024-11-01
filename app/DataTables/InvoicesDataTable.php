@@ -353,7 +353,7 @@ class InvoicesDataTable extends BaseDataTable
         $datatables->editColumn(
             'issue_date',
             function ($row) {
-                return $row->issue_date->timezone($this->company->timezone)->translatedFormat($this->company->date_format);
+                return $row->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format);
             }
         );
         $datatables->orderColumn('short_code', 'invoice_number $1');
@@ -390,7 +390,7 @@ class InvoicesDataTable extends BaseDataTable
             ->select([
                 'invoices.id', 'invoices.due_amount', 'invoices.project_id', 'invoices.client_id', 'invoices.invoice_number',
                 'invoices.currency_id', 'invoices.total', 'invoices.status', 'invoices.issue_date', 'invoices.credit_note',
-                'invoices.show_shipping_address', 'invoices.send_status', 'invoices.invoice_recurring_id',
+                'invoices.show_shipping_address', 'invoices.send_status', 'invoices.invoice_recurring_id','invoices.created_at',
                 'invoices.added_by', 'invoices.hash', 'invoices.custom_invoice_number'
             ])
             ->addSelect('invoices.company_id'); // Company_id is fetched so the we have fetch company relation with it)

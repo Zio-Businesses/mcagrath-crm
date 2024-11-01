@@ -7,6 +7,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Company;
 use App\Models\ProjectVendor;
+use App\Models\Project;
 use App\Models\GlobalSetting;
 use Illuminate\Support\Facades\Crypt;
 
@@ -74,13 +75,14 @@ class NewVendorWorkOrder extends BaseNotification
         $url = getDomainSpecificUrl($url, $this->company);
 
         $vpro = ProjectVendor::findOrFail($this->projectvendor);
+        $pro = Project::with('propertyDetails')->findOrFail($this->projectid);
         $vpro->link=$url;
         $vpro->save();
 
-        $content = __('A new work order has been created') . '<br>';
+        $content = __('Please note that the work order # ') . $pro->project_short_code .' for Property Address - '. $pro->propertyDetails->property_address .' has been assigned to you and please click below to review and "Accept/Reject" . If you have any questions, please call the office immediately.';
 
         return $build
-            ->subject(__('Welcome to McGrath Consulting Contractor Network!'))
+            ->subject(__($pro->project_short_code .', '.$pro->propertyDetails->property_address))
             ->markdown('mail.email', [
                 'content' => $content,
                 'url' => $url,

@@ -69,6 +69,8 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
+use App\Models\ProjectCustomFilter;
+use Exception;
 
 class ProjectController extends AccountBaseController
 {
@@ -98,6 +100,7 @@ class ProjectController extends AccountBaseController
         $viewPermission = user()->permission('view_projects');
         abort_403((!in_array($viewPermission, ['all', 'added', 'owned', 'both'])));
 
+        
         if (!request()->ajax()) {
 
             if (in_array('client', user_roles())) {
@@ -109,8 +112,22 @@ class ProjectController extends AccountBaseController
             }
 
             $this->categories = ProjectCategory::all();
+            $this->subcategories=ProjectSubCategory::all();
+            $this->projecttype=ProjectType::all();
+            $this->projectpriority=ProjectPriority::all();
             $this->departments = Team::all();
             $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
+            $this->delayedby=DelayedBy::all();
+            $this->city = PropertyDetails::distinct()->pluck('city');
+            $this->county = PropertyDetails::distinct()->pluck('county');
+            $this->state = PropertyDetails::distinct()->pluck('state');
+            try{
+                $this->projectFilter = ProjectCustomFilter::where('user_id', user()->id)->get();
+                if (!$this->projectFilter) {
+                    $this->projectFilter = new ProjectCustomFilter();
+                }
+            }
+            catch (Exception){}
         }
 
         return $dataTable->render('projects.index', $this->data);

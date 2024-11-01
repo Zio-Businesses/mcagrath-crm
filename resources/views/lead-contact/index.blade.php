@@ -59,28 +59,28 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 
         </div>
         <div class="modal fade" id="ajaxModel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="modelHeading">Select Entity</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group my-3">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modelHeading">Select Entity</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group my-3">
 
-                                    <div class="d-flex">
-                                        <x-forms.link-primary :link="route('lead-contact.create')"  class="px-3 openRightModal mr-3" id="client">
-                                        @lang('modules.modal.client')
-                                        </x-forms.link-primary>
-                                        <x-forms.link-primary :link="route('lead-vendor.handle')"  class="px-3 openRightModal" id="vendor">
-                                        @lang('modules.modal.vendor')
-                                        </x-forms.link-primary>
-                                    </div>
-                            </div>
-
+                                <div class="d-flex">
+                                    <x-forms.link-primary :link="route('lead-contact.create')"  class="px-3 openRightModal mr-3" id="client">
+                                    @lang('modules.modal.client')
+                                    </x-forms.link-primary>
+                                    <x-forms.link-primary :link="route('lead-vendor.handle')"  class="px-3 openRightModal" id="vendor">
+                                    @lang('modules.modal.vendor')
+                                    </x-forms.link-primary>
+                                </div>
                         </div>
+
                     </div>
                 </div>
-             </div>
+            </div>
+        </div>
         <!-- Task Box End -->
     </div>
     <!-- CONTENT WRAPPER END -->
