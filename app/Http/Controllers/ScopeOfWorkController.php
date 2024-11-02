@@ -12,6 +12,7 @@ use App\Models\VendorContract;
 use App\Models\ScopeOfWork;
 use Illuminate\Support\Facades\Log;
 use App\Models\ContractorType;
+use App\Models\SOWTitle;
 
 class ScopeOfWorkController extends AccountBaseController
 {
@@ -41,10 +42,7 @@ class ScopeOfWorkController extends AccountBaseController
         $this->project = Project::findOrFail($id);
         // $addProjectMilestonePermission = user()->permission('add_project_milestones');
         $project = Project::findOrFail($id);
-       
-
-        // abort_403(!($addProjectMilestonePermission == 'all' || $project->project_admin == user()->id));
-
+        $this->sow_title = SOWTitle::all();
         return view('projects.sow.create', $this->data);
     }
     public function store(Request $request)
@@ -66,7 +64,7 @@ class ScopeOfWorkController extends AccountBaseController
     public function edit($id)
     {
         $this->sow = ScopeOfWork::findOrFail($id);
-
+        $this->sow_title = SOWTitle::all();
         return view('projects.sow.edit', $this->data);
     }
 

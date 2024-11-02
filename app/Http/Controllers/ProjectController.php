@@ -71,6 +71,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
 use App\Models\ProjectCustomFilter;
 use Exception;
+use App\Models\WorkOrderStatus;
 
 class ProjectController extends AccountBaseController
 {
@@ -862,6 +863,7 @@ class ProjectController extends AccountBaseController
         case 'vendors':
             $this->view = 'projects.ajax.vendors';
             $this->cancelledreason = CancelledReason::all();
+            $this->wostatus = WorkOrderStatus::all();
             break;
         case 'estimates':
             return $this->estimates();

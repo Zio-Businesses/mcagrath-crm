@@ -7,11 +7,17 @@
     <div class="modal-body">
         <input type="hidden" name="project_id" value="{{ $sow->project_id }}">
         <div class="row">
-        <div class="col-md-6">
-                <x-forms.text fieldId="sow_title" :fieldLabel="__('Scope of Work Title')"
-                    fieldName="sow_title" fieldRequired="true" :fieldPlaceholder="__('Enter sow title')" :fieldValue="$sow->sow_title">
-                </x-forms.text>
-            </div>
+                    <div class="col-md-6">
+                        
+                        <x-forms.select fieldId="sow_title"
+                            :fieldLabel="__('Enter sow title')" fieldName="sow_title" fieldRequired="true">
+                            <option value="">--</option>
+                            @foreach ($sow_title as $category)
+                                <option @selected($sow->sow_title == $category->sow_title) value="{{ $category->sow_title }}">
+                                {{ $category->sow_title }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>
                     <div class="col-md-6">
                         <x-forms.select fieldId="category"
                             :fieldLabel="__('Project Category')" fieldName="category" search="true">

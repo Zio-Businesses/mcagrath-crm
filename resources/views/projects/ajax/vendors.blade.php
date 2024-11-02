@@ -82,12 +82,10 @@
                                         <div class="col-md-3 col-lg-3">
                                             <x-forms.select fieldId="wo_status-{{ $item->id }}"
                                                 :fieldLabel="__('Work Order Status')" fieldName="wo_status" search="true">
-                                                @foreach ($projectStatus as $status)
-                                                    <option
-                                                    data-content="<i class='fa fa-circle mr-1 f-15' style='color:{{$status->color}}'></i>{{ $status->status_name }}"
-                                                    @selected($item->wo_status == $status->status_name)
-                                                    value="{{$status->status_name}}">
-                                                    </option>
+                                                <option value="">--</option>
+                                                @foreach ($wostatus as $category)
+                                                    <option @selected($item->wo_status == $category->wo_status) value="{{ $category->wo_status }}">
+                                                    {{ $category->wo_status }}</option>
                                                 @endforeach
                                             </x-forms.select>
                                         </div>
