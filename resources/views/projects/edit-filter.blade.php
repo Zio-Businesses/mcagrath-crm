@@ -75,7 +75,7 @@
             @endphp
             <div class="col-md-4">
                 <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                    for="usr">@lang('Project Sub-Category')</label>
+                    for="usr">@lang('Project Type')</label>
                 <div class="mb-4">
                 <select class="form-control select-picker" name="filter_type[]" id="filter_type_edit"
                         data-live-search="true" data-container="body" data-size="8" multiple>

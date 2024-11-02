@@ -21,7 +21,6 @@ return new class extends Migration
             $table->json('city')->nullable();
             $table->json('contractor_type')->nullable();
             $table->json('created_by')->nullable();
-            $table->json('status')->nullable();
             $table->timestamps();
             $table->foreign(['user_id'])->references(['id'])->on('users')->onUpdate('CASCADE')->onDelete('CASCADE');
         });

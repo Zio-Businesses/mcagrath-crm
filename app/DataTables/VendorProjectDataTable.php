@@ -174,34 +174,6 @@ class VendorProjectDataTable extends BaseDataTable
             });
         }
 
-        if (!is_null($request->employee_id) && $request->employee_id != 'all') {
-            $users->where(
-                function ($query) {
-                    return $query->where('project_members.user_id', request()->employee_id);
-                }
-            );
-        }
-
-        if (!is_null($request->client_id) && $request->client_id != 'all') {
-            $users->where('projects.client_id', $request->client_id);
-        }
-
-        if (!is_null($request->vendor_id) && $request->vendor_id != '--') {
-            $users->where('vendor_id', $request->vendor_id);
-        }
-
-        if (!is_null($request->link_id) && $request->link_id != '--') {
-            $users->where('link_status', $request->link_id);
-        }
-
-        if (!is_null($request->wo_status) && $request->wo_status != '--') {
-            $users->where('wo_status', $request->wo_status);
-        }
-        
-        if (!is_null($request->project_status) && $request->project_status != '--') {
-            $users->where('projects.status', $request->project_status);
-        }
-
         return $users;
     }
 

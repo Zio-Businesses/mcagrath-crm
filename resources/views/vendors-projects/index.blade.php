@@ -134,7 +134,7 @@
                     <h4 class="modal-title" id="modelHeading">Custom Filter</h4>
                 </div>
                 <div class="modal-body"> 
-                    <x-form id="save-project-filter-form">
+                    <x-form id="save-project-vendor-filter-form">
                         <input type="hidden" name="user_id" value=" {{user()->id}} ">
                         <input type="hidden" name="startDate" id="startDate">
                         <input type="hidden" name="endDate" id="endDate">
@@ -154,10 +154,10 @@
                                     </div>
                                 </div>
                             
-                                <div class="col-md-4">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
+                                <div class="col-md-4 mt-3">
+                                    <label class="f-14 text-dark-grey text-capitalize"
                                         for="usr">@lang('modules.projects.projectCategory')</label>
-                                    <div class="mb-4">
+                                    <div class="mt-1">
                                     <select class="form-control select-picker" name="filter_category_id[]" id="filter_category_id"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
                                         @foreach ($categories as $category)
@@ -205,9 +205,9 @@
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_vendor[]" id="filter_vendor"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($projectpriority as $category)
-                                            <option value="{{ $category->priority }}">
-                                                {{ $category->priority }}
+                                        @foreach ($vendor as $category)
+                                            <option value="{{ $category->id }}">
+                                                {{ $category->vendor_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -216,103 +216,42 @@
                               
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Project Status')</label>
+                                        for="usr">@lang('Link Status')</label>
                                     <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_status[]" id="filter_status"
+                                    <select class="form-control select-picker" name="filter_link_status[]" id="filter_link_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($projectStatus as $category)
-                                            <option value="{{ $category->status_name }}">
-                                                {{ $category->status_name }}
-                                            </option>
-                                        @endforeach
+                                            <option value="Accepted">Accepted</option>
+                                            <option value="Rejected">Rejected</option>
+                                            <option value="Sent">Sent</option>
+                                            <option value="Removed">Removed</option>
                                     </select>
                                     </div>
                                 </div>
                   
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Delayed By')</label>
+                                        for="usr">@lang('WO Status')</label>
                                     <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_delayed[]" id="filter_delayed"
+                                    <select class="form-control select-picker" name="filter_wo_status[]" id="filter_wo_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($delayedby as $category)
-                                            <option value="{{ $category->delayed_by }}">
-                                                {{ $category->delayed_by }}
+                                            @foreach ($projectStatus as $category)
+                                            <option value="{{ $category->status_name }}">
+                                                {{ $category->status_name }}
                                             </option>
-                                        @endforeach
+                                            @endforeach
                                     </select>
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Client')</label>
+                                        for="usr">@lang('Project Status')</label>
                                     <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_client[]" id="filter_client"
+                                    <select class="form-control select-picker" name="filter_project_status[]" id="filter_project_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($clients as $category)
-                                            <option value="{{ $category->id }}">
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('City')</label>
-                                    <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_city[]" id="filter_city"
-                                            data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($city as $category)
-                                            <option value="{{ $category }}" >
-                                                {{ $category }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('County')</label>
-                                    <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_county[]" id="filter_county"
-                                            data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($county as $category)
-                                            <option value="{{ $category }}" >
-                                                {{ $category }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('State')</label>
-                                    <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_state[]" id="filter_state"
-                                            data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($state as $category)
-                                            <option value="{{ $category }}" >
-                                                {{ $category }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Members')</label>
-                                    <div class="mb-4">
-                                    <select class="form-control select-picker" name="filter_members[]" id="filter_members"
-                                            data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($allEmployees as $category)
-                                            <option value="{{ $category->id }}" >
-                                                {{ $category->name }}
+                                        @foreach ($projectStatus as $category)
+                                            <option value="{{ $category->status_name }}">
+                                                {{ $category->status_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -373,6 +312,20 @@ $(document).ready(function () {
         $('#CustomFilterModal').modal('hide');
     });
 
+    $('#clear').click(function() {
+        $('#filter_category_id').val([]).selectpicker('refresh');
+        $('#filter_vendor').val([]).selectpicker('refresh');
+        $('#filter_link_status').val([]).selectpicker('refresh');
+        $('#filter_wo_status').val([]).selectpicker('refresh');
+        $('#filter_project_status').val([]).selectpicker('refresh');
+        $('#filter_client').val([]).selectpicker('refresh');
+        $('#filter_members').val([]).selectpicker('refresh');
+        document.getElementById('startDate').value='';
+        document.getElementById('endDate').value='';
+        $('#customRange').val('');
+        $('#filter_name').val('');
+    });
+
     const buttonWrapper = document.getElementById('buttonWrapper');
     const scrollLeftBtn = document.getElementById('scrollLeftBtn');
     const scrollRightBtn = document.getElementById('scrollRightBtn');
@@ -404,6 +357,30 @@ $(document).ready(function () {
     });
 
     window.addEventListener('resize', updateScrollButtons);
+
+    $('#save-filter').click(function () {
+            if($('#customRange').val()=='')
+            {
+                document.getElementById('startDate').value='';
+                document.getElementById('endDate').value='';
+            }
+            var url = "{{ route('project-vendor-filter.store') }}";
+            $.easyAjax({
+                url: url,
+                container: '#save-project-vendor-filter-form',
+                type: "POST",
+                blockUI: true,
+                disableButton: true,
+                buttonSelector: '#save-filter',
+                data: $('#save-project-vendor-filter-form').serialize(),
+                success: function(response) {
+                    if (response.status == 'success') {
+                        $('#CustomFilterModal').modal('hide');
+                        window.location.reload();
+                    }
+                }
+            })
+         });
 
 });
 </script>

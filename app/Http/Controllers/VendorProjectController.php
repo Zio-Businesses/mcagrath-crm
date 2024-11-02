@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\VendorContract;
 use App\Models\ProjectStatusSetting;
 use App\Models\ProjectVendorCustomFilter;
+use App\Models\ProjectVendor;
+use App\Models\ProjectCategory;
 
 class VendorProjectController extends AccountBaseController
 {
@@ -24,8 +26,10 @@ class VendorProjectController extends AccountBaseController
             $this->clients = User::allClients();
             $this->allEmployees = User::allEmployees(null, true, 'all');
             $this->vendor =  VendorContract::all();
+            // $this->projectvendor = ProjectVendor::all();
             $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
             $this->projectVendorFilter = ProjectVendorCustomFilter::where('user_id', user()->id)->get();
+            $this->categories = ProjectCategory::all();
         }
         $this->view = 'vendors-projects.index';
         return $dataTable->render('vendors-projects.create', $this->data);
