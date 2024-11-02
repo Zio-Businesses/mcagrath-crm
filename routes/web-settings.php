@@ -64,7 +64,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('app-settings/deleteSessions', [AppSettingController::class, 'deleteSessions'])->name('app-settings.delete_sessions');
     Route::resource('app-settings', AppSettingController::class);
     Route::resource('profile-settings', ProfileSettingController::class);
-    Route::resource('vendor-settings', VendorSettingsController::class);
+    
     /* 2FA */
     Route::get('2fa-codes-download', [TwoFASettingController::class, 'download'])->name('2fa_codes_download');
     Route::get('verify-2fa-password', [TwoFASettingController::class, 'verify'])->name('verify_2fa_password');
@@ -268,7 +268,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account/settings'], function 
     Route::post('location/import-store-Location', [LocationController::class, 'importStore'])->name('location.importStore');
     Route::get('location/get-locations', [AppSettingController::class, 'getLocations'])->name('locations.getLocations');
 
-
+    //vendor-settings
+    
+    Route::get('vendor-settings/create-workorder-status', [VendorSettingsController::class, 'createWorkOrderStatus'])->name('vendor-settings.createWorkOrderStatus');
+    Route::post('vendor-settings/save-workorder-status', [VendorSettingsController::class, 'saveWorkOrderStatus'])->name('vendor-settings.saveWorkOrderStatus');
+    Route::get('vendor-settings/create-sow-title', [VendorSettingsController::class, 'createSOWTitle'])->name('vendor-settings.createSOWTitle');
+    Route::post('vendor-settings/save-sow-title', [VendorSettingsController::class, 'saveSOWTitle'])->name('vendor-settings.saveSOWTitle');
+    Route::resource('vendor-settings', VendorSettingsController::class);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {

@@ -48,7 +48,7 @@ class ProjectSettingController extends AccountBaseController
     {
 
         $tab = request('tab');
-
+        
         switch ($tab) {
         case 'status':
             $this->projectStatusSetting = ProjectStatusSetting::all();

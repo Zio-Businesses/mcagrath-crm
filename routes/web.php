@@ -142,6 +142,8 @@ use App\Http\Controllers\ProjectCustomFilterController;
 use App\Http\Controllers\ProjectVendorCustomFilterController;
 use App\Http\Controllers\VendorCustomFilterController;
 use App\Http\Controllers\LeadVendorCustomFilterController;
+use App\Http\Controllers\WorkOrderStatusController;
+use App\Http\Controllers\SOWTitleController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -244,6 +246,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectType', ProjectTypeController::class);
     Route::resource('ContractorType', ContractorTypeController::class);
     Route::resource('CancelledReason', CancelledReasonController::class);
+    Route::resource('WorkOrderStatus', WorkOrderStatusController::class);
+    Route::resource('SOWTitle', SOWTitleController::class);
     Route::resource('projectPriority', ProjectPriorityController::class);
     Route::resource('delayedBy', ProjectDelayedByController::class);
     Route::resource('propertyType', PropertyTypeController::class);

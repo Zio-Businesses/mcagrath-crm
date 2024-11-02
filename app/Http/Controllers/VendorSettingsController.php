@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\ContractTemplate;
 use Illuminate\Support\Facades\Log;
 use App\Models\VendorWaiverFormTemplate;
+use App\Models\WorkOrderStatus;
+use App\Models\SOWTitle;
 use App\Helper\Reply;
 
 class VendorSettingsController extends AccountBaseController
@@ -24,9 +26,41 @@ class VendorSettingsController extends AccountBaseController
     }
     public function index()
     {
-        $this->contract=ContractTemplate::all();
-        $this->wform=VendorWaiverFormTemplate::first();
-        Log::info($this->wform);
+        $tab = request('tab');
+        \Log::info($tab);
+        switch ($tab) {
+
+        case 'wcform':
+            $this->contract=ContractTemplate::all();
+            $this->wform=VendorWaiverFormTemplate::first();
+            $this->view = 'vendor-settings.ajax.wcform';
+            break;
+
+        case 'wostatus':
+            $this->view = 'vendor-settings.ajax.wostatus';
+            $this->wostatus = WorkOrderStatus::all();
+            break;
+
+        case 'sowtitle':
+            $this->view = 'vendor-settings.ajax.sowtitle';
+            $this->sowtitle = SOWTitle::all();
+            break;
+       
+        default:
+            $this->contract=ContractTemplate::all();
+            $this->wform=VendorWaiverFormTemplate::first();
+            $this->view = 'vendor-settings.ajax.wcform';
+            break;
+        }
+
+        $this->activeTab = $tab ?: 'wcform';
+
+        if (request()->ajax()) {
+            $html = view($this->view, $this->data)->render();
+
+            return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle, 'activeTab' => $this->activeTab]);
+        }
+
         return view('vendor-settings.index', $this->data);
     }
     public function store(Request $request)
@@ -50,5 +84,36 @@ class VendorSettingsController extends AccountBaseController
             return Reply::success(__('Updated'));
             }
         }
+    }
+    public function createWorkOrderStatus()
+    {
+        return view('vendor-settings.create-vendor-work-order-settings-modal', $this->data);
+    }
+
+    public function createSOWTitle()
+    {
+        return view('vendor-settings.create-sow-title-settings-modal', $this->data);
+    }
+
+    public function saveWorkOrderStatus(Request $request)
+    {
+        $request->validate([
+            'wo_status' => 'required',
+        ]);
+        $wos = new WorkOrderStatus();
+        $wos->wo_status = $request->wo_status;
+        $wos->save();
+        return Reply::success(__('messages.recordSaved'));
+    }
+
+    public function saveSOWTitle(Request $request)
+    {
+        $request->validate([
+            'sow_title' => 'required',
+        ]);
+        $sow = new SOWTitle();
+        $sow->sow_title = $request->sow_title;
+        $sow->save();
+        return Reply::success(__('messages.recordSaved'));
     }
 }
