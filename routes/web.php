@@ -611,7 +611,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      });
  
      Route::get('/create-conversation', function (TwilioService $twilioService) {
-         $conversation = $twilioService->createConversation('chat-room');
+         $conversation = $twilioService->createConversation('crm-main');
          return response()->json([
              'sid' => $conversation->sid,
              'friendly_name' => $conversation->friendlyName,
@@ -624,7 +624,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
          return response()->json(['message' => 'Conversation deleted']);
      });
  
-     Route::post('twilio-send', [TwilioConversationController::class, 'send']);
+     Route::post('twilio-send', [TwilioConversationController::class, 'send'])->name('twilio-send');
      Route::get('twilio-conversations', [TwilioConversationController::class, 'index']);
      Route::post('webhooks/twilio', [TwilioWebhookController::class, 'handleWebhook']);
      Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');

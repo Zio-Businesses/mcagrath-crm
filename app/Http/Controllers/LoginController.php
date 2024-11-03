@@ -16,20 +16,12 @@ use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use \Illuminate\Validation\ValidationException;
-use App\Services\TwilioService;
 
 
 class LoginController extends Controller
 {
 
     use AppBoot, SocialAuthSettings;
-
-    protected $twilioService;
-
-    public function __construct(TwilioService $twilioService)
-    {
-        $this->twilioService = $twilioService;
-    }
 
     protected $redirectTo = 'account/dashboard';
 
@@ -67,8 +59,6 @@ class LoginController extends Controller
 
             // Attempt login
             Auth::login($user);
-            $this->twilioService->checkAndAddParticipant(env('TWILIO_CHAT_SID'), $user->email);
-
             return redirect()->route('dashboard');
         }
 
@@ -137,8 +127,6 @@ class LoginController extends Controller
             DB::commit();
 
             Auth::login($user, true);
-            $this->twilioService->checkAndAddParticipant(env('TWILIO_CHAT_SID'), $user->email);
-
             return redirect()->intended($this->redirectPath());
 
         } catch (Exception $e) {

@@ -63,6 +63,7 @@
             border: 1px solid #ccc;
             border-radius: 20px;
             margin-right: 10px;
+            color: white;
             font-size: 16px;
         }
 
@@ -79,7 +80,7 @@
 @endpush
 
 @section('content')
-    <div id="messages" style="overflow-y: scroll; max-height:80svh; position: relative;;">
+    <div id="messages" style="overflow-y: scroll; max-height:80svh; position: relative;">
         <!-- Example messages -->
         <div class="message sent">
             This is a sent message.
@@ -104,7 +105,7 @@
         const messageInput = this.querySelector('input[name="message"]');
         const message = messageInput.value;
 
-        fetch("/twilio-send", {
+        fetch("twilio-send", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
