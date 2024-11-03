@@ -219,6 +219,7 @@ return array(
         'taskCalendar' => 'Task Calendar',
         'calendar' => 'Calendar',
         'messages' => 'Messages',
+        'smschat' => 'SMS - Chat',
         'customFields' => 'Custom Fields',
         'events' => 'Events',
         'vendor'=>'Vendor',

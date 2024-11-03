@@ -139,6 +139,7 @@ use App\Http\Controllers\VendorProjectController;
 use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
 use App\Http\Controllers\ProjectCustomFilterController;
+use App\Http\Controllers\TwilioController;
 use App\Http\Controllers\ProjectVendorCustomFilterController;
 use App\Http\Controllers\VendorCustomFilterController;
 use App\Http\Controllers\LeadVendorCustomFilterController;
@@ -587,6 +588,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('messages/fetch_messages/{id}', [MessageController::class, 'fetchUserMessages'])->name('messages.fetch_messages');
     Route::post('messages/check_messages', [MessageController::class, 'checkNewMessages'])->name('messages.check_new_message');
     Route::resource('messages', MessageController::class);
+
+    
+    //Twilio
+    Route::get('chat',[TwilioController::class,'index'])->name('twilio-chat');
 
     // Chat Files
     Route::get('message-file/download/{id}', [MessageFileController::class, 'download'])->name('message_file.download');
