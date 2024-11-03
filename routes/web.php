@@ -74,6 +74,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskCalendarController;
 use App\Http\Controllers\TaskCategoryController;
 use App\Http\Controllers\InvoiceFilesController;
+use App\Services\TwilioService;
 use App\Http\Controllers\ClientContactController;
 use App\Http\Controllers\ContractRenewController;
 use App\Http\Controllers\EventCalendarController;
@@ -140,6 +141,9 @@ use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
 use App\Http\Controllers\ProjectCustomFilterController;
 use App\Http\Controllers\TwilioController;
+use App\Http\Controllers\TwilioConversationController;
+use App\Http\Controllers\TwilioWebhookController;
+use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\ProjectVendorCustomFilterController;
 use App\Http\Controllers\VendorCustomFilterController;
 use App\Http\Controllers\LeadVendorCustomFilterController;
@@ -590,8 +594,42 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('messages', MessageController::class);
 
     
-    //Twilio
-    Route::get('chat',[TwilioController::class,'index'])->name('twilio-chat');
+     //Twilio
+     Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
+     Route::get('/test-twilio', function (TwilioService $twilioService) {
+         $conversations = $twilioService->getConversations();
+         $data = [];
+         foreach ($conversations as $conversation) {
+             $data[] = [
+                 'sid' => $conversation->sid,
+                 'friendly_name' => $conversation->friendlyName,
+                 'created_at' => $conversation->dateCreated->format('Y-m-d H:i:s'),
+             ];
+         }
+ 
+         return response()->json($data);
+     });
+ 
+     Route::get('/create-conversation', function (TwilioService $twilioService) {
+         $conversation = $twilioService->createConversation('chat-room');
+         return response()->json([
+             'sid' => $conversation->sid,
+             'friendly_name' => $conversation->friendlyName,
+             'created_at' => $conversation->dateCreated->format('Y-m-d H:i:s'),
+         ]);
+     });
+ 
+     Route::get('/delete-conversation/{sid}', function ($sid, TwilioService $twilioService) {
+         $twilioService->deleteConversation($sid);
+         return response()->json(['message' => 'Conversation deleted']);
+     });
+ 
+     Route::post('twilio-send', [TwilioConversationController::class, 'send']);
+     Route::get('twilio-conversations', [TwilioConversationController::class, 'index']);
+     Route::post('webhooks/twilio', [TwilioWebhookController::class, 'handleWebhook']);
+     Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');
+ 
+ 
 
     // Chat Files
     Route::get('message-file/download/{id}', [MessageFileController::class, 'download'])->name('message_file.download');
