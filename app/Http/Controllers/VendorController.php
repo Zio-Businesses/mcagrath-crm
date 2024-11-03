@@ -28,6 +28,9 @@ use App\Http\Requests\vendor\SaveVendorRequest;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewVendorWaiverForm;
 use App\DataTables\ProjectNotesDataTable;
+use App\Models\ContractorType;
+use App\Models\Locations;
+use App\Models\VendorCustomFilter;
 
 class VendorController extends AccountBaseController
 {
@@ -41,6 +44,13 @@ class VendorController extends AccountBaseController
     {
         if (!request()->ajax()) {
             $this->clients = VendorContract::all();
+            // $this->vendorStatus = VendorContract::getStatus(); 
+            $this->contracttype = ContractorType::all();
+            $this->state=Locations::select('state')->distinct()->get();
+            $this->county=Locations::select('county')->distinct()->get();
+            $this->city=Locations::select('city')->distinct()->get();
+            $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->vendorFilter = VendorCustomFilter::where('user_id', user()->id)->get();
         }
 
         return $dataTable->render('vendors.index', $this->data);

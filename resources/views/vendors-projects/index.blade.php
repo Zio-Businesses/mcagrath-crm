@@ -128,7 +128,7 @@
         
         <a class="btn btn-secondary f-14 float-right mb-3" data-toggle="tooltip" id="custom-filter"
         data-original-title="@lang('Custom Filter')"><i class="side-icon bi bi-filter"></i></a>
-
+        <div id="table-actions" class="flex-grow-1 align-items-center mb-2 mb-lg-0 mb-md-0"></div>
         <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
 
             {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}

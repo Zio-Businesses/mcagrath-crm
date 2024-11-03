@@ -33,6 +33,7 @@ class VendorProjectDataTable extends BaseDataTable
         
         $datatables->editColumn('id', fn($row) => $row->id);
         $datatables->editColumn('client_id', fn($row) => $row->client?->id ? view('components.client', ['user' => $row->client]) : '');
+        $datatables->editColumn('client_name', fn($row) => $row->client?->id ? $row->client->name_salutation : '');
         $datatables->editColumn('vendor_id', fn($row) => $row?->vendors ? view('components.vendor', ['vendor' => $row->vendors]) : '');
         $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?$row->project->propertyDetails->property_address:'N/A');
         $datatables->editColumn('project_status', fn($row) => $row->project->status);
@@ -135,6 +136,18 @@ class VendorProjectDataTable extends BaseDataTable
         //     }
         //     return $sowname;
         // });
+        $datatables->addColumn('name', function ($row) {
+            $members = [];
+
+            if (count($row->project?->members) > 0) {
+
+                foreach ($row->project?->members as $member) {
+                    $members[] = $member->user->name;
+                }
+
+                return implode(',', $members);
+            }
+        });
         $status=ProjectStatusSetting::where('default_status', true)->value('status_name');
         $datatables->editColumn('wo_status', function ($row) use ($status) {
             if($row->wo_status==null){
@@ -204,6 +217,10 @@ class VendorProjectDataTable extends BaseDataTable
                 }',
             ]);
 
+        if (canDataTableExport()) {
+            $dataTable->buttons(Button::make(['extend' => 'excel', 'text' => '<i class="fa fa-file-export"></i> ' . trans('app.exportExcel')]));
+        }
+
         return $dataTable;
     }
 
@@ -265,13 +282,18 @@ class VendorProjectDataTable extends BaseDataTable
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
+            __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'title' => __('Internal Team')],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
             __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
+            __('Vendors') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'width' => '15%', 'visible' => false, 'title' => __('Vendors')],
+            __('Vendor Ph #') => ['data' => 'vendor_phone', 'name' => 'vendor_phone', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Ph #')],
+            __('Vendor Email') => ['data' => 'vendor_email_address', 'name' => 'vendor_email_address', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Email')],
             __('Link Status') => ['data' => 'link_status', 'name' => 'link_status', 'title' => __('Link Status')], 
             __('Wo Status') => ['data' => 'wo_status', 'name' => 'wo_status', 'title' => __('Wo Status')],
             __('Project Status') => ['data' => 'project_status', 'name' => 'project_status', 'title' => __('Project Status')],
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
-            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],  
+            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')], 
+            __('Clients') => ['data' => 'client_name', 'name' => 'client_name', 'width' => '15%', 'visible' => false, 'title' => __('Clients')],   
             __('Project Category') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('Project Category')],
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
