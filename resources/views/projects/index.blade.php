@@ -54,11 +54,13 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" 
                         aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                           @if($filter->status=='inactive')
                             <a class="dropdown-item apply-filter" href="javascript:;"
                                 data-row-id="{{$filter->id}}">
                                 <i class="bi bi-save2 mr-2"></i>
                                 @lang('Apply')
                             </a>
+                            @endif
                             <a class="dropdown-item edit-filter" href="javascript:;"
                                 data-row-id="{{$filter->id}}">
                                 <i class="fa fa-edit mr-2"></i>
@@ -69,6 +71,13 @@
                                 <i class="fa fa-trash mr-2"></i>
                                 @lang('app.delete')
                             </a>
+                            @if($filter->status=='active')
+                            <a class="dropdown-item clear-filter" href="javascript:;"
+                                data-row-id="{{$filter->id}}">
+                                <i class="bi bi-save2 mr-2"></i>
+                                @lang('Clear')
+                            </a>
+                            @endif
                     </div>
                 </div>
             </div>
@@ -547,6 +556,26 @@ $deleteProjectPermission = user()->permission('delete_projects');
 
             var id = $(this).data('row-id');
             var url = "{{ route('project-filter.change-status',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+        $('body').on('click', '.clear-filter', function() {
+            var id = $(this).data('row-id');
+            var url = "{{ route('project-filter.clear',':id') }}";
             url = url.replace(':id', id);
             var token = "{{ csrf_token() }}";
             $.easyAjax({

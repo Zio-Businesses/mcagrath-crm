@@ -86,12 +86,14 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" 
                     aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
+                    @if($filter->status=='inactive')
                         <a class="dropdown-item apply-filter" href="javascript:;"
                             data-row-id="{{$filter->id}}">
                             <i class="bi bi-save2 mr-2"></i>
                             @lang('Apply')
                         </a>
-                        <a class="dropdown-item edit-filter" href="javascript:;"
+                    @endif
+                        <a class="dropdown-item edit-filter-vendor-projects" href="javascript:;"
                             data-row-id="{{$filter->id}}">
                             <i class="fa fa-edit mr-2"></i>
                             @lang('app.edit')
@@ -101,6 +103,13 @@
                             <i class="fa fa-trash mr-2"></i>
                             @lang('app.delete')
                         </a>
+                        @if($filter->status=='active')
+                            <a class="dropdown-item clear-filter" href="javascript:;"
+                                data-row-id="{{$filter->id}}">
+                                <i class="bi bi-save2 mr-2"></i>
+                                @lang('Clear')
+                            </a>
+                        @endif
                 </div>
             </div>
         </div>
@@ -234,9 +243,9 @@
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_wo_status[]" id="filter_wo_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                            @foreach ($projectStatus as $category)
-                                            <option value="{{ $category->status_name }}">
-                                                {{ $category->status_name }}
+                                            @foreach ($wostatus as $category)
+                                            <option value="{{ $category->wo_status }}">
+                                                {{ $category->wo_status }}
                                             </option>
                                             @endforeach
                                     </select>
@@ -380,7 +389,102 @@ $(document).ready(function () {
                     }
                 }
             })
-         });
+        });
+
+        $('body').on('click', '.edit-filter-vendor-projects', function() {
+            var id = $(this).data('row-id');
+
+            var url = "{{ route('project-vendor-filter.edit', ':id') }}";
+            url = url.replace(':id', id);
+
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+            
+        });
+        $('body').on('click', '.delete-row', function() {
+            var id = $(this).data('row-id');
+            Swal.fire({
+                title: "@lang('messages.sweetAlertTitle')",
+                text: "@lang('messages.recoverRecord')",
+                icon: 'warning',
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: "@lang('messages.confirmDelete')",
+                cancelButtonText: "@lang('app.cancel')",
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-secondary'
+                },
+                showClass: {
+                    popup: 'swal2-noanimation',
+                    backdrop: 'swal2-noanimation'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('project-vendor-filter.destroy', ':id') }}";
+                    url = url.replace(':id', id);
+                    var token = "{{ csrf_token() }}";
+                    $.easyAjax({
+                        type: 'POST',
+                        url: url,
+                        container: '.content-wrapper',
+                        blockUI: true,
+                        data: {
+                            '_token': token,
+                            '_method': 'DELETE'
+                        },
+                        success: function(response) {
+                            if (response.status == "success") {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $('body').on('click', '.apply-filter', function() {
+
+            var id = $(this).data('row-id');
+            var url = "{{ route('projectvendor-filter.change-status',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+        $('body').on('click', '.clear-filter', function() {
+            var id = $(this).data('row-id');
+            var url = "{{ route('projectvendor-filter.clear',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
 
 });
 </script>

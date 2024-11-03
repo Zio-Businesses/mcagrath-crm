@@ -897,10 +897,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);
      Route::post('project-filter/change-status/{id}',[ProjectCustomFilterController::class,'changestatus'])->name('project-filter.change-status');
+     Route::post('project-filter/clear/{id}',[ProjectCustomFilterController::class,'clear'])->name('project-filter.clear');
 
      //Project-Vendor-custom-filter 
      Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
      Route::post('projectvendor-filter/change-status/{id}',[ProjectVendorCustomFilterController::class,'changestatus'])->name('projectvendor-filter.change-status');
+     Route::post('projectvendor-filter/clear/{id}',[ProjectVendorCustomFilterController::class,'clear'])->name('projectvendor-filter.clear');
 
      //Vendor-custom-filter 
      Route::resource('vendor-filter', VendorCustomFilterController::class);
