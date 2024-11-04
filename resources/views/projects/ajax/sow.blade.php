@@ -14,6 +14,9 @@
                     <x-slot name="thead">
                         <th class="pl-20">#</th>
                         <th>@lang('SOW Title')</th>
+                        <th>@lang('Project Catgeory')</th>
+                        <th>@lang('Project Sub-Catgeory')</th>
+                        <th>@lang('Contractor Type')</th>
                         <th>@lang('Added By')</th>
                         <th>@lang('Added Date')</th>
                         <th class="text-right pr-20">@lang('app.action')</th>
@@ -25,6 +28,15 @@
                             <td>
                                 <a href="javascript:;" class="sow-detail text-darkest-grey f-w-500"
                                     data-sow-id="{{ $item->id }}">{{ $item->sow_title }}</a>
+                            </td>
+                            <td>
+                                {{$item->category??''}}
+                            </td>
+                            <td>
+                                {{$item->sub_category??''}}
+                            </td>
+                            <td>
+                                {{$item->contractor_type??''}}
                             </td>
                             <td>
                                 {{$item->added->name??''}}

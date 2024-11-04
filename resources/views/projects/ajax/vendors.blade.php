@@ -20,7 +20,7 @@
                         <th>@lang('Vendor Name')</th>
                         <th>@lang('app.mobile')</th>
                         <th>@lang('app.email')</th>
-                        
+                        <th>@lang('Project Amount')</th>
                         <th>@lang('Sow')</th>
                         <th>@lang('Link Sent By')</th>
                         <th>@lang('Link Date')</th>
@@ -42,7 +42,9 @@
                             <td>
                                 {{$item->vendor_email_address}}
                             </td>
-                           
+                            <td>
+                                {{$item->project_amount??''}}
+                            </td>
                             <td>
                                 @if($item->sow_id)
                                     @foreach($item->sow_id as $sow)
