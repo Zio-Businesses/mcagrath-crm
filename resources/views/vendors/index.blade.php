@@ -387,7 +387,7 @@
         });
         $('body').on('click', '.edit-filter-vendor', function() {
             var id = $(this).data('row-id');
-
+            
             var url = "{{ route('vendor-filter.edit', ':id') }}";
             url = url.replace(':id', id);
 
@@ -417,7 +417,7 @@
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('project-vendor-filter.destroy', ':id') }}";
+                    var url = "{{ route('vendor-filter.destroy', ':id') }}";
                     url = url.replace(':id', id);
                     var token = "{{ csrf_token() }}";
                     $.easyAjax({
@@ -435,6 +435,47 @@
                             }
                         }
                     });
+                }
+            });
+        });
+        $('body').on('click', '.apply-filter', function() {
+
+            var id = $(this).data('row-id');
+            var url = "{{ route('vendor-filter.change-status',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
+                }
+            });
+        });
+        $('body').on('click', '.clear-filter', function() {
+            var id = $(this).data('row-id');
+            var url = "{{ route('vendor-filter.clear',':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                container: '.content-wrapper',
+                blockUI: true,
+                data: {
+                    '_token': token,
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        window.location.reload();
+                    }
                 }
             });
         });

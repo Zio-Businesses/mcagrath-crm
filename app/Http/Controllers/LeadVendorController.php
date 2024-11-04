@@ -11,14 +11,6 @@ use App\Models\VendorContract;
 use App\Helper\Reply;
 use App\Models\Project;
 use App\Models\ContractType;
-use App\Models\ClientDetails;
-use App\Models\ClientCategory;
-use App\Models\PurposeConsent;
-use App\Models\LanguageSetting;
-use App\Models\UniversalSearch;
-use App\Models\ClientSubCategory;
-use App\Models\PurposeConsentUser;
-use App\Models\EmployeeDetails;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -33,6 +25,7 @@ use App\Models\VendorNotes;
 use App\Imports\LeadVendorImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ContractorType;
+use App\Models\LeadVendorCustomFilter;
 
 class LeadVendorController extends AccountBaseController
 {
@@ -139,25 +132,22 @@ class LeadVendorController extends AccountBaseController
     public function index(VendorTrackDataTable $dataTable)
     {
         $this->pageTitle = 'Vendor Leads';
-        // $viewPermission = user()->permission('view_clients');
-        // $this->addClientPermission = user()->permission('add_clients');
-
-        // abort_403(!in_array($viewPermission, ['all', 'added', 'both']));
-       
-        
         if (!request()->ajax()) {
-            $ids = EmployeeDetails::pluck('user_id');
-            $this->subcategories = ClientSubCategory::all();
-            $this->categories = ClientCategory::all();
-            $this->projects = Project::all();
-            $this->contracts = ContractType::all();
-            $this->countries = countries();
+            // $ids = EmployeeDetails::pluck('user_id');
+            // $this->subcategories = ClientSubCategory::all();
+            // $this->categories = ClientCategory::all();
+            // $this->projects = Project::all();
+            // $this->contracts = ContractType::all();
+            // $this->countries = countries();
             $this->vendorStatuses = Vendor::getStatuses();
-            $this->createdby = User::whereIn('id', $ids)->get();
+            // $this->createdby = User::whereIn('id', $ids)->get();
+            $this->leadVendorFilter = LeadVendorCustomFilter::where('user_id', user()->id)->get();
             $this->contracttype = ContractorType::all();
             $this->state=Locations::select('state')->distinct()->get();
             $this->county=Locations::select('county')->distinct()->get();
             $this->city=Locations::select('city')->distinct()->get();
+            $this->allEmployees = User::allEmployees(null, true, 'all');
+            $this->leadsource=LeadSource::all();
         }
         return $dataTable->render('vendortrack.index', $this->data);
     }
@@ -166,7 +156,6 @@ class LeadVendorController extends AccountBaseController
         $vendor = Vendor::find($id);
 
         if ($vendor) {
-            // Delete the user
             $vendor->delete();
         }
 

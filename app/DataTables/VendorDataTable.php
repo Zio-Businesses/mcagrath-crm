@@ -10,6 +10,8 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Exception;
+use App\Models\VendorCustomFilter;
 
 class VendorDataTable extends BaseDataTable
 {
@@ -153,10 +155,50 @@ class VendorDataTable extends BaseDataTable
             });
         }
 
+        $users = self::customFilter($users);
+
         if ($request->status != '') {
             $users = $users->where('status', $request->status);
         }
 
+        return $users;
+    }
+
+    public function customFilter($users)
+    {
+        try{
+            $customfilter = VendorCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+
+            if($customfilter->start_date!=''&& $customfilter->end_date!='')
+            {
+                $users->whereBetween(DB::raw('DATE(vendor_contracts.`created_at`)'), [$customfilter->start_date, $customfilter->end_date]);
+            }
+            if($customfilter->state!='')
+            {
+                $users->whereIn('vendor_contracts.state', $customfilter->state)->get();
+            }
+            if($customfilter->city!='')
+            {
+                $users->whereIn('vendor_contracts.city', $customfilter->city)->get();
+            }
+            if($customfilter->county!='')
+            {
+                $users->whereIn('vendor_contracts.county', $customfilter->county)->get();
+            }
+            if($customfilter->contractor_type!='')
+            {
+                $users->whereIn('vendor_contracts.contractor_type', $customfilter->contractor_type)->get();
+            }
+            if($customfilter->created_by!='')
+            {
+                $users->whereIn('vendor_contracts.created_by', $customfilter->created_by)->get();
+            }
+            if($customfilter->vendor_status!='')
+            {
+                $users->whereIn('vendor_contracts.status', $customfilter->vendor_status)->get();
+            }
+        }
+        catch (Exception){}
         return $users;
     }
 

@@ -907,8 +907,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Vendor-custom-filter 
      Route::resource('vendor-filter', VendorCustomFilterController::class);
      Route::post('vendor-filter/change-status/{id}',[VendorCustomFilterController::class,'changestatus'])->name('vendor-filter.change-status');
+     Route::post('vendor-filter/clear/{id}',[VendorCustomFilterController::class,'clear'])->name('vendor-filter.clear');
 
       //Lead-Vendor-custom-filter 
       Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
       Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
+      Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
 });

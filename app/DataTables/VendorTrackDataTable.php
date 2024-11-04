@@ -10,6 +10,8 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Models\LeadVendorCustomFilter;
+use Exception;
 
 class VendorTrackDataTable extends BaseDataTable
 {
@@ -189,34 +191,50 @@ class VendorTrackDataTable extends BaseDataTable
             });
         }
 
-        if ($request->startDate !== null && $request->startDate != 'null' && $request->startDate != '') {
-            $startDate = companyToDateString($request->startDate);
-            $users = $users->where(DB::raw('DATE(`created_at`)'), '>=', $startDate);
-        }
+        $users = self::customFilter($users);
+    
+        return $users;
+    }
 
-        if ($request->endDate !== null && $request->endDate != 'null' && $request->endDate != '') {
-            $endDate = companyToDateString($request->endDate);
-            $users = $users->where(DB::raw('DATE(`created_at`)'), '<=', $endDate);
-        }
-        if ($request->status != '') {
-            $users = $users->where('v_status', $request->status);
-        }
-        if ($request->createdby != '') {
-            $users = $users->where('created_by', $request->createdby);
-        }
-        if ($request->contractor_type != '') {
-            $users = $users->where('contractor_type', $request->contractor_type);
-        }
-        if ($request->state != '') {
-            $users = $users->where('state', $request->state);
-        }
-        if ($request->county != '') {
-            $users = $users->where('county', $request->county);
-        }
-        if ($request->city != '') {
-            $users = $users->where('city', $request->city);
-        }
+    public function customFilter($users)
+    {
+        try{
+            $customfilter = LeadVendorCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
 
+            if($customfilter->start_date!=''&& $customfilter->end_date!='')
+            {
+                $users->whereBetween(DB::raw('DATE(vendors.`nxt_date`)'), [$customfilter->start_date, $customfilter->end_date]);
+            }
+            if($customfilter->state!='')
+            {
+                $users->whereIn('vendors.state', $customfilter->state)->get();
+            }
+            if($customfilter->city!='')
+            {
+                $users->whereIn('vendors.city', $customfilter->city)->get();
+            }
+            if($customfilter->county!='')
+            {
+                $users->whereIn('vendors.county', $customfilter->county)->get();
+            }
+            if($customfilter->contractor_type!='')
+            {
+                $users->whereIn('vendors.contractor_type', $customfilter->contractor_type)->get();
+            }
+            if($customfilter->created_by!='')
+            {
+                $users->whereIn('vendors.created_by', $customfilter->created_by)->get();
+            }
+            if($customfilter->lead_vendor_status!='')
+            {
+                $users->whereIn('vendors.v_status', $customfilter->lead_vendor_status)->get();
+            }
+            if($customfilter->lead_source!='')
+            {
+                $users->whereIn('vendors.lead_source', $customfilter->lead_source)->get();
+            }
+        }
+        catch (Exception){}
         return $users;
     }
 
