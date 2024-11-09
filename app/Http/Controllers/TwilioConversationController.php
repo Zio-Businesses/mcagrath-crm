@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VendorContract;
 use App\Services\TwilioService;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
@@ -22,36 +23,32 @@ class TwilioConversationController extends Controller
     {
         $request->validate([
             'message' => 'required|string|max:255',
-            'phoneNumber' => 'digits:10',
+            'vendorId' => "integer",
         ]);
 
         $user = Auth::user();
+        $message = $request->message;
 
         // Replace with your conversation SID
         $conversationSid = env('TWILIO_CHAT_SID'); // Update this with the correct Conversation SID
-        try{
 
-            if($request->phoneNumber){
-                // Log::info("Phone number is present");
-                $toNumber = '+91' . $request->phoneNumber;
-                $twilioNumber = env('TWILIO_NUMBER');
-                $client->messages->create(
+        if($request->vendorId){
+            // Log::info("Phone number is present");
+            $vendor = VendorContract::where('id', $request->vendorId)->select('vendor_name','cell')->first();
+            $toNumber = '+91' . $vendor->cell;
+            $twilioNumber = env('TWILIO_NUMBER');
+            $client->messages->create(
                 $toNumber, // Text any number
                 [
                     'from' => $twilioNumber, // From a Twilio number in your account
                     'body' => $request->message
                 ]
-                );
-            }
-            // Send the message using the Twilio API
-            $this->twilioService->sendMessage($conversationSid, $user->name, $request->message);
-            return response()->json(['success' => true]);
-        }catch(Exception $e){
-            return response()->json(['success' => false]);
+            );
+            $message = '@' . $vendor->vendor_name . ' ' . $message;
         }
-
-
-
+        // Send the message using the Twilio API
+        $this->twilioService->sendMessage($conversationSid, $user->name, $message);
+        return response()->json(['success' => true]);
     }
     public function index()
     {

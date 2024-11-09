@@ -76,6 +76,12 @@
             font-size: 16px;
             cursor: pointer;
         }
+        select.form-control, select.form-control>option{
+            width: 15%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 20px;
+        }
     </style>
 @endpush
 
@@ -91,6 +97,17 @@
     </div>
     <form id="messageForm" action="/twilio-send" method="POST">
         @csrf
+        <select class="form-control" name="vendor">
+            <option value='' class="form-control">Select vendor</option>
+            @php
+                use App\Models\VendorContract;
+                $vendors = VendorContract::all();
+            @endphp
+
+            @foreach ($vendors as $vendor)
+            <option value='{{ $vendor->id }}' class="form-control">{{ $vendor->vendor_name }}</option>
+            @endforeach
+        </select>
         <input type="text" name="message" placeholder="Type your message" required>
         <button type="submit">Send</button>
     </form>
@@ -103,21 +120,12 @@
         e.preventDefault();
 
         const messageInput = this.querySelector('input[name="message"]');
-        let message = messageInput.value;
-        let phoneNumber;
+        const message = messageInput.value;
+        const vendorInput = this.querySelector('select[name="vendor"]');
+        const vendorId = vendorInput.value;
 
-        const phonePattern = /@(\d{10})/; // Matches "@<10-digit number>"
-        const phoneMatch = message.match(phonePattern);
-        console.log(phoneMatch);
-
-        if(phoneMatch){
-            phoneNumber = phoneMatch[1];
-            message = message.replace(phonePattern, "").trim();
-        }
-
-        console.log(phoneNumber);
+        console.log(vendorId);
         console.log(message);
-
         fetch("twilio-send", {
                 method: "POST",
                 headers: {
@@ -125,17 +133,21 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
                 body: JSON.stringify({
-                    message, phoneNumber
+                    message, vendorId
                 }),
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     messageInput.value = "";
+                    vendorInput.value = "";
                     loadMessages();
                 }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                alert("Message not sent");
+                console.error("Error:", error);
+            });
     });
 
     let twilioConversation;
