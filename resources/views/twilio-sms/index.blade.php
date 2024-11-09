@@ -103,7 +103,20 @@
         e.preventDefault();
 
         const messageInput = this.querySelector('input[name="message"]');
-        const message = messageInput.value;
+        let message = messageInput.value;
+        let phoneNumber;
+
+        const phonePattern = /@(\d{10})/; // Matches "@<10-digit number>"
+        const phoneMatch = message.match(phonePattern);
+        console.log(phoneMatch);
+
+        if(phoneMatch){
+            phoneNumber = phoneMatch[1];
+            message = message.replace(phonePattern, "").trim();
+        }
+
+        console.log(phoneNumber);
+        console.log(message);
 
         fetch("twilio-send", {
                 method: "POST",
@@ -112,7 +125,7 @@
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
                 body: JSON.stringify({
-                    message
+                    message, phoneNumber
                 }),
             })
             .then(response => response.json())
