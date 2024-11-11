@@ -124,8 +124,6 @@
         const vendorInput = this.querySelector('select[name="vendor"]');
         const vendorId = vendorInput.value;
 
-        console.log(vendorId);
-        console.log(message);
         fetch("twilio-send", {
                 method: "POST",
                 headers: {

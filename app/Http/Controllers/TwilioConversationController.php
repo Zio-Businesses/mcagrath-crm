@@ -22,8 +22,7 @@ class TwilioConversationController extends Controller
     public function send(Client $client,Request $request)
     {
         $request->validate([
-            'message' => 'required|string|max:255',
-            'vendorId' => "integer",
+            'message' => 'required|string|max:255'
         ]);
 
         $user = Auth::user();
@@ -31,6 +30,7 @@ class TwilioConversationController extends Controller
 
         // Replace with your conversation SID
         $conversationSid = env('TWILIO_CHAT_SID'); // Update this with the correct Conversation SID
+
 
         if($request->vendorId){
             // Log::info("Phone number is present");
