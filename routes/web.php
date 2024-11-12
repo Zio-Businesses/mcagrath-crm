@@ -940,16 +940,20 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);
      Route::post('project-filter/change-status/{id}',[ProjectCustomFilterController::class,'changestatus'])->name('project-filter.change-status');
+     Route::post('project-filter/clear/{id}',[ProjectCustomFilterController::class,'clear'])->name('project-filter.clear');
 
      //Project-Vendor-custom-filter 
      Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
      Route::post('projectvendor-filter/change-status/{id}',[ProjectVendorCustomFilterController::class,'changestatus'])->name('projectvendor-filter.change-status');
+     Route::post('projectvendor-filter/clear/{id}',[ProjectVendorCustomFilterController::class,'clear'])->name('projectvendor-filter.clear');
 
      //Vendor-custom-filter 
      Route::resource('vendor-filter', VendorCustomFilterController::class);
      Route::post('vendor-filter/change-status/{id}',[VendorCustomFilterController::class,'changestatus'])->name('vendor-filter.change-status');
+     Route::post('vendor-filter/clear/{id}',[VendorCustomFilterController::class,'clear'])->name('vendor-filter.clear');
 
       //Lead-Vendor-custom-filter 
       Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
       Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
+      Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
 });

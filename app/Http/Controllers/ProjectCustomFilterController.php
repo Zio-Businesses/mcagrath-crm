@@ -82,6 +82,9 @@ class ProjectCustomFilterController extends AccountBaseController
     }
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'filter_name' => 'required',
+        ]);
         $pcf = ProjectCustomFilter::findOrFail($id);
         $pcf->filter_on = $request->custom_date_filter_on;
         $pcf->start_date = $request->filterstartDate;
@@ -112,6 +115,13 @@ class ProjectCustomFilterController extends AccountBaseController
         $filter->status = 'active';
         $filter->save();
         return Reply::success(__('Filter Applied'));
+    }
+    public function clear($id){
+
+        $filter = ProjectCustomFilter::findOrFail($id);
+        $filter->status = 'inactive';
+        $filter->save();
+        return Reply::success(__('Filter Removed'));
     }
     
 }

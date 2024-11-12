@@ -254,6 +254,7 @@
                                     data-live-search="true" @if(!in_array('admin', user_roles()) && $vendor->status=='DNU') disabled @endif>
                                 <option value="">--</option>
                                 <option @selected($vendor->status == 'Active') value="Active" data-content='<i class="fa fa-circle mr-2" style="color:#00b5ff;"></i>Active'>
+                                <option @selected($vendor->status == 'InActive') value="InActive" data-content='<i class="fa fa-circle mr-2" style="color:#800080;"></i>InActive'>
                                 <option @selected($vendor->status == 'Compliant') value="Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Compliant'>
                                 <option @selected($vendor->status == 'Snooze') value="Snooze" data-content='<i class="fa fa-circle mr-2" style="color:#FFA500;"></i>Snooze'>
                                 <option @selected($vendor->status == 'Non Compliant') value="Non Compliant" data-content='<i class="fa fa-circle mr-2" style="color:#FFFF00;"></i>Non Compliant'>

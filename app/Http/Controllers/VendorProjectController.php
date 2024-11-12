@@ -11,6 +11,7 @@ use App\Models\ProjectStatusSetting;
 use App\Models\ProjectVendorCustomFilter;
 use App\Models\ProjectVendor;
 use App\Models\ProjectCategory;
+use App\Models\WorkOrderStatus;
 
 class VendorProjectController extends AccountBaseController
 {
@@ -30,6 +31,7 @@ class VendorProjectController extends AccountBaseController
             $this->projectStatus = ProjectStatusSetting::where('status', 'active')->get();
             $this->projectVendorFilter = ProjectVendorCustomFilter::where('user_id', user()->id)->get();
             $this->categories = ProjectCategory::all();
+            $this->wostatus = WorkOrderStatus::all();
         }
         $this->view = 'vendors-projects.index';
         return $dataTable->render('vendors-projects.create', $this->data);

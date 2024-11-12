@@ -11,6 +11,9 @@ use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use App\Models\ProjectStatusSetting;
+use App\Models\ProjectVendorCustomFilter;
+use Exception;
+
 class VendorProjectDataTable extends BaseDataTable
 {
 
@@ -30,6 +33,7 @@ class VendorProjectDataTable extends BaseDataTable
         
         $datatables->editColumn('id', fn($row) => $row->id);
         $datatables->editColumn('client_id', fn($row) => $row->client?->id ? view('components.client', ['user' => $row->client]) : '');
+        $datatables->editColumn('client_name', fn($row) => $row->client?->id ? $row->client->name_salutation : '');
         $datatables->editColumn('vendor_id', fn($row) => $row?->vendors ? view('components.vendor', ['vendor' => $row->vendors]) : '');
         $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?$row->project->propertyDetails->property_address:'N/A');
         $datatables->editColumn('project_status', fn($row) => $row->project->status);
@@ -132,6 +136,18 @@ class VendorProjectDataTable extends BaseDataTable
         //     }
         //     return $sowname;
         // });
+        $datatables->addColumn('name', function ($row) {
+            $members = [];
+
+            if (count($row->project?->members) > 0) {
+
+                foreach ($row->project?->members as $member) {
+                    $members[] = $member->user->name;
+                }
+
+                return implode(',', $members);
+            }
+        });
         $status=ProjectStatusSetting::where('default_status', true)->value('status_name');
         $datatables->editColumn('wo_status', function ($row) use ($status) {
             if($row->wo_status==null){
@@ -161,8 +177,14 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('projects', 'projects.id', '=', 'project_vendors.project_id')
         ->leftJoin('property_details', 'property_details.id', '=', 'projects.property_details_id') 
         ->leftJoin('project_members', 'project_members.project_id', '=', 'projects.id')// Join projects table
-        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status')
+        ->leftJoin('project_estimators', 'project_estimators.project_id', 'projects.id')
+        ->leftJoin('project_accountings', 'project_accountings.project_id', 'projects.id')
+        ->leftJoin('project_emanagers', 'project_emanagers.project_id', 'projects.id')
+        ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
+        ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id','projects.category_id','project_category.category_name')
         ->groupBy('project_vendors.id');
+
+        $users = self::customFilter($users);
 
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
@@ -195,9 +217,59 @@ class VendorProjectDataTable extends BaseDataTable
                 }',
             ]);
 
+        if (canDataTableExport()) {
+            $dataTable->buttons(Button::make(['extend' => 'excel', 'text' => '<i class="fa fa-file-export"></i> ' . trans('app.exportExcel')]));
+        }
+
         return $dataTable;
     }
 
+    public function customFilter($users)
+    {
+        try{
+            $customfilter = ProjectVendorCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+
+            if($customfilter->start_date!=''&& $customfilter->end_date!='')
+            {
+                $users->whereBetween(DB::raw('DATE(project_vendors.`created_at`)'), [$customfilter->start_date, $customfilter->end_date]);
+            }
+            if($customfilter->project_status!='')
+            {
+                $users->whereIn('projects.status', $customfilter->project_status)->get();
+            }
+            if($customfilter->client_id!='')
+            {
+                $users->whereIn('projects.client_id', $customfilter->client_id)->get();
+            }
+            if($customfilter->work_order_status!='')
+            {
+                $users->whereIn('project_vendors.wo_status', $customfilter->work_order_status)->get();
+            }
+            if($customfilter->project_category!='')
+            {
+                $users->whereIn('projects.category_id', $customfilter->project_category)->get();
+            }
+            if($customfilter->vendor_id!='')
+            {
+                $users->whereIn('project_vendors.vendor_id', $customfilter->vendor_id)->get();
+            }
+            if($customfilter->link_status!='')
+            {
+                $users->whereIn('project_vendors.link_status', $customfilter->link_status)->get();
+            }
+            if($customfilter->project_members!='')
+            {
+                $users->whereIn('project_members.user_id', $customfilter->project_members)
+                ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
+                ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
+                ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
+                ->get();
+                
+            }
+        }
+        catch (Exception){}
+        return $users;
+    }
     /**
      * Get columns.
      *
@@ -210,14 +282,19 @@ class VendorProjectDataTable extends BaseDataTable
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('modules.projects.members') => ['data' => 'members', 'name' => 'members', 'exportable' => false, 'width' => '15%', 'title' => __('modules.projects.members')],
+            __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'title' => __('Internal Team')],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
             __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
+            __('Vendors') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'width' => '15%', 'visible' => false, 'title' => __('Vendors')],
+            __('Vendor Ph #') => ['data' => 'vendor_phone', 'name' => 'vendor_phone', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Ph #')],
+            __('Vendor Email') => ['data' => 'vendor_email_address', 'name' => 'vendor_email_address', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Email')],
             __('Link Status') => ['data' => 'link_status', 'name' => 'link_status', 'title' => __('Link Status')], 
             __('Wo Status') => ['data' => 'wo_status', 'name' => 'wo_status', 'title' => __('Wo Status')],
             __('Project Status') => ['data' => 'project_status', 'name' => 'project_status', 'title' => __('Project Status')],
             __('Property Address') => ['data' => 'property_address', 'name' => 'property_address', 'title' => __('Property Address')],
-            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')],  
-            __('Project Category') => ['data' => 'project_type', 'name' => 'project_type', 'title' => __('Project Category')],
+            __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client')], 
+            __('Clients') => ['data' => 'client_name', 'name' => 'client_name', 'width' => '15%', 'visible' => false, 'title' => __('Clients')],   
+            __('Project Category') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('Project Category')],
             __('Link Sent Date') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Link Sent Date')],
             __('Due Date') => ['data' => 'due_date', 'name' => 'due_date', 'title' => __('Due Date')],
             __('Inspection Date') => ['data' => 'inspection_date', 'name' => 'inspection_date', 'title' => __('Inspection Date')],

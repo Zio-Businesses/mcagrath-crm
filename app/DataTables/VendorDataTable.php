@@ -10,6 +10,8 @@ use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Exception;
+use App\Models\VendorCustomFilter;
 
 class VendorDataTable extends BaseDataTable
 {
@@ -114,6 +116,7 @@ class VendorDataTable extends BaseDataTable
                 <select class="form-control select-picker change-vendor-status" data-size="5" data-row-id="' . $row->id . '" ' . ((!in_array("admin", user_roles()) && $row->status == "DNU") ? 'disabled' : '') . '>
                     <option value="">--</option>
                     <option value="Active" ' . ($row->status === "Active" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#00b5ff;\'></i>Active">
+                    <option value="InActive" ' . ($row->status === "InActive" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#800080;\'></i>InActive">
                     <option value="Compliant" ' . ($row->status === "Compliant" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#679c0d;\'></i>Compliant">
                     <option value="Snooze" ' . ($row->status === "Snooze" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#FFA500;\'></i>Snooze">
                     <option value="Non Compliant" ' . ($row->status === "Non Compliant" ? "selected" : "") . ' data-content="<i class=\'fa fa-circle mr-2\' style=\'color:#FFFF00;\'></i>Non Compliant">
@@ -153,10 +156,50 @@ class VendorDataTable extends BaseDataTable
             });
         }
 
+        $users = self::customFilter($users);
+
         if ($request->status != '') {
             $users = $users->where('status', $request->status);
         }
 
+        return $users;
+    }
+
+    public function customFilter($users)
+    {
+        try{
+            $customfilter = VendorCustomFilter::where('user_id', user()->id)->where('status', 'active')->first();
+
+            if($customfilter->start_date!=''&& $customfilter->end_date!='')
+            {
+                $users->whereBetween(DB::raw('DATE(vendor_contracts.`created_at`)'), [$customfilter->start_date, $customfilter->end_date]);
+            }
+            if($customfilter->state!='')
+            {
+                $users->whereIn('vendor_contracts.state', $customfilter->state)->get();
+            }
+            if($customfilter->city!='')
+            {
+                $users->whereIn('vendor_contracts.city', $customfilter->city)->get();
+            }
+            if($customfilter->county!='')
+            {
+                $users->whereIn('vendor_contracts.county', $customfilter->county)->get();
+            }
+            if($customfilter->contractor_type!='')
+            {
+                $users->whereIn('vendor_contracts.contractor_type', $customfilter->contractor_type)->get();
+            }
+            if($customfilter->created_by!='')
+            {
+                $users->whereIn('vendor_contracts.created_by', $customfilter->created_by)->get();
+            }
+            if($customfilter->vendor_status!='')
+            {
+                $users->whereIn('vendor_contracts.status', $customfilter->vendor_status)->get();
+            }
+        }
+        catch (Exception){}
         return $users;
     }
 
