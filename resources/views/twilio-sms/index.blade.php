@@ -131,7 +131,7 @@
         <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
         <form id="messageForm" action="/twilio-send" method="POST">
             @csrf
-            <select class="form-control" name="vendor">
+            <select class="form-control" name="vendor" id="vendor">
                 <option value='' class="form-control">Select vendor</option>
                 @php
                     use App\Models\VendorContract;
@@ -163,9 +163,12 @@
         const messageInput = document.getElementById("messageInput");
         const sendButton = document.getElementById("sendButton");
 
+        const vendorInput = document.getElementById("vendor");
+     
         document.getElementById("messageForm").addEventListener("submit", function(e) {
             e.preventDefault();
             const message = messageInput.value;
+            const vendorId = vendorInput.value;
 
 
             sendingMessage.style.display = 'block';
