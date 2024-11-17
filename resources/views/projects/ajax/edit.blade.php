@@ -244,7 +244,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         <x-forms.text :fieldLabel="__('Invoiced Date')" fieldReadOnly
                             :fieldPlaceholder="__('placeholders.date')" fieldName="invoiced_date"
                             fieldId="invoiced_date" 
-                            :fieldValue="($project->latestInvoice?->issue_date ? $project->latestInvoice->issue_date->timezone(company()->timezone)->format(company()->date_format) : '')" />
+                            :fieldValue="($project->latestInvoice?->created_at ? $project->latestInvoice->created_at->timezone(company()->timezone)->format(company()->date_format) : '')" />
                                
                     </div>
                     <div class="col-md-4">

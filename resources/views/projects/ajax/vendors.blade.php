@@ -48,7 +48,10 @@
                             <td>
                                 @if($item->sow_id)
                                     @foreach($item->sow_id as $sow)
-                                        {{ $item->sowname($sow) }}<br/>
+                                       @php
+                                        $sowData = $item->sowname($sow); // Get the related model instance
+                                       @endphp
+                                        {{ $sowData->sow_title }}- {{ $sowData->category }} - {{ $sowData->sub_category }}<br/>
                                     @endforeach
                                 @endif
                             </td>
@@ -77,7 +80,7 @@
                             </td>
                         </tr>
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
-                            <td colspan="9">
+                            <td colspan="10">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <div class="row justify-content-center border rounded mr-0 bg-additional-grey">
                                         <input type="hidden" name="project_id" value="{{ $project->id }}">

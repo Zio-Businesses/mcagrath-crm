@@ -1,0 +1,1 @@
+<?php echo e($text); ?><?php /**PATH /home/u659716913/domains/crm.mcresi.com/public_html/resources/views/vendor/mail/text/text.blade.php ENDPATH**/ ?>

@@ -1,0 +1,2 @@
+$(function(){window.<?php echo e(config('datatables-html.namespace', 'LaravelDataTables')); ?>=window.<?php echo e(config('datatables-html.namespace', 'LaravelDataTables')); ?>||{};window.<?php echo e(config('datatables-html.namespace', 'LaravelDataTables')); ?>["%1$s"]=$("#%1$s").DataTable(%2$s);});
+<?php /**PATH /home/u659716913/domains/crm.mcresi.com/public_html/resources/views/vendor/datatables/script.blade.php ENDPATH**/ ?>
