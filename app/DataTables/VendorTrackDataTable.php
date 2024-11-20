@@ -191,8 +191,9 @@ class VendorTrackDataTable extends BaseDataTable
                     ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
         }
-
+        if ($request->searchText == ''){
         $users = self::customFilter($users);
+        }
     
         return $users;
     }
