@@ -20,7 +20,7 @@
                             href="{{ $file->file_url }}">@lang('app.view')</a>
                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
                             data-row-id="{{ $file->id }}"
-                            href="javascript:;">@lang('Rename')</a>
+                            href="javascript:;">@lang('Rename File')</a>
                     <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
                         href="{{ route('vendor-docs.download', md5($file->id)) }}">@lang('app.download')</a>
                     <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
