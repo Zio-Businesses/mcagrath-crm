@@ -144,6 +144,7 @@ use App\Http\Controllers\VendorCustomFilterController;
 use App\Http\Controllers\LeadVendorCustomFilterController;
 use App\Http\Controllers\WorkOrderStatusController;
 use App\Http\Controllers\SOWTitleController;
+use App\Http\Controllers\VendorDocController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -894,6 +895,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');
      Route::resource('vendor-estimates-files', VendorEstimateFilesController::class);
  
+     //Vendor Docs
+     Route::get('vendor-docs/download/{id}', [VendorDocController::class, 'download'])->name('vendor-docs.download');
+     Route::resource('vendor-docs', VendorDocController::class);
+
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);
      Route::post('project-filter/change-status/{id}',[ProjectCustomFilterController::class,'changestatus'])->name('project-filter.change-status');

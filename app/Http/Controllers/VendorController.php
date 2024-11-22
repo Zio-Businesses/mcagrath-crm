@@ -58,8 +58,8 @@ class VendorController extends AccountBaseController
     public function show($id)
     {
         $tab = request('tab');
-
-        $this->vendorDetail = VendorContract::Find($id);
+        
+        $this->vendorDetail = VendorContract::findOrFail($id);
 
         $this->pageTitle = $this->vendorDetail->vendor_name;
 
@@ -74,6 +74,9 @@ class VendorController extends AccountBaseController
         switch ($tab) {
             case 'notes':
                 return $this->notes();
+                break;
+            case 'doc':
+                $this->view = 'vendors.ajax.docs';
                 break;
             default:
                 $this->view = 'vendors.ajax.profile';
