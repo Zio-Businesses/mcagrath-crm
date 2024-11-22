@@ -55,6 +55,9 @@
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
                                         target="_blank"
                                         href="{{ $file->file_url }}">@lang('app.view')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
+                                    data-row-id="{{ $file->id }}"
+                                    href="javascript:;">@lang('Rename')</a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
                                     href="{{ route('vendor-docs.download', md5($file->id)) }}">@lang('app.download')</a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
@@ -142,6 +145,57 @@ $(document).ready(function() {
     $('body').on('click', '#cancel-taskfile', function() {
         $('#save-taskfile-data-form').toggleClass('d-none');
         $('#add-btn').toggleClass('d-none');
+    });
+    $('body').on('click', '.rename-file', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-docs.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+            
+    });
+    $('body').on('click', '.delete-file', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-docs.destroy', ':id') }}";
+                url = url.replace(':id', id);
+
+                var token = "{{ csrf_token() }}";
+
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#task-file-list').html(response.view);
+                        }
+                    }
+                });
+            }
+        });
     });
 });
 

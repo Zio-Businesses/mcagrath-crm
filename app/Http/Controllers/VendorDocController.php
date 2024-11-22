@@ -17,8 +17,17 @@ class VendorDocController extends AccountBaseController
     {
         if ($request->hasFile('file')) {
 
-            // $defaultImage = null;
+            $this->storeFiles($request);
 
+            $this->vendorDetail = VendorDocs::where('vendor_id', $request->vendor_id)->orderByDesc('id')->get();
+            $view = view('vendors.docs.show', $this->data)->render();
+
+            return Reply::dataOnly(['status' => 'success', 'view' => $view]);
+        }
+    }
+    private function storeFiles($request)
+    {
+        if ($request->hasFile('file')) {
             foreach ($request->file as $fileData) {
                 $file = new VendorDocs();
                 $file->vendor_id = $request->vendor_id;
@@ -28,12 +37,23 @@ class VendorDocController extends AccountBaseController
                 $file->size = $fileData->getSize();
                 $file->save();
             }
-
         }
-
-        return Reply::success(__('messages.fileUploaded'));
     }
 
+    public function edit($id)
+    {
+        $this->name = VendorDocs::findOrFail($id);
+        return view('vendors.docs.rename', $this->data);
+    }
+    public function update(Request $request, $id)
+    {
+        $rename = VendorDocs::findOrFail($id);
+        $rename->filename = $request->filename;
+        $rename->save();
+        $this->vendorDetail = VendorDocs::where('vendor_id', $rename->vendor_id)->orderByDesc('id')->get();
+        $view = view('vendors.docs.show', $this->data)->render();
+        return Reply::successWithData(__('Updated Successfully'), ['view' => $view]);
+    }
     /**
      * Remove the specified resource from storage.
      */
@@ -41,25 +61,27 @@ class VendorDocController extends AccountBaseController
     {
         
         $file = VendorDocs::findOrFail($id);
-        $this->deletePermission = user()->permission('delete_invoices');
-        abort_403(!($this->deletePermission == 'all' || ($this->deletePermission == 'added' && $file->added_by == user()->id)));
+        // $this->deletePermission = user()->permission('delete_invoices');
+        // abort_403(!($this->deletePermission == 'all' || ($this->deletePermission == 'added' && $file->added_by == user()->id)));
 
         Files::deleteFile($file->hashname, 'vendor-docs/' . $file->vendor_id);
 
         VendorDocs::destroy($id);
 
-        $this->files = VendorDocs::where('vendor_id', $file->vendor_id)->orderByDesc('id')->get();
+        $this->vendorDetail = VendorDocs::where('vendor_id', $file->vendor_id)->orderByDesc('id')->get();
         // $view = view('estimates.ajax.show', $this->data)->render();
 
-        return Reply::success(__('messages.deleteSuccess'));
+        $view = view('vendors.docs.show', $this->data)->render();
+
+        return Reply::successWithData(__('messages.deleteSuccess'), ['view' => $view]);
     }
 
     public function download($id)
     {
         $file = VendorDocs::whereRaw('md5(id) = ?', $id)->firstOrFail();
 
-        $this->viewPermission = user()->permission('view_invoices');
-        abort_403(!($this->viewPermission == 'all' || ($this->viewPermission == 'added' && $file->added_by == user()->id)));
+        // $this->viewPermission = user()->permission('view_invoices');
+        // abort_403(!($this->viewPermission == 'all' || ($this->viewPermission == 'added' && $file->added_by == user()->id)));
 
         return download_local_s3($file, 'vendor-docs/' . $file->hashname);
     }

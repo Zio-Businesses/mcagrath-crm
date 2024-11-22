@@ -128,6 +128,9 @@
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
                                         target="_blank"
                                         href="<?php echo e($file->file_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
+                                    data-row-id="<?php echo e($file->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('Rename'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
                                     href="<?php echo e(route('vendor-docs.download', md5($file->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
@@ -233,6 +236,57 @@ $(document).ready(function() {
     $('body').on('click', '#cancel-taskfile', function() {
         $('#save-taskfile-data-form').toggleClass('d-none');
         $('#add-btn').toggleClass('d-none');
+    });
+    $('body').on('click', '.rename-file', function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('vendor-docs.edit', ':id')); ?>";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+            
+    });
+    $('body').on('click', '.delete-file', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "<?php echo e(route('vendor-docs.destroy', ':id')); ?>";
+                url = url.replace(':id', id);
+
+                var token = "<?php echo e(csrf_token()); ?>";
+
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#task-file-list').html(response.view);
+                        }
+                    }
+                });
+            }
+        });
     });
 });
 

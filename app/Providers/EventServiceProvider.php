@@ -209,6 +209,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceFiles;
 use App\Models\ClientEstimatesFiles;
 use App\Models\VendorEstimateFiles;
+use App\Models\VendorDocs;
 use App\Models\InvoiceSetting;
 use App\Models\Issue;
 use App\Models\KnowledgeBase;
@@ -422,6 +423,7 @@ use App\Observers\TaskFileObserver;
 use App\Observers\InvoiceFileObserver;
 use App\Observers\ClientEstimatesFilesObserver;
 use App\Observers\VendorEstimatesFilesObserver;
+use App\Observers\VendorDocsObserver;
 use App\Observers\VendorEstimateObserver;
 use App\Observers\LeadPipelineObserver;
 use App\Observers\LeadStageObserver;
@@ -615,6 +617,7 @@ class EventServiceProvider extends ServiceProvider
         InvoiceFiles::class => [InvoiceFileObserver::class],
         ClientEstimatesFiles::class=>[ClientEstimatesFilesObserver::class],
         VendorEstimateFiles::class=>[VendorEstimatesFilesObserver::class],
+        VendorDocs::class=>[VendorDocsObserver::class],
         vendor_estimates::class=>[VendorEstimateObserver::class],
         TaskLabelList::class => [TaskLabelListObserver::class],
         TaskNote::class => [TaskNoteObserver::class],
