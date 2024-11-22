@@ -98,12 +98,13 @@ class VendorTrackDataTable extends BaseDataTable
                     </div>';
             
         });
-        $datatables->editColumn('status', function($row){
+        $datatables->editColumn('v_status', function($row){
             if($row->v_status=='Declined by Vendor'&&$row->reason){
 
                 return '<div class="media align-items-center" style="width: 125px;">
                         <div class="media-body">
-                        <td> <a href data-toggle="tooltip" style="color:#1d82f5;" data-placement="bottom" title="' .$row->reason .'">'.   $row->v_status . '</a> </td>
+                        <td> ' .   $row->v_status . '</a> </td>
+                        <td> ' .   $row->reason . '</a> </td>
                     </div>
                 </div>';
             }
@@ -168,7 +169,7 @@ class VendorTrackDataTable extends BaseDataTable
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
         // Add Custom Field to datatable
 
-        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check','latest_note','created_by','edited_by','website']));
+        $datatables->rawColumns(array_merge(['name', 'action', 'v_status', 'check','latest_note','created_by','edited_by','website']));
 
         return $datatables;
     }
@@ -190,8 +191,9 @@ class VendorTrackDataTable extends BaseDataTable
                     ->orWhere('created_by', 'like', '%' . request('searchText') . '%');
             });
         }
-
+        if ($request->searchText == ''){
         $users = self::customFilter($users);
+        }
     
         return $users;
     }
@@ -282,7 +284,7 @@ class VendorTrackDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby'),'width' => '100px'],
-            __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
+            __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'title' => __('app.status')],
             __('app.ct_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.ct_type')],
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],
             __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],

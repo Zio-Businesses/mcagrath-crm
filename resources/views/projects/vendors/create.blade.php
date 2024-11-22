@@ -40,7 +40,7 @@
                             <option value="">--</option>
                             @foreach ($sow as $category)
                                 <option value="{{ $category->id }}">
-                                    {{ $category->sow_title }} 
+                                    {{ $category->sow_title }} - {{$category->category}} - {{$category->sub_category}}
                                 </option>
                             @endforeach
                         </x-forms.select>
