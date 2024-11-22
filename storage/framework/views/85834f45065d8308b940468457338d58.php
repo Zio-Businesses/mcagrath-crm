@@ -73,7 +73,7 @@ $viewClientOrder = user()->permission('view_order');
                     <li>
                         <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('vendors.show', $vendorDetail->id).'?tab=doc','text' => __('Documents'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('vendors.show', $vendorDetail->id).'?tab=doc','text' => __('Document'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
