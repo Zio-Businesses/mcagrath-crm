@@ -33,7 +33,7 @@ $viewClientOrder = user()->permission('view_order');
                         <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=notes'" :text="__('Notes')" class="notes" ajax="false" />
                     </li>
                     <li>
-                        <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=doc'" :text="__('Document')" class="doc" ajax="false" />
+                        <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=doc'" :text="__('Documen')" class="doc" ajax="false" />
                     </li>
                 </ul>
             </nav>
