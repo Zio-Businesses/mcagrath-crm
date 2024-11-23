@@ -1,249 +1,50 @@
 
 
 <?php $__env->startPush('styles'); ?>
-    <style>
-        ::-webkit-scrollbar {
-            background-color: transparent;
-        }
-
-        ::-webkit-scrollbar-button {
-            border: none;
-        }
-
-        .chat-app-container {
-            display: flex;
-            height: 100%;
-            border: 1px solid #e8eef340;
-            overflow: hidden;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            flex: 1;
-            max-width: 300px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #e8eef340;
-        }
-
-        .search-bar {
-            padding: 10px;
-            border-bottom: 1px solid #e8eef340;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #e8eef340;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .user-list {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .user {
-            padding: 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #e8eef340;
-            transition: background 0.3s;
-        }
-
-        .user img {
-            width: 3rem;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .user:hover {
-            background-color: #e8eef340;
-        }
-
-        /* Chat Area */
-        .chat-area {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 15px;
-            border-bottom: 1px solid #e8eef340;
-        }
-
-        #messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .message {
-            margin: .5rem 0;
-            padding: .5rem;
-            border-radius: .4rem;
-            max-width: 80%;
-            display: flex;
-            flex-direction: column;
-            gap: .2rem;
-            word-wrap: break-word;
-        }
-
-        .message.received {
-            background-color: #535353;
-            color: white;
-            text-align: left;
-            align-self: flex-start;
-        }
-
-        .message.sent .msg-auth {
-            text-align: right;
-        }
-
-        .msg-auth {
-            text-transform: uppercase;
-        }
-
-        .msg-body {
-            font-size: 1rem;
-            text-align: left;
-        }
-
-        .msg-time {
-            font-size: .75rem;
-            text-align: right;
-        }
-
-        .message.sent {
-            background-color: #dcf8c6;
-            color: black;
-            text-align: left;
-            align-self: flex-end;
-        }
-
-        .status-message {
-            font-size: 0.9rem;
-            color: #777;
-            margin: .5rem;
-            text-align: center;
-            display: none;
-        }
-
-        .status-message.loading {
-            color: #3498db;
-        }
-
-        .status-message.sending {
-            color: #34b7f1;
-        }
-
-        .status-message.error {
-            color: #e74c3c;
-        }
-
-        #message-input {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0rem .5rem;
-            width: 95%;
-        }
-
-        #message-input input {
-            flex: 1;
-            padding: .75rem .5rem;
-            border-radius: .75rem;
-            border: 1px solid #ccc;
-            margin-right: 10px;
-            color: white;
-            font-size: 16px;
-        }
-
-        #message-input button {
-            padding: .75rem .5rem;
-            border: none;
-            border-radius: 100%;
-            background-color: #34b7f1;
-            color: white;
-            font-size: .725rem;
-            cursor: pointer;
-        }
-
-        #message-input button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .chat-app-container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                max-width: none;
-                height: 30%;
-                flex: none;
-                border-right: none;
-                border-bottom: 1px solid #e8eef340;
-            }
-
-            .chat-area {
-                flex: none;
-            }
-
-        }
-    </style>
+    <link rel="stylesheet" href="<?php echo e(asset('twilio-chat/style.css')); ?>" defer="defer">
 <?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
-    <div style="height: 92svh">
-        <div class="chat-app-container">
-            <!-- Left Sidebar -->
-            <div class="sidebar">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search" />
-                </div>
-                <div class="user-list">
-                    <?php
-                        use App\Models\VendorContract;
-                        $vendors = VendorContract::all();
-                    ?>
-                    <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="user">
-                            <img src=<?php echo e($vendor->image_url); ?> alt="" />
-                            <span><?php echo e($vendor->vendor_name); ?></span>
-                        </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                </div>
+    <div class="chat-app-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" placeholder="Search" />
             </div>
-
-            <!-- Chat Area -->
-            <div class="chat-area">
-                <div class="chat-header">
-                    <h3>Chat with User 1</h3>
-                </div>
-                <div id="messages">
-                </div>
-                <div id="loadingMessage" class="status-message loading">Loading messages...</div>
-                <div id="sendingMessage" class="status-message sending">Sending message...</div>
-                <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
-                <form id="message-input" action="/twilio-send" method="POST">
-                    <?php echo csrf_field(); ?>
-                    <input type="text" name="message" id="messageInput" placeholder="Type your message" required>
-                    <button type="submit" id="sendButton"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
+            <div class="user-list">
+                <?php
+                    use App\Models\VendorContract;
+                    $vendors = VendorContract::all();
+                ?>
+                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="user">
+                        <img src=<?php echo e($vendor->image_url); ?> alt="" />
+                        <span><?php echo e($vendor->vendor_name); ?></span>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
-    </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <h3>Edward McGrath</h3>
+            </div>
+            <div id="messages">
+            </div>
+            <div id="loadingMessage" class="status-message loading">Loading messages...</div>
+            <div id="sendingMessage" class="status-message sending">Sending message...</div>
+            <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
+            <form id="message-input" action="/twilio-send" method="POST">
+                <?php echo csrf_field(); ?>
+                <input type="text" name="message" id="messageInput" placeholder="Type your message" required>
+                <button type="submit" id="sendButton"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+        </div>
     </div>
 <?php $__env->stopSection(); ?>
 
@@ -261,7 +62,6 @@
         document.getElementById("message-input").addEventListener("submit", function(e) {
             e.preventDefault();
             const message = messageInput.value;
-            const vendorId = vendorInput.value;
 
 
             sendingMessage.style.display = 'block';
@@ -278,14 +78,12 @@
                     },
                     body: JSON.stringify({
                         message,
-                        vendorId
                     }),
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         messageInput.value = "";
-                        vendorInput.value = "";
                     } else {
                         throw new Error("Message sending failed");
                     }
