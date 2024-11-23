@@ -1,5 +1,8 @@
 @extends('layouts.app')
-
+@php
+    use App\Models\VendorContract;
+    $vendors = VendorContract::all();
+@endphp
 @push('styles')
     <link rel="stylesheet" href="{{ asset('twilio-chat/style.css') }}" defer="defer">
 @endpush
@@ -8,13 +11,30 @@
         <!-- Left Sidebar -->
         <div class="sidebar">
             <div class="search-bar">
-                <input type="text" placeholder="Search" />
+                <div class="form-group">
+                    <x-forms.select fieldId="selectVendor" :fieldLabel="__('modules.messages.chooseMember')" fieldName="vendor_id" search="true"
+                        fieldRequired="true">
+                        <option value="">--</option>
+                        @foreach ($vendors as $vendor)
+                            @php
+                                $content = "<div class='d-flex align-items-center text-left'>
+                                            <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
+                                                <img class='rounded-circle' src='{$vendor->image_url}' alt='{$vendor->vendor_name}'>
+                                            </div>
+                                            <span>{$vendor->vendor_name}</span>
+                                        </div>";
+                            @endphp
+
+                            <option data-content="{!! $content !!}" value="{{ $vendor->id }}">
+                                {{ $vendor->vendor_name }}
+                            </option>
+                        @endforeach
+                    </x-forms.select>
+                </div>
+
+
             </div>
             <div class="user-list">
-                @php
-                    use App\Models\VendorContract;
-                    $vendors = VendorContract::all();
-                @endphp
                 @foreach ($vendors as $vendor)
                     <div class="user" data-vendor-id="{{ $vendor->id }}">
                         <img src="{{ $vendor->image_url }}" alt="" />
@@ -53,6 +73,10 @@
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="{{ asset('twilio-chat/scripts.jss') }}"></script>
     <script>
+        $(document).ready(function() {
+            $('#selectVendor').selectpicker();
+        });
+
         document.querySelectorAll('.user').forEach(user => {
             user.addEventListener('click', function() {
                 document.querySelectorAll('.user').forEach(u => u.classList.remove('active'));

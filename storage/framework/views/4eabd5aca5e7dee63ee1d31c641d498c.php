@@ -1,5 +1,8 @@
 
-
+<?php
+    use App\Models\VendorContract;
+    $vendors = VendorContract::all();
+?>
 <?php $__env->startPush('styles'); ?>
     <link rel="stylesheet" href="<?php echo e(asset('twilio-chat/style.css')); ?>" defer="defer">
 <?php $__env->stopPush(); ?>
@@ -8,13 +11,48 @@
         <!-- Left Sidebar -->
         <div class="sidebar">
             <div class="search-bar">
-                <input type="text" placeholder="Search" />
+                <div class="form-group">
+                    <?php if (isset($component)) { $__componentOriginal67cd5dc9866c6185ad92d933c387fa86 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Select::resolve(['fieldId' => 'selectVendor','fieldLabel' => __('modules.messages.chooseMember'),'fieldName' => 'vendor_id','search' => 'true','fieldRequired' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.select'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Select::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                        <option value="">--</option>
+                        <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
+                                $content = "<div class='d-flex align-items-center text-left'>
+                                            <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
+                                                <img class='rounded-circle' src='{$vendor->image_url}' alt='{$vendor->vendor_name}'>
+                                            </div>
+                                            <span>{$vendor->vendor_name}</span>
+                                        </div>";
+                            ?>
+
+                            <option data-content="<?php echo $content; ?>" value="<?php echo e($vendor->id); ?>">
+                                <?php echo e($vendor->vendor_name); ?>
+
+                            </option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal67cd5dc9866c6185ad92d933c387fa86)): ?>
+<?php $attributes = $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86; ?>
+<?php unset($__attributesOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86)): ?>
+<?php $component = $__componentOriginal67cd5dc9866c6185ad92d933c387fa86; ?>
+<?php unset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
+<?php endif; ?>
+                </div>
+
+
             </div>
             <div class="user-list">
-                <?php
-                    use App\Models\VendorContract;
-                    $vendors = VendorContract::all();
-                ?>
                 <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="user" data-vendor-id="<?php echo e($vendor->id); ?>">
                         <img src="<?php echo e($vendor->image_url); ?>" alt="" />
@@ -53,6 +91,10 @@
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="<?php echo e(asset('twilio-chat/scripts.jss')); ?>"></script>
     <script>
+        $(document).ready(function() {
+            $('#selectVendor').selectpicker();
+        });
+
         document.querySelectorAll('.user').forEach(user => {
             user.addEventListener('click', function() {
                 document.querySelectorAll('.user').forEach(u => u.classList.remove('active'));
