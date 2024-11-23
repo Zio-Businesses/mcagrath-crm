@@ -16,8 +16,8 @@
                     $vendors = VendorContract::all();
                 @endphp
                 @foreach ($vendors as $vendor)
-                    <div class="user">
-                        <img src={{ $vendor->image_url }} alt="" />
+                    <div class="user" data-vendor-id="{{ $vendor->id }}">
+                        <img src="{{ $vendor->image_url }}" alt="" />
                         <span>{{ $vendor->vendor_name }}</span>
                     </div>
                 @endforeach
@@ -26,8 +26,9 @@
 
         <!-- Chat Area -->
         <div class="chat-area">
-            <div class="chat-header">
-                <h3>Edward McGrath</h3>
+            <div class="chat-header" id="chatheader">
+                <img id="chat-image" src="" alt="Vendor" style="display: none" />
+                <h3 id="chat-title"></h3>
             </div>
             <div id="messages">
             </div>
@@ -50,7 +51,35 @@
 
 @push('scripts')
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
+    <script src="{{ asset('twilio-chat/scripts.jss') }}"></script>
     <script>
+        document.querySelectorAll('.user').forEach(user => {
+            user.addEventListener('click', function() {
+                document.querySelectorAll('.user').forEach(u => u.classList.remove('active'));
+                this.classList.add('active');
+
+                const vendorId = this.getAttribute('data-vendor-id');
+                const vendorName = this.querySelector('span').textContent;
+                const vendorImage = this.querySelector('img').src;
+                const form = document.getElementById('message-input');
+                const chat = document.getElementById('chatheader');
+
+
+                const chatTitle = document.getElementById('chat-title');
+                const chatImage = document.getElementById('chat-image');
+
+                chatTitle.textContent = vendorName;
+                chatImage.src = vendorImage;
+                chatImage.style.display = 'inline-block';
+                form.style.display = "flex";
+                chat.style.display = "flex";
+
+                connectToTwilio();
+            });
+        });
+
+
+
         const loadingMessage = document.getElementById("loadingMessage");
         const sendingMessage = document.getElementById("sendingMessage");
         const errorMessage = document.getElementById("errorMessage");
@@ -186,7 +215,5 @@
             const messagesDiv = document.getElementById("messages");
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
-
-        window.onload = connectToTwilio;
     </script>
 @endpush
