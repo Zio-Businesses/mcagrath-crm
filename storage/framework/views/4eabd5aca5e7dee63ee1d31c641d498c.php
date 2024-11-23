@@ -51,6 +51,13 @@
             transition: background 0.3s;
         }
 
+        .user img {
+            width: 3rem;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
         .user:hover {
             background-color: #e8eef340;
         }
@@ -206,7 +213,10 @@
                         $vendors = VendorContract::all();
                     ?>
                     <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="user"><?php echo e($vendor->vendor_name); ?></div>
+                        <div class="user">
+                            <img src=<?php echo e($vendor->image_url); ?> alt="" />
+                            <span><?php echo e($vendor->vendor_name); ?></span>
+                        </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>

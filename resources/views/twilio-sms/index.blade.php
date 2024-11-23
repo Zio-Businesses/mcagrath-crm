@@ -51,6 +51,13 @@
             transition: background 0.3s;
         }
 
+        .user img {
+            width: 3rem;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
         .user:hover {
             background-color: #e8eef340;
         }
@@ -206,7 +213,10 @@
                         $vendors = VendorContract::all();
                     @endphp
                     @foreach ($vendors as $vendor)
-                        <div class="user">{{ $vendor->vendor_name }}</div>
+                        <div class="user">
+                            <img src={{ $vendor->image_url }} alt="" />
+                            <span>{{ $vendor->vendor_name }}</span>
+                        </div>
                     @endforeach
                 </div>
             </div>
