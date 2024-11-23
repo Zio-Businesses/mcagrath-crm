@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@push('styles')
+
+<?php $__env->startPush('styles'); ?>
     <style>
         ::-webkit-scrollbar {
             background-color: transparent;
@@ -191,8 +191,8 @@
 
         }
     </style>
-@endpush
-@section('content')
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <div style="height: 92svh">
         <div class="chat-app-container">
             <!-- Left Sidebar -->
@@ -201,13 +201,13 @@
                     <input type="text" placeholder="Search" />
                 </div>
                 <div class="user-list">
-                    @php
+                    <?php
                         use App\Models\VendorContract;
                         $vendors = VendorContract::all();
-                    @endphp
-                    @foreach ($vendors as $vendor)
-                        <div class="user">{{ $vendor->vendor_name }}</div>
-                    @endforeach
+                    ?>
+                    <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="user"><?php echo e($vendor->vendor_name); ?></div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
 
@@ -222,7 +222,7 @@
                 <div id="sendingMessage" class="status-message sending">Sending message...</div>
                 <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
                 <form id="message-input" action="/twilio-send" method="POST">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                     <input type="text" name="message" id="messageInput" placeholder="Type your message" required>
                     <button type="submit" id="sendButton"><svg xmlns="http://www.w3.org/2000/svg" width="24"
                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -235,9 +235,9 @@
         </div>
     </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script>
         const loadingMessage = document.getElementById("loadingMessage");
@@ -264,7 +264,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "X-CSRF-TOKEN": "<?php echo e(csrf_token()); ?>",
                     },
                     body: JSON.stringify({
                         message,
@@ -300,7 +300,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const accessToken = data.token;
-                    const conversationSid = "{{ env('TWILIO_CHAT_SID') }}";
+                    const conversationSid = "<?php echo e(env('TWILIO_CHAT_SID')); ?>";
 
                     Twilio.Conversations.Client.create(accessToken)
                         .then(client => client.getConversationBySid(conversationSid))
@@ -353,7 +353,7 @@
         function displayMessage(message) {
             const messagesDiv = document.getElementById("messages");
             const messageElement = document.createElement("div");
-            const loggedInUserId = "{{ auth()->user()->name }}";
+            const loggedInUserId = "<?php echo e(auth()->user()->name); ?>";
 
             if (message.author === loggedInUserId) {
                 messageElement.classList.add("message", "sent");
@@ -381,4 +381,6 @@
 
         window.onload = connectToTwilio;
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\Coding\crm-main\resources\views/twilio-sms/index.blade.php ENDPATH**/ ?>
