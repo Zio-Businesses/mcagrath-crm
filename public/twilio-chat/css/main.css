@@ -55,6 +55,9 @@
     align-items: center;
 }
 
+.user.active{
+    background-color: #e8eef366;
+}
 .user img {
     width: 3rem;
     aspect-ratio: 1 / 1;
