@@ -11,27 +11,29 @@
         <!-- Left Sidebar -->
         <div class="sidebar">
             <div class="search-bar">
-                <div class="form-group">
-                    <x-forms.select fieldId="selectVendor" :fieldLabel="__('modules.messages.chooseMember')" fieldName="vendor_id" search="true"
-                        fieldRequired="true">
-                        <option value="">--</option>
+                <div class="form-group position-relative mt-1 mb-1">
+                    <!-- The Dropdown -->
+                    <select id="selectVendor" name="vendor_id" class="form-control select-picker pl-5" data-live-search="true"
+                        data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                        <option value="">Search for vendors</option>
                         @foreach ($vendors as $vendor)
-                            @php
-                                $content = "<div class='d-flex align-items-center text-left'>
-                                            <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
-                                                <img class='rounded-circle' src='{$vendor->image_url}' alt='{$vendor->vendor_name}'>
-                                            </div>
-                                            <span>{$vendor->vendor_name}</span>
-                                        </div>";
-                            @endphp
-
-                            <option data-content="{!! $content !!}" value="{{ $vendor->id }}">
+                            <option value="{{ $vendor->id }}"
+                                data-content="<div class='d-flex align-items-center text-left'>
+                                <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
+                                    <img class='rounded-circle' src='{{ $vendor->image_url }}' alt='{{ $vendor->vendor_name }}' width='30'>
+                                </div>
+                                <span>{{ $vendor->vendor_name }}</span>
+                            </div>">
                                 {{ $vendor->vendor_name }}
                             </option>
                         @endforeach
-                    </x-forms.select>
-                </div>
+                    </select>
 
+                    <!-- Search Icon -->
+                    <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
 
             </div>
             <div class="user-list">
