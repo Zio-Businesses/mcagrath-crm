@@ -1,8 +1,5 @@
 @extends('layouts.app')
-@php
-    use App\Models\VendorContract;
-    $vendors = VendorContract::all();
-@endphp
+
 @push('styles')
     <link rel="stylesheet" href="{{ asset('twilio-chat/css/main.css') }}" defer="defer">
 @endpush
@@ -37,10 +34,11 @@
 
             </div>
             <div class="user-list">
-                @foreach ($vendors as $vendor)
+                @foreach ($vendors_in_chat as $vendor)
                     <div class="user" data-vendor-id="{{ $vendor->id }}">
                         <img src="{{ $vendor->image_url }}" alt="" />
                         <span>{{ $vendor->vendor_name }}</span>
+                        {{-- <small>{{$vendor->sms_updated}}</small> --}}
                     </div>
                 @endforeach
             </div>
@@ -77,8 +75,9 @@
     <script>
         window.appData = {
             csrfToken: "{{ csrf_token() }}",
+            twilioSend: "{{ route('twilio-send') }}",
+            createConversation: "{{ route('createConversation') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
-            twilioChatSid: "{{ env('TWILIO_CHAT_SID') }}"
         };
     </script>
 @endpush

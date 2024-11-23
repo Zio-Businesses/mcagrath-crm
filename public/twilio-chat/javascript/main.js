@@ -6,31 +6,34 @@ document.addEventListener("DOMContentLoaded", function () {
         function (e, clickedIndex, isSelected, previousValue) {
             const selectedVendorId = $(this).val();
 
-            if (selectedVendorId) {
-                const userElement = document.querySelector(
-                    `.user[data-vendor-id='${selectedVendorId}']`
-                );
+            // if (selectedVendorId) {
+            //     const userElement = document.querySelector(
+            //         `.user[data-vendor-id='${selectedVendorId}']`
+            //     );
 
-                if (userElement) {
-                    userElement.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                    });
-                    userElement.click();
-                }
-            }
+            //     if (userElement) {
+            //         userElement.scrollIntoView({
+            //             behavior: "smooth",
+            //             block: "center",
+            //         });
+            //         userElement.click();
+            //     }
+            // }
         }
     );
 });
+let chatsid = '';
+let selected_vendor;
 document.querySelectorAll(".user").forEach((user) => {
-    user.addEventListener("click", function () {
+    user.addEventListener("click", async function () {
         document
             .querySelectorAll(".user")
             .forEach((u) => u.classList.remove("active"));
         this.classList.add("active");
 
         const vendorId = this.getAttribute("data-vendor-id");
-        const vendorName = this.querySelector("span").textContent;
+        selected_vendor = vendorId;
+        const vendorName = this.querySelector("span").textContent.trim();
         const vendorImage = this.querySelector("img").src;
         const form = document.getElementById("message-input");
         const chat = document.getElementById("chatheader");
@@ -44,7 +47,29 @@ document.querySelectorAll(".user").forEach((user) => {
         form.style.display = "flex";
         chat.style.display = "flex";
 
-        connectToTwilio();
+        try {
+            const response = await fetch(window.appData.createConversation, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": window.appData.csrfToken,
+                },
+                body: JSON.stringify({ vendor_id: vendorId }),
+            });
+
+            const data = await response.json();
+
+            if (data.sid) {
+                chatsid = data.sid;
+                connectToTwilio(data.sid);
+            } else {
+                console.error("Failed to get or create chat SID.");
+                alert("Unable to connect to the chat. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while connecting to the chat.");
+        }
     });
 });
 
@@ -67,13 +92,14 @@ document
         sendButton.disabled = true;
         messageInput.disabled = true;
 
-        fetch("twilio-send", {
+        fetch(window.appData.twilioSend, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": window.appData.csrfToken,
             },
-            body: JSON.stringify({ message }),
+            body: JSON.stringify({ message:message , chatsid:chatsid, vendorId:selected_vendor }),
+
         })
             .then((response) => response.json())
             .then((data) => {
@@ -96,7 +122,7 @@ document
 
 let twilioConversation;
 
-function connectToTwilio() {
+function connectToTwilio(twilioChatSid) {
     loadingMessage.style.display = "block";
 
     fetch("generatetwiliotoken")
@@ -106,7 +132,7 @@ function connectToTwilio() {
 
             Twilio.Conversations.Client.create(accessToken)
                 .then((client) =>
-                    client.getConversationBySid(window.appData.twilioChatSid)
+                    client.getConversationBySid(twilioChatSid)
                 )
                 .then((conversation) => {
                     twilioConversation = conversation;

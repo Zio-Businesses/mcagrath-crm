@@ -1,8 +1,5 @@
 
-<?php
-    use App\Models\VendorContract;
-    $vendors = VendorContract::all();
-?>
+
 <?php $__env->startPush('styles'); ?>
     <link rel="stylesheet" href="<?php echo e(asset('twilio-chat/css/main.css')); ?>" defer="defer">
 <?php $__env->stopPush(); ?>
@@ -38,10 +35,11 @@
 
             </div>
             <div class="user-list">
-                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = $vendors_in_chat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="user" data-vendor-id="<?php echo e($vendor->id); ?>">
                         <img src="<?php echo e($vendor->image_url); ?>" alt="" />
                         <span><?php echo e($vendor->vendor_name); ?></span>
+                        
                     </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
@@ -78,8 +76,9 @@
     <script>
         window.appData = {
             csrfToken: "<?php echo e(csrf_token()); ?>",
+            twilioSend: "<?php echo e(route('twilio-send')); ?>",
+            createConversation: "<?php echo e(route('createConversation')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
-            twilioChatSid: "<?php echo e(env('TWILIO_CHAT_SID')); ?>"
         };
     </script>
 <?php $__env->stopPush(); ?>
