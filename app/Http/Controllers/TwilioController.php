@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Services\TwilioService;
+use App\Models\VendorContract;
 
 class TwilioController extends AccountBaseController
 {
@@ -24,7 +26,11 @@ class TwilioController extends AccountBaseController
      */
     public function index()
     {
-        $this->twilioService->checkAndAddParticipant(env('TWILIO_CHAT_SID'), user()->email);
-        return view('twilio-sms.index', $this->data);
+        $vendors = VendorContract::all();
+        $vendors_in_chat = VendorContract::whereNotNull('chat_sid')->orderBy('sms_updated_at', 'desc')->get();
+        return view('twilio-sms.index', $this->data, [
+            'vendors' => $vendors,
+            'vendors_in_chat' => $vendors_in_chat,
+        ]);
     }
 }

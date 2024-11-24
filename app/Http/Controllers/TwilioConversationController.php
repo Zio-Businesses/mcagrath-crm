@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\VendorContract;
 use App\Services\TwilioService;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
-
+use App\Models\VendorContract;
 
 class TwilioConversationController extends Controller
 {
@@ -19,46 +18,60 @@ class TwilioConversationController extends Controller
         $this->twilioService = $twilioService;
     }
 
-    public function send(Client $client,Request $request)
+    public function getConversation(TwilioService $twilioService)
     {
-        $request->validate([
-            'message' => 'required|string|max:255'
-        ]);
-
-        $user = Auth::user();
-        $message = $request->message;
-
-        // Replace with your conversation SID
-        $conversationSid = env('TWILIO_CHAT_SID'); // Update this with the correct Conversation SID
-
-
-        if($request->vendorId){
-            // Log::info("Phone number is present");
-            $vendor = VendorContract::where('id', $request->vendorId)->select('vendor_name','cell')->first();
-            $toNumber = '+91' . $vendor->cell;
-            $twilioNumber = env('TWILIO_NUMBER');
-            $client->messages->create(
-                $toNumber, // Text any number
-                [
-                    'from' => $twilioNumber, // From a Twilio number in your account
-                    'body' => $request->message
-                ]
-            );
-            $message = '@' . $vendor->vendor_name . ' ' . $message;
+        $conversations = $twilioService->getConversations();
+        $data = [];
+        foreach ($conversations as $conversation) {
+            $data[] = [
+                'sid' => $conversation->sid,
+                'friendly_name' => $conversation->friendlyName,
+                'created_at' => $conversation->dateCreated->format('Y-m-d H:i:s'),
+            ];
         }
-        // Send the message using the Twilio API
-        $this->twilioService->sendMessage($conversationSid, $user->name, $message);
-        return response()->json(['success' => true]);
+
+        return response()->json($data);
     }
-    public function index()
+
+    public function createConversation(TwilioService $twilioService, Request $request)
     {
-        // Fetch messages from the Twilio conversation
-        // Replace with your conversation SID
-        $conversationSid = env('TWILIO_CHAT_SID'); // Update this with the correct Conversation SID
 
-        $messages = $this->twilioService->getMessages($conversationSid);
+        $request->validate([
+            'vendor_id' => 'required|exists:vendors,id',
+        ]);
+        try {
+            $vendor = VendorContract::find($request->vendor_id);
 
-        return response()->json($messages);
+            if (!$vendor) {
+                return response()->json(['error' => 'Vendor not found'], 404);
+            }
+
+            if ($vendor->chat_sid) {
+                $this->twilioService->checkAndAddParticipant($vendor->chat_sid, user()->email);
+                return response()->json([
+                    'sid' => $vendor->chat_sid,
+                    'friendly_name' => $vendor->vendor_name,
+                ]);
+            }
+
+            $conversation = $twilioService->createConversation($vendor->vendor_name);
+
+            $vendor->chat_sid = $conversation->sid;
+            $vendor->save();
+            $this->twilioService->checkAndAddParticipant($conversation->sid, user()->email);
+            return response()->json([
+                'sid' => $conversation->sid,
+                'friendly_name' => $conversation->friendlyName,
+                'created_at' => $conversation->dateCreated->format('Y-m-d H:i:s'),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to process request'], 500);
+        }
     }
 
+    public function deleteConversation($sid, TwilioService $twilioService)
+    {
+        $twilioService->deleteConversation($sid);
+        return response()->json(['message' => 'Conversation deleted']);
+    }
 }
