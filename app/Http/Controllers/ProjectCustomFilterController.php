@@ -21,7 +21,7 @@ class ProjectCustomFilterController extends AccountBaseController
 {
     public function store(Request $request)
     {
-        try {
+        
             $request->validate([
                 'filter_name' => 'required',
             ]);
@@ -45,10 +45,7 @@ class ProjectCustomFilterController extends AccountBaseController
             $pcf->save();
     
             return Reply::success(__('Filter Saved'));
-            
-        } catch (Exception $e) {
-            return Reply::error(__('An error occurred while saving the filter.'));
-        }
+     
     }
     public function destroy($id)
     {

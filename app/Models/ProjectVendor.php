@@ -62,7 +62,7 @@ class ProjectVendor extends BaseModel
     public function sowname($data)
     {  
         $scopeofwork= ScopeOfWork::withTrashed()->find($data);
-        return $scopeofwork->sow_title;
+        return $scopeofwork;
     }
     public function sowcategory($data)
     {

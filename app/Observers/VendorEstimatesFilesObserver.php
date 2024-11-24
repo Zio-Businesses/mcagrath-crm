@@ -30,7 +30,6 @@ class VendorEstimatesFilesObserver
      */
     public function deleting(VendorEstimateFiles $Files)
     {
-        \Log::info('hello');
         Files::deleteFile($Files->hashname, VendorEstimateFiles::FILE_PATH);
     }
 }

@@ -26,11 +26,14 @@ $viewClientOrder = user()->permission('view_order');
 
             <nav class="tabs">
                 <ul class="-primary">
-                <li>
+                    <li>
                         <x-tab :href="route('vendors.show', $vendorDetail->id)" :text="__('modules.employees.profile')" class="profile" ajax="false" />
                     </li>
                     <li>
                         <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=notes'" :text="__('Notes')" class="notes" ajax="false" />
+                    </li>
+                    <li>
+                        <x-tab :href="route('vendors.show', $vendorDetail->id).'?tab=doc'" :text="__('Files')" class="doc" ajax="false" />
                     </li>
                 </ul>
             </nav>
