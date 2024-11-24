@@ -22,8 +22,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     );
 });
-let chatsid = '';
+let chatsid = "";
 let selected_vendor;
+const loadingMessage = document.getElementById("loadingMessage");
+const sendingMessage = document.getElementById("sendingMessage");
+const errorMessage = document.getElementById("errorMessage");
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const vendorInput = document.getElementById("vendor");
+const chatTitle = document.getElementById("chat-title");
+
 document.querySelectorAll(".user").forEach((user) => {
     user.addEventListener("click", async function () {
         document
@@ -38,7 +46,6 @@ document.querySelectorAll(".user").forEach((user) => {
         const form = document.getElementById("message-input");
         const chat = document.getElementById("chatheader");
 
-        const chatTitle = document.getElementById("chat-title");
         const chatImage = document.getElementById("chat-image");
 
         chatTitle.textContent = vendorName;
@@ -48,6 +55,15 @@ document.querySelectorAll(".user").forEach((user) => {
         chat.style.display = "flex";
 
         try {
+            $(".spinner").fadeIn("fast", function () {
+                $(this).addClass("d-flex");
+            });
+            loadingMessage.style.display = "block";
+            messageInput.value = "";
+            sendButton.disabled = true;
+            messageInput.disabled = true;
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = "";
             const response = await fetch(window.appData.createConversation, {
                 method: "POST",
                 headers: {
@@ -73,13 +89,6 @@ document.querySelectorAll(".user").forEach((user) => {
     });
 });
 
-const loadingMessage = document.getElementById("loadingMessage");
-const sendingMessage = document.getElementById("sendingMessage");
-const errorMessage = document.getElementById("errorMessage");
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const vendorInput = document.getElementById("vendor");
-
 document
     .getElementById("message-input")
     .addEventListener("submit", function (e) {
@@ -98,8 +107,11 @@ document
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": window.appData.csrfToken,
             },
-            body: JSON.stringify({ message:message , chatsid:chatsid, vendorId:selected_vendor }),
-
+            body: JSON.stringify({
+                message: message,
+                chatsid: chatsid,
+                vendorId: selected_vendor,
+            }),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -124,6 +136,8 @@ let twilioConversation;
 
 function connectToTwilio(twilioChatSid) {
     loadingMessage.style.display = "block";
+    sendButton.disabled = true;
+    messageInput.disabled = true;
 
     fetch("generatetwiliotoken")
         .then((response) => response.json())
@@ -131,9 +145,7 @@ function connectToTwilio(twilioChatSid) {
             const accessToken = data.token;
 
             Twilio.Conversations.Client.create(accessToken)
-                .then((client) =>
-                    client.getConversationBySid(twilioChatSid)
-                )
+                .then((client) => client.getConversationBySid(twilioChatSid))
                 .then((conversation) => {
                     twilioConversation = conversation;
                     loadMessages();
@@ -147,7 +159,12 @@ function connectToTwilio(twilioChatSid) {
                     console.error("Error connecting to Twilio:", error);
                 })
                 .finally(() => {
+                    sendButton.disabled = false;
+                    messageInput.disabled = false;
                     loadingMessage.style.display = "none";
+                    $(".spinner").fadeOut("slow", function () {
+                        $(this).removeClass("d-flex");
+                    });
                 });
         })
         .catch((error) => {
@@ -161,6 +178,8 @@ function loadMessages() {
     if (!twilioConversation) return;
 
     loadingMessage.style.display = "block";
+    sendButton.disabled = true;
+    messageInput.disabled = true;
 
     twilioConversation
         .getMessages()
@@ -178,6 +197,8 @@ function loadMessages() {
         })
         .finally(() => {
             loadingMessage.style.display = "none";
+            sendButton.disabled = false;
+            messageInput.disabled = false;
         });
 }
 
@@ -186,10 +207,10 @@ function displayMessage(message) {
     const messageElement = document.createElement("div");
     const loggedInUserId = window.appData.loggedInUserName;
 
-    if (message.author === loggedInUserId) {
-        messageElement.classList.add("message", "sent");
-    } else {
+    if (message.author === chatTitle.textContent ) {
         messageElement.classList.add("message", "received");
+    } else {
+        messageElement.classList.add("message", "sent");
     }
 
     const apiDate = new Date(message.dateUpdated);

@@ -38,7 +38,9 @@
                     <div class="user" data-vendor-id="{{ $vendor->id }}">
                         <img src="{{ $vendor->image_url }}" alt="" />
                         <span>{{ $vendor->vendor_name }}</span>
-                        {{-- <small>{{$vendor->sms_updated}}</small> --}}
+                        <div class="time">
+                            <small>{{ $vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : '' }}</small>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -50,6 +52,9 @@
                 <img id="chat-image" src="" alt="Vendor" style="display: none" />
                 <h3 id="chat-title"></h3>
             </div>
+            <div class="spinner d-none justify-content-center align-items-center">
+                <div class="spinner-border" role="status" aria-hidden="true"></div>
+            </div>
             <div id="messages">
             </div>
             <div id="loadingMessage" class="status-message loading">Loading messages...</div>
@@ -57,7 +62,7 @@
             <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
             <form id="message-input" action="/twilio-send" method="POST">
                 @csrf
-                <input type="text" name="message" id="messageInput" placeholder="Type your message" required>
+                <input type="text" name="message" id="messageInput" placeholder="Type your message" required />
                 <button type="submit" id="sendButton"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">

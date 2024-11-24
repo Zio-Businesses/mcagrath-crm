@@ -6,6 +6,11 @@
     border: none;
 }
 
+.spinner {
+    width: 100%;
+    height: 100%;
+}
+
 .chat-app-container {
     position: absolute;
     display: flex;
@@ -45,6 +50,7 @@
 }
 
 .user {
+    position: relative;
     padding: 0.75rem;
     cursor: pointer;
     border-bottom: 1px solid #e8eef340;
@@ -54,8 +60,15 @@
     justify-content: flex-start;
     align-items: center;
 }
+.user .time {
+    position: absolute;
+    right: 2%;
+    bottom: 2%;
+    font-size: .725rem;
+    width: 2rem;
+}
 
-.user.active{
+.user.active {
     background-color: #e8eef366;
 }
 .user img {
@@ -77,6 +90,7 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 1rem;
+    transition: transform 0.3s ease-in-out;
 }
 
 .chat-header {
@@ -89,7 +103,7 @@
     border-bottom: 1px solid #e8eef340;
 }
 
-.chat-header img{
+.chat-header img {
     width: 4rem;
     aspect-ratio: 1 / 1;
     object-fit: cover;
@@ -100,7 +114,7 @@
     flex: 1;
     width: 100%;
     padding: 15px;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
     overflow-y: auto;
     display: flex;
@@ -156,7 +170,9 @@
     color: #777;
     margin: 0.5rem;
     text-align: center;
+    position: absolute;
     display: none;
+    bottom: 10%;
 }
 
 .status-message.loading {
@@ -208,7 +224,7 @@
     .sidebar {
         display: none;
     }
-    .chat-area{
+    .chat-area {
         flex: 1;
         width: 100%;
     }
