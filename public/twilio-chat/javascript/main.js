@@ -6,19 +6,22 @@ document.addEventListener("DOMContentLoaded", function () {
         function (e, clickedIndex, isSelected, previousValue) {
             const selectedVendorId = $(this).val();
 
-            // if (selectedVendorId) {
-            //     const userElement = document.querySelector(
-            //         `.user[data-vendor-id='${selectedVendorId}']`
-            //     );
+            if (selectedVendorId) {
+                const userElement = document.querySelector(
+                    `.user[data-vendor-id='${selectedVendorId}']`
+                );
 
-            //     if (userElement) {
-            //         userElement.scrollIntoView({
-            //             behavior: "smooth",
-            //             block: "center",
-            //         });
-            //         userElement.click();
-            //     }
-            // }
+                if (userElement) {
+                    userElement.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                    });
+                    userElement.click();
+                }
+                else{
+                    
+                }
+            }
         }
     );
 });
