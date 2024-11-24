@@ -45,7 +45,7 @@ class TwilioChatController extends Controller
         //             'body' => $request->message
         //         ]
         //     );
-        //     $message = '@' . $vendor->vendor_name . ' ' . $message;
+        //     $message = $message;
         // }
 
         $this->twilioService->sendMessage($conversationSid, $user->name, $message);

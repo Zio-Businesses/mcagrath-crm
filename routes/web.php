@@ -598,6 +598,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     
      //Twilio
      Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
+     Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
 
 
      Route::get('/test-twilio',[TwilioConversationController::class,'getConversation'])->name('getConversation');

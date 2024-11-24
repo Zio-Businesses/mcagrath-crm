@@ -34,7 +34,7 @@
 
             </div>
             <div class="user-list">
-                @foreach ($vendors_in_chat as $vendor)
+                @foreach ($vendors as $vendor)
                     <div class="user" data-vendor-id="{{ $vendor->id }}">
                         <img src="{{ $vendor->image_url }}" alt="" />
                         <span>{{ $vendor->vendor_name }}</span>
@@ -82,6 +82,7 @@
             csrfToken: "{{ csrf_token() }}",
             twilioSend: "{{ route('twilio-send') }}",
             createConversation: "{{ route('createConversation') }}",
+            fetchVendors: "{{ route('fetchVendors') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };
     </script>

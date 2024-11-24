@@ -35,7 +35,7 @@
 
             </div>
             <div class="user-list">
-                <?php $__currentLoopData = $vendors_in_chat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="user" data-vendor-id="<?php echo e($vendor->id); ?>">
                         <img src="<?php echo e($vendor->image_url); ?>" alt="" />
                         <span><?php echo e($vendor->vendor_name); ?></span>
@@ -83,6 +83,7 @@
             csrfToken: "<?php echo e(csrf_token()); ?>",
             twilioSend: "<?php echo e(route('twilio-send')); ?>",
             createConversation: "<?php echo e(route('createConversation')); ?>",
+            fetchVendors: "<?php echo e(route('fetchVendors')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };
     </script>

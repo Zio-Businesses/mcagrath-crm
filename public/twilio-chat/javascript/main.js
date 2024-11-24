@@ -34,9 +34,11 @@ const messageInput = document.getElementById("messageInput");
 const sendButton = document.getElementById("sendButton");
 const vendorInput = document.getElementById("vendor");
 const chatTitle = document.getElementById("chat-title");
+let disableClicks = false;
 
 document.querySelectorAll(".user").forEach((user) => {
     user.addEventListener("click", async function () {
+        if (disableClicks) return;
         document
             .querySelectorAll(".user")
             .forEach((u) => u.classList.remove("active"));
@@ -61,6 +63,7 @@ document.querySelectorAll(".user").forEach((user) => {
             $(".spinner").fadeIn("fast", function () {
                 $(this).addClass("d-flex");
             });
+            disableClicks = true;
             loadingMessage.style.display = "block";
             messageInput.value = "";
             sendButton.disabled = true;
@@ -100,7 +103,7 @@ document
 
         sendingMessage.style.display = "block";
         errorMessage.style.display = "none";
-
+        disableClicks = true;
         sendButton.disabled = true;
         messageInput.disabled = true;
 
@@ -129,6 +132,7 @@ document
                 console.error("Error:", error);
             })
             .finally(() => {
+                disableClicks = false;
                 sendButton.disabled = false;
                 messageInput.disabled = false;
                 sendingMessage.style.display = "none";
@@ -162,6 +166,7 @@ function connectToTwilio(twilioChatSid) {
                     console.error("Error connecting to Twilio:", error);
                 })
                 .finally(() => {
+                    disableClicks = false;
                     sendButton.disabled = false;
                     messageInput.disabled = false;
                     loadingMessage.style.display = "none";
