@@ -146,6 +146,10 @@ use App\Http\Controllers\WorkOrderStatusController;
 use App\Http\Controllers\SOWTitleController;
 use App\Http\Controllers\VendorDocController;
 use App\Http\Controllers\VendorCoiDocController;
+use App\Http\Controllers\VendorContractorLicenseDocController;
+use App\Http\Controllers\VendorBuisnessLicenseDocController;
+use App\Http\Controllers\VendorWorkersCompDocController;
+use App\Http\Controllers\VendorWnineDocController; 
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -903,6 +907,22 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Vendor COI DOC
      Route::resource('vendor-coi', VendorCoiDocController::class);
      Route::get('vendor-coi/download/{id}', [VendorCoiDocController::class, 'download'])->name('vendor-coi.download');
+
+     //Vendor Contractor License DOC
+     Route::resource('vendor-contractor-license',  VendorContractorLicenseDocController::class);
+     Route::get('vendor-contractor-license/download/{id}', [VendorContractorLicenseDocController::class, 'download'])->name('vendor-contractor-license.download');
+
+     //Vendor Buisness License DOC
+     Route::resource('vendor-buisness-license',  VendorBuisnessLicenseDocController::class);
+     Route::get('vendor-buisness-license/download/{id}', [VendorBuisnessLicenseDocController::class, 'download'])->name('vendor-buisness-license.download');
+
+     //Vendor Workers Comp DOC
+     Route::resource('vendor-wnine',  VendorWnineDocController::class);
+     Route::get('vendor-wnine/download/{id}', [VendorWnineDocController::class, 'download'])->name('vendor-wnine.download');
+
+     //Vendor W9 DOC
+     Route::resource('vendor-workers-comp',  VendorWorkersCompDocController::class);
+     Route::get('vendor-workers-comp/download/{id}', [VendorWorkersCompDocController::class, 'download'])->name('vendor-workers-comp.download');
 
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);

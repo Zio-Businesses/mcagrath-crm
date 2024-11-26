@@ -14,7 +14,6 @@ use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\VendorContract;
-use App\Models\VendorCoiDoc;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 use App\Models\VendorWaiverFormTemplate;
@@ -32,6 +31,11 @@ use App\DataTables\ProjectNotesDataTable;
 use App\Models\ContractorType;
 use App\Models\Locations;
 use App\Models\VendorCustomFilter;
+use App\Models\VendorContractorLicenseDoc;
+use App\Models\VendorCoiDoc;
+use App\Models\VendorBuisnessLicenseDoc;
+use App\Models\VendorWorkersCompDoc;
+use App\Models\VendorWnineDoc;
 
 class VendorController extends AccountBaseController
 {
@@ -78,6 +82,10 @@ class VendorController extends AccountBaseController
                 break;
             case 'doc':
                 $this->coi = VendorCoiDoc::where('vendor_id', $id)->first();
+                $this->contractor_license = VendorContractorLicenseDoc::where('vendor_id', $id)->first();
+                $this->buisness_license = VendorBuisnessLicenseDoc::where('vendor_id', $id)->first();
+                $this->workers_comp = VendorWorkersCompDoc::where('vendor_id', $id)->first();
+                $this->wnine = VendorWnineDoc::where('vendor_id', $id)->first();
                 $this->view = 'vendors.ajax.docs';
                 break;
             default:

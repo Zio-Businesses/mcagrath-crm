@@ -1,5 +1,10 @@
 <link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
-
+<style>
+.dropify-wrapper.has-preview .dropify-clear
+{
+    display: none !important; /* Forces the remove button to be hidden */
+}
+</style>
 <!-- TAB CONTENT START -->
 <div class="col-xl-12 col-lg-12 col-md-12" id="documents">
     <div class="row p-2">
@@ -7,35 +12,36 @@
             <x-form id="save-contractor-license">
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="contractor_license" name="contractor_license" />
+                    <input type="hidden" name ="vendor_id_cont" value="{{$vendorDetail->id}}"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="contractor_license_file" name="contractor_license_file" data-default-file="{{$contractor_license?->filename ? $contractor_license->cot_image_url : null}}"/>
                 </div>
                 <div class="col ml-2 mt-3">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">Contractor License</p>
+                        @if($contractor_license?->filename)
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>
-                        
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                             aria-labelledby="dropdownMenuLink" tabindex="0">
                             <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    >@lang('app.view')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
+                                    target="_blank" href="{{ $contractor_license->cot_image_url }}">@lang('app.view')</a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-contractor-license"
+                                data-row-id="{{ $contractor_license->id }}"
                                 href="javascript:;">@lang('Edit')</a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href="">@lang('app.download')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
+                                href="{{ route('vendor-contractor-license.download', md5($contractor_license->id)) }}">@lang('app.download')</a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-contractor-license" 
+                                data-row-id="{{ $contractor_license->id }}"
                                 href="javascript:;">@lang('app.delete')</a>
                         </div>
+                        @endif
                     </div>
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
+                    <x-cards.data-row-mod :label="__('Expiry Date')" :value="$contractor_license && $contractor_license->expiry_date ? $contractor_license->expiry_date->translatedFormat(company()->date_format) : ''" />
+                        <x-cards.data-row-mod :label="__('Added By')" :value="$contractor_license->added->name??''" />
+                        <x-cards.data-row-mod :label="__('Added Date')" :value="$contractor_license && $contractor_license->created_at ? $contractor_license->created_at->translatedFormat(company()->date_format) : ''" />
                 </div>
             </div>
             </x-form>
@@ -44,11 +50,13 @@
             <x-form id="save-buisness-license">
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="buisness_license" name="buisness_license" />
+                    <input type="hidden" name ="vendor_id_buisness" value="{{$vendorDetail->id}}"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="buisness_license" name="buisness_license" data-default-file="{{$buisness_license?->filename ? $buisness_license->bul_image_url : null}}"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex ">
                         <p class="f-14 font-weight-bold" style="width:90%;">Buisness License</p>
+                        @if($buisness_license?->filename)
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
@@ -58,21 +66,21 @@
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                             aria-labelledby="dropdownMenuLink" tabindex="0">
                             <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    >@lang('app.view')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
+                                    target="_blank" href="{{ $buisness_license->bul_image_url }}">@lang('app.view')</a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-buisness-license"
+                                data-row-id="{{ $buisness_license->id }}"
                                 href="javascript:;">@lang('Edit')</a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href="">@lang('app.download')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
+                                href="{{ route('vendor-buisness-license.download', md5($buisness_license->id)) }}">@lang('app.download')</a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-buisness-license" 
+                                data-row-id="{{ $buisness_license->id }}"
                                 href="javascript:;">@lang('app.delete')</a>
                         </div>
+                        @endif
                     </div>
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
+                    <x-cards.data-row-mod :label="__('Expiry Date')" :value="$buisness_license && $buisness_license->expiry_date ? $buisness_license->expiry_date->translatedFormat(company()->date_format) : ''" />
+                    <x-cards.data-row-mod :label="__('Added By')" :value="$buisness_license->added->name??''" />
+                    <x-cards.data-row-mod :label="__('Added Date')" :value="$buisness_license && $buisness_license->created_at ? $buisness_license->created_at->translatedFormat(company()->date_format) : ''" />
                 </div>
             </div>
             </x-form>
@@ -120,13 +128,13 @@
             <x-form id="save-wcomp">
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" />
-               
+                    <input type="hidden" name ="vendor_id_wc" value="{{$vendorDetail->id}}"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">Workers Comp</p>
+                        @if($workers_comp?->filename)
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
@@ -134,23 +142,23 @@
                         </button>
                         
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                            aria-labelledby="dropdownMenuLink" tabindex="0">
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    >@lang('app.view')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
-                                href="javascript:;">@lang('Edit')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href="">@lang('app.download')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
-                                href="javascript:;">@lang('app.delete')</a>
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                    target="_blank" href="{{ $workers_comp->wc_image_url }}">@lang('app.view')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-workers-comp"
+                                    data-row-id="{{ $workers_comp->id }}"
+                                    href="javascript:;">@lang('Edit')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                    href="{{ route('vendor-workers-comp.download', md5($workers_comp->id)) }}">@lang('app.download')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp" 
+                                    data-row-id="{{ $workers_comp->id }}"
+                                    href="javascript:;">@lang('app.delete')</a>
                         </div>
+                        @endif
                     </div>
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
+                    <x-cards.data-row-mod :label="__('Expiry Date')" :value="$workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : ''" />
+                    <x-cards.data-row-mod :label="__('Added By')" :value="$workers_comp->added->name??''" />
+                    <x-cards.data-row-mod :label="__('Added Date')" :value="$workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : ''" />
                 </div>
             </div>
             </x-form>
@@ -163,37 +171,36 @@
             <x-form id="save-wnine">
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wnine" name="wnine" />
-                
+                    <input type="hidden" name ="vendor_id_wnine" value="{{$vendorDetail->id}}"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wnine" name="wnine" data-default-file="{{$wnine?->filename ? $wnine->wnine_image_url : null}}"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">W9</p>
+                        @if($wnine?->filename)
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>
-                        
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                            aria-labelledby="dropdownMenuLink" tabindex="0">
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    >@lang('app.view')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
-                                href="javascript:;">@lang('Edit')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href="">@lang('app.download')</a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
-                                href="javascript:;">@lang('app.delete')</a>
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                    target="_blank" href="{{ $wnine->wnine_image_url }}">@lang('app.view')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-wnine"
+                                    data-row-id="{{ $wnine->id }}"
+                                    href="javascript:;">@lang('Edit')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                    href="{{ route('vendor-wnine.download', md5($wnine->id)) }}">@lang('app.download')</a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-wnine" 
+                                    data-row-id="{{ $wnine->id }}"
+                                    href="javascript:;">@lang('app.delete')</a>
                         </div>
+                        @endif
                     </div>
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
-                    <x-cards.data-row-mod :label="__('modules.employees.fullName')" :value="user()->id" />
+                    <x-cards.data-row-mod :label="__('Expiry Date')" :value="$wnine && $wnine->expiry_date ? $wnine->expiry_date->translatedFormat(company()->date_format) : ''" />
+                    <x-cards.data-row-mod :label="__('Added By')" :value="$wnine->added->name??''" />
+                    <x-cards.data-row-mod :label="__('Added Date')" :value="$wnine && $wnine->created_at ? $wnine->created_at->translatedFormat(company()->date_format) : ''" />
                 </div>
             </div>
             </x-form>
@@ -271,6 +278,21 @@
 <script>
 $(document).ready(function() {
     $('.dropify').dropify();
+    $('.dropify').each(function () {
+        // Check if the data-default-file attribute is set and not empty
+        var defaultFile = $(this).data('default-file');
+        
+        if (defaultFile && defaultFile !== '') {
+            // Disable Dropify if data-default-file is present
+            $(this).prop('disabled', true);
+            
+            // Optional: You can also remove the drag-and-drop functionality by removing Dropify
+            $(this).dropify();
+        } else {
+            // Initialize Dropify as usual when data-default-file is empty or not set
+            $(this).dropify();
+        }
+    })
     Dropzone.autoDiscover = false;
     taskDropzone = new Dropzone("#vendor_file", {
         dictDefaultMessage: "{{ __('app.dragDrop') }}",
@@ -430,6 +452,7 @@ $(document).ready(function() {
                 $.easyAjax({
                     type: 'POST',
                     url: url,
+                    blockUI: true,
                     data: {
                         '_token': token,
                         '_method': 'DELETE'
@@ -447,6 +470,272 @@ $(document).ready(function() {
 
         var id = $(this).data('row-id');
         var url = "{{ route('vendor-coi.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    $('#save-contractor-license .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "{{route('vendor-contractor-license.store')}}",
+                container: '#save-contractor-license',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-contractor-license').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-contractor-license', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-contractor-license.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-contractor-license', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-contractor-license.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    $('#save-buisness-license .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "{{route('vendor-buisness-license.store')}}",
+                container: '#save-buisness-license',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-buisness-license').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-buisness-license', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-buisness-license.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-buisness-license', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-buisness-license.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    //save-wcomp
+    $('#save-wcomp .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "{{route('vendor-workers-comp.store')}}",
+                container: '#save-wcomp',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-wcomp').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-workers-comp', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-workers-comp.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-workers-comp', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-workers-comp.edit', ':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    //save-wnine
+    $('#save-wnine .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "{{route('vendor-wnine.store')}}",
+                container: '#save-wnine',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-wnine').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-wnine', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('vendor-wnine.destroy', ':id') }}";
+                url = url.replace(':id', id);
+                var token = "{{ csrf_token() }}";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-wnine', function() {
+
+        var id = $(this).data('row-id');
+        var url = "{{ route('vendor-wnine.edit', ':id') }}";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);

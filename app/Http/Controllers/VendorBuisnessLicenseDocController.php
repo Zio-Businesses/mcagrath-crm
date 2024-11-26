@@ -4,21 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\VendorCoiDoc;
+use App\Models\VendorBuisnessLicenseDoc;
 use App\Helper\Files;
 use App\Helper\Reply;
 
-class VendorCoiDocController extends AccountBaseController
+class VendorBuisnessLicenseDocController extends AccountBaseController
 {
     public function store(Request $request)
     {
-        if ($request->hasFile('coi')) {
+        if ($request->hasFile('buisness_license')) {
            
-        $file = new VendorCoiDoc();
-        $fileData = $request->coi;
-        $file->vendor_id = $request->vendor_id_coi;
+        $file = new VendorBuisnessLicenseDoc();
+        $fileData = $request->buisness_license;
+        $file->vendor_id = $request->vendor_id_buisness;
         $file->added_by = user()->id;
-        $filename = Files::uploadLocalOrS3($fileData, VendorCoiDoc::FILE_PATH);
+        $filename = Files::uploadLocalOrS3($fileData, VendorBuisnessLicenseDoc::FILE_PATH);
         $file->filename = $fileData->getClientOriginalName();
         $file->hashname = $filename;
         $file->size = $fileData->getSize();
@@ -29,29 +29,29 @@ class VendorCoiDocController extends AccountBaseController
 
     public function download($id)
     {
-        $file = VendorCoiDoc::whereRaw('md5(id) = ?', $id)->firstOrFail();
+        $file = VendorBuisnessLicenseDoc::whereRaw('md5(id) = ?', $id)->firstOrFail();
 
-        return download_local_s3($file, 'vendor-coi/' . $file->hashname);
+        return download_local_s3($file, 'vendor-buisness-license/' . $file->hashname);
     }
     public function destroy($id)
     {
         
-        $file = VendorCoiDoc::findOrFail($id);
+        $file = VendorBuisnessLicenseDoc::findOrFail($id);
 
-        Files::deleteFile($file->hashname, 'vendor-coi/');
+        Files::deleteFile($file->hashname, 'vendor-buisness-license/');
 
-        VendorCoiDoc::destroy($id);
+        VendorBuisnessLicenseDoc::destroy($id);
 
         return Reply::success(__('messages.deleteSuccess'));
     }
     public function edit($id)
     {
-        $this->expiry_date = VendorCoiDoc::findOrFail($id);
-        return view('vendors.coi.edit', $this->data);
+        $this->expiry_date = VendorBuisnessLicenseDoc::findOrFail($id);
+        return view('vendors.buisness-license.edit', $this->data);
     }
     public function update(Request $request, $id)
     {
-        $expiry_date = VendorCoiDoc::findOrFail($id);
+        $expiry_date = VendorBuisnessLicenseDoc::findOrFail($id);
         $expiry_date->expiry_date = $request->expiry_date == null ? null : companyToYmd($request->expiry_date);
         $expiry_date->save();
 

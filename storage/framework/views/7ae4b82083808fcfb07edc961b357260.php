@@ -1,5 +1,10 @@
 <link rel="stylesheet" href="<?php echo e(asset('vendor/css/dropzone.min.css')); ?>">
-
+<style>
+.dropify-wrapper.has-preview .dropify-clear
+{
+    display: none !important; /* Forces the remove button to be hidden */
+}
+</style>
 <!-- TAB CONTENT START -->
 <div class="col-xl-12 col-lg-12 col-md-12" id="documents">
     <div class="row p-2">
@@ -16,42 +21,43 @@
 <?php $component->withAttributes(['id' => 'save-contractor-license']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="contractor_license" name="contractor_license" />
+                    <input type="hidden" name ="vendor_id_cont" value="<?php echo e($vendorDetail->id); ?>"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="contractor_license_file" name="contractor_license_file" data-default-file="<?php echo e($contractor_license?->filename ? $contractor_license->cot_image_url : null); ?>"/>
                 </div>
                 <div class="col ml-2 mt-3">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">Contractor License</p>
+                        <?php if($contractor_license?->filename): ?>
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>
-                        
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                             aria-labelledby="dropdownMenuLink" tabindex="0">
                             <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    ><?php echo app('translator')->get('app.view'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
+                                    target="_blank" href="<?php echo e($contractor_license->cot_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-contractor-license"
+                                data-row-id="<?php echo e($contractor_license->id); ?>"
                                 href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href=""><?php echo app('translator')->get('app.download'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
+                                href="<?php echo e(route('vendor-contractor-license.download', md5($contractor_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-contractor-license" 
+                                data-row-id="<?php echo e($contractor_license->id); ?>"
                                 href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Expiry Date'),'value' => $contractor_license && $contractor_license->expiry_date ? $contractor_license->expiry_date->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Expiry Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($contractor_license && $contractor_license->expiry_date ? $contractor_license->expiry_date->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -62,16 +68,16 @@
 <?php $component = $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b; ?>
 <?php unset($__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b); ?>
 <?php endif; ?>
-                    <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
+                        <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added By'),'value' => $contractor_license->added->name??'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added By')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($contractor_license->added->name??'')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -82,16 +88,16 @@
 <?php $component = $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b; ?>
 <?php unset($__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b); ?>
 <?php endif; ?>
-                    <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
+                        <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added Date'),'value' => $contractor_license && $contractor_license->created_at ? $contractor_license->created_at->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($contractor_license && $contractor_license->created_at ? $contractor_license->created_at->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -128,11 +134,13 @@
 <?php $component->withAttributes(['id' => 'save-buisness-license']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="buisness_license" name="buisness_license" />
+                    <input type="hidden" name ="vendor_id_buisness" value="<?php echo e($vendorDetail->id); ?>"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="buisness_license" name="buisness_license" data-default-file="<?php echo e($buisness_license?->filename ? $buisness_license->bul_image_url : null); ?>"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex ">
                         <p class="f-14 font-weight-bold" style="width:90%;">Buisness License</p>
+                        <?php if($buisness_license?->filename): ?>
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
@@ -142,28 +150,28 @@
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                             aria-labelledby="dropdownMenuLink" tabindex="0">
                             <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    ><?php echo app('translator')->get('app.view'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
+                                    target="_blank" href="<?php echo e($buisness_license->bul_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-buisness-license"
+                                data-row-id="<?php echo e($buisness_license->id); ?>"
                                 href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href=""><?php echo app('translator')->get('app.download'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
+                                href="<?php echo e(route('vendor-buisness-license.download', md5($buisness_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
+                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-buisness-license" 
+                                data-row-id="<?php echo e($buisness_license->id); ?>"
                                 href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Expiry Date'),'value' => $buisness_license && $buisness_license->expiry_date ? $buisness_license->expiry_date->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Expiry Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($buisness_license && $buisness_license->expiry_date ? $buisness_license->expiry_date->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -176,14 +184,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added By'),'value' => $buisness_license->added->name??'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added By')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($buisness_license->added->name??'')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -196,14 +204,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added Date'),'value' => $buisness_license && $buisness_license->created_at ? $buisness_license->created_at->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($buisness_license && $buisness_license->created_at ? $buisness_license->created_at->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -354,13 +362,13 @@
 <?php $component->withAttributes(['id' => 'save-wcomp']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" />
-               
+                    <input type="hidden" name ="vendor_id_wc" value="<?php echo e($vendorDetail->id); ?>"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" data-default-file="<?php echo e($workers_comp?->filename ? $workers_comp->wc_image_url : null); ?>"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">Workers Comp</p>
+                        <?php if($workers_comp?->filename): ?>
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
@@ -368,30 +376,30 @@
                         </button>
                         
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                            aria-labelledby="dropdownMenuLink" tabindex="0">
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    ><?php echo app('translator')->get('app.view'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
-                                href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href=""><?php echo app('translator')->get('app.download'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
-                                href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                    target="_blank" href="<?php echo e($workers_comp->wc_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-workers-comp"
+                                    data-row-id="<?php echo e($workers_comp->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                    href="<?php echo e(route('vendor-workers-comp.download', md5($workers_comp->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp" 
+                                    data-row-id="<?php echo e($workers_comp->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Expiry Date'),'value' => $workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Expiry Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -404,14 +412,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added By'),'value' => $workers_comp->added->name??'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added By')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($workers_comp->added->name??'')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -424,14 +432,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added Date'),'value' => $workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -472,44 +480,43 @@
 <?php $component->withAttributes(['id' => 'save-wnine']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="col ml-0 px-0">
-                
-                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wnine" name="wnine" />
-                
+                    <input type="hidden" name ="vendor_id_wnine" value="<?php echo e($vendorDetail->id); ?>"/>
+                    <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wnine" name="wnine" data-default-file="<?php echo e($wnine?->filename ? $wnine->wnine_image_url : null); ?>"/>
                 </div>
                 <div class="col ml-2 mt-4">
                     <div class="dropdown ml-auto d-flex a">
                         <p class="f-14 font-weight-bold" style="width:90%;">W9</p>
+                        <?php if($wnine?->filename): ?>
                         <button
                             class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle mb-2"
                             type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width:10%;">
                             <i class="fa fa-ellipsis-h"></i>
                         </button>
-                        
                         <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
-                            aria-labelledby="dropdownMenuLink" tabindex="0">
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                    target="_blank"
-                                    ><?php echo app('translator')->get('app.view'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-file"
-                                
-                                href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                href=""><?php echo app('translator')->get('app.download'); ?></a>
-                            <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                
-                                href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                    target="_blank" href="<?php echo e($wnine->wnine_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-wnine"
+                                    data-row-id="<?php echo e($wnine->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                    href="<?php echo e(route('vendor-wnine.download', md5($wnine->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-wnine" 
+                                    data-row-id="<?php echo e($wnine->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
                         </div>
+                        <?php endif; ?>
                     </div>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Expiry Date'),'value' => $wnine && $wnine->expiry_date ? $wnine->expiry_date->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Expiry Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($wnine && $wnine->expiry_date ? $wnine->expiry_date->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -522,14 +529,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added By'),'value' => $wnine->added->name??'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added By')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($wnine->added->name??'')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -542,14 +549,14 @@
 <?php endif; ?>
                     <?php if (isset($component)) { $__componentOriginal7e30a74dcb37e090b2a36f2055f14e6b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('modules.employees.fullName'),'value' => user()->id]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.cards.data-row-mod','data' => ['label' => __('Added Date'),'value' => $wnine && $wnine->created_at ? $wnine->created_at->translatedFormat(company()->date_format) : '']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data-row-mod'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('modules.employees.fullName')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(user()->id)]); ?>
+<?php $component->withAttributes(['label' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Added Date')),'value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($wnine && $wnine->created_at ? $wnine->created_at->translatedFormat(company()->date_format) : '')]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal7e30a74dcb37e090b2a36f2055f14e6b)): ?>
@@ -737,6 +744,21 @@
 <script>
 $(document).ready(function() {
     $('.dropify').dropify();
+    $('.dropify').each(function () {
+        // Check if the data-default-file attribute is set and not empty
+        var defaultFile = $(this).data('default-file');
+        
+        if (defaultFile && defaultFile !== '') {
+            // Disable Dropify if data-default-file is present
+            $(this).prop('disabled', true);
+            
+            // Optional: You can also remove the drag-and-drop functionality by removing Dropify
+            $(this).dropify();
+        } else {
+            // Initialize Dropify as usual when data-default-file is empty or not set
+            $(this).dropify();
+        }
+    })
     Dropzone.autoDiscover = false;
     taskDropzone = new Dropzone("#vendor_file", {
         dictDefaultMessage: "<?php echo e(__('app.dragDrop')); ?>",
@@ -896,6 +918,7 @@ $(document).ready(function() {
                 $.easyAjax({
                     type: 'POST',
                     url: url,
+                    blockUI: true,
                     data: {
                         '_token': token,
                         '_method': 'DELETE'
@@ -913,6 +936,272 @@ $(document).ready(function() {
 
         var id = $(this).data('row-id');
         var url = "<?php echo e(route('vendor-coi.edit', ':id')); ?>";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    $('#save-contractor-license .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "<?php echo e(route('vendor-contractor-license.store')); ?>",
+                container: '#save-contractor-license',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-contractor-license').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-contractor-license', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "<?php echo e(route('vendor-contractor-license.destroy', ':id')); ?>";
+                url = url.replace(':id', id);
+                var token = "<?php echo e(csrf_token()); ?>";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-contractor-license', function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('vendor-contractor-license.edit', ':id')); ?>";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    $('#save-buisness-license .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "<?php echo e(route('vendor-buisness-license.store')); ?>",
+                container: '#save-buisness-license',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-buisness-license').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-buisness-license', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "<?php echo e(route('vendor-buisness-license.destroy', ':id')); ?>";
+                url = url.replace(':id', id);
+                var token = "<?php echo e(csrf_token()); ?>";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-buisness-license', function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('vendor-buisness-license.edit', ':id')); ?>";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    //save-wcomp
+    $('#save-wcomp .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "<?php echo e(route('vendor-workers-comp.store')); ?>",
+                container: '#save-wcomp',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-wcomp').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-workers-comp', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "<?php echo e(route('vendor-workers-comp.destroy', ':id')); ?>";
+                url = url.replace(':id', id);
+                var token = "<?php echo e(csrf_token()); ?>";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-workers-comp', function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('vendor-workers-comp.edit', ':id')); ?>";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+        
+    });
+    //save-wnine
+    $('#save-wnine .dropify').on('change', function (event) {
+        if (event.target.files.length > 0) {
+            $.easyAjax({
+                url: "<?php echo e(route('vendor-wnine.store')); ?>",
+                container: '#save-wnine',
+                type: "POST",
+                file: true,
+                disableButton: true,
+                blockUI: true,
+                data:$('#save-wnine').serialize(),
+                success: function(response) {
+                   window.location.reload();
+                }
+            });
+        }
+    });
+    $('body').on('click', '.delete-wnine', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "<?php echo e(route('vendor-wnine.destroy', ':id')); ?>";
+                url = url.replace(':id', id);
+                var token = "<?php echo e(csrf_token()); ?>";
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+    $('body').on('click', '.edit-wnine', function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('vendor-wnine.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
