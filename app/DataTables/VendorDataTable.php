@@ -243,6 +243,14 @@ class VendorDataTable extends BaseDataTable
                 'orderable' => false,
                 'searchable' => false
             ],
+            'action' => [
+                'title' => __('app.action'),
+                'data' => 'action', // Specify the data source for actions
+                'exportable' => false,
+                'orderable' => false,
+                'searchable' => false,
+                'class' => 'text-right pr-20'
+            ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('app.name') => ['data' => 'name', 'name' => 'name', 'exportable' => false, 'title' => __('app.name')],
@@ -258,16 +266,16 @@ class VendorDataTable extends BaseDataTable
             __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
         ];
 
-        $action = [
-            Column::computed('action', __('app.action'))
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->searchable(false)
-                ->addClass('text-right pr-20')
-        ];
+        // $action = [
+        //     Column::computed('action', __('app.action'))
+        //         ->exportable(false)
+        //         ->printable(false)
+        //         ->orderable(false)
+        //         ->searchable(false)
+        //         ->addClass('text-right pr-20')
+        // ];
 
-        return array_merge($data, $action);
+        return array_merge($data);
     }
 
 }
