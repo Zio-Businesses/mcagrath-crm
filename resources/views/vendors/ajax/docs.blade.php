@@ -35,7 +35,7 @@
                                 href="{{ route('vendor-contractor-license.download', md5($contractor_license->id)) }}">@lang('app.download')</a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-contractor-license" 
                                 data-row-id="{{ $contractor_license->id }}"
-                                href="javascript:;">@lang('app.delete')</a>
+                                href="javascript:;">@lang('Remove File')</a>
                         </div>
                         @endif
                     </div>
@@ -74,7 +74,7 @@
                                 href="{{ route('vendor-buisness-license.download', md5($buisness_license->id)) }}">@lang('app.download')</a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-buisness-license" 
                                 data-row-id="{{ $buisness_license->id }}"
-                                href="javascript:;">@lang('app.delete')</a>
+                                href="javascript:;">@lang('Remove File')</a>
                         </div>
                         @endif
                     </div>
@@ -113,7 +113,7 @@
                                     href="{{ route('vendor-coi.download', md5($coi->id)) }}">@lang('app.download')</a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-coi" 
                                     data-row-id="{{ $coi->id }}"
-                                    href="javascript:;">@lang('app.delete')</a>
+                                    href="javascript:;">@lang('Remove File')</a>
                             </div>
                             @endif
                         </div>
@@ -152,7 +152,7 @@
                                     href="{{ route('vendor-workers-comp.download', md5($workers_comp->id)) }}">@lang('app.download')</a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp" 
                                     data-row-id="{{ $workers_comp->id }}"
-                                    href="javascript:;">@lang('app.delete')</a>
+                                    href="javascript:;">@lang('Remove File')</a>
                         </div>
                         @endif
                     </div>
@@ -194,7 +194,7 @@
                                     href="{{ route('vendor-wnine.download', md5($wnine->id)) }}">@lang('app.download')</a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-wnine" 
                                     data-row-id="{{ $wnine->id }}"
-                                    href="javascript:;">@lang('app.delete')</a>
+                                    href="javascript:;">@lang('Remove File')</a>
                         </div>
                         @endif
                     </div>
