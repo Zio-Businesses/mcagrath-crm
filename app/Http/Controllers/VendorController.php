@@ -14,6 +14,7 @@ use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\VendorContract;
+use App\Models\VendorCoiDoc;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 use App\Models\VendorWaiverFormTemplate;
@@ -76,6 +77,7 @@ class VendorController extends AccountBaseController
                 return $this->notes();
                 break;
             case 'doc':
+                $this->coi = VendorCoiDoc::where('vendor_id', $id)->first();
                 $this->view = 'vendors.ajax.docs';
                 break;
             default:

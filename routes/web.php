@@ -145,6 +145,7 @@ use App\Http\Controllers\LeadVendorCustomFilterController;
 use App\Http\Controllers\WorkOrderStatusController;
 use App\Http\Controllers\SOWTitleController;
 use App\Http\Controllers\VendorDocController;
+use App\Http\Controllers\VendorCoiDocController;
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -898,6 +899,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Vendor Docs
      Route::get('vendor-docs/download/{id}', [VendorDocController::class, 'download'])->name('vendor-docs.download');
      Route::resource('vendor-docs', VendorDocController::class);
+
+     //Vendor COI DOC
+     Route::resource('vendor-coi', VendorCoiDocController::class);
+     Route::get('vendor-coi/download/{id}', [VendorCoiDocController::class, 'download'])->name('vendor-coi.download');
 
      //Project-custom-filter 
      Route::resource('project-filter', ProjectCustomFilterController::class);
