@@ -126,7 +126,7 @@
         </div>
         <div class="col-xl-6 col-lg-6 col-md-6 ml-0 p-2 ">
             <x-form id="save-wcomp">
-            <div class="border-grey d-xl-flex">
+            <div class="border-grey d-xl-flex rounded border">
                 <div class="col ml-0 px-0">
                     <input type="hidden" name ="vendor_id_wc" value="{{$vendorDetail->id}}"/>
                     <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
