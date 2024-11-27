@@ -280,6 +280,14 @@ class VendorTrackDataTable extends BaseDataTable
                 'orderable' => false,
                 'searchable' => false
             ],
+            'action' => [
+                'title' => __('app.action'),
+                'data' => 'action', // Specify the data source for actions
+                'exportable' => false,
+                'orderable' => false,
+                'searchable' => false,
+                'class' => 'text-right pr-20'
+            ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
@@ -304,16 +312,16 @@ class VendorTrackDataTable extends BaseDataTable
                  
         ];
 
-        $action = [
-            Column::computed('action', __('app.action'))
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->searchable(false)
-                ->addClass('text-right pr-20')
-        ];
+        // $action = [
+        //     Column::computed('action', __('app.action'))
+        //         ->exportable(false)
+        //         ->printable(false)
+        //         ->orderable(false)
+        //         ->searchable(false)
+        //         ->addClass('text-right pr-20')
+        // ];
 
-        return array_merge($data, $action);
+        return array_merge($data);
     }
 
 }

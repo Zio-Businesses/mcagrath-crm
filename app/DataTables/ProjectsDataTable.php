@@ -694,6 +694,14 @@ class ProjectsDataTable extends BaseDataTable
                 'searchable' => false,
                 'visible' => !in_array('client', user_roles())
             ],
+            'action' => [
+                'title' => __('app.action'),
+                'data' => 'action', // Specify the data source for actions
+                'exportable' => false,
+                'orderable' => false,
+                'searchable' => false,
+                'class' => 'text-right pr-20'
+            ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => false, 'title' => '#'],
             __('app.completion') => ['data' => 'completion_export', 'name' => 'completion_export', 'visible' => false, 'title' => __('app.completion')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'width' => '16%', 'exportable' => false, 'title' => __('app.status')],
@@ -739,16 +747,16 @@ class ProjectsDataTable extends BaseDataTable
             
         ];
 
-        $action = [
-            Column::computed('action', __('app.action'))
-                ->exportable(false)
-                ->printable(false)
-                ->orderable(false)
-                ->searchable(false)
-                ->addClass('text-right pr-20')
-        ];
+        // $action = [
+        //     Column::computed('action', __('app.action'))
+        //         ->exportable(false)
+        //         ->printable(false)
+        //         ->orderable(false)
+        //         ->searchable(false)
+        //         ->addClass('text-right pr-20')
+        // ];
 
-        return array_merge($data, CustomFieldGroup::customFieldsDataMerge(new Project()), $action);
+        return array_merge($data, CustomFieldGroup::customFieldsDataMerge(new Project()));
     }
 
 }

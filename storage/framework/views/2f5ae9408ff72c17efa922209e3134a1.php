@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title" id="modelHeading"><?php echo app('translator')->get('Rename File'); ?></h5>
+    <h5 class="modal-title" id="modelHeading"><?php echo app('translator')->get('Edit File'); ?></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">×</span></button>
 </div>
@@ -12,30 +12,30 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'renameFile']); ?>
+<?php $component->withAttributes(['id' => 'exp_date']); ?>
     <div class="modal-body"> 
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('File Name'),'fieldName' => 'filename','fieldRequired' => 'true','fieldId' => 'filter_name','fieldValue' => $name->filename,'fieldPlaceholder' => __('Enter file name')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.text'); ?>
+                    <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['custom' => 'true','fieldId' => 'expiry_date','fieldLabel' => __('Expiry Date'),'fieldName' => 'expiry_date','fieldPlaceholder' => __('placeholders.date'),'fieldValue' => $expiry_date->expiry_date  ? $expiry_date->expiry_date->format(company()->date_format) : ''] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                 </div>
             </div>
@@ -70,7 +70,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'rename-file']); ?><?php echo app('translator')->get('app.save'); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['id' => 'save']); ?><?php echo app('translator')->get('app.save'); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
 <?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
@@ -92,22 +92,27 @@
 <?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
 <?php endif; ?>
 <script>
-    $('#rename-file').click(function() {
-        var url = "<?php echo e(route('vendor-docs.update', $name->id)); ?>";
+    $('#save').click(function() {
+        var url = "<?php echo e(route('vendor-contractor-license.update', $expiry_date->id)); ?>";
         $.easyAjax({
             url: url,
-            container: '#renameFile',
+            container: '#exp_date',
             type: "POST",
             blockUI: true,
             disableButton: true,
-            buttonSelector: '#rename-file',
-            data: $('#renameFile').serialize(),
+            buttonSelector: '#save',
+            data: $('#exp_date').serialize(),
             success: function(response) {
                 if (response.status == 'success') {
-                    $('#task-file-list').html(response.view);
-                    $('.modal:visible').modal('hide');
+                    window.location.reload();
                 }
             }
         })
     });
-</script><?php /**PATH C:\xampp\htdocs\public_html\resources\views/vendors/docs/rename.blade.php ENDPATH**/ ?>
+    $('.custom-date-picker').each(function(ind, el) {
+        datepicker(el, {
+            position: 'bl',
+            ...datepickerConfig
+        });
+    });
+</script><?php /**PATH C:\xampp\htdocs\public_html\resources\views/vendors/contractor-license/edit.blade.php ENDPATH**/ ?>
