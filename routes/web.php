@@ -157,6 +157,8 @@ use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController; 
 
+Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
+
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
 
