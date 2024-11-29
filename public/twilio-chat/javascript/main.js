@@ -1,82 +1,75 @@
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
+    // Initialize select picker
     $("#selectVendor").selectpicker();
 
+    // Handle vendor selection
     $("#selectVendor").on(
         "changed.bs.select",
         function (e, clickedIndex, isSelected, previousValue) {
             const selectedVendorId = $(this).val();
 
             if (selectedVendorId) {
-                const userElement = document.querySelector(
+                const $userElement = $(
                     `.user[data-vendor-id='${selectedVendorId}']`
                 );
 
-                if (userElement) {
-                    userElement.scrollIntoView({
+                if ($userElement.length) {
+                    $userElement[0].scrollIntoView({
                         behavior: "smooth",
                         block: "center",
                     });
-                    userElement.click();
-                }
-                else{
-                    
+                    $userElement.trigger("click");
                 }
             }
         }
     );
-});
-let chatsid = "";
-let selected_vendor;
-const loadingMessage = document.getElementById("loadingMessage");
-const sendingMessage = document.getElementById("sendingMessage");
-const errorMessage = document.getElementById("errorMessage");
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const vendorInput = document.getElementById("vendor");
-const chatTitle = document.getElementById("chat-title");
-let disableClicks = false;
 
-document.querySelectorAll(".user").forEach((user) => {
-    user.addEventListener("click", async function () {
+    let chatsid = "";
+    let selected_vendor;
+    const $loadingMessage = $("#loadingMessage");
+    const $sendingMessage = $("#sendingMessage");
+    const $errorMessage = $("#errorMessage");
+    const $messageInput = $("#messageInput");
+    const $sendButton = $("#sendButton");
+    const $chatTitle = $("#chat-title");
+    const $messagesDiv = $("#messages");
+    const $chatImage = $("#chat-image");
+    const $form = $("#message-input");
+    const $chatHeader = $("#chatheader");
+    let disableClicks = false;
+
+    // Handle user clicks
+    $(".user").on("click", async function () {
         if (disableClicks) return;
-        document
-            .querySelectorAll(".user")
-            .forEach((u) => u.classList.remove("active"));
-        this.classList.add("active");
 
-        const vendorId = this.getAttribute("data-vendor-id");
-        selected_vendor = vendorId;
-        const vendorName = this.querySelector("span").textContent.trim();
-        const vendorImage = this.querySelector("img").src;
-        const form = document.getElementById("message-input");
-        const chat = document.getElementById("chatheader");
+        $(".user").removeClass("active");
+        const $this = $(this);
+        $this.addClass("active");
 
-        const chatImage = document.getElementById("chat-image");
+        selected_vendor = $this.data("vendor-id");
+        const vendorName = $this.find("span").text().trim();
+        const vendorImage = $this.find("img").attr("src");
 
-        chatTitle.textContent = vendorName;
-        chatImage.src = vendorImage;
-        chatImage.style.display = "inline-block";
-        form.style.display = "flex";
-        chat.style.display = "flex";
+        $chatTitle.text(vendorName);
+        $chatImage.attr("src", vendorImage).css("display", "inline-block");
+        $form.css("display", "flex");
+        $chatHeader.css("display", "flex");
 
         try {
-            $(".spinner").fadeIn("fast", function () {
-                $(this).addClass("d-flex");
-            });
+            $(".spinner").fadeIn("fast").addClass("d-flex");
             disableClicks = true;
-            loadingMessage.style.display = "block";
-            messageInput.value = "";
-            sendButton.disabled = true;
-            messageInput.disabled = true;
-            const messagesDiv = document.getElementById("messages");
-            messagesDiv.innerHTML = "";
+            $loadingMessage.show();
+            $messageInput.val("").prop("disabled", true);
+            $sendButton.prop("disabled", true);
+            $messagesDiv.empty();
+
             const response = await fetch(window.appData.createConversation, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": window.appData.csrfToken,
                 },
-                body: JSON.stringify({ vendor_id: vendorId }),
+                body: JSON.stringify({ vendor_id: selected_vendor }),
             });
 
             const data = await response.json();
@@ -91,21 +84,23 @@ document.querySelectorAll(".user").forEach((user) => {
         } catch (error) {
             console.error("Error:", error);
             alert("An error occurred while connecting to the chat.");
+        } finally {
+            $(".spinner").fadeOut("fast").removeClass("d-flex");
+            disableClicks = false;
+            $loadingMessage.hide();
         }
     });
-});
 
-document
-    .getElementById("message-input")
-    .addEventListener("submit", function (e) {
+    // Handle message form submission
+    $form.on("submit", function (e) {
         e.preventDefault();
-        const message = messageInput.value;
+        const message = $messageInput.val();
 
-        sendingMessage.style.display = "block";
-        errorMessage.style.display = "none";
+        $sendingMessage.show();
+        $errorMessage.hide();
         disableClicks = true;
-        sendButton.disabled = true;
-        messageInput.disabled = true;
+        $sendButton.prop("disabled", true);
+        $messageInput.prop("disabled", true);
 
         fetch(window.appData.twilioSend, {
             method: "POST",
@@ -122,29 +117,36 @@ document
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    messageInput.value = "";
+                    $messageInput.val("");
                 } else {
                     throw new Error("Message sending failed");
                 }
             })
             .catch((error) => {
-                errorMessage.style.display = "block";
+                $errorMessage.show();
                 console.error("Error:", error);
             })
             .finally(() => {
                 disableClicks = false;
-                sendButton.disabled = false;
-                messageInput.disabled = false;
-                sendingMessage.style.display = "none";
+                $sendButton.prop("disabled", false);
+                $messageInput.prop("disabled", false);
+                $sendingMessage.hide();
             });
     });
+});
 
 let twilioConversation;
 
 function connectToTwilio(twilioChatSid) {
-    loadingMessage.style.display = "block";
-    sendButton.disabled = true;
-    messageInput.disabled = true;
+    const $loadingMessage = $("#loadingMessage");
+    const $sendButton = $("#sendButton");
+    const $messageInput = $("#messageInput");
+    const $spinner = $(".spinner");
+    const $errorMessage = $("#errorMessage");
+
+    $loadingMessage.show();
+    $sendButton.prop("disabled", true);
+    $messageInput.prop("disabled", true);
 
     fetch("generatetwiliotoken")
         .then((response) => response.json())
@@ -162,64 +164,62 @@ function connectToTwilio(twilioChatSid) {
                     });
                 })
                 .catch((error) => {
-                    errorMessage.style.display = "block";
+                    $errorMessage.show();
                     console.error("Error connecting to Twilio:", error);
                 })
                 .finally(() => {
                     disableClicks = false;
-                    sendButton.disabled = false;
-                    messageInput.disabled = false;
-                    loadingMessage.style.display = "none";
-                    $(".spinner").fadeOut("slow", function () {
+                    $sendButton.prop("disabled", false);
+                    $messageInput.prop("disabled", false);
+                    $loadingMessage.hide();
+                    $spinner.fadeOut("slow", function () {
                         $(this).removeClass("d-flex");
                     });
                 });
         })
         .catch((error) => {
-            errorMessage.style.display = "block";
+            $errorMessage.show();
             console.error("Error fetching token:", error);
-            loadingMessage.style.display = "none";
+            $loadingMessage.hide();
         });
 }
 
 function loadMessages() {
     if (!twilioConversation) return;
 
-    loadingMessage.style.display = "block";
-    sendButton.disabled = true;
-    messageInput.disabled = true;
+    const $loadingMessage = $("#loadingMessage");
+    const $sendButton = $("#sendButton");
+    const $messageInput = $("#messageInput");
+    const $errorMessage = $("#errorMessage");
+
+    $loadingMessage.show();
+    $sendButton.prop("disabled", true);
+    $messageInput.prop("disabled", true);
 
     twilioConversation
         .getMessages()
         .then((messages) => {
-            console.log(messages);
-            const messagesDiv = document.getElementById("messages");
-            messagesDiv.innerHTML = "";
+            const $messagesDiv = $("#messages");
+            $messagesDiv.empty();
 
             messages.items.forEach((message) => displayMessage(message));
             scrollToEnd();
         })
         .catch((error) => {
-            errorMessage.style.display = "block";
+            $errorMessage.show();
             console.error("Error loading messages:", error);
         })
         .finally(() => {
-            loadingMessage.style.display = "none";
-            sendButton.disabled = false;
-            messageInput.disabled = false;
+            $loadingMessage.hide();
+            $sendButton.prop("disabled", false);
+            $messageInput.prop("disabled", false);
         });
 }
 
 function displayMessage(message) {
-    const messagesDiv = document.getElementById("messages");
-    const messageElement = document.createElement("div");
+    const $messagesDiv = $("#messages");
+    const $chatTitle = $("#chat-title");
     const loggedInUserId = window.appData.loggedInUserName;
-
-    if (message.author === chatTitle.textContent ) {
-        messageElement.classList.add("message", "received");
-    } else {
-        messageElement.classList.add("message", "sent");
-    }
 
     const apiDate = new Date(message.dateUpdated);
     const formattedDate = `${apiDate.getDate().toString().padStart(2, "0")}-${(
@@ -232,13 +232,18 @@ function displayMessage(message) {
         .toString()
         .padStart(2, "0")}`;
 
-    messageElement.innerHTML = `<h6 class='msg-auth'>${message.author}</h6>
-            <div class='msg-body'>${message.body}</div>
-            <div class='msg-time'>${formattedDate} ${time}</div>`;
-    messagesDiv.appendChild(messageElement);
+    const messageClass =
+        message.author === $chatTitle.text().trim() ? "received" : "sent";
+    const messageElement = `
+        <div class="message ${messageClass}">
+            <h6 class="msg-auth">${message.author}</h6>
+            <div class="msg-body">${message.body}</div>
+            <div class="msg-time">${formattedDate} ${time}</div>
+        </div>`;
+    $messagesDiv.append(messageElement);
 }
 
 function scrollToEnd() {
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    const $messagesDiv = $("#messages");
+    $messagesDiv.scrollTop($messagesDiv.prop("scrollHeight"));
 }
