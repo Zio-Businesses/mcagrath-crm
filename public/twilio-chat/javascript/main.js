@@ -100,18 +100,8 @@ $(document).ready(function () {
         }, 300)
     );
 
-    // Handle message form submission
-    $form.on("submit", function (e) {
-        e.preventDefault();
-        const message = $messageInput.val();
-
-        $sendingMessage.show();
-        $errorMessage.hide();
-        disableClicks = true;
-        $sendButton.prop("disabled", true);
-        $messageInput.prop("disabled", true);
-
-        fetch(window.appData.twilioSend, {
+    function sendMessage(message) {
+        return fetch(window.appData.twilioSend, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -122,26 +112,44 @@ $(document).ready(function () {
                 chatsid: chatsid,
                 vendorId: selected_vendor,
             }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    $messageInput.val("");
-                } else {
-                    throw new Error("Message sending failed");
-                }
-            })
-            .catch((error) => {
-                $errorMessage.show();
-                console.error("Error:", error);
-            })
-            .finally(() => {
-                disableClicks = false;
-                $sendButton.prop("disabled", false);
-                $messageInput.prop("disabled", false);
-                $sendingMessage.hide();
-            });
+        });
+    }
+    
+    $form.on("submit", async function (e) {
+        e.preventDefault();
+        const message = $messageInput.val();
+    
+        $sendingMessage.show();
+        $errorMessage.hide();
+        disableClicks = true;
+        $sendButton.prop("disabled", true);
+        $messageInput.prop("disabled", true);
+    
+        try {
+            const response = await sendMessage(message);
+            const data = await response.json();
+    
+            if (!data.success) {
+                throw new Error("Message sending failed");
+            }
+    
+            $messageInput.val("");
+        } catch (error) {
+            console.error("Error:", error);
+            const retry = confirm(
+                "Message sending failed. Would you like to retry?"
+            );
+            if (retry) {
+                await sendMessage(message);
+            }
+        } finally {
+            disableClicks = false;
+            $sendButton.prop("disabled", false);
+            $messageInput.prop("disabled", false);
+            $sendingMessage.hide();
+        }
     });
+    
 
     // Connect to Twilio
     function connectToTwilio(twilioChatSid) {
@@ -154,7 +162,7 @@ $(document).ready(function () {
         fetch("generatetwiliotoken")
             .then((response) => response.json())
             .then((data) => {
-                Cookies.set("twilioToken", data.token);
+                Cookies.set("twilioToken", data.token, 600);
                 initializeTwilio(data.token, twilioChatSid);
             })
             .catch((error) => {
