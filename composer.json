@@ -25,6 +25,7 @@
         "froiden/envato": "^5.0",
         "froiden/laravel-installer": "^1.6",
         "froiden/laravel-rest-api": "^10.0",
+        "giggsey/libphonenumber-for-php": "*",
         "google/apiclient": "^2.10",
         "graham-campbell/gitlab": "^7.0",
         "graham-campbell/markdown": "^15.0",

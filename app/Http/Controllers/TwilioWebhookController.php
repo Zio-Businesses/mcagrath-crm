@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\VendorContract;
+use libphonenumber\PhoneNumberUtil;
+use libphonenumber\PhoneNumberFormat;
+
 
 class TwilioWebhookController extends Controller
 {
@@ -18,24 +21,33 @@ class TwilioWebhookController extends Controller
     }
     public function handleWebhook(Request $request)
     {
-        // Log the incoming SMS details
         Log::info('Incoming SMS request data:', $request->all());
         $from = $request->input('From'); // Sender's phone number
         $body = $request->input('Body'); // Message content
 
+        // Normalize the phone number
+        $phoneUtil = PhoneNumberUtil::getInstance();
 
-        $normalizedFrom = preg_replace('/^\+\d+/', '', $from);
-        $vendor = VendorContract::where('cell', 'like', "%$normalizedFrom")->first();
+        try {
+            $parsedFrom = $phoneUtil->parse($from, null);
+            $normalizedFrom = $phoneUtil->format($parsedFrom, PhoneNumberFormat::E164); // Normalize to E.164 format
 
-        if (!$vendor) {
-            Log::warning("Vendor not found for phone number: $from");
-            return response()->json(['error' => 'Vendor not found'], 404);
+
+            $nationalNumber = $parsedFrom->getNationalNumber();
+            $vendor = VendorContract::where('cell', $nationalNumber)->first();
+
+            if (!$vendor) {
+                Log::warning("Vendor not found for phone number: $from");
+                return response()->json(['error' => 'Vendor not found'], 404);
+            }
+
+            $vendorSid = $vendor->chat_sid;
+            $this->twilioService->sendMessage($vendorSid, $vendor->name, $body);
+
+            return response()->json($request->all());
+        } catch (\libphonenumber\NumberParseException $e) {
+            Log::error("Failed to parse phone number: {$e->getMessage()}");
+            return response()->json(['error' => 'Invalid phone number'], 400);
         }
-
-
-        $vendorSid = $vendor->chat_sid;
-        $this->twilioService->sendMessage($vendorSid, $vendor->name, $body);
-
-        return response()->json($request->all());
     }
 }
