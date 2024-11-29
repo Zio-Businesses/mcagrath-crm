@@ -1,9 +1,4 @@
 $(document).ready(function () {
-    const CACHE = {
-        twilioToken: null,
-        conversations: {},
-    };
-
     const $selectVendor = $("#selectVendor");
     const $loadingMessage = $("#loadingMessage");
     const $sendingMessage = $("#sendingMessage");
@@ -17,8 +12,8 @@ $(document).ready(function () {
     const $chatHeader = $("#chatheader");
     let disableClicks = false;
 
-    let chatsid = Cookies.get("chatsid") || "";
-    let selected_vendor = Cookies.get("selected_vendor") || null;
+    let chatsid = "";
+    let selected_vendor = null;
 
     // Initialize vendor select picker
     $selectVendor.selectpicker();
@@ -60,8 +55,6 @@ $(document).ready(function () {
             $form.css("display", "flex");
             $chatHeader.css("display", "flex");
 
-            Cookies.set("selected_vendor", selected_vendor);
-
             $(".spinner").fadeIn("fast").addClass("d-flex");
             disableClicks = true;
             $loadingMessage.show();
@@ -69,8 +62,9 @@ $(document).ready(function () {
             $sendButton.prop("disabled", true);
             $messagesDiv.empty();
 
-            if (CACHE.conversations[selected_vendor]) {
-                chatsid = CACHE.conversations[selected_vendor];
+            // Check cookies for an existing chat SID
+            chatsid = Cookies.get(`conversation_${selected_vendor}`);
+            if (chatsid) {
                 connectToTwilio(chatsid);
                 return;
             }
@@ -92,8 +86,9 @@ $(document).ready(function () {
 
                 if (data.sid) {
                     chatsid = data.sid;
-                    CACHE.conversations[selected_vendor] = chatsid;
-                    Cookies.set("chatsid", chatsid);
+                    Cookies.set(`conversation_${selected_vendor}`, chatsid, {
+                        expires: 7, // Cache for 7 days
+                    });
                     connectToTwilio(chatsid);
                 } else {
                     alert("Unable to connect to the chat. Please try again.");
@@ -150,16 +145,16 @@ $(document).ready(function () {
 
     // Connect to Twilio
     function connectToTwilio(twilioChatSid) {
-
-        if (CACHE.twilioToken) {
-            initializeTwilio(CACHE.twilioToken, twilioChatSid);
+        const token = Cookies.get("twilioToken");
+        if (token) {
+            initializeTwilio(token, twilioChatSid);
             return;
         }
 
         fetch("generatetwiliotoken")
             .then((response) => response.json())
             .then((data) => {
-                CACHE.twilioToken = data.token;
+                Cookies.set("twilioToken", data.token);
                 initializeTwilio(data.token, twilioChatSid);
             })
             .catch((error) => {
