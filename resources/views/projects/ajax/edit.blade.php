@@ -28,6 +28,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                     </div>
 
                     <input type="hidden" name="project_id" value="{{ $project->id }}">
+                    <input type="hidden" name="projectID" value="{{ $projectID }}">
                     <div class="col-md-3">
                         <x-forms.label class="mb-12 mt-3" fieldId="type"
                                        :fieldLabel="__('Project Type')">

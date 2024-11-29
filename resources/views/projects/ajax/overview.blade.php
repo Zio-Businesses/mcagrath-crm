@@ -55,7 +55,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                                 || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
                                 || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles())))
                                 <a class="dropdown-item openRightModal"
-                                    href="{{ route('projects.edit', $project->id) }}">@lang('app.editProject')
+                                    href="{{ route('projects.edit', $project->id) }}?projectID={{$project->id}}">@lang('app.editProject')
                                 </a>
 
                                 <a class="dropdown-item"

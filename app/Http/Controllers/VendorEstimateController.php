@@ -59,8 +59,8 @@ class VendorEstimateController extends AccountBaseController
                 $this->zero = '0' . $this->zero;
             }
         }
-
-
+        $this->redirectUrl = request('project_id') ? route('projects.show', ['project' => request('project_id'), 'tab' => 'vendor_estimates']) : route('vendor-estimates.index');
+       
         $this->units = UnitType::all();
 
         $this->estimateTemplate = request('template') ? EstimateTemplate::findOrFail(request('template')) : null;
@@ -130,7 +130,7 @@ class VendorEstimateController extends AccountBaseController
 
         $this->logSearchEntry($estimate->id, $estimate->estimate_number, 'estimates-vendor.show', 'estimates-vendor');
 
-        $redirectUrl = urldecode($request->redirect_url);
+        $redirectUrl = rtrim($request->input('redirect_url'), '/');
 
         if ($redirectUrl == '') {
             $redirectUrl = route('vendor-estimates.index');

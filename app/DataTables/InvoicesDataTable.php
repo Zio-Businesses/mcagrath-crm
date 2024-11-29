@@ -45,6 +45,7 @@ class InvoicesDataTable extends BaseDataTable
      */
     public function dataTable($query)
     {
+        \Log::info(request()->projectID);
 
         $firstInvoice = $this->firstInvoice;
         $datatables = datatables()->eloquent($query);
@@ -427,7 +428,7 @@ class InvoicesDataTable extends BaseDataTable
             });
         }
 
-        if ($request->projectID != 'all' && !is_null($request->projectID)) {
+        if ($request->projectID != '' && !is_null($request->projectID)) {
             $model = $model->where('invoices.project_id', '=', $request->projectID);
         }
 

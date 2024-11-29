@@ -14,6 +14,7 @@
     <hr class="m-0 border-top-grey">
     <!-- FORM START -->
     <x-form class="c-inv-form" id="saveInvoiceForm">
+        <input type="hidden" name ="redirect_url" value={{$redirectUrl}}/>
         <!-- INVOICE NUMBER, DATE, DUE DATE, FREQUENCY START -->
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- INVOICE NUMBER START -->
@@ -362,7 +363,7 @@
         
         let defaultImage = '';
         let lastIndex = 0;
-        
+        var projectID=$('#project_id').val();
         Dropzone.autoDiscover = false;
         //Dropzone class
         invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
@@ -393,7 +394,8 @@
             $.easyBlockUI();
         });
         invoiceDropzone.on('queuecomplete', function () {
-            window.location.href = '{{ route("vendor-estimates.index") }}';
+            window.location.href = projectID ? '{{ route("projects.show", ["project" => ":projectID", "tab" => "vendor_estimates"]) }}'.replace(':projectID', projectID):'{{ route("vendor-estimates.index") }}';
+            
         });
         invoiceDropzone.on('removedfile', function () {
             var grp = $('div#file-upload-dropzone').closest(".form-group");
@@ -592,7 +594,6 @@
                         if (typeof invoiceDropzone !== 'undefined' && invoiceDropzone.getQueuedFiles().length > 0) {
                             estimateId = response.estimateId;
                             $('#estimateId').val(response.estimateId);
-                            console.log(estimateId);
                             (response.add_more == true) ? localStorage.setItem("redirect_estimate", window.location.href) : localStorage.setItem("redirect_estimate", response.redirectUrl);
                             invoiceDropzone.processQueue();
                         }

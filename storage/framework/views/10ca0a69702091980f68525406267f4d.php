@@ -57,7 +57,7 @@ $memberIds = $project->members->pluck('user_id')->toArray();
                                 || ($editProjectPermission == 'both' && (user()->id == $project->client_id || user()->id == $project->added_by))
                                 || ($editProjectPermission == 'both' && in_array(user()->id, $memberIds) && in_array('employee', user_roles()))): ?>
                                 <a class="dropdown-item openRightModal"
-                                    href="<?php echo e(route('projects.edit', $project->id)); ?>"><?php echo app('translator')->get('app.editProject'); ?>
+                                    href="<?php echo e(route('projects.edit', $project->id)); ?>?projectID=<?php echo e($project->id); ?>"><?php echo app('translator')->get('app.editProject'); ?>
                                 </a>
 
                                 <a class="dropdown-item"
