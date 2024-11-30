@@ -109,7 +109,7 @@ class VendorDataTable extends BaseDataTable
         $datatables->editColumn('company_name', fn($row) => $row->company_name);
         $datatables->editColumn('created_by', fn($row) => $row->created_by);
         
-        $datatables->editColumn('status', function ($row)
+        $datatables->editColumn('v_status', function ($row)
         {
             return '
             <div class="media align-items-center" style="width: 150px;">
@@ -131,7 +131,7 @@ class VendorDataTable extends BaseDataTable
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
         // Add Custom Field to datatable
 
-        $datatables->rawColumns(array_merge(['name', 'action', 'status', 'check']));
+        $datatables->rawColumns(array_merge(['name', 'action', 'v_status', 'check']));
 
         return $datatables;
     }
@@ -144,6 +144,7 @@ class VendorDataTable extends BaseDataTable
     {
         $request = $this->request();
         $users = VendorContract::query();
+        $users = $users->orderBy('id', 'desc');
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
@@ -263,7 +264,8 @@ class VendorDataTable extends BaseDataTable
             __('app.contractor_type') => ['data' => 'contractor_type', 'name' => 'contractor_type', 'title' => __('app.contractor_type')],
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
-            __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')],
+            __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'exportable' => false, 'title' => __('app.status')],
+            __('vendor status') => ['data' => 'status', 'name' => 'status', 'visible' => false, 'title' => __('vendor status')],
         ];
 
         // $action = [
