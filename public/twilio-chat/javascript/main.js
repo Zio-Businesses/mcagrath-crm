@@ -11,7 +11,7 @@ $(document).ready(function () {
     const $form = $("#message-input");
     const $chatHeader = $("#chatheader");
     let disableClicks = false;
-
+    let twilioClient;
     let chatsid = "";
     let selected_vendor = null;
 
@@ -114,25 +114,25 @@ $(document).ready(function () {
             }),
         });
     }
-    
+
     $form.on("submit", async function (e) {
         e.preventDefault();
         const message = $messageInput.val();
-    
+
         $sendingMessage.show();
         $errorMessage.hide();
         disableClicks = true;
         $sendButton.prop("disabled", true);
         $messageInput.prop("disabled", true);
-    
+
         try {
             const response = await sendMessage(message);
             const data = await response.json();
-    
+
             if (!data.success) {
                 throw new Error("Message sending failed");
             }
-    
+
             $messageInput.val("");
         } catch (error) {
             console.error("Error:", error);
@@ -149,7 +149,6 @@ $(document).ready(function () {
             $sendingMessage.hide();
         }
     });
-    
 
     // Connect to Twilio
     function connectToTwilio(twilioChatSid) {
@@ -162,7 +161,7 @@ $(document).ready(function () {
         fetch("generatetwiliotoken")
             .then((response) => response.json())
             .then((data) => {
-                Cookies.set("twilioToken", data.token, 600);
+                Cookies.set("twilioToken", data.token, 3600);
                 initializeTwilio(data.token, twilioChatSid);
             })
             .catch((error) => {
@@ -172,8 +171,18 @@ $(document).ready(function () {
             });
     }
 
+    function initializeTwilioClient(token) {
+        if (twilioClient) {
+            return Promise.resolve(twilioClient);
+        }
+        return Twilio.Conversations.Client.create(token).then((client) => {
+            twilioClient = client;
+            return client;
+        });
+    }
+
     function initializeTwilio(token, twilioChatSid) {
-        Twilio.Conversations.Client.create(token)
+        initializeTwilioClient(token)
             .then((client) => client.getConversationBySid(twilioChatSid))
             .then((conversation) => {
                 twilioConversation = conversation;
