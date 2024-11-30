@@ -19,7 +19,7 @@ class TwilioTokenController extends Controller
         $chatServiceSid = env('TWILIO_SERVICE_SID'); // Your Conversation Service SID
 
         // Create an access token
-        $accessToken = new AccessToken($sid, $apiKey, $apiSecret, 3600, $request->user()->email);
+        $accessToken = new AccessToken($sid, $apiKey, $apiSecret, 600, $request->user()->email);
 
         // Create a Chat grant
         $chatGrant = new ChatGrant();

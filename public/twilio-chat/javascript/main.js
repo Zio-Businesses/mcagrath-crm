@@ -10,10 +10,14 @@ $(document).ready(function () {
     const $chatImage = $("#chat-image");
     const $form = $("#message-input");
     const $chatHeader = $("#chatheader");
+    const PAGE_SIZE = 10;
     let disableClicks = false;
     let twilioClient;
     let chatsid = "";
     let selected_vendor = null;
+    let oldestMessageIndex = undefined;
+    let isLoadingMessages = false;
+    let initialLoad = true;
 
     // Initialize vendor select picker
     $selectVendor.selectpicker();
@@ -65,6 +69,9 @@ $(document).ready(function () {
             // Check cookies for an existing chat SID
             chatsid = Cookies.get(`conversation_${selected_vendor}`);
             if (chatsid) {
+                oldestMessageIndex = undefined;
+                isLoadingMessages = false;
+                initialLoad = true;
                 connectToTwilio(chatsid);
                 return;
             }
@@ -161,7 +168,7 @@ $(document).ready(function () {
         fetch("generatetwiliotoken")
             .then((response) => response.json())
             .then((data) => {
-                Cookies.set("twilioToken", data.token, 3600);
+                Cookies.set("twilioToken", data.token);
                 initializeTwilio(data.token, twilioChatSid);
             })
             .catch((error) => {
@@ -200,26 +207,102 @@ $(document).ready(function () {
 
     // Load messages and display them
     function loadMessages() {
-        if (!twilioConversation) return;
+        if (!twilioConversation || isLoadingMessages) return;
+
+        $loadingMessage.show();
+        isLoadingMessages = true; // Prevent concurrent requests
+
+        // Save the current scroll position and height of the messages div
+        const previousScrollHeight = $messagesDiv.prop("scrollHeight");
+        const previousScrollTop = $messagesDiv.scrollTop();
 
         twilioConversation
-            .getMessages()
+            .getMessages(PAGE_SIZE, oldestMessageIndex)
             .then((messages) => {
-                $messagesDiv.empty();
-                messages.items.forEach((message) => displayMessage(message));
-                scrollToEnd();
+                if (initialLoad) {
+                    // Attach scroll listener for lazy loading
+                    $messagesDiv.on("scroll", function () {
+                        if (
+                            $messagesDiv.scrollTop() === 0 &&
+                            !isLoadingMessages
+                        ) {
+                            loadMessages();
+                        }
+                    });
+                    // Handle the initial load of messages
+                    $messagesDiv.empty();
+                    messages.items.forEach((message) =>
+                        displayMessage(message)
+                    );
+                    scrollToEnd();
+                    initialLoad = false;
+                    if (messages.items.length > 0) {
+                        oldestMessageIndex = messages.items[0].index - 1;
+                    }
+                } else {
+                    // Lazy load older messages
+                    if (messages.items.length > 0) {
+                        oldestMessageIndex = messages.items[0].index - 1;
+                    }
+
+                    messages.items.reverse().forEach((message) => {
+                        prependMessage(message);
+                    });
+
+                    // Maintain the user's scroll position
+                    const newScrollHeight = $messagesDiv.prop("scrollHeight");
+                    const scrollDifference =
+                        newScrollHeight - previousScrollHeight;
+                    $messagesDiv.scrollTop(
+                        previousScrollTop + scrollDifference
+                    );
+                }
+
+                // Stop loading if no more messages are available
+                if (messages.items.length < PAGE_SIZE) {
+                    $messagesDiv.off("scroll"); // Disable further scroll listening
+                }
+                console.log(messages);
             })
             .catch((error) => {
                 $errorMessage.show();
                 console.error("Error loading messages:", error);
             })
             .finally(() => {
+                isLoadingMessages = false;
                 $loadingMessage.hide();
                 $(".spinner").fadeOut("fast").removeClass("d-flex");
                 disableClicks = false;
                 $sendButton.prop("disabled", false);
                 $messageInput.prop("disabled", false);
             });
+    }
+
+    function prependMessage(message) {
+        const apiDate = new Date(message.dateUpdated);
+        const formattedDate = `${apiDate
+            .getDate()
+            .toString()
+            .padStart(2, "0")}-${(apiDate.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}-${apiDate.getFullYear().toString().slice(-2)}`;
+        const time = `${apiDate
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${apiDate
+            .getMinutes()
+            .toString()
+            .padStart(2, "0")}`;
+
+        const messageClass =
+            message.author === $chatTitle.text().trim() ? "received" : "sent";
+        const messageElement = `
+            <div class="message ${messageClass}">
+                <h6 class="msg-auth">${message.author}</h6>
+                <div class="msg-body">${message.body}</div>
+                <div class="msg-time">${formattedDate} ${time}</div>
+            </div>`;
+        $messagesDiv.prepend(messageElement);
     }
 
     function displayMessage(message) {
