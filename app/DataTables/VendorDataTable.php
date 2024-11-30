@@ -265,7 +265,7 @@ class VendorDataTable extends BaseDataTable
             __('app.createdby') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('app.createdby')],
             __('app.createdAt') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdAt')],
             __('app.status') => ['data' => 'v_status', 'name' => 'v_status', 'exportable' => false, 'title' => __('app.status')],
-            __('vendor status') => ['data' => 'status', 'name' => 'status', 'visible' => false, 'title' => __('vendor status')],
+            __('Vendor Status') => ['data' => 'status', 'name' => 'status', 'visible' => false, 'title' => __('Vendor Status')],
         ];
 
         // $action = [
