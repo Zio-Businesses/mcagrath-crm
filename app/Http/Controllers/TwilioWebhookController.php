@@ -42,7 +42,7 @@ class TwilioWebhookController extends Controller
             }
 
             $vendorSid = $vendor->chat_sid;
-            $this->twilioService->sendMessage($vendorSid, $vendor->name, $body);
+            $this->twilioService->sendMessage($vendorSid, $vendor->vendor_name, $body);
 
             return response()->json($request->all());
         } catch (\libphonenumber\NumberParseException $e) {
