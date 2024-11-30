@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //CACHING ELEMENTS
     const $selectVendor = $("#selectVendor");
     const $loadingMessage = $("#loadingMessage");
     const $sendingMessage = $("#sendingMessage");
@@ -18,10 +19,10 @@ $(document).ready(function () {
     let oldestMessageIndex = undefined;
     let isLoadingMessages = false;
     let initialLoad = true;
+    //END OF CACHE ELEMENTS
 
-    // Initialize vendor select picker
+    // SEARRCH WITH DROP DOWN BOX
     $selectVendor.selectpicker();
-
     $selectVendor.on("changed.bs.select", function () {
         const selectedVendorId = $(this).val();
 
@@ -39,8 +40,9 @@ $(document).ready(function () {
             }
         }
     });
+    // END OF SEARRCH WITH DROP DOWN BOX
 
-    // Handle user clicks
+    // VENDORS LIST
     $(".user").on(
         "click",
         debounce(async function () {
@@ -69,13 +71,10 @@ $(document).ready(function () {
             oldestMessageIndex = undefined;
             isLoadingMessages = false;
             initialLoad = true;
-            $messagesDiv.on("scroll", function () {
-                if ($messagesDiv.scrollTop() === 0 && !isLoadingMessages) {
-                    loadMessages();
-                }
-            });
+            $messagesDiv.off("scroll");
             // Handle the initial load of messages
             $messagesDiv.empty();
+
             // Check cookies for an existing chat SID
             chatsid = Cookies.get(`conversation_${selected_vendor}`);
             if (chatsid) {
@@ -113,7 +112,9 @@ $(document).ready(function () {
             }
         }, 300)
     );
+    // END OF VENDORS LIST
 
+    //SENDING THE MESSAGE
     function sendMessage(message) {
         return fetch(window.appData.twilioSend, {
             method: "POST",
@@ -163,8 +164,9 @@ $(document).ready(function () {
             $sendingMessage.hide();
         }
     });
+    //END OF SENDING THE MSG
 
-    // Connect to Twilio
+    // TWILIO TOKEN JWT
     function connectToTwilio(twilioChatSid) {
         // const token = Cookies.get("twilioToken");
         // if (token) {
@@ -184,7 +186,9 @@ $(document).ready(function () {
                 $loadingMessage.hide();
             });
     }
+    // END OF TWILIO TOKEN JWT
 
+    //TWILIO CLIENT
     function initializeTwilioClient(token) {
         if (twilioClient) {
             return Promise.resolve(twilioClient);
@@ -194,7 +198,9 @@ $(document).ready(function () {
             return client;
         });
     }
+    //END OF TWILIO CLIENT
 
+    //INITIAL LOADING TWILIO CHATS
     function initializeTwilio(token, twilioChatSid) {
         initializeTwilioClient(token)
             .then((client) => client.getConversationBySid(twilioChatSid))
@@ -208,14 +214,15 @@ $(document).ready(function () {
             })
             .catch((error) => {
                 $errorMessage.show();
+                $loadingMessage.hide();
                 console.error("Error connecting to Twilio:", error);
             });
     }
+    //END OF INITIAL LOADING TWILIO CHATS
 
-    // Load messages and display them
+    //LOAD THE MSGS
     function loadMessages() {
-        if (!twilioConversation || isLoadingMessages) return;
-
+        if (isLoadingMessages) return;
         $loadingMessage.show();
         isLoadingMessages = true; // Prevent concurrent requests
 
@@ -224,6 +231,14 @@ $(document).ready(function () {
             .then((messages) => {
                 if (initialLoad) {
                     // Attach scroll listener for lazy loading
+                    $messagesDiv.on("scroll", function () {
+                        if (
+                            $messagesDiv.scrollTop() === 0 &&
+                            !isLoadingMessages
+                        ) {
+                            loadMessages();
+                        }
+                    });
                     messages.items.forEach((message) =>
                         displayMessage(message)
                     );
@@ -272,6 +287,7 @@ $(document).ready(function () {
             });
     }
 
+    //PREPEND ON SCROLL UP
     function prependMessage(message) {
         const apiDate = new Date(message.dateUpdated);
         const formattedDate = `${apiDate
@@ -299,6 +315,7 @@ $(document).ready(function () {
         $messagesDiv.prepend(messageElement);
     }
 
+    //INITIAL DISPLAY
     function displayMessage(message) {
         const apiDate = new Date(message.dateUpdated);
         const formattedDate = `${apiDate
@@ -326,6 +343,7 @@ $(document).ready(function () {
         $messagesDiv.append(messageElement);
     }
 
+    //SCROLL TO END FUNCTION
     function scrollToEnd() {
         $messagesDiv.scrollTop($messagesDiv.prop("scrollHeight"));
     }
