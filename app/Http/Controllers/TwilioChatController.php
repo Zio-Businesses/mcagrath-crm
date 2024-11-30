@@ -33,15 +33,15 @@ class TwilioChatController extends Controller
         $vendor = VendorContract::where('id', $vendorId)->first();
         $vendor->sms_updated_at = now();
         $vendor->save();
-        //     $toNumber = $vendor->cell;
-        //     $twilioNumber = env('TWILIO_NUMBER');
-        //     $client->messages->create(
-        //         $toNumber,
-        //         [
-        //             'from' => $twilioNumber,
-        //             'body' => $request->message
-        //         ]
-        //     );
+        // $toNumber = "+1" . $vendor->cell;
+        // $twilioNumber = env('TWILIO_NUMBER');
+        // $client->messages->create(
+        //     $toNumber,
+        //     [
+        //         'from' => $twilioNumber,
+        //         'body' => $request->message
+        //     ]
+        // );
 
         $this->twilioService->sendMessage($conversationSid, $user->name, $message);
         return response()->json(['success' => true]);

@@ -66,12 +66,19 @@ $(document).ready(function () {
             $sendButton.prop("disabled", true);
             $messagesDiv.empty();
 
+            oldestMessageIndex = undefined;
+            isLoadingMessages = false;
+            initialLoad = true;
+            $messagesDiv.on("scroll", function () {
+                if ($messagesDiv.scrollTop() === 0 && !isLoadingMessages) {
+                    loadMessages();
+                }
+            });
+            // Handle the initial load of messages
+            $messagesDiv.empty();
             // Check cookies for an existing chat SID
             chatsid = Cookies.get(`conversation_${selected_vendor}`);
             if (chatsid) {
-                oldestMessageIndex = undefined;
-                isLoadingMessages = false;
-                initialLoad = true;
                 connectToTwilio(chatsid);
                 return;
             }
@@ -159,16 +166,16 @@ $(document).ready(function () {
 
     // Connect to Twilio
     function connectToTwilio(twilioChatSid) {
-        const token = Cookies.get("twilioToken");
-        if (token) {
-            initializeTwilio(token, twilioChatSid);
-            return;
-        }
+        // const token = Cookies.get("twilioToken");
+        // if (token) {
+        //     initializeTwilio(token, twilioChatSid);
+        //     return;
+        // }
 
         fetch("generatetwiliotoken")
             .then((response) => response.json())
             .then((data) => {
-                Cookies.set("twilioToken", data.token);
+                // Cookies.set("twilioToken", data.token);
                 initializeTwilio(data.token, twilioChatSid);
             })
             .catch((error) => {
@@ -212,25 +219,11 @@ $(document).ready(function () {
         $loadingMessage.show();
         isLoadingMessages = true; // Prevent concurrent requests
 
-        // Save the current scroll position and height of the messages div
-        const previousScrollHeight = $messagesDiv.prop("scrollHeight");
-        const previousScrollTop = $messagesDiv.scrollTop();
-
         twilioConversation
             .getMessages(PAGE_SIZE, oldestMessageIndex)
             .then((messages) => {
                 if (initialLoad) {
                     // Attach scroll listener for lazy loading
-                    $messagesDiv.on("scroll", function () {
-                        if (
-                            $messagesDiv.scrollTop() === 0 &&
-                            !isLoadingMessages
-                        ) {
-                            loadMessages();
-                        }
-                    });
-                    // Handle the initial load of messages
-                    $messagesDiv.empty();
                     messages.items.forEach((message) =>
                         displayMessage(message)
                     );
@@ -240,7 +233,9 @@ $(document).ready(function () {
                         oldestMessageIndex = messages.items[0].index - 1;
                     }
                 } else {
-                    // Lazy load older messages
+                    const previousScrollHeight =
+                        $messagesDiv.prop("scrollHeight");
+                    const previousScrollTop = $messagesDiv.scrollTop();
                     if (messages.items.length > 0) {
                         oldestMessageIndex = messages.items[0].index - 1;
                     }
@@ -262,7 +257,6 @@ $(document).ready(function () {
                 if (messages.items.length < PAGE_SIZE) {
                     $messagesDiv.off("scroll"); // Disable further scroll listening
                 }
-                console.log(messages);
             })
             .catch((error) => {
                 $errorMessage.show();
@@ -271,7 +265,7 @@ $(document).ready(function () {
             .finally(() => {
                 isLoadingMessages = false;
                 $loadingMessage.hide();
-                $(".spinner").fadeOut("fast").removeClass("d-flex");
+                $(".spinner").fadeOut("slow").removeClass("d-flex");
                 disableClicks = false;
                 $sendButton.prop("disabled", false);
                 $messageInput.prop("disabled", false);
