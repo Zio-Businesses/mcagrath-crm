@@ -26,14 +26,14 @@ class TwilioController extends AccountBaseController
      */
 
     public function fetchVendors(){
-        $vendors = VendorContract::all();
         $vendors_in_chat = VendorContract::whereNotNull('chat_sid')->orderBy('sms_updated_at', 'desc')->get();
         return response()->json($vendors_in_chat);
     }
 
     public function index()
     {
-        $vendors = VendorContract::orderBy('sms_updated_at', 'desc')->get();
+        $vendors = VendorContract::all();
+        // $vendors = VendorContract::orderBy('sms_updated_at', 'desc')->get();
         $vendors_in_chat = VendorContract::whereNotNull('chat_sid')->orderBy('sms_updated_at', 'desc')->get();
         return view('twilio-sms.index', $this->data, [
             'vendors' => $vendors,

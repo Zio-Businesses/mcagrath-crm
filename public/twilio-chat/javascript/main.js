@@ -11,6 +11,7 @@ $(document).ready(function () {
     const $chatImage = $("#chat-image");
     const $form = $("#message-input");
     const $chatHeader = $("#chatheader");
+    const userList = $(".user-list");
     const PAGE_SIZE = 10;
     let disableClicks = false;
     let twilioClient;
@@ -20,6 +21,48 @@ $(document).ready(function () {
     let isLoadingMessages = false;
     let initialLoad = true;
     //END OF CACHE ELEMENTS
+
+    // Function to render vendors
+    function renderVendors(vendors) {
+        userList.empty();
+
+        vendors.forEach((vendor) => {
+            const vendorHtml = `
+            <div class="user" data-vendor-id="${vendor.id}">
+                <img src="${vendor.image_url}" alt="" />
+                  <div class="userdetails">
+                            <span>${vendor.vendor_name}
+                            </span>
+                            <p class="usercontent">${vendor.last_msg || ""}</p>
+                        </div>
+                <div class="notif"></div>
+                <div class="time">
+                    <p>${
+                        vendor.sms_updated_at
+                            ? new Date(
+                                  vendor.sms_updated_at
+                              ).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: false,
+                              })
+                            : ""
+                    }</p>
+                </div>
+            </div>
+        `;
+            userList.append(vendorHtml);
+        });
+
+        if (selected_vendor) {
+            const $activeVendor = userList.find(
+                `[data-vendor-id="${selected_vendor}"]`
+            );
+            if ($activeVendor.length) {
+                $activeVendor.addClass("active");
+            }
+        }
+    }
 
     // SEARRCH WITH DROP DOWN BOX
     $selectVendor.selectpicker();
@@ -43,8 +86,10 @@ $(document).ready(function () {
     // END OF SEARRCH WITH DROP DOWN BOX
 
     // VENDORS LIST
-    $(".user").on(
+    // Use event delegation to bind the click event
+    $(".user-list").on(
         "click",
+        ".user",
         debounce(async function () {
             if (disableClicks) return;
 
@@ -72,6 +117,7 @@ $(document).ready(function () {
             isLoadingMessages = false;
             initialLoad = true;
             $messagesDiv.off("scroll");
+
             // Handle the initial load of messages
             $messagesDiv.empty();
 
@@ -100,8 +146,8 @@ $(document).ready(function () {
                 if (data.sid) {
                     chatsid = data.sid;
                     Cookies.set(`conversation_${selected_vendor}`, chatsid, {
-                        expires: 7, // Cache for 7 days
-                    });
+                        expires: 7,
+                    }); // Cache for 7 days
                     connectToTwilio(chatsid);
                 } else {
                     alert("Unable to connect to the chat. Please try again.");
@@ -112,6 +158,7 @@ $(document).ready(function () {
             }
         }, 300)
     );
+
     // END OF VENDORS LIST
 
     //SENDING THE MESSAGE
@@ -126,6 +173,7 @@ $(document).ready(function () {
                 message: message,
                 chatsid: chatsid,
                 vendorId: selected_vendor,
+                user:  window.appData.loggedInUserName,
             }),
         });
     }
@@ -191,13 +239,48 @@ $(document).ready(function () {
     //TWILIO CLIENT
     function initializeTwilioClient(token) {
         if (twilioClient) {
+            console.log("Reusing existing Twilio client instance.");
             return Promise.resolve(twilioClient);
         }
-        return Twilio.Conversations.Client.create(token).then((client) => {
-            twilioClient = client;
-            return client;
-        });
+
+        return Twilio.Conversations.Client.create(token)
+            .then((client) => {
+                twilioClient = client;
+                console.log("Twilio client initialized successfully.");
+
+                client.on("messageAdded", (message) => {
+                    fetch(window.appData.fetchVendors, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": window.appData.csrfToken,
+                        },
+                        body: JSON.stringify({}),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(
+                                    `HTTP error! status: ${response.status}`
+                                );
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            renderVendors(data); // Re-render vendor list
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching vendors:", error);
+                        });
+                });
+
+                return client;
+            })
+            .catch((error) => {
+                console.error("Error initializing Twilio client:", error);
+                throw error; // Propagate the error for the calling function to handle
+            });
     }
+
     //END OF TWILIO CLIENT
 
     //INITIAL LOADING TWILIO CHATS
@@ -207,17 +290,21 @@ $(document).ready(function () {
             .then((conversation) => {
                 twilioConversation = conversation;
                 loadMessages();
+
+                // Listen for new messages
                 conversation.on("messageAdded", (message) => {
                     displayMessage(message);
+                    // Ensure the UI scrolls to the latest message
                     scrollToEnd();
                 });
             })
             .catch((error) => {
-                $errorMessage.show();
+                $errorMessage.show(); // Show an error message
                 $loadingMessage.hide();
                 console.error("Error connecting to Twilio:", error);
             });
     }
+
     //END OF INITIAL LOADING TWILIO CHATS
 
     //LOAD THE MSGS

@@ -35,12 +35,20 @@
 
             </div>
             <div class="user-list">
-                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = $vendors_in_chat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="user" data-vendor-id="<?php echo e($vendor->id); ?>">
                         <img src="<?php echo e($vendor->image_url); ?>" alt="" />
-                        <span><?php echo e($vendor->vendor_name); ?></span>
+                        <div class="userdetails">
+                            <span><?php echo e($vendor->vendor_name); ?>
+
+                            </span>
+                            <p class="usercontent"><?php echo e($vendor->last_msg ? $vendor->last_msg : ''); ?></p>
+                        </div>
+
+                        <div class="notif">
+                        </div>
                         <div class="time">
-                            <small><?php echo e($vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : ''); ?></small>
+                            <p><?php echo e($vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : ''); ?></p>
                         </div>
                     </div>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

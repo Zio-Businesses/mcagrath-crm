@@ -34,12 +34,19 @@
 
             </div>
             <div class="user-list">
-                @foreach ($vendors as $vendor)
+                @foreach ($vendors_in_chat as $vendor)
                     <div class="user" data-vendor-id="{{ $vendor->id }}">
                         <img src="{{ $vendor->image_url }}" alt="" />
-                        <span>{{ $vendor->vendor_name }}</span>
+                        <div class="userdetails">
+                            <span>{{ $vendor->vendor_name }}
+                            </span>
+                            <p class="usercontent">{{ $vendor->last_msg ? $vendor->last_msg : '' }}</p>
+                        </div>
+
+                        <div class="notif">
+                        </div>
                         <div class="time">
-                            <small>{{ $vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : '' }}</small>
+                            <p>{{ $vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : '' }}</p>
                         </div>
                     </div>
                 @endforeach

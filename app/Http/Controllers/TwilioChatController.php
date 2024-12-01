@@ -32,6 +32,7 @@ class TwilioChatController extends Controller
 
         $vendor = VendorContract::where('id', $vendorId)->first();
         $vendor->sms_updated_at = now();
+        $vendor->last_msg = $request->user . ": " . $message;
         $vendor->save();
         // $toNumber = "+1" . $vendor->cell;
         // $twilioNumber = env('TWILIO_NUMBER');

@@ -41,6 +41,9 @@ class TwilioWebhookController extends Controller
                 return response()->json(['error' => 'Vendor not found'], 404);
             }
 
+            $vendor->sms_updated_at = now();
+            $vendor->last_msg = $vendor->vendor_name . ": " . $body;
+            $vendor->save();
             $vendorSid = $vendor->chat_sid;
             $this->twilioService->sendMessage($vendorSid, $vendor->name, $body);
 
