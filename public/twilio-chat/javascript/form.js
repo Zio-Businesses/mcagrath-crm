@@ -3,15 +3,52 @@ $(document).ready(function () {
     const $formBtn = $("#formbtn");
     const $closeForm = $("#closeForm");
     const $selectVendorContracts = $("#selectVendorContracts");
+    const $selectVendorleads = $("#selectVendorleads");
     const $nameInput = $("#name");
     const $phoneInput = $("#phone");
     let image_url = "";
     const $countrycode = $("#countrycode");
     const $submitButton = $("#submit");
     // Initialize the selectpicker
+    $selectVendorleads.selectpicker();
     $selectVendorContracts.selectpicker();
     $countrycode.selectpicker();
     // Handle change event
+
+    $selectVendorleads.on("changed.bs.select", function () {
+        const selectedVendorId = $(this).val();
+
+        if (!selectedVendorId) {
+            $countrycode.selectpicker("refresh");
+            $phoneInput.val("");
+            $nameInput.val("");
+            return;
+        }
+
+        $.ajax({
+            url: window.appData.getVendorInLeadsById,
+            method: "POST",
+            data: {
+                vendor_id: selectedVendorId,
+                _token: window.appData.csrfToken,
+            },
+            beforeSend: function () {
+                $submitButton.prop("disabled", true);
+            },
+            success: function (response) {
+                $nameInput.val(response.vendor_name);
+                $phoneInput.val(response.vendor_cell);
+
+                image_url = response.image_url;
+            },
+            error: function () {
+                alert("Failed to fetch vendor details. Please try again.");
+            },
+            complete: function () {
+                $submitButton.prop("disabled", false);
+            },
+        });
+    });
     $selectVendorContracts.on("changed.bs.select", function () {
         const selectedVendorId = $(this).val();
 

@@ -121,6 +121,22 @@
                 </select>
 
             </div>
+            <div class="mb-3">
+                <p class="fw-bold cap-bold">Is the vendor already added in the Leads?</p>
+                <select id="selectVendorleads" name="vendor_id" class="form-control selectpicker" data-live-search="true"
+                    data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                    <option value="">Search for vendors</option>
+                    @foreach ($vendors_in_leads as $vendor)
+                        <option value="{{ $vendor->id }}"
+                            data-content="<div class='d-flex align-items-center text-left'>
+                                        <span>{{ $vendor->vendor_name }}</span>
+                                    </div>">
+                            {{ $vendor->vendor_name }}
+                        </option>
+                    @endforeach
+                </select>
+
+            </div>
             <!--SEARCH FOR EXSISTING VENDORS END -->
             <form id="vendorinChatForm" action="{{ route('vendor-store') }}" method="POST">
                 @csrf
@@ -187,6 +203,7 @@
             fetchVendors: "{{ route('getVendorInChat') }}",
             generatetwiliotoken: "{{ route('generatetwiliotoken') }}",
             getVendorById: "{{ route('getVendorById') }}",
+            getVendorInLeadsById: "{{ route('getVendorInLeadsById') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };
     </script>

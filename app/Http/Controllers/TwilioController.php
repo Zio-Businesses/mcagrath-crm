@@ -6,6 +6,7 @@ use App\Services\TwilioService;
 use App\Models\VendorContract;
 use Illuminate\Http\Request;
 use App\Models\VendorInChat;
+use App\Models\Vendor;
 
 class TwilioController extends AccountBaseController
 {
@@ -105,6 +106,19 @@ class TwilioController extends AccountBaseController
             'image_url' => $vendor->company_logo,
         ]);
     }
+    public function getVendorInLeadsById(Request $request)
+    {
+        $validatedData = $request->validate([
+            'vendor_id' => 'required|integer|exists:vendors,id',
+        ]);
+
+        $vendor = Vendor::find($validatedData['vendor_id']);
+
+        return response()->json([
+            'vendor_name' => $vendor->vendor_name,
+            'vendor_cell' => $vendor->vendor_number,
+        ]);
+    }
     public function getVendorInChat()
     {
 
@@ -128,11 +142,13 @@ class TwilioController extends AccountBaseController
     public function index()
     {
         $vendors = VendorContract::all();
+        $vendors_in_leads = Vendor::all();
         // $vendors = VendorContract::orderBy('sms_updated_at', 'desc')->get();
         $vendors_in_chat = VendorInChat::orderBy('updated_at', 'desc')->get();
 
         return view('twilio-sms.index', $this->data, [
             'vendors' => $vendors,
+            'vendors_in_leads' => $vendors_in_leads,
             'vendors_in_chat' => $vendors_in_chat,
         ]);
     }

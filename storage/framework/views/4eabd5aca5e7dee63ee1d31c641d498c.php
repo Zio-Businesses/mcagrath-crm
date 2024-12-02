@@ -124,6 +124,23 @@
                 </select>
 
             </div>
+            <div class="mb-3">
+                <p class="fw-bold cap-bold">Is the vendor already added in the Leads?</p>
+                <select id="selectVendorleads" name="vendor_id" class="form-control selectpicker" data-live-search="true"
+                    data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                    <option value="">Search for vendors</option>
+                    <?php $__currentLoopData = $vendors_in_leads; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($vendor->id); ?>"
+                            data-content="<div class='d-flex align-items-center text-left'>
+                                        <span><?php echo e($vendor->vendor_name); ?></span>
+                                    </div>">
+                            <?php echo e($vendor->vendor_name); ?>
+
+                        </option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </select>
+
+            </div>
             <!--SEARCH FOR EXSISTING VENDORS END -->
             <form id="vendorinChatForm" action="<?php echo e(route('vendor-store')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
@@ -190,6 +207,7 @@
             fetchVendors: "<?php echo e(route('getVendorInChat')); ?>",
             generatetwiliotoken: "<?php echo e(route('generatetwiliotoken')); ?>",
             getVendorById: "<?php echo e(route('getVendorById')); ?>",
+            getVendorInLeadsById: "<?php echo e(route('getVendorInLeadsById')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };
     </script>
