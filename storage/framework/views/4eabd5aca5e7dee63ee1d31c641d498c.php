@@ -1,10 +1,10 @@
-@extends('layouts.app')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('twilio-chat/css/main.css') }}" defer="defer">
-    <link rel="stylesheet" href="{{ asset('twilio-chat/css/form.css') }}" defer="defer">
-@endpush
-@section('content')
+
+<?php $__env->startPush('styles'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('twilio-chat/css/main.css')); ?>" defer="defer">
+    <link rel="stylesheet" href="<?php echo e(asset('twilio-chat/css/form.css')); ?>" defer="defer">
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
     <!-- MAIN SCREEN -->
     <div class="chat-app-container">
         <!-- LEFT SIDE BAR -->
@@ -15,17 +15,18 @@
                     <select id="selectVendor" name="vendor_id" class="form-control select-picker pl-5"
                         data-live-search="true" data-size="8" data-dropdown-align-right="true" title="Search for vendors">
                         <option value="">Search for vendors</option>
-                        @foreach ($vendors_in_chat as $vendor)
-                            <option value="{{ $vendor->id }}"
+                        <?php $__currentLoopData = $vendors_in_chat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($vendor->id); ?>"
                                 data-content="<div class='d-flex align-items-center text-left'>
                                 <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
-                                    <img class='rounded-circle' src='{{ $vendor->image_url }}' alt='{{ $vendor->vendor_name }}' width='30'>
+                                    <img class='rounded-circle' src='<?php echo e($vendor->image_url); ?>' alt='<?php echo e($vendor->vendor_name); ?>' width='30'>
                                 </div>
-                                <span>{{ $vendor->vendor_name }}</span>
+                                <span><?php echo e($vendor->vendor_name); ?></span>
                             </div>">
-                                {{ $vendor->vendor_name }}
+                                <?php echo e($vendor->vendor_name); ?>
+
                             </option>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                     <!-- Search Icon -->
                     <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
@@ -36,23 +37,25 @@
             </div>
             <!-- VENDOR lIST -->
             <div class="user-list">
-                @foreach ($vendors_in_chat as $vendor)
-                    <div class="user" data-vendor-id="{{ $vendor->id }}">
-                        <img src="{{ $vendor->image_url }}" alt="" />
+                <?php $__currentLoopData = $vendors_in_chat; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="user" data-vendor-id="<?php echo e($vendor->id); ?>">
+                        <img src="<?php echo e($vendor->image_url); ?>" alt="" />
                         <div class="userdetails">
-                            <span>{{ $vendor->vendor_name }}
+                            <span><?php echo e($vendor->vendor_name); ?>
+
                             </span>
-                            <p class="usercontent">{{ $vendor->last_msg ? $vendor->last_msg : '' }}</p>
+                            <p class="usercontent"><?php echo e($vendor->last_msg ? $vendor->last_msg : ''); ?></p>
                         </div>
 
                         <div class="notif">
                         </div>
                         <div class="time">
-                            <p>{{ $vendor->updated_at ? \Carbon\Carbon::parse($vendor->updated_at)->format('H:i') : '' }}
+                            <p><?php echo e($vendor->updated_at ? \Carbon\Carbon::parse($vendor->updated_at)->format('H:i') : ''); ?>
+
                             </p>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
             <!-- VENDOR lIST END  -->
             <button id="formbtn">+</button>
@@ -80,7 +83,7 @@
             <div id="errorMessage" class="status-message error">An error occurred. Please try again.</div>
             <!-- INPUT FIELD -->
             <form id="message-input" action="/twilio-send" method="POST">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <input type="text" name="message" id="messageInput" placeholder="Type your message" required />
                 <button type="submit" id="sendButton"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -107,23 +110,24 @@
                 <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker"
                     data-live-search="true" data-size="8" data-dropdown-align-right="true" title="Search for vendors">
                     <option value="">Search for vendors</option>
-                    @foreach ($vendors as $vendor)
-                        <option value="{{ $vendor->id }}"
+                    <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($vendor->id); ?>"
                             data-content="<div class='d-flex align-items-center text-left'>
                                         <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
-                                            <img class='rounded-circle' src='{{ $vendor->image_url }}' alt='{{ $vendor->vendor_name }}' width='30'>
+                                            <img class='rounded-circle' src='<?php echo e($vendor->image_url); ?>' alt='<?php echo e($vendor->vendor_name); ?>' width='30'>
                                         </div>
-                                        <span>{{ $vendor->vendor_name }}</span>
+                                        <span><?php echo e($vendor->vendor_name); ?></span>
                                     </div>">
-                            {{ $vendor->vendor_name }}
+                            <?php echo e($vendor->vendor_name); ?>
+
                         </option>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
 
             </div>
             <!--SEARCH FOR EXSISTING VENDORS END -->
-            <form id="vendorinChatForm" action="{{ route('vendor-store') }}" method="POST">
-                @csrf
+            <form id="vendorinChatForm" action="<?php echo e(route('vendor-store')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <div class="mb-3">
                     <p class="fw-bold cap-bold">Add the vendors manually?</p>
                 </div>
@@ -172,21 +176,23 @@
         <!-- POPUP FORM END -->
     </div>
     <!-- POPUP OVERLAY END -->
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-    <script src="{{ asset('twilio-chat/javascript/main.js') }}"></script>
-    <script src="{{ asset('twilio-chat/javascript/form.js') }}"></script>
+    <script src="<?php echo e(asset('twilio-chat/javascript/main.js')); ?>"></script>
+    <script src="<?php echo e(asset('twilio-chat/javascript/form.js')); ?>"></script>
     <script>
         window.appData = {
-            csrfToken: "{{ csrf_token() }}",
-            twilioSend: "{{ route('twilio-send') }}",
-            createConversation: "{{ route('createConversation') }}",
-            fetchVendors: "{{ route('getVendorInChat') }}",
-            getVendorById: "{{ route('getVendorById') }}",
-            loggedInUserName: "{{ auth()->user()->name }}",
+            csrfToken: "<?php echo e(csrf_token()); ?>",
+            twilioSend: "<?php echo e(route('twilio-send')); ?>",
+            createConversation: "<?php echo e(route('createConversation')); ?>",
+            fetchVendors: "<?php echo e(route('getVendorInChat')); ?>",
+            getVendorById: "<?php echo e(route('getVendorById')); ?>",
+            loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\Coding\crm-main\resources\views/twilio-sms/index.blade.php ENDPATH**/ ?>

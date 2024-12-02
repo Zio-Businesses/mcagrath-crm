@@ -6,10 +6,9 @@ use App\Services\TwilioService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Models\VendorContract;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
-
+use App\Models\VendorInChat;
 
 class TwilioWebhookController extends Controller
 {
@@ -34,17 +33,16 @@ class TwilioWebhookController extends Controller
 
 
             $nationalNumber = $parsedFrom->getNationalNumber();
-            $vendor = VendorContract::where('cell', $nationalNumber)->first();
+            $vendor = VendorInChat::where('vendor_phone', $nationalNumber)->first();
 
             if (!$vendor) {
                 Log::warning("Vendor not found for phone number: $from");
                 return response()->json(['error' => 'Vendor not found'], 404);
             }
 
-            $vendor->sms_updated_at = now();
             $vendor->last_msg = $vendor->vendor_name . ": " . $body;
             $vendor->save();
-            $vendorSid = $vendor->chat_sid;
+            $vendorSid = $vendor->channel_sid;
             $this->twilioService->sendMessage($vendorSid, $vendor->vendor_name, $body);
 
             return response()->json($request->all());
