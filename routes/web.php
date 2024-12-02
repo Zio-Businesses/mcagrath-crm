@@ -606,7 +606,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Twilio
      Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
      Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
-
+     Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
+     Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
 
      Route::get('/test-twilio',[TwilioConversationController::class,'getConversation'])->name('getConversation');
      Route::post('/create-conversation',[TwilioConversationController::class,'createConversation'])->name('createConversation');
@@ -614,7 +615,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
  
      Route::post('twilio-send', [TwilioChatController::class, 'send'])->name('twilio-send');
      Route::get('twilio-conversations', [TwilioChatController::class, 'index']);
-     Route::post('webhooks/twilio', [TwilioWebhookController::class, 'handleWebhook']);
      Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');
  
  

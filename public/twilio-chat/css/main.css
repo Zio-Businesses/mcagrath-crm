@@ -25,6 +25,7 @@
     flex: 1;
     max-width: 300px;
     display: flex;
+    position: relative;
     flex-direction: column;
     border-right: 1px solid #e8eef340;
     margin-bottom: 1rem;
@@ -48,6 +49,7 @@
     flex: 1;
     margin-left: 0.5rem;
     overflow-y: auto;
+    position: relative;
 }
 
 .user {

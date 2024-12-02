@@ -38,9 +38,9 @@ $(document).ready(function () {
                 <div class="notif"></div>
                 <div class="time">
                     <p>${
-                        vendor.sms_updated_at
+                        vendor.updated_at
                             ? new Date(
-                                  vendor.sms_updated_at
+                                  vendor.updated_at
                               ).toLocaleTimeString([], {
                                   hour: "2-digit",
                                   minute: "2-digit",

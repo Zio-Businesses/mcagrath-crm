@@ -2,6 +2,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('twilio-chat/css/main.css') }}" defer="defer">
+    <link rel="stylesheet" href="{{ asset('twilio-chat/css/form.css') }}" defer="defer">
 @endpush
 @section('content')
     <div class="chat-app-container">
@@ -10,10 +11,10 @@
             <div class="search-bar">
                 <div class="form-group position-relative mt-1 mb-1">
                     <!-- The Dropdown -->
-                    <select id="selectVendor" name="vendor_id" class="form-control select-picker pl-5" data-live-search="true"
-                        data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                    <select id="selectVendor" name="vendor_id" class="form-control select-picker pl-5"
+                        data-live-search="true" data-size="8" data-dropdown-align-right="true" title="Search for vendors">
                         <option value="">Search for vendors</option>
-                        @foreach ($vendors as $vendor)
+                        @foreach ($vendors_in_chat as $vendor)
                             <option value="{{ $vendor->id }}"
                                 data-content="<div class='d-flex align-items-center text-left'>
                                 <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
@@ -46,11 +47,13 @@
                         <div class="notif">
                         </div>
                         <div class="time">
-                            <p>{{ $vendor->sms_updated_at ? \Carbon\Carbon::parse($vendor->sms_updated_at)->format('H:i') : '' }}</p>
+                            <p>{{ $vendor->updated_at ? \Carbon\Carbon::parse($vendor->updated_at)->format('H:i') : '' }}
+                            </p>
                         </div>
                     </div>
                 @endforeach
             </div>
+            <button id="formbtn">+</button>
         </div>
 
         <!-- Chat Area -->
@@ -79,18 +82,101 @@
                 </button>
         </div>
     </div>
+
+    <div id="popupOverlay">
+        <div id="popupForm">
+            <h2 class="cap-bold">Start Conversation With Vendor</h2>
+            <form id="vendorinChatForm" action="{{ route('vendor-store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <p class="fw-bold cap-bold">Is the vendor already added in the contracts?</p>
+                    <div class="search-bar">
+                        <div class="form-group position-relative">
+                            <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker pl-5"
+                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
+                                title="Search for vendors">
+                                <option value="">Search for vendors</option>
+                                @foreach ($vendors as $vendor)
+                                    <option value="{{ $vendor->id }}"
+                                        data-content="<div class='d-flex align-items-center text-left'>
+                                            <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
+                                                <img class='rounded-circle' src='{{ $vendor->image_url }}' alt='{{ $vendor->vendor_name }}' width='30'>
+                                            </div>
+                                            <span>{{ $vendor->vendor_name }}</span>
+                                        </div>">
+                                        {{ $vendor->vendor_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <p class="fw-bold cap-bold">Add the vendors manually?</p>
+                </div>
+
+                <div class="mb-3">
+                    <label for="name" class="form-label cap-bold">Name<span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" class="form-control py-2" required
+                        placeholder="Enter Vendor name">
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="countrycode" class="form-label cap-bold">Country Code<span
+                                class="text-danger">*</span></label>
+                        <div class="form-group position-relative">
+                            <select id="countrycode" name="countrycode" class="form-control selectpicker pl-5"
+                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
+                                title="Search for country code" required>
+                                <option value="">Search for country code</option>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                                <option value="+61">+61 (Australia)</option>
+                                <option value="+81">+81 (Japan)</option>
+                            </select>
+                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label cap-bold">Phone<span class="text-danger">*</span></label>
+                        <input type="number" id="phone" name="phone" class="form-control py-2" required
+                            placeholder="Enter phone number">
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <button id="closeForm" type="button" class="btn btn-outline-secondary cap-bold">Close</button>
+                    <button type="submit" class="btn btn-primary uppercase" id="submit">Submit</button>
+                </div>
+            </form>
+
+
+
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="{{ asset('twilio-chat/javascript/main.js') }}"></script>
+    <script src="{{ asset('twilio-chat/javascript/form.js') }}"></script>
     <script>
         window.appData = {
             csrfToken: "{{ csrf_token() }}",
             twilioSend: "{{ route('twilio-send') }}",
             createConversation: "{{ route('createConversation') }}",
             fetchVendors: "{{ route('fetchVendors') }}",
+            getVendorById: "{{ route('getVendorById') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };
     </script>
