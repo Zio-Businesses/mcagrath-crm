@@ -83,40 +83,34 @@
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
                 </button>
+            </form>
         </div>
     </div>
 
     <div id="popupOverlay">
         <div id="popupForm">
             <h2 class="cap-bold">Start Conversation With Vendor</h2>
-            <form action="" method="POST">
+            <form id="vendorinChatForm" action="<?php echo e(route('vendor-store')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
                 <div class="mb-3">
                     <p class="fw-bold cap-bold">Is the vendor already added in the contracts?</p>
-                    <div class="search-bar">
-                        <div class="form-group position-relative">
-                            <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker pl-5"
-                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
-                                title="Search for vendors">
-                                <option value="">Search for vendors</option>
-                                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($vendor->id); ?>"
-                                        data-content="<div class='d-flex align-items-center text-left'>
+                    <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker"
+                        data-live-search="true" data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                        <option value="">Search for vendors</option>
+                        <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($vendor->id); ?>"
+                                data-content="<div class='d-flex align-items-center text-left'>
                                             <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
                                                 <img class='rounded-circle' src='<?php echo e($vendor->image_url); ?>' alt='<?php echo e($vendor->vendor_name); ?>' width='30'>
                                             </div>
                                             <span><?php echo e($vendor->vendor_name); ?></span>
                                         </div>">
-                                        <?php echo e($vendor->vendor_name); ?>
+                                <?php echo e($vendor->vendor_name); ?>
 
-                                    </option>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </select>
-                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
+                            </option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+
                 </div>
 
                 <div class="mb-3">
@@ -133,21 +127,18 @@
                     <div class="col-md-6">
                         <label for="countrycode" class="form-label cap-bold">Country Code<span
                                 class="text-danger">*</span></label>
-                        <div class="form-group position-relative">
-                            <select id="countrycode" name="countrycode" class="form-control selectpicker pl-5"
-                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
-                                title="Search for country code" required>
-                                <option value="">Search for country code</option>
-                                <option value="+1">+1 (USA)</option>
-                                <option value="+44">+44 (UK)</option>
-                                <option value="+91">+91 (India)</option>
-                                <option value="+61">+61 (Australia)</option>
-                                <option value="+81">+81 (Japan)</option>
-                            </select>
-                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
+
+                        <select id="countrycode" name="countrycode" class="form-control selectpicker"
+                            data-live-search="true" data-size="8" data-dropdown-align-right="true"
+                            title="Search for country code" required>
+                            <option value="">Search for country code</option>
+                            <option value="+1">+1 (USA)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+91">+91 (India)</option>
+                            <option value="+61">+61 (Australia)</option>
+                            <option value="+81">+81 (Japan)</option>
+                        </select>
+
                     </div>
 
                     <div class="col-md-6">
@@ -156,7 +147,10 @@
                             placeholder="Enter phone number">
                     </div>
                 </div>
-
+                <div class="mb-3">
+                    <div id="error-messages" class="text-danger"></div>
+                </div>
+                
                 <div class="mt-4 d-flex justify-content-between">
                     <button id="closeForm" type="button" class="btn btn-outline-secondary cap-bold">Close</button>
                     <button type="submit" class="btn btn-primary uppercase" id="submit">Submit</button>
@@ -179,7 +173,7 @@
             csrfToken: "<?php echo e(csrf_token()); ?>",
             twilioSend: "<?php echo e(route('twilio-send')); ?>",
             createConversation: "<?php echo e(route('createConversation')); ?>",
-            fetchVendors: "<?php echo e(route('fetchVendors')); ?>",
+            fetchVendors: "<?php echo e(route('getVendorInChat')); ?>",
             getVendorById: "<?php echo e(route('getVendorById')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };

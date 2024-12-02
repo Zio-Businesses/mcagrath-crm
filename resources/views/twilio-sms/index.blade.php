@@ -80,6 +80,7 @@
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
                 </button>
+            </form>
         </div>
     </div>
 
@@ -90,29 +91,22 @@
                 @csrf
                 <div class="mb-3">
                     <p class="fw-bold cap-bold">Is the vendor already added in the contracts?</p>
-                    <div class="search-bar">
-                        <div class="form-group position-relative">
-                            <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker pl-5"
-                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
-                                title="Search for vendors">
-                                <option value="">Search for vendors</option>
-                                @foreach ($vendors as $vendor)
-                                    <option value="{{ $vendor->id }}"
-                                        data-content="<div class='d-flex align-items-center text-left'>
+                    <select id="selectVendorContracts" name="vendor_id" class="form-control selectpicker"
+                        data-live-search="true" data-size="8" data-dropdown-align-right="true" title="Search for vendors">
+                        <option value="">Search for vendors</option>
+                        @foreach ($vendors as $vendor)
+                            <option value="{{ $vendor->id }}"
+                                data-content="<div class='d-flex align-items-center text-left'>
                                             <div class='taskEmployeeImg border-0 d-inline-block mr-1'>
                                                 <img class='rounded-circle' src='{{ $vendor->image_url }}' alt='{{ $vendor->vendor_name }}' width='30'>
                                             </div>
                                             <span>{{ $vendor->vendor_name }}</span>
                                         </div>">
-                                        {{ $vendor->vendor_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
+                                {{ $vendor->vendor_name }}
+                            </option>
+                        @endforeach
+                    </select>
+
                 </div>
 
                 <div class="mb-3">
@@ -129,21 +123,18 @@
                     <div class="col-md-6">
                         <label for="countrycode" class="form-label cap-bold">Country Code<span
                                 class="text-danger">*</span></label>
-                        <div class="form-group position-relative">
-                            <select id="countrycode" name="countrycode" class="form-control selectpicker pl-5"
-                                data-live-search="true" data-size="8" data-dropdown-align-right="true"
-                                title="Search for country code" required>
-                                <option value="">Search for country code</option>
-                                <option value="+1">+1 (USA)</option>
-                                <option value="+44">+44 (UK)</option>
-                                <option value="+91">+91 (India)</option>
-                                <option value="+61">+61 (Australia)</option>
-                                <option value="+81">+81 (Japan)</option>
-                            </select>
-                            <span class="position-absolute search-icon" style="top: 10px; left: 15px; color: #6c757d;">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>
+
+                        <select id="countrycode" name="countrycode" class="form-control selectpicker"
+                            data-live-search="true" data-size="8" data-dropdown-align-right="true"
+                            title="Search for country code" required>
+                            <option value="">Search for country code</option>
+                            <option value="+1">+1 (USA)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+91">+91 (India)</option>
+                            <option value="+61">+61 (Australia)</option>
+                            <option value="+81">+81 (Japan)</option>
+                        </select>
+
                     </div>
 
                     <div class="col-md-6">
@@ -152,7 +143,10 @@
                             placeholder="Enter phone number">
                     </div>
                 </div>
-
+                <div class="mb-3">
+                    <div id="error-messages" class="text-danger"></div>
+                </div>
+                
                 <div class="mt-4 d-flex justify-content-between">
                     <button id="closeForm" type="button" class="btn btn-outline-secondary cap-bold">Close</button>
                     <button type="submit" class="btn btn-primary uppercase" id="submit">Submit</button>
@@ -175,7 +169,7 @@
             csrfToken: "{{ csrf_token() }}",
             twilioSend: "{{ route('twilio-send') }}",
             createConversation: "{{ route('createConversation') }}",
-            fetchVendors: "{{ route('fetchVendors') }}",
+            fetchVendors: "{{ route('getVendorInChat') }}",
             getVendorById: "{{ route('getVendorById') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };

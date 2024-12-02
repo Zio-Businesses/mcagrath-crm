@@ -8,6 +8,7 @@ use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use App\Models\VendorInChat;
 
 
 class TwilioChatController extends Controller
@@ -30,19 +31,18 @@ class TwilioChatController extends Controller
         $vendorId = $request->vendorId;
         $conversationSid = $request->chatsid;
 
-        $vendor = VendorContract::where('id', $vendorId)->first();
-        $vendor->sms_updated_at = now();
+        $vendor = VendorInChat::where('id', $vendorId)->first();
         $vendor->last_msg = $request->user . ": " . $message;
         $vendor->save();
-        $toNumber ="+1".$vendor->cell;
-        $twilioNumber = env('TWILIO_NUMBER');
-        $client->messages->create(
-            $toNumber,
-            [
-                'from' => $twilioNumber,
-                'body' => $request->message
-            ]
-        );
+        // $toNumber = $vendor->vendor_country_code . "" . $vendor->cell;
+        // $twilioNumber = env('TWILIO_NUMBER');
+        // $client->messages->create(
+        //     $toNumber,
+        //     [
+        //         'from' => $twilioNumber,
+        //         'body' => $request->message
+        //     ]
+        // );
 
         $this->twilioService->sendMessage($conversationSid, $user->name, $message);
         return response()->json(['success' => true]);

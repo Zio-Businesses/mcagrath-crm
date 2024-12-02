@@ -606,6 +606,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
      //Twilio
      Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
      Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
+     Route::post('getVendorInChat', [TwilioController::class, 'getVendorInChat'])->name('getVendorInChat');
      Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
      Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Exception;
 use App\Models\VendorContract;
+use App\Models\VendorInChat;
 
 class TwilioConversationController extends Controller
 {
@@ -37,32 +38,19 @@ class TwilioConversationController extends Controller
     {
 
         $request->validate([
-            'vendor_id' => 'required|exists:vendors,id',
+            'vendor_id' => 'required|exists:vendor_in_chats,id',
         ]);
         try {
-            $vendor = VendorContract::find($request->vendor_id);
+            $vendor = VendorInChat::find($request->vendor_id);
 
             if (!$vendor) {
                 return response()->json(['error' => 'Vendor not found'], 404);
             }
 
-            if ($vendor->chat_sid) {
-                $this->twilioService->checkAndAddParticipant($vendor->chat_sid, user()->email);
-                return response()->json([
-                    'sid' => $vendor->chat_sid,
-                    'friendly_name' => $vendor->vendor_name,
-                ]);
-            }
-
-            $conversation = $twilioService->createConversation($vendor->vendor_name);
-
-            $vendor->chat_sid = $conversation->sid;
-            $vendor->save();
-            $this->twilioService->checkAndAddParticipant($conversation->sid, user()->email);
+            $this->twilioService->checkAndAddParticipant($vendor->channel_sid, user()->email);
             return response()->json([
-                'sid' => $conversation->sid,
-                'friendly_name' => $conversation->friendlyName,
-                'created_at' => $conversation->dateCreated->format('Y-m-d H:i:s'),
+                'sid' => $vendor->channel_sid,
+                'friendly_name' => $vendor->vendor_name,
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to process request'], 500);

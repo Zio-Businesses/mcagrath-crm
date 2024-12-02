@@ -27,23 +27,32 @@ class TwilioController extends AccountBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(TwilioService $twilioService, Request $request)
     {
-        $validatedData = $request->validate([
-            'vendor_name' => 'required|string|max:255',
-            'company_logo' => 'nullable|string|max:255',
-            'channel_sid' => 'required|string|max:255',
-            'vendor_country_code' => 'required|string|max:5',
-            'last_msg' => 'nullable|string',
-            'vendor_phone' => 'required|string|unique:vendor_in_chats,vendor_phone|max:15',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'vendor_name' => 'required|string|max:255',
+                'company_logo' => 'nullable|string|max:255',
+                'vendor_country_code' => 'required|string|max:5',
+                'vendor_phone' => 'required|string|unique:vendor_in_chats,vendor_phone|max:15',
+            ]);
 
-        $vendor = VendorInChat::create($validatedData);
+            $conversation = $twilioService->createConversation($request->vendor_name);
+            $validatedData['channel_sid'] = $conversation->sid;
 
-        return response()->json([
-            'message' => 'Vendor created successfully',
-            'data' => $vendor,
-        ], 201);
+
+            $vendor = VendorInChat::create($validatedData);
+
+            return response()->json([
+                'message' => 'Vendor created successfully',
+                'data' => $vendor,
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Failed to Create either the number already exist or try refreshing the page',
+                'errors' => $e->errors(),
+            ], 422);
+        }
     }
 
     public function update(Request $request, $id)
@@ -95,6 +104,13 @@ class TwilioController extends AccountBaseController
             'vendor_cell' => $vendor->cell,
             'image_url' => $vendor->image_url,
         ]);
+    }
+    public function getVendorInChat()
+    {
+
+        $vendor = VendorInChat::orderBy('updated_at', 'desc')->get();
+
+        return response()->json($vendor);
     }
 
     /**

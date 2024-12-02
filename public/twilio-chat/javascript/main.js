@@ -39,13 +39,14 @@ $(document).ready(function () {
                 <div class="time">
                     <p>${
                         vendor.updated_at
-                            ? new Date(
-                                  vendor.updated_at
-                              ).toLocaleTimeString([], {
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  hour12: false,
-                              })
+                            ? new Date(vendor.updated_at).toLocaleTimeString(
+                                  [],
+                                  {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: false,
+                                  }
+                              )
                             : ""
                     }</p>
                 </div>
@@ -173,7 +174,7 @@ $(document).ready(function () {
                 message: message,
                 chatsid: chatsid,
                 vendorId: selected_vendor,
-                user:  window.appData.loggedInUserName,
+                user: window.appData.loggedInUserName,
             }),
         });
     }
@@ -239,38 +240,60 @@ $(document).ready(function () {
     //TWILIO CLIENT
     function initializeTwilioClient(token) {
         if (twilioClient) {
-            console.log("Reusing existing Twilio client instance.");
             return Promise.resolve(twilioClient);
         }
 
         return Twilio.Conversations.Client.create(token)
             .then((client) => {
                 twilioClient = client;
-                console.log("Twilio client initialized successfully.");
 
-                client.on("messageAdded", (message) => {
-                    fetch(window.appData.fetchVendors, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": window.appData.csrfToken,
-                        },
-                        body: JSON.stringify({}),
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error(
-                                    `HTTP error! status: ${response.status}`
-                                );
-                            }
-                            return response.json();
+                // Debounce or throttle function to reduce API call frequency
+                let fetchVendorsTimeout = null;
+                const THROTTLE_DELAY = 2000; // Delay for throttling API requests
+
+                function fetchAndRenderVendors() {
+                    // Clear previous timeout if it exists
+                    if (fetchVendorsTimeout) {
+                        clearTimeout(fetchVendorsTimeout);
+                    }
+
+                    // Set a new timeout to throttle API calls
+                    fetchVendorsTimeout = setTimeout(() => {
+                        fetch(window.appData.fetchVendors, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": window.appData.csrfToken,
+                            },
+                            body: JSON.stringify({}), // Add necessary payload if required
                         })
-                        .then((data) => {
-                            renderVendors(data); // Re-render vendor list
-                        })
-                        .catch((error) => {
-                            console.error("Error fetching vendors:", error);
-                        });
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        `HTTP error! status: ${response.status}`
+                                    );
+                                }
+                                return response.json();
+                            })
+                            .then((data) => {
+                                renderVendors(data); // Re-render or update vendor list
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching vendors:", error);
+                            });
+                    }, THROTTLE_DELAY);
+                }
+
+                // Listen for messageAdded and participantAdded events
+                client.on("messageAdded", () => {
+                    fetchAndRenderVendors();
+                });
+
+                client.on("conversationAdded", () => {
+                    fetchAndRenderVendors();
+                });
+                client.on("participantAdded", () => {
+                    fetchAndRenderVendors();
                 });
 
                 return client;
