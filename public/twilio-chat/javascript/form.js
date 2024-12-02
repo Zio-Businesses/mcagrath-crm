@@ -36,7 +36,7 @@ $(document).ready(function () {
                 $nameInput.val(response.vendor_name);
                 $phoneInput.val(response.vendor_cell);
 
-                image_url = response.company_logo;
+                image_url = response.image_url;
             },
             error: function () {
                 alert("Failed to fetch vendor details. Please try again.");
@@ -80,7 +80,7 @@ $(document).ready(function () {
 
             error: function (xhr) {
                 const errors = xhr.responseJSON.message;
-                $('#error-messages').html(errors);
+                $("#error-messages").html(errors);
             },
 
             complete: function () {

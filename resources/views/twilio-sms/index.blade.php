@@ -45,8 +45,8 @@
                             <p class="usercontent">{{ $vendor->last_msg ? $vendor->last_msg : '' }}</p>
                         </div>
 
-                        <div class="notif">
-                        </div>
+                        {{-- <div class="notif">
+                        </div> --}}
                         <div class="time">
                             <p>{{ $vendor->updated_at ? \Carbon\Carbon::parse($vendor->updated_at)->format('H:i') : '' }}
                             </p>
@@ -165,7 +165,7 @@
 
                 <div class="mt-4 d-flex justify-content-between">
                     <button id="closeForm" type="button" class="btn btn-outline-secondary cap-bold">Close</button>
-                    <button type="submit" class="btn btn-primary uppercase" id="submit">Submit</button>
+                    <button type="submit" class="btn btn-primary cap-bold" id="submit">Submit</button>
                 </div>
             </form>
         </div>
@@ -185,6 +185,7 @@
             twilioSend: "{{ route('twilio-send') }}",
             createConversation: "{{ route('createConversation') }}",
             fetchVendors: "{{ route('getVendorInChat') }}",
+            generatetwiliotoken: "{{ route('generatetwiliotoken') }}",
             getVendorById: "{{ route('getVendorById') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };

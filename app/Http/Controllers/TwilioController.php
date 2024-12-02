@@ -39,7 +39,7 @@ class TwilioController extends AccountBaseController
 
             $conversation = $twilioService->createConversation($request->vendor_name);
             $validatedData['channel_sid'] = $conversation->sid;
-
+            $this->twilioService->checkAndAddParticipant($conversation->sid, user()->email);
 
             $vendor = VendorInChat::create($validatedData);
 
@@ -102,7 +102,7 @@ class TwilioController extends AccountBaseController
         return response()->json([
             'vendor_name' => $vendor->vendor_name,
             'vendor_cell' => $vendor->cell,
-            'image_url' => $vendor->image_url,
+            'image_url' => $vendor->company_logo,
         ]);
     }
     public function getVendorInChat()

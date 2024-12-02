@@ -14,57 +14,154 @@ $(document).ready(function () {
     const userList = $(".user-list");
     const PAGE_SIZE = 10;
     let disableClicks = false;
-    let twilioClient;
+    let twilioClient = null;
     let chatsid = "";
     let selected_vendor = null;
     let oldestMessageIndex = undefined;
     let isLoadingMessages = false;
     let initialLoad = true;
+    let twilioConversation = null;
     //END OF CACHE ELEMENTS
+    connectToTwilio();
+    // Connect to Twilio and fetch the token
+    function connectToTwilio() {
+        disableClicks = true;
+        $loadingMessage.show();
+        fetch(window.appData.generatetwiliotoken)
+            .then((response) => response.json())
+            .then((data) => {
+                initializeTwilioClient(data.token);
+            })
+            .catch((error) => {
+                console.error("Error fetching token:", error);
+                $errorMessage.show();
 
-    // Function to render vendors
-    function renderVendors(vendors) {
-        userList.empty();
-
-        vendors.forEach((vendor) => {
-            const vendorHtml = `
-            <div class="user" data-vendor-id="${vendor.id}">
-                <img src="${vendor.image_url}" alt="" />
-                  <div class="userdetails">
-                            <span>${vendor.vendor_name}
-                            </span>
-                            <p class="usercontent">${vendor.last_msg || ""}</p>
-                        </div>
-                <div class="notif"></div>
-                <div class="time">
-                    <p>${
-                        vendor.updated_at
-                            ? new Date(vendor.updated_at).toLocaleTimeString(
-                                  [],
-                                  {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: false,
-                                  }
-                              )
-                            : ""
-                    }</p>
-                </div>
-            </div>
-        `;
-            userList.append(vendorHtml);
-        });
-
-        if (selected_vendor) {
-            const $activeVendor = userList.find(
-                `[data-vendor-id="${selected_vendor}"]`
-            );
-            if ($activeVendor.length) {
-                $activeVendor.addClass("active");
-            }
-        }
+            })
+            .finally(() => {
+                $loadingMessage.hide();
+                disableClicks = false;
+            });
     }
 
+    // Initialize Twilio Client and manage token updates
+    function initializeTwilioClient(token) {
+        if (twilioClient) {
+            return Promise.resolve(twilioClient);
+        }
+
+        return Twilio.Conversations.Client.create(token)
+            .then((client) => {
+                twilioClient = client;
+
+                console.log("Twilio Conversations Client initialized.");
+
+                // Add event listeners for token expiration
+                client.on("tokenAboutToExpire", handleTokenRefresh);
+                client.on("tokenExpired", handleTokenRefresh);
+
+                // Setup event listeners for conversations
+                setupConversationListeners(client);
+
+                return client;
+            })
+            .catch((error) => {
+                console.error("Error initializing Twilio client:", error);
+                throw error;
+            });
+    }
+
+    // Handle token refresh
+    function handleTokenRefresh() {
+        console.log(
+            "Token is about to expire or has expired. Refreshing token..."
+        );
+        fetch(window.appData.generatetwiliotoken)
+            .then((response) => response.json())
+            .then((data) => {
+                return twilioClient.updateToken(data.token);
+            })
+            .then(() => {
+                console.log("Twilio client token successfully updated.");
+            })
+            .catch((error) => {
+                console.error("Error refreshing token:", error);
+            });
+    }
+
+    // Set up listeners for conversation events
+    function setupConversationListeners(client) {
+        let fetchVendorsTimeout = null;
+        const THROTTLE_DELAY = 2000;
+
+        function fetchAndRenderVendors() {
+            if (fetchVendorsTimeout) {
+                clearTimeout(fetchVendorsTimeout);
+            }
+            fetchVendorsTimeout = setTimeout(() => {
+                fetch(window.appData.fetchVendors, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": window.appData.csrfToken,
+                    },
+                    body: JSON.stringify({}),
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(
+                                `HTTP error! status: ${response.status}`
+                            );
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        renderVendors(data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching vendors:", error);
+                    });
+            }, THROTTLE_DELAY);
+        }
+
+        // Global listeners
+        client.on("messageAdded", () => {
+            fetchAndRenderVendors();
+        });
+        client.on("conversationAdded", () => {
+            fetchAndRenderVendors();
+        });
+        client.on("participantAdded", () => {
+            fetchAndRenderVendors();
+        });
+    }
+
+    // Initialize a specific Twilio conversation
+    function initializeTwilio(twilioChatSid) {
+        if (!twilioClient) {
+            console.error("Twilio client is not initialized.");
+            return;
+        }
+        if (twilioConversation) {
+            twilioConversation.removeAllListeners("messageAdded");
+        }
+        twilioClient
+            .getConversationBySid(twilioChatSid)
+            .then((conversation) => {
+                twilioConversation = conversation;
+                loadMessages();
+                conversation.on("messageAdded", (message) => {
+                    displayMessage(message);
+                    scrollToEnd();
+                });
+            })
+            .catch((error) => {
+                $errorMessage.show();
+                $loadingMessage.hide();
+                console.error("Error connecting to Twilio:", error);
+            });
+    }
+
+    //END OF TWILIO CLIENT
     // SEARRCH WITH DROP DOWN BOX
     $selectVendor.selectpicker();
     $selectVendor.on("changed.bs.select", function () {
@@ -125,7 +222,7 @@ $(document).ready(function () {
             // Check cookies for an existing chat SID
             chatsid = Cookies.get(`conversation_${selected_vendor}`);
             if (chatsid) {
-                connectToTwilio(chatsid);
+                initializeTwilio(chatsid);
                 return;
             }
 
@@ -149,7 +246,7 @@ $(document).ready(function () {
                     Cookies.set(`conversation_${selected_vendor}`, chatsid, {
                         expires: 7,
                     }); // Cache for 7 days
-                    connectToTwilio(chatsid);
+                    initializeTwilio(chatsid);
                 } else {
                     alert("Unable to connect to the chat. Please try again.");
                 }
@@ -214,121 +311,6 @@ $(document).ready(function () {
         }
     });
     //END OF SENDING THE MSG
-
-    // TWILIO TOKEN JWT
-    function connectToTwilio(twilioChatSid) {
-        // const token = Cookies.get("twilioToken");
-        // if (token) {
-        //     initializeTwilio(token, twilioChatSid);
-        //     return;
-        // }
-
-        fetch("generatetwiliotoken")
-            .then((response) => response.json())
-            .then((data) => {
-                // Cookies.set("twilioToken", data.token);
-                initializeTwilio(data.token, twilioChatSid);
-            })
-            .catch((error) => {
-                $errorMessage.show();
-                console.error("Error fetching token:", error);
-                $loadingMessage.hide();
-            });
-    }
-    // END OF TWILIO TOKEN JWT
-
-    //TWILIO CLIENT
-    function initializeTwilioClient(token) {
-        if (twilioClient) {
-            return Promise.resolve(twilioClient);
-        }
-
-        return Twilio.Conversations.Client.create(token)
-            .then((client) => {
-                twilioClient = client;
-
-                // Debounce or throttle function to reduce API call frequency
-                let fetchVendorsTimeout = null;
-                const THROTTLE_DELAY = 2000; // Delay for throttling API requests
-
-                function fetchAndRenderVendors() {
-                    // Clear previous timeout if it exists
-                    if (fetchVendorsTimeout) {
-                        clearTimeout(fetchVendorsTimeout);
-                    }
-
-                    // Set a new timeout to throttle API calls
-                    fetchVendorsTimeout = setTimeout(() => {
-                        fetch(window.appData.fetchVendors, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": window.appData.csrfToken,
-                            },
-                            body: JSON.stringify({}), // Add necessary payload if required
-                        })
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error(
-                                        `HTTP error! status: ${response.status}`
-                                    );
-                                }
-                                return response.json();
-                            })
-                            .then((data) => {
-                                renderVendors(data); // Re-render or update vendor list
-                            })
-                            .catch((error) => {
-                                console.error("Error fetching vendors:", error);
-                            });
-                    }, THROTTLE_DELAY);
-                }
-
-                // Listen for messageAdded and participantAdded events
-                client.on("messageAdded", () => {
-                    fetchAndRenderVendors();
-                });
-
-                client.on("conversationAdded", () => {
-                    fetchAndRenderVendors();
-                });
-                client.on("participantAdded", () => {
-                    fetchAndRenderVendors();
-                });
-
-                return client;
-            })
-            .catch((error) => {
-                console.error("Error initializing Twilio client:", error);
-                throw error; // Propagate the error for the calling function to handle
-            });
-    }
-
-    //END OF TWILIO CLIENT
-
-    //INITIAL LOADING TWILIO CHATS
-    function initializeTwilio(token, twilioChatSid) {
-        initializeTwilioClient(token)
-            .then((client) => client.getConversationBySid(twilioChatSid))
-            .then((conversation) => {
-                twilioConversation = conversation;
-                loadMessages();
-
-                // Listen for new messages
-                conversation.on("messageAdded", (message) => {
-                    displayMessage(message);
-                    // Ensure the UI scrolls to the latest message
-                    scrollToEnd();
-                });
-            })
-            .catch((error) => {
-                $errorMessage.show(); // Show an error message
-                $loadingMessage.hide();
-                console.error("Error connecting to Twilio:", error);
-            });
-    }
-
-    //END OF INITIAL LOADING TWILIO CHATS
 
     //LOAD THE MSGS
     function loadMessages() {
@@ -451,6 +433,47 @@ $(document).ready(function () {
                 <div class="msg-time">${formattedDate} ${time}</div>
             </div>`;
         $messagesDiv.append(messageElement);
+    }
+
+    function renderVendors(vendors) {
+        userList.empty();
+
+        vendors.forEach((vendor) => {
+            const vendorHtml = `
+            <div class="user" data-vendor-id="${vendor.id}">
+                <img src="${vendor.image_url}" alt="" />
+                  <div class="userdetails">
+                            <span>${vendor.vendor_name}
+                            </span>
+                            <p class="usercontent">${vendor.last_msg || ""}</p>
+                        </div>
+                <div class="time">
+                    <p>${
+                        vendor.updated_at
+                            ? new Date(vendor.updated_at).toLocaleTimeString(
+                                  [],
+                                  {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: false,
+                                  }
+                              )
+                            : ""
+                    }</p>
+                </div>
+            </div>
+        `;
+            userList.append(vendorHtml);
+        });
+
+        if (selected_vendor) {
+            const $activeVendor = userList.find(
+                `[data-vendor-id="${selected_vendor}"]`
+            );
+            if ($activeVendor.length) {
+                $activeVendor.addClass("active");
+            }
+        }
     }
 
     //SCROLL TO END FUNCTION

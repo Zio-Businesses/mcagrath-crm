@@ -47,8 +47,7 @@
                             <p class="usercontent"><?php echo e($vendor->last_msg ? $vendor->last_msg : ''); ?></p>
                         </div>
 
-                        <div class="notif">
-                        </div>
+                        
                         <div class="time">
                             <p><?php echo e($vendor->updated_at ? \Carbon\Carbon::parse($vendor->updated_at)->format('H:i') : ''); ?>
 
@@ -169,7 +168,7 @@
 
                 <div class="mt-4 d-flex justify-content-between">
                     <button id="closeForm" type="button" class="btn btn-outline-secondary cap-bold">Close</button>
-                    <button type="submit" class="btn btn-primary uppercase" id="submit">Submit</button>
+                    <button type="submit" class="btn btn-primary cap-bold" id="submit">Submit</button>
                 </div>
             </form>
         </div>
@@ -189,6 +188,7 @@
             twilioSend: "<?php echo e(route('twilio-send')); ?>",
             createConversation: "<?php echo e(route('createConversation')); ?>",
             fetchVendors: "<?php echo e(route('getVendorInChat')); ?>",
+            generatetwiliotoken: "<?php echo e(route('generatetwiliotoken')); ?>",
             getVendorById: "<?php echo e(route('getVendorById')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };
