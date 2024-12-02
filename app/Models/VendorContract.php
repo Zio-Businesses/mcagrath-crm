@@ -14,11 +14,6 @@ class VendorContract extends BaseModel
     protected $table = 'vendor_contracts';
     protected $appends = ['image_url'];
 
-    protected $fillable = [
-        'chat_sid',
-        'sms_updated_at',
-    ];
-
     public function getImageUrlAttribute()
     {
         $company = company();
