@@ -31,10 +31,10 @@ class TwilioChatController extends Controller
         $vendorId = $request->vendorId;
         $conversationSid = $request->chatsid;
 
-        $vendor = VendorInChat::where('id', $vendorId)->first();
-        $vendor->last_msg = $request->user . ": " . $message;
-        $vendor->save();
-        // $toNumber = $vendor->vendor_country_code . "" . $vendor->cell;
+        // $vendor = VendorInChat::where('id', $vendorId)->first();
+        // $vendor->last_msg = $request->user . ": " . $message;
+        // $vendor->save();
+        // $toNumber = $vendor->vendor_country_code . "" . $vendor->vendor_phone;
         // $twilioNumber = env('TWILIO_NUMBER');
         // $client->messages->create(
         //     $toNumber,
