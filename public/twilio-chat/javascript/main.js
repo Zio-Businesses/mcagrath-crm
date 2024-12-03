@@ -79,6 +79,30 @@ $(document).ready(function () {
                             );
                         });
                 });
+                client.on("messageAdded", (message) => {
+                    fetch(`${window.appData.fetchUpdatedVendor}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": window.appData.csrfToken,
+                        },
+                        body: JSON.stringify({
+                            channel_sid: message.conversation.sid,
+                        }),
+                    })
+                        .then((response) => response.json())
+                        .then((vendor) => {
+                            if (vendor) {
+                                updateVendor(vendor);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error fetching updated vendor:",
+                                error
+                            );
+                        });
+                });
                 return client;
             })
             .catch((error) => {
