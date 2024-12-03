@@ -203,6 +203,8 @@
             fetchVendors: "{{ route('getVendorInChat') }}",
             generatetwiliotoken: "{{ route('generatetwiliotoken') }}",
             getVendorById: "{{ route('getVendorById') }}",
+            fetchUpdatedVendor: "{{ route('fetchUpdatedVendor') }}",
+            handleMessageAdded: "{{ route('handleMessageAdded') }}",
             getVendorInLeadsById: "{{ route('getVendorInLeadsById') }}",
             loggedInUserName: "{{ auth()->user()->name }}",
         };

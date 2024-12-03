@@ -610,6 +610,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
     Route::post('getVendorInLeadsById', [TwilioController::class, 'getVendorInLeadsById'])->name('getVendorInLeadsById');
     Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
+    Route::post('fetchUpdatedVendor', [TwilioController::class, 'fetchUpdatedVendor'])->name('fetchUpdatedVendor');
+    Route::post('handleMessageAdded', [TwilioController::class, 'handleMessageAdded'])->name('handleMessageAdded');
 
     Route::get('/test-twilio', [TwilioConversationController::class, 'getConversation'])->name('getConversation');
     Route::post('/create-conversation', [TwilioConversationController::class, 'createConversation'])->name('createConversation');

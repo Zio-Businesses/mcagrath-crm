@@ -207,6 +207,8 @@
             fetchVendors: "<?php echo e(route('getVendorInChat')); ?>",
             generatetwiliotoken: "<?php echo e(route('generatetwiliotoken')); ?>",
             getVendorById: "<?php echo e(route('getVendorById')); ?>",
+            fetchUpdatedVendor: "<?php echo e(route('fetchUpdatedVendor')); ?>",
+            handleMessageAdded: "<?php echo e(route('handleMessageAdded')); ?>",
             getVendorInLeadsById: "<?php echo e(route('getVendorInLeadsById')); ?>",
             loggedInUserName: "<?php echo e(auth()->user()->name); ?>",
         };

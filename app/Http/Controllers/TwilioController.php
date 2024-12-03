@@ -7,6 +7,7 @@ use App\Models\VendorContract;
 use Illuminate\Http\Request;
 use App\Models\VendorInChat;
 use App\Models\Vendor;
+use App\Models\User;
 
 class TwilioController extends AccountBaseController
 {
@@ -41,6 +42,12 @@ class TwilioController extends AccountBaseController
             $conversation = $twilioService->createConversation($request->vendor_name);
             $validatedData['channel_sid'] = $conversation->sid;
             $this->twilioService->checkAndAddParticipant($conversation->sid, user()->email);
+            // $users = User::all();
+
+            // // Add each user to the conversation
+            // foreach ($users as $user) {
+            //     $this->twilioService->checkAndAddParticipant($conversation->sid, $user->email);
+            // }
 
             $vendor = VendorInChat::create($validatedData);
 
@@ -80,6 +87,20 @@ class TwilioController extends AccountBaseController
             'data' => $vendor,
         ]);
     }
+    public function fetchUpdatedVendor(Request $request)
+    {
+        $channel_sid = $request->channel_sid;
+    
+        $vendor = VendorInChat::where('channel_sid', $channel_sid)->first();
+
+
+        if ($vendor) {
+            return response()->json($vendor);
+        } else {
+            return response()->json(['error' => 'Vendor not found'], 404);
+        }
+    }
+
 
     public function show($id)
     {

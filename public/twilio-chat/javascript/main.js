@@ -35,17 +35,14 @@ $(document).ready(function () {
             .catch((error) => {
                 console.error("Error fetching token:", error);
                 $errorMessage.show();
-
-            })
-            .finally(() => {
-                $loadingMessage.hide();
-                disableClicks = false;
             });
     }
 
     // Initialize Twilio Client and manage token updates
     function initializeTwilioClient(token) {
         if (twilioClient) {
+            $loadingMessage.hide();
+            disableClicks = false;
             return Promise.resolve(twilioClient);
         }
 
@@ -58,16 +55,61 @@ $(document).ready(function () {
                 // Add event listeners for token expiration
                 client.on("tokenAboutToExpire", handleTokenRefresh);
                 client.on("tokenExpired", handleTokenRefresh);
-
-                // Setup event listeners for conversations
-                setupConversationListeners(client);
-
+                client.on("conversationAdded", (conversation) => {
+                    fetch(`${window.appData.fetchUpdatedVendor}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": window.appData.csrfToken,
+                        },
+                        body: JSON.stringify({
+                            channel_sid: conversation.sid,
+                        }),
+                    })
+                        .then((response) => response.json())
+                        .then((vendor) => {
+                            if (vendor) {
+                                updateVendor(vendor);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(
+                                "Error fetching updated vendor:",
+                                error
+                            );
+                        });
+                });
                 return client;
             })
             .catch((error) => {
                 console.error("Error initializing Twilio client:", error);
                 throw error;
+            })
+            .finally(() => {
+                $loadingMessage.hide();
+                disableClicks = false;
             });
+    }
+
+    function updateVendor(vendor) {
+        const $vendorDiv = userList.find(`[data-vendor-id="${vendor.id}"]`);
+        if ($vendorDiv.length) {
+            $vendorDiv.find(".usercontent").text(vendor.last_msg || "");
+            $vendorDiv.find(".time p").text(
+                vendor.updated_at
+                    ? new Date(vendor.updated_at).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                      })
+                    : ""
+            );
+            // Move the updated vendor to the top
+            $vendorDiv.prependTo(userList);
+        } else {
+            // Add new vendor if not already present
+            renderVendors(vendor);
+        }
     }
 
     // Handle token refresh
@@ -86,53 +128,6 @@ $(document).ready(function () {
             .catch((error) => {
                 console.error("Error refreshing token:", error);
             });
-    }
-
-    // Set up listeners for conversation events
-    function setupConversationListeners(client) {
-        let fetchVendorsTimeout = null;
-        const THROTTLE_DELAY = 2000;
-
-        function fetchAndRenderVendors() {
-            if (fetchVendorsTimeout) {
-                clearTimeout(fetchVendorsTimeout);
-            }
-            fetchVendorsTimeout = setTimeout(() => {
-                fetch(window.appData.fetchVendors, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": window.appData.csrfToken,
-                    },
-                    body: JSON.stringify({}),
-                })
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error(
-                                `HTTP error! status: ${response.status}`
-                            );
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        renderVendors(data);
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching vendors:", error);
-                    });
-            }, THROTTLE_DELAY);
-        }
-
-        // Global listeners
-        client.on("messageAdded", () => {
-            fetchAndRenderVendors();
-        });
-        client.on("conversationAdded", () => {
-            fetchAndRenderVendors();
-        });
-        client.on("participantAdded", () => {
-            fetchAndRenderVendors();
-        });
     }
 
     // Initialize a specific Twilio conversation
@@ -435,36 +430,27 @@ $(document).ready(function () {
         $messagesDiv.append(messageElement);
     }
 
-    function renderVendors(vendors) {
-        userList.empty();
-
-        vendors.forEach((vendor) => {
-            const vendorHtml = `
-            <div class="user" data-vendor-id="${vendor.id}">
-                <img src="${vendor.image_url}" alt="" />
-                  <div class="userdetails">
-                            <span>${vendor.vendor_name}
-                            </span>
-                            <p class="usercontent">${vendor.last_msg || ""}</p>
-                        </div>
-                <div class="time">
-                    <p>${
-                        vendor.updated_at
-                            ? new Date(vendor.updated_at).toLocaleTimeString(
-                                  [],
-                                  {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                      hour12: false,
-                                  }
-                              )
-                            : ""
-                    }</p>
-                </div>
+    function renderVendors(vendor) {
+        const vendorHtml = `
+        <div class="user" data-vendor-id="${vendor.id}">
+            <img src="${vendor.image_url}" alt="" />
+            <div class="userdetails">
+                <span>${vendor.vendor_name}</span>
+                <p class="usercontent">${vendor.last_msg || ""}</p>
             </div>
-        `;
-            userList.append(vendorHtml);
-        });
+            <div class="time">
+                <p>${
+                    vendor.updated_at
+                        ? new Date(vendor.updated_at).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                          })
+                        : ""
+                }</p>
+            </div>
+        </div>`;
+        userList.prepend(vendorHtml);
 
         if (selected_vendor) {
             const $activeVendor = userList.find(
