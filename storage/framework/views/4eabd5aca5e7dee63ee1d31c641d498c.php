@@ -195,8 +195,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('scripts'); ?>
-    <script src="https://sdk.twilio.com/js/conversations/releases/2.6.0/twilio-conversations.min.js"
-        integrity="sha256-xPEivoMXimPOKythl5xUKOfcCMcVg8DVl0I2BmKfmqc=" crossorigin="anonymous"></script>
+    <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="<?php echo e(asset('twilio-chat/javascript/main.js')); ?>"></script>
     <script src="<?php echo e(asset('twilio-chat/javascript/form.js')); ?>"></script>

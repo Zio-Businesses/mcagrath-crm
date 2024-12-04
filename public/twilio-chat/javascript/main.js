@@ -154,6 +154,10 @@ $(document).ready(function () {
             });
     }
 
+    handlemessageAdded = (message) => {
+        displayMessage(message);
+        scrollToEnd();
+    };
     // Initialize a specific Twilio conversation
     function initializeTwilio(twilioChatSid) {
         if (!twilioClient) {
@@ -161,17 +165,17 @@ $(document).ready(function () {
             return;
         }
         if (twilioConversation) {
-            twilioConversation.removeAllListeners("messageAdded");
+            twilioConversation.removeListener(
+                "messageAdded",
+                handlemessageAdded
+            );
         }
         twilioClient
             .getConversationBySid(twilioChatSid)
             .then((conversation) => {
                 twilioConversation = conversation;
                 loadMessages();
-                conversation.on("messageAdded", (message) => {
-                    displayMessage(message);
-                    scrollToEnd();
-                });
+                conversation.on("messageAdded", handlemessageAdded);
             })
             .catch((error) => {
                 $errorMessage.show();
