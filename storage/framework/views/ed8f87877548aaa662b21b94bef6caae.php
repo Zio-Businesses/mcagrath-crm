@@ -7,23 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{ asset('vendor/css/all.min.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('vendor/css/all.min.css')); ?>">
 
     <!-- Simple Line Icons -->
-    <link rel="stylesheet" href="{{ asset('vendor/css/simple-line-icons.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('vendor/css/simple-line-icons.css')); ?>">
 
     <!-- Template CSS -->
-    <link type="text/css" rel="stylesheet" media="all" href="{{ asset('css/main.css') }}">
+    <link type="text/css" rel="stylesheet" media="all" href="<?php echo e(asset('css/main.css')); ?>">
 
-    <title>@lang($pageTitle)</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ $company->favicon_url }}">
+    <title><?php echo app('translator')->get($pageTitle); ?></title>
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo e($company->favicon_url); ?>">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ $company->favicon_url }}">
+    <meta name="msapplication-TileImage" content="<?php echo e($company->favicon_url); ?>">
     <meta name="theme-color" content="#ffffff">
 
-    @include('sections.theme_css', ['company' => $company])
+    <?php echo $__env->make('sections.theme_css', ['company' => $company], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
-    @isset($activeSettingMenu)
+    <?php if(isset($activeSettingMenu)): ?>
         <style>
             .preloader-container {
                 margin-left: 510px;
@@ -31,9 +31,9 @@
             }
 
         </style>
-    @endisset
+    <?php endif; ?>
 
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
 
     <style>
         :root {
@@ -91,8 +91,8 @@
     
 
 
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/jquery/modernizr.min.js') }}"></script>
+    <script src="<?php echo e(asset('vendor/jquery/jquery.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('vendor/jquery/modernizr.min.js')); ?>"></script>
 
     <script>
         var checkMiniSidebar = localStorage.getItem("mini-sidebar");
@@ -111,112 +111,112 @@
             <div class="d-lg-flex flex-col">
                 <div class="d-lg-flex flex-col col-lg-8 pl-0">
                     <div class="d-flex justify-content-center align-items-center ">
-                        <img src="{{$company->dark_logo_url}}" alt="{{ $company->company_name }}" style="height:160px; width:120px;" class="rounded-left" />
+                        <img src="<?php echo e($company->dark_logo_url); ?>" alt="<?php echo e($company->company_name); ?>" style="height:160px; width:120px;" class="rounded-left" />
                     </div>
                     <div class="d-flex justify-content-center align-items-center ml-lg-2 rounded light-grey-border-div mt-2 mt-sm-0">
                         <p class="py-2 ml-3 pr-5 mb-0 font-weight-bold lh-base">
-                            {{ $company->company_name }}<br>
-                            {!! nl2br($company->defaultAddress->address) !!}<br>
-                            Phone #: {{ $company->company_phone }}<br>
-                            Email: <a href="{{$company->website}}">{{ $company->company_email }}</a><br>
-                            Website: <a href="{{$company->website}}">{{ $company->website }}</a>
+                            <?php echo e($company->company_name); ?><br>
+                            <?php echo nl2br($company->defaultAddress->address); ?><br>
+                            Phone #: <?php echo e($company->company_phone); ?><br>
+                            Email: <a href="<?php echo e($company->website); ?>"><?php echo e($company->company_email); ?></a><br>
+                            Website: <a href="<?php echo e($company->website); ?>"><?php echo e($company->website); ?></a>
                         </p>
                     </div>
                 </div>
                 <table class="text-dark f-13 mt-3 mt-sm-0 table-borderless pb-3 mr-4 w-sm-100 w-50" style="height:100px;">
                     <tr class="">
                         <td class="border-right-0 font-weight-bold">
-                            @lang('Assigned Date')</td>
-                        <td class="border-left-0 pl-2">{{ $projectvendor->created_at->translatedFormat($company->date_format) }}</td>
+                            <?php echo app('translator')->get('Assigned Date'); ?></td>
+                        <td class="border-left-0 pl-2"><?php echo e($projectvendor->created_at->translatedFormat($company->date_format)); ?></td>
                     </tr>
                     <tr >
                         <td class="border-right-0 font-weight-bold">
-                            @lang('Project Coordinator')</td>
+                            <?php echo app('translator')->get('Project Coordinator'); ?></td>
                         <td class="border-left-0 pl-2 py-2">
-                        @foreach($projectid->members as $item )
-                                {{$item->user->name}} <br/>
-                        @endforeach
+                        <?php $__currentLoopData = $projectid->members; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php echo e($item->user->name); ?> <br/>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="border-right-0 font-weight-bold">
-                            @lang('Vendor')</td>
-                        <td class="border-left-0 pl-2">{{$projectvendor->vendor_name}}</td>
+                            <?php echo app('translator')->get('Vendor'); ?></td>
+                        <td class="border-left-0 pl-2"><?php echo e($projectvendor->vendor_name); ?></td>
                     </tr>
                     <tr>
                         <td class="border-right-0 font-weight-bold">
-                            @lang('Phone')</td>
-                        <td class="border-left-0 pl-2">{{$projectvendor->vendor_phone}}</td>
+                            <?php echo app('translator')->get('Phone'); ?></td>
+                        <td class="border-left-0 pl-2"><?php echo e($projectvendor->vendor_phone); ?></td>
                     </tr>
                     <tr>
                         <td class="border-right-0 font-weight-bold">
                             Email</td>
-                        <td class="border-left-0 pl-2">{{$projectvendor->vendor_email_address}}</td>
+                        <td class="border-left-0 pl-2"><?php echo e($projectvendor->vendor_email_address); ?></td>
                     </tr>
                     
                 </table>
             </div>
             <div class="mt-3 position-relative">
-                @if($projectvendor->accepted_date)
+                <?php if($projectvendor->accepted_date): ?>
                 <div class="watermark-center">
                     <i class="fa fa-check-circle"></i> 
                     <span>Accepted</span>
                 </div>
-                @endif
+                <?php endif; ?>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Work Order #</h5>
-                        <p>{{$projectid->project_short_code}}</p>
+                        <p><?php echo e($projectid->project_short_code); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Priority</h5>
-                        <p>{{$projectid->priority}}</p>
+                        <p><?php echo e($projectid->priority); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Project Type</h5>
-                        <p>{{$projectvendor->project_type}}</p>
+                        <p><?php echo e($projectvendor->project_type); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Street Address</h5>
-                        <p>{{$projectid->propertyDetails->street_address}}</p>
+                        <p><?php echo e($projectid->propertyDetails->street_address); ?></p>
                     </div>
                 </div>
                 
                 <!-- Second row with 2 columns -->
                 <div class="row">
-                    @if($projectid->propertyDetails->optional)
+                    <?php if($projectid->propertyDetails->optional): ?>
                         <div class="col-md-3 col-12 grid-item">
                             <h5 class="f-13 font-weight-bold">Suite # / House #</h5>
-                            <p>{{$projectid->propertyDetails->optional}}</p>
+                            <p><?php echo e($projectid->propertyDetails->optional); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">City</h5>
-                        <p>{{$projectid->propertyDetails->city}}</p>
+                        <p><?php echo e($projectid->propertyDetails->city); ?></p>
                     </div>
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">State</h5>
-                        <p>{{$projectid->propertyDetails->state}}</p>
+                        <p><?php echo e($projectid->propertyDetails->state); ?></p>
                     </div>    
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Zipcode</h5>
-                        <p>{{$projectid->propertyDetails->zipcode}}</p>
+                        <p><?php echo e($projectid->propertyDetails->zipcode); ?></p>
                     </div>
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">County</h5>
-                        <p>{{$projectid->propertyDetails->county}}</p>
+                        <p><?php echo e($projectid->propertyDetails->county); ?></p>
                     </div>
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Project Category</h5>
-                        <p>{{$projectid->category->category_name}}</p>
+                        <p><?php echo e($projectid->category->category_name); ?></p>
                     </div>
                     <div class="col-md-3 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Project Sub-Category</h5>
-                        <p>{{$projectid->sub_category}}</p>
+                        <p><?php echo e($projectid->sub_category); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Property Type</h5>
-                        <p>{{$projectid->propertyDetails->property_type}}</p>
+                        <p><?php echo e($projectid->propertyDetails->property_type); ?></p>
                     </div>
                 </div>
                 
@@ -224,26 +224,26 @@
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Bedrooms</h5>
-                        <p>{{$projectid->propertyDetails->bedrooms}}</p>
+                        <p><?php echo e($projectid->propertyDetails->bedrooms); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Bathrooms</h5>
-                        <p>{{$projectid->propertyDetails->bathrooms}}</p>
+                        <p><?php echo e($projectid->propertyDetails->bathrooms); ?></p>
                     </div>
                 </div>
                 <hr class="custom-line">
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Project Date</h5>
-                        <p>{{$projectid->start_date->translatedFormat($company->date_format) }}</p>
+                        <p><?php echo e($projectid->start_date->translatedFormat($company->date_format)); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Due Date</h5>
-                        <p>{{$projectvendor->due_date->translatedFormat($company->date_format) }}</p>
+                        <p><?php echo e($projectvendor->due_date->translatedFormat($company->date_format)); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Project Amount</h5>
-                        <p>{{currency_format($projectvendor->project_amount, $contractid->currency->id) }}</p>
+                        <p><?php echo e(currency_format($projectvendor->project_amount, $contractid->currency->id)); ?></p>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -252,110 +252,112 @@
                     </div>
                     <div class="col-md-5 col-12 grid-item">
                         <p>
-                        {{$projectvendor->add_notes}}
+                        <?php echo e($projectvendor->add_notes); ?>
+
                         </p>
                     </div>
                 </div>
                 <hr class="custom-line">
                 <h5 class="f-13 font-weight-bold mb-4">Scope Of Work:</h5>
-                @foreach($projectvendor->sow_id as $sow)
+                <?php $__currentLoopData = $projectvendor->sow_id; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sow): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Catgeory</h5>
-                        <p>{{$projectvendor->sowcategory($sow)}}</p>
+                        <p><?php echo e($projectvendor->sowcategory($sow)); ?></p>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Sub-Category</h5>
-                        <p>{{$projectvendor->sowsubcategory($sow)}}</p>
+                        <p><?php echo e($projectvendor->sowsubcategory($sow)); ?></p>
                     </div>
                     <div class="col-md-6 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Description</h5>
-                        <p>{{$projectvendor->sowdescription($sow)}}</p>
+                        <p><?php echo e($projectvendor->sowdescription($sow)); ?></p>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
             <div>
-                @if($projectvendor->changenotification)
-                    @foreach($projectvendor->changenotification as $key => $changenotify)
+                <?php if($projectvendor->changenotification): ?>
+                    <?php $__currentLoopData = $projectvendor->changenotification; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $changenotify): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <hr class="custom-line">
-                        <h4 class="f-14 font-weight-bold">Change Order - {{$key+1}}</h4>
+                        <h4 class="f-14 font-weight-bold">Change Order - <?php echo e($key+1); ?></h4>
                         <div class="border rounded border-dark p-2 position-relative">
                             <!-- Watermark -->
-                            @if($changenotify->accepted_date)
+                            <?php if($changenotify->accepted_date): ?>
                             <div class="watermark-center">
                                 <i class="fa fa-check-circle" style="color: green;"></i> 
                                 <span style="color: green;">Accepted</span>
                             </div>
-                            @endif
-                            @if($changenotify->link_status=='Rejected')
+                            <?php endif; ?>
+                            <?php if($changenotify->link_status=='Rejected'): ?>
                             <div class="watermark-center">
                                 <i class="fa fa-times-circle" style="color: red;"></i> 
                                 <span style="color: red;">Rejected</span>
                             </div>
-                            @endif
+                            <?php endif; ?>
                             <!-- Content Layer -->
                             <div class="row">
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Project Type</h5>
-                                    <p>{{$changenotify->project_type}}</p>
+                                    <p><?php echo e($changenotify->project_type); ?></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Project Amount</h5>
-                                    <p>{{currency_format($changenotify->project_amount, $contractid->currency->id) }}</p>
+                                    <p><?php echo e(currency_format($changenotify->project_amount, $contractid->currency->id)); ?></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Due Date</h5>
-                                    <p>{{$changenotify->due_date}}</p>
+                                    <p><?php echo e($changenotify->due_date); ?></p>
                                 </div>
                             </div>
                             <h5 class="f-13 font-weight-bold mb-4">Scope Of Work:</h5>
-                            @foreach($changenotify->sow_id as $sow)
+                            <?php $__currentLoopData = $changenotify->sow_id; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sow): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="row">
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Category</h5>
-                                    <p>{{$changenotify->sow($sow)->category}}</p>
+                                    <p><?php echo e($changenotify->sow($sow)->category); ?></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Sub-Category</h5>
-                                    <p>{{$changenotify->sow($sow)->sub_category}}</p>
+                                    <p><?php echo e($changenotify->sow($sow)->sub_category); ?></p>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Description</h5>
-                                    <p>{{$changenotify->sow($sow)->description}}</p>
+                                    <p><?php echo e($changenotify->sow($sow)->description); ?></p>
                                 </div>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             <div class="row mt-2">
                                 <div class="col-md-2 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Comments</h5>
                                 </div>
                                 <div class="col-md-5 col-12 grid-item">
                                     <p>
-                                        {{$changenotify->add_notes}}
+                                        <?php echo e($changenotify->add_notes); ?>
+
                                     </p>
                                 </div>
                             </div>
-                            @if(!($changenotify->rejected_date) && !($changenotify->accepted_date))
+                            <?php if(!($changenotify->rejected_date) && !($changenotify->accepted_date)): ?>
                             <div class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
                                 <a class="btn btn-success m-2 accept-notify btn-xs" href="javascript:;"
-                                    data-row-id="{{ $changenotify->id }}">
+                                    data-row-id="<?php echo e($changenotify->id); ?>">
                                     <i class="fa fa-check mr-2"></i>
-                                    @lang('Accept')
+                                    <?php echo app('translator')->get('Accept'); ?>
                                 </a>
                                 <a class="btn btn-danger m-2 reject-notify btn-xs" href="javascript:;"
-                                    data-row-id="{{ $changenotify->id }}">
+                                    data-row-id="<?php echo e($changenotify->id); ?>">
                                     <i class="fa fa-times mr-2"></i>
-                                    @lang('Reject')
+                                    <?php echo app('translator')->get('Reject'); ?>
                                 </a>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
-                    @endforeach
-                @endif
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
                 <hr class="custom-line">
                 <!--<h5 class="f-13 font-weight-bold mb-4">WORK ORDER INSTRUCTIONS: PLEASE READ CAREFULLY:</h5>-->
-                <div class="ql-editor p-0 pb-3">{!! $contractid->contract_detail !!}</div>
+                <div class="ql-editor p-0 pb-3"><?php echo $contractid->contract_detail; ?></div>
             </div>
             
         </div>
@@ -365,10 +367,46 @@
         
         <div class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
            
-            <x-forms.button-success class="border-0 mr-3 mb-2" id="accept" icon="check">Accept
-            </x-forms.button-success>
-            <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="times" >Reject
-            </x-forms.button-success>
+            <?php if (isset($component)) { $__componentOriginal5586a837a5f7371c36d53423ae34c509 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5586a837a5f7371c36d53423ae34c509 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.forms.button-success','data' => ['class' => 'border-0 mr-3 mb-2','id' => 'accept','icon' => 'check']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-success'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-0 mr-3 mb-2','id' => 'accept','icon' => 'check']); ?>Accept
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5586a837a5f7371c36d53423ae34c509)): ?>
+<?php $attributes = $__attributesOriginal5586a837a5f7371c36d53423ae34c509; ?>
+<?php unset($__attributesOriginal5586a837a5f7371c36d53423ae34c509); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5586a837a5f7371c36d53423ae34c509)): ?>
+<?php $component = $__componentOriginal5586a837a5f7371c36d53423ae34c509; ?>
+<?php unset($__componentOriginal5586a837a5f7371c36d53423ae34c509); ?>
+<?php endif; ?>
+            <?php if (isset($component)) { $__componentOriginal5586a837a5f7371c36d53423ae34c509 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5586a837a5f7371c36d53423ae34c509 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.forms.button-success','data' => ['id' => 'cancel','class' => 'border-0 mr-3 mb-2 btn btn-danger','icon' => 'times']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-success'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'cancel','class' => 'border-0 mr-3 mb-2 btn btn-danger','icon' => 'times']); ?>Reject
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5586a837a5f7371c36d53423ae34c509)): ?>
+<?php $attributes = $__attributesOriginal5586a837a5f7371c36d53423ae34c509; ?>
+<?php unset($__attributesOriginal5586a837a5f7371c36d53423ae34c509); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5586a837a5f7371c36d53423ae34c509)): ?>
+<?php $component = $__componentOriginal5586a837a5f7371c36d53423ae34c509; ?>
+<?php unset($__componentOriginal5586a837a5f7371c36d53423ae34c509); ?>
+<?php endif; ?>
 
           
         </div>
@@ -380,15 +418,15 @@
 </div>
 
 <!-- Global Required Javascript -->
-<script src="{{ asset('js/main.js') }}"></script>
+<script src="<?php echo e(asset('js/main.js')); ?>"></script>
 
 <script>
 
     $('#accept').click(function () {
-    var token="{{ csrf_token() }}";
-    var data="{{$projectvendor->id}}";
+    var token="<?php echo e(csrf_token()); ?>";
+    var data="<?php echo e($projectvendor->id); ?>";
     $.easyAjax({
-        url: "{{ route('front.wo.store') }}",
+        url: "<?php echo e(route('front.wo.store')); ?>",
         type: "POST",
         data: {
                 '_token': token,
@@ -403,10 +441,10 @@
     });
     });
     $('body').on('click', '.accept-notify', function() {
-    var token="{{ csrf_token() }}";
+    var token="<?php echo e(csrf_token()); ?>";
     var id = $(this).data('row-id');
         $.easyAjax({
-            url: "{{ route('front.wo.changenotifystore') }}",
+            url: "<?php echo e(route('front.wo.changenotifystore')); ?>",
             type: "POST",
             data: {
                     '_token': token,
@@ -421,10 +459,10 @@
         });
     });
     $('body').on('click', '.reject-notify', function() {
-    var token="{{ csrf_token() }}";
+    var token="<?php echo e(csrf_token()); ?>";
     var id = $(this).data('row-id');
     $.easyAjax({
-        url: "{{ route('front.wo.changenotifystore') }}",
+        url: "<?php echo e(route('front.wo.changenotifystore')); ?>",
         type: "POST",
         data: {
                 '_token': token,
@@ -439,10 +477,10 @@
     });
     });
     $('#cancel').click(function () {
-    var token="{{ csrf_token() }}";
-    var data="{{$projectvendor->id}}";
+    var token="<?php echo e(csrf_token()); ?>";
+    var data="<?php echo e($projectvendor->id); ?>";
     $.easyAjax({
-        url: "{{ route('front.wo.store') }}",
+        url: "<?php echo e(route('front.wo.store')); ?>",
         type: "POST",
         data: {
                 '_token': token,
@@ -462,3 +500,4 @@
 </body>
 
 </html>
+<?php /**PATH C:\xampp\htdocs\public_html\resources\views/workorder.blade.php ENDPATH**/ ?>

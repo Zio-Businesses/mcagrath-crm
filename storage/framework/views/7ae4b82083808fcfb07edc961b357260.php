@@ -44,7 +44,7 @@
                                 href="<?php echo e(route('vendor-contractor-license.download', md5($contractor_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-contractor-license" 
                                 data-row-id="<?php echo e($contractor_license->id); ?>"
-                                href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -158,7 +158,7 @@
                                 href="<?php echo e(route('vendor-buisness-license.download', md5($buisness_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                             <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-buisness-license" 
                                 data-row-id="<?php echo e($buisness_license->id); ?>"
-                                href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -272,7 +272,7 @@
                                     href="<?php echo e(route('vendor-coi.download', md5($coi->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-coi" 
                                     data-row-id="<?php echo e($coi->id); ?>"
-                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                    href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -360,7 +360,7 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['id' => 'save-wcomp']); ?>
-            <div class="border-grey d-xl-flex">
+            <div class="border-grey d-xl-flex rounded border">
                 <div class="col ml-0 px-0">
                     <input type="hidden" name ="vendor_id_wc" value="<?php echo e($vendorDetail->id); ?>"/>
                     <input type="file" class="dropify mr-0 mr-lg-2 mr-md-2 w-100" id="wcomp" name="wcomp" data-default-file="<?php echo e($workers_comp?->filename ? $workers_comp->wc_image_url : null); ?>"/>
@@ -386,7 +386,7 @@
                                     href="<?php echo e(route('vendor-workers-comp.download', md5($workers_comp->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp" 
                                     data-row-id="<?php echo e($workers_comp->id); ?>"
-                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                    href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                         </div>
                         <?php endif; ?>
                     </div>
@@ -503,7 +503,7 @@
                                     href="<?php echo e(route('vendor-wnine.download', md5($wnine->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-wnine" 
                                     data-row-id="<?php echo e($wnine->id); ?>"
-                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
+                                    href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                         </div>
                         <?php endif; ?>
                     </div>

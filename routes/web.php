@@ -150,6 +150,7 @@ use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController; 
+use App\Http\Controllers\VendorChangeNotificationController; 
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -302,6 +303,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('sow', ScopeOfWorkController::class);
             
             Route::resource('projectvendors', ProjectVendorController::class);
+            Route::get('projectvendors/changenotification/{id}', [ProjectVendorController::class, 'changenotification'])->name('projectvendors.changenotification');
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
@@ -943,4 +945,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
       Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
       Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
       Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
+
+      //Vendor Change Notification
+      Route::resource('change-notification', VendorChangeNotificationController::class);
 });

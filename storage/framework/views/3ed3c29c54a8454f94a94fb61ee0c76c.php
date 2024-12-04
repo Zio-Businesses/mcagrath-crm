@@ -131,9 +131,13 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes(['id' => 'updateProjectVendor-'.e($item->id).'']); ?>
-                                    <div class="row justify-content-center border rounded mr-0 bg-additional-grey">
+                                    <a href="javascript:;" class="text-dark toggle-original" data-original-id="<?php echo e($item->id); ?>"><i
+                                            class="fa fa-chevron-down"></i>
+                                        <?php echo app('translator')->get('Original'); ?></a><br/>
+                                    <div class="row border rounded mr-0 bg-additional-grey d-none" id="original-<?php echo e($item->id); ?>">
+                                        
                                         <input type="hidden" name="project_id" value="<?php echo e($project->id); ?>">
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginal67cd5dc9866c6185ad92d933c387fa86 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Select::resolve(['fieldId' => 'wo_status-'.e($item->id).'','fieldLabel' => __('Work Order Status'),'fieldName' => 'wo_status','search' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -160,7 +164,7 @@
 <?php unset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'inspection_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Inspection Date'),'fieldName' => 'inspection_date','fieldValue' => ($item->inspection_date ? $item->inspection_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -182,7 +186,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <div>
                                             <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
@@ -206,7 +210,7 @@
 <?php endif; ?>        
                                             </div>          
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 're_inspection_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Re-Inspection Date'),'fieldName' => 're_inspection_date','fieldValue' => ($item->re_inspection_date ? $item->re_inspection_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -228,9 +232,8 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <div class="">
-                                                <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Re-inspection Time'),'fieldPlaceholder' => __('placeholders.hours'),'fieldName' => 're_inspection_time','fieldId' => 're_inspection_time-'.e($item->id).'','fieldValue' => ($item->re_inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->re_inspection_time)->format(company()->time_format) : '')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.text'); ?>
@@ -250,9 +253,8 @@
 <?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
 <?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
 <?php endif; ?>
-                                            </div>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'bid_ecd-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Bid Ecd Date'),'fieldName' => 'bid_ecd','fieldValue' => ($item->bid_ecd ? $item->bid_ecd->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -274,7 +276,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'bid_submitted_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Bid Submitted Date'),'fieldName' => 'bid_submitted_date','fieldValue' => ($item->bid_submitted_date ? $item->bid_submitted_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -296,7 +298,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Bid Amount'),'fieldName' => 'bid_amount','fieldId' => 'bid_amount-'.e($item->id).'','fieldPlaceholder' => __('Bid Amount'),'fieldValue' => $item->bid_amount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -318,7 +320,7 @@
 <?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'bid_rejected_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Bid Rejected Date'),'fieldName' => 'bid_rejected_date','fieldValue' => ($item->bid_rejected_date ? $item->bid_rejected_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -340,187 +342,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'bid_approval_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Bid Approval Date'),'fieldName' => 'bid_approval_date','fieldValue' => ($item->bid_approval_date ? $item->bid_approval_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.datepicker'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_schedule_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Schedule Date'),'fieldName' => 'work_schedule_date','fieldValue' => ($item->work_schedule_date ? $item->work_schedule_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.datepicker'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                                    <div class="">
-                                                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Work Schedule Time'),'fieldPlaceholder' => __('placeholders.hours'),'fieldName' => 'work_schedule_time','fieldId' => 'work_schedule_time-'.e($item->id).'','fieldValue' => ($item->work_schedule_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_time)->format(company()->time_format) : '')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-                                                    </div>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_schedule_re_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Re-Schedule Date'),'fieldName' => 'work_schedule_re_date','fieldValue' => ($item->work_schedule_re_date ? $item->work_schedule_re_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.datepicker'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                                    <div class="">
-                                                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Work Re-Schedule Time'),'fieldPlaceholder' => __('placeholders.hours'),'fieldName' => 'work_schedule_re_time','fieldId' => 'work_schedule_re_time-'.e($item->id).'','fieldValue' => ($item->work_schedule_re_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_re_time)->format(company()->time_format) : '')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-                                                    </div>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_completion_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Completion Date'),'fieldName' => 'work_completion_date','fieldValue' => ($item->work_completion_date ? $item->work_completion_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.datepicker'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_ecd-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Ecd'),'fieldName' => 'work_ecd','fieldValue' => ($item->work_ecd ? $item->work_ecd->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.datepicker'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
-<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
-<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3">
-                                            <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Bid Approved Amount'),'fieldName' => 'bid_approved_amount','fieldId' => 'bid_approved_amount-'.e($item->id).'','fieldPlaceholder' => __('Bid Approved Amount'),'fieldValue' => $item->bid_approved_amount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.text'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
-<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
-<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
-<?php endif; ?>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-1 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'cancelled_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Cancelled Date'),'fieldName' => 'cancelled_date','fieldValue' => ($item->cancelled_date ? $item->cancelled_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -542,7 +364,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'cancelled_reason','fieldLabel' => __('Cancelled Reason')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -573,7 +395,7 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-                                                <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason"
+                                                <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason-<?php echo e($item->id); ?>"
                                                         data-live-search="true">
                                                         <option value="">--</option>
                                                     <?php $__currentLoopData = $cancelledreason; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -592,7 +414,193 @@
 <?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                    </div>
+                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="<?php echo e($item->id); ?>"><i
+                                            class="fa fa-chevron-down"></i>
+                                            <?php echo app('translator')->get('Change Order'); ?></a>
+                                    <div class="row border rounded mr-0 bg-additional-grey d-none" id="change-notify-group-<?php echo e($item->id); ?>">
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'bid_approval_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Bid Approval Date'),'fieldName' => 'bid_approval_date','fieldValue' => ($item->bid_approval_date ? $item->bid_approval_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_schedule_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Schedule Date'),'fieldName' => 'work_schedule_date','fieldValue' => ($item->work_schedule_date ? $item->work_schedule_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                                    <div class="">
+                                                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Work Schedule Time'),'fieldPlaceholder' => __('placeholders.hours'),'fieldName' => 'work_schedule_time','fieldId' => 'work_schedule_time-'.e($item->id).'','fieldValue' => ($item->work_schedule_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_time)->format(company()->time_format) : '')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                                                    </div>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_schedule_re_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Re-Schedule Date'),'fieldName' => 'work_schedule_re_date','fieldValue' => ($item->work_schedule_re_date ? $item->work_schedule_re_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                                    <div class="">
+                                                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Work Re-Schedule Time'),'fieldPlaceholder' => __('placeholders.hours'),'fieldName' => 'work_schedule_re_time','fieldId' => 'work_schedule_re_time-'.e($item->id).'','fieldValue' => ($item->work_schedule_re_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_re_time)->format(company()->time_format) : '')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                                                    </div>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_completion_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Completion Date'),'fieldName' => 'work_completion_date','fieldValue' => ($item->work_completion_date ? $item->work_completion_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'work_ecd-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Work Ecd'),'fieldName' => 'work_ecd','fieldValue' => ($item->work_ecd ? $item->work_ecd->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.datepicker'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Datepicker::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $attributes = $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__attributesOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66)): ?>
+<?php $component = $__componentOriginalf704f069031d81dfb7cf95f6709a6a66; ?>
+<?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
+<?php endif; ?>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2">
+                                            <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Bid Approved Amount'),'fieldName' => 'bid_approved_amount','fieldId' => 'bid_approved_amount-'.e($item->id).'','fieldPlaceholder' => __('Bid Approved Amount'),'fieldValue' => $item->bid_approved_amount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                                        </div>
+                                    
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'invoiced_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Invoiced Date'),'fieldName' => 'invoiced_date','fieldValue' => ($item->invoiced_date ? $item->invoiced_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -614,7 +622,7 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Invoiced Amount'),'fieldName' => 'invoiced_amount','fieldId' => 'invoiced_amount-'.e($item->id).'','fieldPlaceholder' => __('Invoiced Amount'),'fieldValue' => $item->invoiced_amount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -636,7 +644,7 @@
 <?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Datepicker::resolve(['fieldId' => 'paid_date-'.e($item->id).'','custom' => 'true','fieldLabel' => __('Paid Date'),'fieldName' => 'paid_date','fieldValue' => ($item->paid_date ? $item->paid_date->format(company()->date_format) : ''),'fieldPlaceholder' => __('placeholders.date')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -658,10 +666,44 @@
 <?php unset($__componentOriginalf704f069031d81dfb7cf95f6709a6a66); ?>
 <?php endif; ?>
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Paid Amount'),'fieldName' => 'paid_amount','fieldId' => 'paid_amount-'.e($item->id).'','fieldPlaceholder' => __('Paid Amount'),'fieldValue' => $item->paid_amount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                                        </div>
+                                        <?php
+                                        $changeOrderAmounts = $item->changenotification
+                                            ->filter(function ($notification) {
+                                                return $notification->link_status === 'Accepted' && !is_null($notification->accepted_date);
+                                            })
+                                            ->pluck('project_amount');
+
+                                        // Convert each value to a float and calculate the total
+                                        $totalChangeOrderAmount = $changeOrderAmounts->map(function ($amount) {
+                                            return (float) $amount; // Convert VARCHAR to float
+                                        })->sum();
+                                        ?>
+                                        <div class="col-lg-2 col-md-2">
+                                            <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Change Order Amount'),'fieldName' => 'change_order_amount','fieldReadOnly' => true,'fieldId' => 'change_order_amount-'.e($item->id).'','fieldPlaceholder' => __('Change Order Amount'),'fieldValue' => $totalChangeOrderAmount] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.text'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -684,16 +726,25 @@
                                         <input type="text" id="linkInput-<?php echo e($item->id); ?>" value="<?php echo e($item->link); ?>" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
-
-                                             <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
-                                                data-link-id="<?php echo e($item->id); ?>">
+                                            <a class="btn btn-primary m-2 btn-xs change-notify-history" href="javascript:;"
+                                                data-notify-history-id="<?php echo e($item->id); ?>">
+                                                <i class="fa fa-table mr-2"></i>
+                                                <?php echo app('translator')->get('Change Notification History'); ?>
+                                            </a>
+                                            <a class="btn btn-primary m-2 btn-xs change-notify" href="javascript:;"
+                                                data-notify-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-paper-plane mr-2"></i>
-                                                <?php echo app('translator')->get('Resend Link'); ?>
+                                                <?php echo app('translator')->get('Change Notification'); ?>
                                             </a>
                                             <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;"
                                             data-row-id="<?php echo e($item->id); ?>">
                                                     <i class="fa fa-copy mr-2"></i>
                                                     <?php echo app('translator')->get('Copy Link'); ?>
+                                            </a>
+                                            <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
+                                                data-link-id="<?php echo e($item->id); ?>">
+                                                <i class="fa fa-paper-plane mr-2"></i>
+                                                <?php echo app('translator')->get('Resend Link'); ?>
                                             </a>
                                             <a class="btn btn-primary m-2 btn-xs" href="<?php echo e(route('projectvendors.download', $item->id)); ?>"
                                                 data-row-id="<?php echo e($item->id); ?>">
@@ -814,6 +865,26 @@
     
     $('#add-project-sow').click(function() {
         const url = "<?php echo e(route('projectvendors.create')); ?>" + "?id=<?php echo e($project->id); ?>";
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+
+    });
+    $('.toggle-original').click(function () {
+            var id = $(this).data('original-id');
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#original-'+id).toggleClass('d-none');
+    });
+    $('.toggle-change-notify').click(function () {
+            var id = $(this).data('change-id');
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#change-notify-group-'+id).toggleClass('d-none');
+    });
+    
+    $('body').on('click', '.change-notify', function() {
+        
+        var id = $(this).data('notify-id');
+        var url = "<?php echo e(route('projectvendors.changenotification',':id')); ?>";
+        url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
 

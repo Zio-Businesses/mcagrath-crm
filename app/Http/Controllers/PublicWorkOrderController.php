@@ -13,6 +13,13 @@ use App\Models\ContractTemplate;
 use App\Models\VendorContract;
 use App\Models\ScopeOfWork;
 use App\Helper\Reply;
+use App\Models\VendorChangeNotification;
+use Illuminate\Support\Facades\App;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\WorkOrderAcceptNotification;
+use App\Jobs\ProcessWorkOrder;
+
 class PublicWorkOrderController extends Controller
 {
     public function fromEncryptedString($value)
@@ -52,12 +59,16 @@ class PublicWorkOrderController extends Controller
     }
     public function WoStore(Request $request){
 
-    //    Log::info();
         if ($request->action == 'accept') {
+       
+            
             $projectvendor = ProjectVendor::findOrFail($request->data);
+           
             $projectvendor->link_status='Accepted';
             $projectvendor->accepted_date=date("Y-m-d");
             $projectvendor->save();
+            ProcessWorkOrder::dispatch($projectvendor->id);
+            
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
         } 
         elseif ($request->action == 'reject') {
@@ -69,4 +80,24 @@ class PublicWorkOrderController extends Controller
         } 
 
     }
+
+    public function ChangeNotifyStore(Request $request){
+
+        if ($request->action == 'accept') {
+            $vcn = VendorChangeNotification::findOrFail($request->data);
+            $vcn->link_status='Accepted';
+            $vcn->accepted_date=date("Y-m-d");
+            $vcn->save();
+            return Reply::success(__('Thank You. Your Response Has Been Noted'));
+        } 
+        elseif ($request->action == 'reject') {
+            $vcn = VendorChangeNotification::findOrFail($request->data);
+            $vcn->link_status='Rejected';
+            $vcn->rejected_date=date("Y-m-d");
+            $vcn->save();
+           return Reply::success(__('Thank You For Your Time'));
+        } 
+    }
+
+   
 }

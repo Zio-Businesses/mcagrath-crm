@@ -155,6 +155,7 @@ Route::post('/waiverstore', [PublicWaiverFormCotnroller::class, 'WaiverStore'])-
 Route::get('/form-vendor', [OneTimeAgreeController::class, 'vendorfredirect'])->name('front.form.show');
 Route::post('/vendor-store', [OneTimeAgreeController::class, 'vendorstore'])->name('front.vendor.save');
 Route::post('/wostore', [PublicWorkOrderController::class, 'WoStore'])->name('front.wo.store');
+Route::post('/changenotifystore', [PublicWorkOrderController::class, 'ChangeNotifyStore'])->name('front.wo.changenotifystore');
 Route::get('/form-vendor-show', [OneTimeAgreeController::class, 'vendorformshow'])->name('front.formv.show');
 Route::get('/estimate/{hash}', [PublicUrlController::class, 'estimateView'])->name('front.estimate.show')->middleware('signed');
 Route::get('/invoice/{hash}', [HomeController::class, 'invoice'])->name('front.invoice')->middleware('signed');
