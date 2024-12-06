@@ -29,4 +29,22 @@ class VendorChangeNotificationController extends Controller
         Notification::route('mail', $vpro->vendor_email_address)->notify(new ChangeOrderNotification($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id));
         return Reply::success(__('Change Notification sent'));
     }
+    public function resentLink($id)
+    {
+        $vcn = VendorChangeNotification::findOrFail($id);
+        
+        if($vcn->accepted_date)
+        {
+            $vcn->accepted_date=null;
+        }
+        if($vcn->rejected_date)
+        {
+            $vcn->rejected_date=null;
+        }
+        $vcn->link_status='Sent';
+        $vcn->save();
+        $vpro = ProjectVendor::where('id', $vcn->project_vendor_id)->select('id', 'project_id', 'vendor_email_address','contract_id','vendor_id')->firstOrFail();
+        Notification::route('mail', $vpro->vendor_email_address)->notify(new ChangeOrderNotification($vpro->id,$vpro->project_id,$vpro->contract_id,$vpro->vendor_id));
+        return Reply::success(__('Link Resend'));
+    }
 }

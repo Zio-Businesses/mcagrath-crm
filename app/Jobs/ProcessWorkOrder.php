@@ -35,10 +35,12 @@ class ProcessWorkOrder implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::info('Processing job for ProjectVendor ID: ' . $this->projectVendorId);
+        // \Log::info('Processing job for ProjectVendor ID: ' . $this->projectVendorId);
         $pdfGenerated = $this->pdfGeneration($this->projectVendorId);
         $vendorid = ProjectVendor::findOrFail($this->projectVendorId);
+        if($pdfGenerated){
         Notification::route('mail', $vendorid->vendor_email_address)->notify(new WorkOrderAcceptNotification($vendorid->id, $pdfGenerated));
+        }
     }
 
     public function pdfGeneration($projectvendorid)

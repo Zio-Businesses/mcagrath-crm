@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VendorChangeNotification extends BaseModel
 {
@@ -14,27 +15,6 @@ class VendorChangeNotification extends BaseModel
         'accepted_date'=>'datetime',
     ];
     protected $cachedSowRecords = null;
-    // public function sowname($data)
-    // {  
-    //     $scopeofwork= ScopeOfWork::withTrashed()->find($data);
-    //     return $scopeofwork;
-    // }
-    // public function sowcategory($data)
-    // {
-    //     $scopeofwork= ScopeOfWork::withTrashed()->find($data);
-    //     return $scopeofwork->category;
-    // }
-    // public function sowsubcategory($data)
-    // {
-    //     $scopeofwork= ScopeOfWork::withTrashed()->find($data);
-    //     return $scopeofwork->sub_category;
-    // }
-    // public function sowdescription($data)
-    // {
-    //     $scopeofwork= ScopeOfWork::withTrashed()->find($data);
-    //     return $scopeofwork->description;
-    // }
-
 
     public function sow($data)
     {
@@ -48,6 +28,11 @@ class VendorChangeNotification extends BaseModel
 
         // Return the specific record or null if not found
         return $this->cachedSowRecords->get($data);
+    }
+
+    public function added(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'link_sent_by')->withoutGlobalScope(ActiveScope::class);
     }
 
 }

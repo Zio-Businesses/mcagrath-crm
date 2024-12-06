@@ -386,6 +386,16 @@
 
     });
 
+    $('body').on('click', '.change-notify-history', function() {
+        
+        var id = $(this).data('notify-history-id');
+        var url = "{{ route('projectvendors.changenotificationhistory',':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_XL, url);
+
+    });
+
     $('body').on('click', '.edit-vpro', function() {
         var id = $(this).data('row-id');
         var url = "{{ route('projectvendors.update', ':id') }}";

@@ -193,4 +193,10 @@ class ProjectVendorController extends AccountBaseController
         $this->contract=ContractTemplate::all();
         return view('projects.vendors.changenotification', $this->data);
     }
+
+    public function changenotificationhistory($id)
+    {
+        $this->projectvendor=ProjectVendor::findOrFail($id);
+        return view('projects.vendors.changenotificationhistory', $this->data);
+    }
 }

@@ -15,15 +15,16 @@ class WorkOrderAcceptNotification extends BaseNotification
 {
     
 
-    protected $projectvendor,$pdfsent;
+    protected $projectvendor,$from;
     /**
      * Create a new notification instance.
      */
-    public function __construct($vproid,$pdfgenerated)
+    public function __construct($vproid,$by)
     {
         $this->company = Company::find(1);
         $this->projectvendor = $vproid;
-        $this->pdfsent =  $pdfgenerated;
+        $this->from = $by;
+        // $this->pdfsent =  $pdfgenerated;
     }
 
     /**
@@ -37,7 +38,10 @@ class WorkOrderAcceptNotification extends BaseNotification
         return ['mail'];
     }
 
-
+    protected function castAttributeAsEncryptedString($key, $value)
+    {
+        return Crypt::encryptString($value);
+    }
 
     /**
      * Get the mail representation of the notification.
@@ -47,25 +51,40 @@ class WorkOrderAcceptNotification extends BaseNotification
      */
     public function toMail($notifiable): MailMessage
     {
-        
-        
+        $data = [
+            'projectvendor' => $this->projectvendor,
+        ];
+        $encryptedData = $this->castAttributeAsEncryptedString('data', json_encode($data));
         $build = parent::build();
         $vpro = ProjectVendor::findOrFail($this->projectvendor);
         $pro = Project::with('propertyDetails')->findOrFail($vpro->project_id);
-        $content = __('This is an Work Order Accpeted Notification') .' for Property Address - '. $pro->propertyDetails->property_address .'. Please find a copy of the accepted workorder below as an attachment';
-        $filename = 'workorder-' . $vpro->id;
-        $pdfPath = storage_path($this->pdfsent);
+        if($this->from=='original')
+        {
+            $content = __('This is an Work Order Accpeted Notification') .' for Property Address - '. $pro->propertyDetails->property_address .'. Please click the download button below to get a copy.';
+            $subject = 'Work Order Accepted';
+        }
+        else{
+            $content = __('This is an Change Order Accpeted Notification') .' for Property Address - '. $pro->propertyDetails->property_address .'. Please click the download button below to get a copy.';
+            $subject = 'Change Order Accepted';
+        }
+        // $filename = 'workorder-' . $vpro->id;
+        // $pdfPath = storage_path($this->pdfsent);
+        $url = url()->temporarySignedRoute('front.wo.download', now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),[
+            'data' => $encryptedData,
+        ]);
+        $url = getDomainSpecificUrl($url, $this->company);
         return $build
-            ->subject(__('Work Order Accepted'))
+            ->subject(__($subject))
             ->markdown('mail.email', [
                 'content'=>$content,
+                'url' => $url,
                 'themeColor' => $this->company->header_color,
+                'actionText' => __('Download') . ' ' . __('PDF'),
                 'notifiableName' => $vpro->vendor_name,
-                ])
-                ->attach($pdfPath, [
-                    'as' => $filename, // Custom file name for the attachment
-                    'mime' => 'application/pdf',
-                ]);
+            ]);
+            // ->attachData($pdfPath, $filename, [
+            //     'mime' => 'application/pdf',
+            // ]);
     }
 
     /**

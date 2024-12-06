@@ -304,9 +304,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             
             Route::resource('projectvendors', ProjectVendorController::class);
             Route::get('projectvendors/changenotification/{id}', [ProjectVendorController::class, 'changenotification'])->name('projectvendors.changenotification');
+            Route::get('projectvendors/changenotificationhistory/{id}', [ProjectVendorController::class, 'changenotificationhistory'])->name('projectvendors.changenotificationhistory');
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
+            
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');
@@ -948,4 +950,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
       //Vendor Change Notification
       Route::resource('change-notification', VendorChangeNotificationController::class);
+      Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
 });

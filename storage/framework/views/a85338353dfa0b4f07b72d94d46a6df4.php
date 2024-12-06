@@ -287,7 +287,7 @@ $projectArchived = $project->trashed();
                     <?php endif; ?>
 
                     <?php if(in_array('orders', user_modules()) && !is_null($project->client_id) && ($viewOrderPermission == 'all' || ($viewOrderPermission == 'added' && user()->id == $project->added_by) || ($viewOrderPermission == 'owned' && user()->id == $project->client_id))): ?>
-                        <li>
+                        <!-- <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
 <?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=orders','text' => __('app.menu.orders'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -308,7 +308,7 @@ $projectArchived = $project->trashed();
 <?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
 <?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
 <?php endif; ?>
-                        </li>
+                        </li> -->
                     <?php endif; ?>
 
                     <?php if(in_array('timelogs', user_modules()) && ($viewProjectTimelogPermission == 'all' || ($viewProjectTimelogPermission == 'added' && user()->id == $project->added_by) || ($viewProjectTimelogPermission == 'owned' && user()->id == $project->client_id))): ?>

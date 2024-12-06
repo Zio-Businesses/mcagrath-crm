@@ -364,12 +364,12 @@
         <!-- CARD FOOTER START -->
         
         <div class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
-           
+            @if(!($projectvendor->rejected_date) && !($projectvendor->accepted_date))
             <x-forms.button-success class="border-0 mr-3 mb-2" id="accept" icon="check">Accept
             </x-forms.button-success>
             <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="times" >Reject
             </x-forms.button-success>
-
+            @endif
           
         </div>
        
@@ -390,6 +390,7 @@
     $.easyAjax({
         url: "{{ route('front.wo.store') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,
@@ -408,6 +409,7 @@
         $.easyAjax({
             url: "{{ route('front.wo.changenotifystore') }}",
             type: "POST",
+            blockUI: true,
             data: {
                     '_token': token,
                     'data':id,
@@ -426,6 +428,7 @@
     $.easyAjax({
         url: "{{ route('front.wo.changenotifystore') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':id,
@@ -444,6 +447,7 @@
     $.easyAjax({
         url: "{{ route('front.wo.store') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,

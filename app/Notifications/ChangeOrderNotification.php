@@ -72,7 +72,7 @@ class ChangeOrderNotification extends BaseNotification
         $vpro = ProjectVendor::findOrFail($this->projectvendor);
         $pro = Project::with('propertyDetails')->findOrFail($this->projectid);
         $url = $vpro->link;
-        $content = __('This is an Change order notification') .' for Property Address - '. $pro->propertyDetails->property_address .' has been assigned to you and please click below to review and "Accept/Reject" . If you have any questions, please call the office immediately.';
+        $content = __('This is an Change order notification') .' for Work Order # - '.$pro->project_short_code .' with Property Address - '. $pro->propertyDetails->property_address .'. please click below to review and "Accept/Reject" . If you have any questions, please call the office immediately.';
         
         return $build
             ->subject(__('Change Order Notification'))
@@ -80,7 +80,7 @@ class ChangeOrderNotification extends BaseNotification
                 'content' => $content,
                 'url' => $url,
                 'themeColor' => $this->company->header_color,
-                'actionText' => __('app.view') . ' ' . __('Work Order'),
+                'actionText' => __('app.view') . ' ' . __('Change Order'),
                 'notifiableName' => $vpro->vendor_name,
                 ]);
     }

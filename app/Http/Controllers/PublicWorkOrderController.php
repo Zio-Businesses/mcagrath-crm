@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Log;
 use App\Models\ProjectVendor;
 use App\Models\Project;
 use App\Models\ContractTemplate;
@@ -67,8 +66,8 @@ class PublicWorkOrderController extends Controller
             $projectvendor->link_status='Accepted';
             $projectvendor->accepted_date=date("Y-m-d");
             $projectvendor->save();
-            ProcessWorkOrder::dispatch($projectvendor->id);
-            
+            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'original'));
+            ProcessWorkOrder::dispatch($projectvendor->id)->onConnection('database')->onQueue('file-auto-upload');               
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
         } 
         elseif ($request->action == 'reject') {
@@ -88,6 +87,9 @@ class PublicWorkOrderController extends Controller
             $vcn->link_status='Accepted';
             $vcn->accepted_date=date("Y-m-d");
             $vcn->save();
+            $projectvendor = ProjectVendor::findOrFail($vcn->project_vendor_id);
+            Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'change'));
+            ProcessWorkOrder::dispatch($vcn->project_vendor_id,'change')->onConnection('database')->onQueue('file-auto-upload');   
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
         } 
         elseif ($request->action == 'reject') {
@@ -97,6 +99,45 @@ class PublicWorkOrderController extends Controller
             $vcn->save();
            return Reply::success(__('Thank You For Your Time'));
         } 
+    }
+
+    public function downloadPdf(Request $request){
+
+        try {
+            $encryptedData = $request->query('data');
+            $decryptedData = json_decode($this->fromEncryptedString($encryptedData), true);
+        } catch (\Exception $e) {
+            abort(403, 'Invalid or expired link');
+        }
+        $this->pageTitle = 'app.menu.contracts';
+        $this->pageIcon = 'fa fa-file';
+        $this->company = Company::find(1);
+        $this->projectvendor = ProjectVendor::findOrFail($decryptedData['projectvendor']);
+        $this->projectid = Project::findOrFail($this->projectvendor->project_id);
+        $this->contractid = ContractTemplate::findOrFail($this->projectvendor->contract_id);
+        $this->vendorid = VendorContract::findOrFail($this->projectvendor->vendor_id);
+
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" fill="red"/></svg>';
+        $base64Svg = base64_encode($svg);
+        $this->base64StringTimes = "data:image/svg+xml;base64," . $base64Svg;
+
+        $svgCheck = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" fill="green"/></svg>';
+        $base64SvgCheck = base64_encode($svgCheck);
+        $this->base64StringCheck = "data:image/svg+xml;base64," . $base64SvgCheck;
+
+        $pdf = app('dompdf.wrapper');
+
+        $pdf->setOption('enable_php', true);
+        $pdf->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+
+        App::setLocale('en');
+        Carbon::setLocale('en');
+        $pdf->loadView('projects.vendors.contract-pdf', $this->data);
+
+        $filename = 'contract-' . $this->projectvendor->id;
+
+        return $pdf->download($filename . '.pdf');
+
     }
 
    

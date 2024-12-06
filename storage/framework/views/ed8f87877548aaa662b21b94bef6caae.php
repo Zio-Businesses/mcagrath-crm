@@ -366,7 +366,7 @@
         <!-- CARD FOOTER START -->
         
         <div class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
-           
+            <?php if(!($projectvendor->rejected_date) && !($projectvendor->accepted_date)): ?>
             <?php if (isset($component)) { $__componentOriginal5586a837a5f7371c36d53423ae34c509 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal5586a837a5f7371c36d53423ae34c509 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.forms.button-success','data' => ['class' => 'border-0 mr-3 mb-2','id' => 'accept','icon' => 'check']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -407,7 +407,7 @@
 <?php $component = $__componentOriginal5586a837a5f7371c36d53423ae34c509; ?>
 <?php unset($__componentOriginal5586a837a5f7371c36d53423ae34c509); ?>
 <?php endif; ?>
-
+            <?php endif; ?>
           
         </div>
        
@@ -428,6 +428,7 @@
     $.easyAjax({
         url: "<?php echo e(route('front.wo.store')); ?>",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,
@@ -446,6 +447,7 @@
         $.easyAjax({
             url: "<?php echo e(route('front.wo.changenotifystore')); ?>",
             type: "POST",
+            blockUI: true,
             data: {
                     '_token': token,
                     'data':id,
@@ -464,6 +466,7 @@
     $.easyAjax({
         url: "<?php echo e(route('front.wo.changenotifystore')); ?>",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':id,
@@ -482,6 +485,7 @@
     $.easyAjax({
         url: "<?php echo e(route('front.wo.store')); ?>",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,
