@@ -17,6 +17,6 @@ class ScopeOfWork extends BaseModel
     }
     public function added(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'added_by');
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
     }
 }

@@ -156,8 +156,11 @@ use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController;
+use App\Http\Controllers\VendorWnineDocController; 
+use App\Http\Controllers\VendorChangeNotificationController; 
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
+
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -310,9 +313,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('sow', ScopeOfWorkController::class);
 
             Route::resource('projectvendors', ProjectVendorController::class);
+            Route::get('projectvendors/changenotification/{id}', [ProjectVendorController::class, 'changenotification'])->name('projectvendors.changenotification');
+            Route::get('projectvendors/changenotificationhistory/{id}', [ProjectVendorController::class, 'changenotificationhistory'])->name('projectvendors.changenotificationhistory');
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
+            
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');
@@ -963,13 +969,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('projectvendor-filter/change-status/{id}', [ProjectVendorCustomFilterController::class, 'changestatus'])->name('projectvendor-filter.change-status');
     Route::post('projectvendor-filter/clear/{id}', [ProjectVendorCustomFilterController::class, 'clear'])->name('projectvendor-filter.clear');
 
-    //Vendor-custom-filter 
-    Route::resource('vendor-filter', VendorCustomFilterController::class);
-    Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
-    Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
+      //Lead-Vendor-custom-filter 
+      Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
+      Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
+      Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
 
-    //Lead-Vendor-custom-filter 
-    Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
-    Route::post('lead-vendor-filter/change-status/{id}', [LeadVendorCustomFilterController::class, 'changestatus'])->name('lead-vendor-filter.change-status');
-    Route::post('lead-vendor-filter/clear/{id}', [LeadVendorCustomFilterController::class, 'clear'])->name('lead-vendor-filter.clear');
+      //Vendor Change Notification
+      Route::resource('change-notification', VendorChangeNotificationController::class);
+      Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
 });

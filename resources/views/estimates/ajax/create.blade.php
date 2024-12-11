@@ -707,7 +707,7 @@
     $(document).ready(function() {
         let defaultImage = '';
         let lastIndex = 0;
-
+        var projectID=$('#project_id').val();
         Dropzone.autoDiscover = false;
         //Dropzone class
         invoiceDropzone = new Dropzone("div#file-upload-dropzone", {
@@ -738,7 +738,7 @@
             $.easyBlockUI();
         });
         invoiceDropzone.on('queuecomplete', function () {
-            window.location.href = '{{ route("estimates.index") }}';
+            window.location.href = projectID ? '{{ route("projects.show", ["project" => ":projectID", "tab" => "estimates"]) }}'.replace(':projectID', projectID):'{{ route("estimates.index") }}';
         });
         invoiceDropzone.on('removedfile', function () {
             var grp = $('div#file-upload-dropzone').closest(".form-group");

@@ -22,6 +22,7 @@ $addProductPermission = user()->permission('add_product');
         <!-- INVOICE NUMBER, DATE, DUE DATE, FREQUENCY START -->
         <div class="row px-lg-4 px-md-4 px-3 py-3">
             <!-- INVOICE NUMBER START -->
+            <input type="hidden" name="projectID" id="projectID" value="{{$projectID}}">
             <div class="col-md-6 col-lg-4">
                 <div class="form-group mb-lg-0 mb-md-0 mb-4">
                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
@@ -417,6 +418,7 @@ $addProductPermission = user()->permission('add_product');
     $(document).ready(function() {
         let defaultImage = '';
         let lastIndex = 0;
+        var projectID=$('#projectID').val();
 
         Dropzone.autoDiscover = false;
         //Dropzone class
@@ -449,7 +451,7 @@ $addProductPermission = user()->permission('add_product');
             $.easyBlockUI();
         });
         invoiceDropzone.on('queuecomplete', function () {
-            window.location.href = '{{ route("estimates.index") }}';
+            window.location.href =  projectID ? '{{ route("projects.show", ["project" => ":projectID", "tab" => "estimates"]) }}'.replace(':projectID', projectID):'{{ route("estimates.index") }}';
         });
         invoiceDropzone.on('removedfile', function () {
             var grp = $('div#file-upload-dropzone').closest(".form-group");

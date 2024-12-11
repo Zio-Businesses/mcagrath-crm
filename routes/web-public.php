@@ -150,11 +150,13 @@ Route::get('/proposal/{hash}', [HomeController::class, 'proposal'])->name('front
 Route::get('/contract/{hash}', [PublicUrlController::class, 'contractView'])->name('front.contract.show')->middleware('signed');
 Route::get('/ota', [OneTimeAgreeController::class, 'OtaView'])->name('front.ota.show')->middleware('signed');
 Route::get('/wo', [PublicWorkOrderController::class, 'WoView'])->name('front.wo.show')->middleware('signed');
+Route::get('/downloadpdf', [PublicWorkOrderController::class, 'downloadPdf'])->name('front.wo.download')->middleware('signed');
 Route::get('/waiver', [PublicWaiverFormCotnroller::class, 'WaiverView'])->name('front.waiver.show')->middleware('signed');
 Route::post('/waiverstore', [PublicWaiverFormCotnroller::class, 'WaiverStore'])->name('front.waiver.store');
 Route::get('/form-vendor', [OneTimeAgreeController::class, 'vendorfredirect'])->name('front.form.show');
 Route::post('/vendor-store', [OneTimeAgreeController::class, 'vendorstore'])->name('front.vendor.save');
 Route::post('/wostore', [PublicWorkOrderController::class, 'WoStore'])->name('front.wo.store');
+Route::post('/changenotifystore', [PublicWorkOrderController::class, 'ChangeNotifyStore'])->name('front.wo.changenotifystore');
 Route::get('/form-vendor-show', [OneTimeAgreeController::class, 'vendorformshow'])->name('front.formv.show');
 Route::get('/estimate/{hash}', [PublicUrlController::class, 'estimateView'])->name('front.estimate.show')->middleware('signed');
 Route::get('/invoice/{hash}', [HomeController::class, 'invoice'])->name('front.invoice')->middleware('signed');

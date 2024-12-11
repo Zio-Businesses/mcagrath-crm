@@ -596,6 +596,8 @@ class ProjectController extends AccountBaseController
 
         $this->view = 'projects.ajax.edit';
 
+        $this->projectID = request()->input('projectID');
+
         if (request()->ajax()) {
             return $this->returnAjax($this->view);
         }
@@ -778,12 +780,12 @@ class ProjectController extends AccountBaseController
 
         $this->logProjectActivity($project->id, 'messages.updateSuccess');
 
-        $redirectUrl = urldecode($request->redirect_url);
+        // $redirectUrl = urldecode($request->redirect_url);
 
-        if ($redirectUrl == '') {
-            $redirectUrl = route('projects.index');
-        }
-
+        // if ($redirectUrl == '') {
+        //     $redirectUrl = route('projects.index');
+        // }
+        $redirectUrl = $request->projectID ? route('projects.show', ['project' => $request->projectID]) : route('projects.index');
         return Reply::successWithData(__('messages.updateSuccess'), ['projectID' => $project->id, 'redirectUrl' => $redirectUrl]);
     }
 

@@ -183,7 +183,7 @@ class VendorProjectDataTable extends BaseDataTable
         ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
         ->select('project_vendors.*', 'projects.project_short_code','property_details.property_address','project_members.user_id','projects.status','projects.client_id','projects.category_id','project_category.category_name')
         ->groupBy('project_vendors.id');
-
+        $users = $users->orderBy('id', 'desc');
         $users = self::customFilter($users);
 
         if ($request->searchText != '') {

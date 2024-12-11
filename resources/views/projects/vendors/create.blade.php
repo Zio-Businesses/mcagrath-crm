@@ -58,7 +58,7 @@
                         </x-forms.select>
                     </div>
                     <div class="col-md-6">
-                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Project Amount')"
+                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Project Amount')"
                             fieldName="project_amount" fieldId="project_amount" fieldRequired="true"
                             :fieldPlaceholder="__('Project Amount')" />                  
                     </div>

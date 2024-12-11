@@ -68,7 +68,7 @@
                     <div class="select-others">
                         <select class="form-control select-picker" name="project_id" id="filter_project_id"
                             data-container="body" data-live-search="true" data-size="8">
-                            <option value="all">@lang('app.all')</option>
+                            <option value="">@lang('app.all')</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->project_name }}</option>
                             @endforeach
@@ -201,9 +201,9 @@ $manageRecurringInvoicesPermission = user()->permission('manage_recurring_invoic
             }
 
             var projectID = $('#filter_project_id').val();
-            if (!projectID) {
-                projectID = 0;
-            }
+            // if (!projectID) {
+            //     projectID = 0;
+            // }
             var clientID = $('#clientID').val();
             var status = $('#status').val();
 

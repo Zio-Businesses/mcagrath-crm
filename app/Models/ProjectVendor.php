@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProjectVendor extends BaseModel
 {
@@ -55,9 +56,14 @@ class ProjectVendor extends BaseModel
         return $project_short_code->project_short_code;
     }
     
+    public function changenotification(): HasMany
+    {
+        return $this->hasMany(VendorChangeNotification::class, 'project_vendor_id')->orderByDesc('id');
+    }
+    
     public function linksentby(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'link_sent_by');
+        return $this->belongsTo(User::class, 'link_sent_by')->withoutGlobalScope(ActiveScope::class);
     }
     public function sowname($data)
     {  

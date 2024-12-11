@@ -274,7 +274,7 @@ class EstimateController extends AccountBaseController
     public function edit($id)
     {
         $this->estimate = Estimate::with('items.estimateItemImage')->findOrFail($id)->withCustomFields();
-
+        $this->projectID=request()->input('projectID');
         $this->editPermission = user()->permission('edit_estimates');
 
         abort_403(!(
@@ -436,8 +436,7 @@ class EstimateController extends AccountBaseController
             $estimate->updateCustomFieldData($request->custom_fields_data);
         }
         
-        $redirectUrl = route('estimates.index');
-        
+        $redirectUrl = $request->projectID ? route('projects.show', ['project' => $request->projectID, 'tab' => 'estimates']) : route('estimates.index');
         return Reply::successWithData(__('messages.updateSuccess'), ['estimateId' => $estimate->id, 'redirectUrl' => $redirectUrl]);
     }
 

@@ -182,6 +182,7 @@ class VendorTrackDataTable extends BaseDataTable
     {
         $request = $this->request();
         $users = Vendor::query();
+       
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')

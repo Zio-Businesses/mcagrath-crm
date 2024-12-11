@@ -65,6 +65,27 @@
             background: black;
             margin: 20px 0;
         }
+        
+        .watermark-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0.2;
+            font-size: 3rem;
+            pointer-events: none;
+            
+        }
+        .watermark-center i {
+            font-size: 4rem; /* Make the tick symbol larger */
+            display: block;
+        }
+        .btn-xs {
+            padding: .50rem .4rem;
+            font-size: .875rem;
+            border-radius: .2rem;
+        }
 
     </style>
     
@@ -135,7 +156,13 @@
                     
                 </table>
             </div>
-            <div class="mt-3">
+            <div class="mt-3 position-relative">
+                @if($projectvendor->accepted_date)
+                <div class="watermark-center">
+                    <i class="fa fa-check-circle"></i> 
+                    <span>Accepted</span>
+                </div>
+                @endif
                 <div class="row">
                     <div class="col-md-3 col-sm-6 col-12 grid-item">
                         <h5 class="f-13 font-weight-bold">Work Order #</h5>
@@ -247,6 +274,85 @@
                     </div>
                 </div>
                 @endforeach
+            </div>
+            <div>
+                @if($projectvendor->changenotification)
+                    @foreach($projectvendor->changenotification as $key => $changenotify)
+                        <hr class="custom-line">
+                        <h4 class="f-14 font-weight-bold">Change Order - {{$key+1}}</h4>
+                        <div class="border rounded border-dark p-2 position-relative">
+                            <!-- Watermark -->
+                            @if($changenotify->accepted_date)
+                            <div class="watermark-center">
+                                <i class="fa fa-check-circle" style="color: green;"></i> 
+                                <span style="color: green;">Accepted</span>
+                            </div>
+                            @endif
+                            @if($changenotify->link_status=='Rejected')
+                            <div class="watermark-center">
+                                <i class="fa fa-times-circle" style="color: red;"></i> 
+                                <span style="color: red;">Rejected</span>
+                            </div>
+                            @endif
+                            <!-- Content Layer -->
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Project Type</h5>
+                                    <p>{{$changenotify->project_type}}</p>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Project Amount</h5>
+                                    <p>{{currency_format($changenotify->project_amount, $contractid->currency->id) }}</p>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Due Date</h5>
+                                    <p>{{$changenotify->due_date}}</p>
+                                </div>
+                            </div>
+                            <h5 class="f-13 font-weight-bold mb-4">Scope Of Work:</h5>
+                            @foreach($changenotify->sow_id as $sow)
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Category</h5>
+                                    <p>{{$changenotify->sow($sow)->category}}</p>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Sub-Category</h5>
+                                    <p>{{$changenotify->sow($sow)->sub_category}}</p>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Description</h5>
+                                    <p>{{$changenotify->sow($sow)->description}}</p>
+                                </div>
+                            </div>
+                            @endforeach
+                            <div class="row mt-2">
+                                <div class="col-md-2 col-12 grid-item">
+                                    <h5 class="f-13 font-weight-bold">Comments</h5>
+                                </div>
+                                <div class="col-md-5 col-12 grid-item">
+                                    <p>
+                                        {{$changenotify->add_notes}}
+                                    </p>
+                                </div>
+                            </div>
+                            @if(!($changenotify->rejected_date) && !($changenotify->accepted_date))
+                            <div class="card-footer bg-white border-0 d-flex justify-content-end py-0 py-lg-4 py-md-4 mb-4 mb-lg-3 mb-md-3 ">
+                                <a class="btn btn-success m-2 accept-notify btn-xs" href="javascript:;"
+                                    data-row-id="{{ $changenotify->id }}">
+                                    <i class="fa fa-check mr-2"></i>
+                                    @lang('Accept')
+                                </a>
+                                <a class="btn btn-danger m-2 reject-notify btn-xs" href="javascript:;"
+                                    data-row-id="{{ $changenotify->id }}">
+                                    <i class="fa fa-times mr-2"></i>
+                                    @lang('Reject')
+                                </a>
+                            </div>
+                            @endif
+                        </div>
+                    @endforeach
+                @endif
                 <hr class="custom-line">
                 <!--<h5 class="f-13 font-weight-bold mb-4">WORK ORDER INSTRUCTIONS: PLEASE READ CAREFULLY:</h5>-->
                 <div class="ql-editor p-0 pb-3">{!! $contractid->contract_detail !!}</div>
@@ -264,6 +370,7 @@
             <x-forms.button-success id="cancel" class="border-0 mr-3 mb-2 btn btn-danger" icon="times" >Reject
             </x-forms.button-success>
             @endif
+          
         </div>
        
         <!-- CARD FOOTER END -->
@@ -283,10 +390,49 @@
     $.easyAjax({
         url: "{{ route('front.wo.store') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,
                 'action':'accept'
+              },
+        success: function(response) {
+            setTimeout(() => {
+                    window.location.reload();
+                   }, 1000);
+        },
+    });
+    });
+    $('body').on('click', '.accept-notify', function() {
+    var token="{{ csrf_token() }}";
+    var id = $(this).data('row-id');
+        $.easyAjax({
+            url: "{{ route('front.wo.changenotifystore') }}",
+            type: "POST",
+            blockUI: true,
+            data: {
+                    '_token': token,
+                    'data':id,
+                    'action':'accept'
+                },
+            success: function(response) {
+                setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+            },
+        });
+    });
+    $('body').on('click', '.reject-notify', function() {
+    var token="{{ csrf_token() }}";
+    var id = $(this).data('row-id');
+    $.easyAjax({
+        url: "{{ route('front.wo.changenotifystore') }}",
+        type: "POST",
+        blockUI: true,
+        data: {
+                '_token': token,
+                'data':id,
+                'action':'reject'
               },
         success: function(response) {
             setTimeout(() => {
@@ -301,6 +447,7 @@
     $.easyAjax({
         url: "{{ route('front.wo.store') }}",
         type: "POST",
+        blockUI: true,
         data: {
                 '_token': token,
                 'data':data,

@@ -42,7 +42,7 @@ class EstimatesDataTable extends BaseDataTable
     public function dataTable($query)
     {
         $firstEstimate = $this->firstEstimate;
-
+        
 
         $datatables = datatables()->eloquent($query);
         $datatables->addIndexColumn();
@@ -79,10 +79,15 @@ class EstimatesDataTable extends BaseDataTable
                     || ($this->editEstimatePermission == 'owned' && $row->client_id == user()->id)
                     || ($this->editEstimatePermission == 'both' && ($row->client_id == user()->id || $row->added_by == user()->id))
                 ) {
-                    $action .= '<a class="dropdown-item" href="' . route('estimates.edit', [$row->id]) . '">
-                            <i class="fa fa-edit mr-2"></i>
-                            ' . trans('app.edit') . '
-                        </a>';
+            
+                    $action .= '<a class="dropdown-item ';
+
+                    $action .= request()->projectID ? 'openRightModal' : '';
+    
+                    $action .= '" href="' . route('estimates.edit', [$row->id]) . '?projectID=' . request()->projectID . ' ">
+                                    <i class="fa fa-edit mr-2"></i>
+                                    ' . trans('app.edit') . '
+                                </a>';
                 }
             }
 

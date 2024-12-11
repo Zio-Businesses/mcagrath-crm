@@ -82,9 +82,13 @@
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
                             <td colspan="10">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
-                                    <div class="row justify-content-center border rounded mr-0 bg-additional-grey">
+                                    <a href="javascript:;" class="text-dark toggle-original" data-original-id="{{ $item->id }}"><i
+                                            class="fa fa-chevron-down"></i>
+                                        @lang('Original')</a><br/>
+                                    <div class="row border rounded mr-0 bg-additional-grey d-none" id="original-{{ $item->id }}">
+                                        
                                         <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.select fieldId="wo_status-{{ $item->id }}"
                                                 :fieldLabel="__('Work Order Status')" fieldName="wo_status" search="true">
                                                 <option value="">--</option>
@@ -94,13 +98,13 @@
                                                 @endforeach
                                             </x-forms.select>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <x-forms.datepicker fieldId="inspection_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Inspection Date')" fieldName="inspection_date"
                                                 :fieldValue="($item->inspection_date ? $item->inspection_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <div>
                                             <x-forms.text :fieldLabel="__('Inspection Time')"
                                                 :fieldPlaceholder="__('placeholders.hours')" fieldName="inspection_time"
@@ -108,106 +112,53 @@
                                                 :fieldValue="($item->inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->inspection_time)->format(company()->time_format) : '')" />        
                                             </div>          
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="re_inspection_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Re-Inspection Date')" fieldName="re_inspection_date"
                                                 :fieldValue="($item->re_inspection_date ? $item->re_inspection_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <div class="">
-                                                <x-forms.text :fieldLabel="__('Re-inspection Time')"
-                                                            :fieldPlaceholder="__('placeholders.hours')" fieldName="re_inspection_time"
-                                                            fieldId="re_inspection_time-{{ $item->id }}" 
-                                                            :fieldValue="($item->re_inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->re_inspection_time)->format(company()->time_format) : '')" />
-                                            </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.text :fieldLabel="__('Re-inspection Time')"
+                                                        :fieldPlaceholder="__('placeholders.hours')" fieldName="re_inspection_time"
+                                                        fieldId="re_inspection_time-{{ $item->id }}" 
+                                                        :fieldValue="($item->re_inspection_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->re_inspection_time)->format(company()->time_format) : '')" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="bid_ecd-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Bid Ecd Date')" fieldName="bid_ecd"
                                                 :fieldValue="($item->bid_ecd ? $item->bid_ecd->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="bid_submitted_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Bid Submitted Date')" fieldName="bid_submitted_date"
                                                 :fieldValue="($item->bid_submitted_date ? $item->bid_submitted_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <x-forms.text class="" :fieldLabel="__('Bid Amount')"
                                                         fieldName="bid_amount"  fieldId="bid_amount-{{ $item->id }}"
                                                         :fieldPlaceholder="__('Bid Amount')" :fieldValue="$item->bid_amount" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="bid_rejected_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Bid Rejected Date')" fieldName="bid_rejected_date"
                                                 :fieldValue="($item->bid_rejected_date ? $item->bid_rejected_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <x-forms.datepicker fieldId="bid_approval_date-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Bid Approval Date')" fieldName="bid_approval_date"
-                                                :fieldValue="($item->bid_approval_date ? $item->bid_approval_date->format(company()->date_format) : '')"
-                                                :fieldPlaceholder="__('placeholders.date')" />
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <x-forms.datepicker fieldId="work_schedule_date-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Work Schedule Date')" fieldName="work_schedule_date"
-                                                :fieldValue="($item->work_schedule_date ? $item->work_schedule_date->format(company()->date_format) : '')"
-                                                :fieldPlaceholder="__('placeholders.date')" />
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                                    <div class="">
-                                                        <x-forms.text :fieldLabel="__('Work Schedule Time')"
-                                                            :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_time"
-                                                            fieldId="work_schedule_time-{{ $item->id }}" 
-                                                            :fieldValue="($item->work_schedule_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_time)->format(company()->time_format) : '')" />
-                                                    </div>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <x-forms.datepicker fieldId="work_schedule_re_date-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Work Re-Schedule Date')" fieldName="work_schedule_re_date"
-                                                :fieldValue="($item->work_schedule_re_date ? $item->work_schedule_re_date->format(company()->date_format) : '')"
-                                                :fieldPlaceholder="__('placeholders.date')" />
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                                    <div class="">
-                                                        <x-forms.text :fieldLabel="__('Work Re-Schedule Time')"
-                                                            :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_re_time"
-                                                            fieldId="work_schedule_re_time-{{ $item->id }}" 
-                                                            :fieldValue="($item->work_schedule_re_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_re_time)->format(company()->time_format) : '')" />
-                                                    </div>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <x-forms.datepicker fieldId="work_completion_date-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Work Completion Date')" fieldName="work_completion_date"
-                                                :fieldValue="($item->work_completion_date ? $item->work_completion_date->format(company()->date_format) : '')"
-                                                :fieldPlaceholder="__('placeholders.date')" />
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
-                                            <x-forms.datepicker fieldId="work_ecd-{{ $item->id }}" custom="true"
-                                                :fieldLabel="__('Work Ecd')" fieldName="work_ecd"
-                                                :fieldValue="($item->work_ecd ? $item->work_ecd->format(company()->date_format) : '')"
-                                                :fieldPlaceholder="__('placeholders.date')" />
-                                        </div>
-                                        <div class="col-lg-3 col-md-3">
-                                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')"
-                                                        fieldName="bid_approved_amount"  fieldId="bid_approved_amount-{{ $item->id }}"
-                                                        :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$item->bid_approved_amount"/>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-1 col-lg-2">
                                             <x-forms.datepicker fieldId="cancelled_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Cancelled Date')" fieldName="cancelled_date"
                                                 :fieldValue="($item->cancelled_date ? $item->cancelled_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <x-forms.label class="mb-12 mt-3" fieldId="cancelled_reason"
                                                         :fieldLabel="__('Cancelled Reason')">
                                             </x-forms.label>
                                             <x-forms.input-group>
-                                                <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason"
+                                                <select class="form-control select-picker" name="cancelled_reason" id="cancelled_reason-{{ $item->id }}"
                                                         data-live-search="true">
                                                         <option value="">--</option>
                                                     @foreach ($cancelledreason as $category)
@@ -217,42 +168,125 @@
                                                 </select>
                                             </x-forms.input-group>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                    </div>
+                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="{{ $item->id }}"><i
+                                            class="fa fa-chevron-down"></i>
+                                            @lang('Change Order')</a>
+                                    <div class="row border rounded mr-0 bg-additional-grey d-none" id="change-notify-group-{{ $item->id }}">
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.datepicker fieldId="bid_approval_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Bid Approval Date')" fieldName="bid_approval_date"
+                                                :fieldValue="($item->bid_approval_date ? $item->bid_approval_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.datepicker fieldId="work_schedule_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Work Schedule Date')" fieldName="work_schedule_date"
+                                                :fieldValue="($item->work_schedule_date ? $item->work_schedule_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                                    <div class="">
+                                                        <x-forms.text :fieldLabel="__('Work Schedule Time')"
+                                                            :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_time"
+                                                            fieldId="work_schedule_time-{{ $item->id }}" 
+                                                            :fieldValue="($item->work_schedule_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_time)->format(company()->time_format) : '')" />
+                                                    </div>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.datepicker fieldId="work_schedule_re_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Work Re-Schedule Date')" fieldName="work_schedule_re_date"
+                                                :fieldValue="($item->work_schedule_re_date ? $item->work_schedule_re_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                                    <div class="">
+                                                        <x-forms.text :fieldLabel="__('Work Re-Schedule Time')"
+                                                            :fieldPlaceholder="__('placeholders.hours')" fieldName="work_schedule_re_time"
+                                                            fieldId="work_schedule_re_time-{{ $item->id }}" 
+                                                            :fieldValue="($item->work_schedule_re_time ? \Carbon\Carbon::createFromFormat('H:i:s', $item->work_schedule_re_time)->format(company()->time_format) : '')" />
+                                                    </div>
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.datepicker fieldId="work_completion_date-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Work Completion Date')" fieldName="work_completion_date"
+                                                :fieldValue="($item->work_completion_date ? $item->work_completion_date->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-md-2 col-lg-2">
+                                            <x-forms.datepicker fieldId="work_ecd-{{ $item->id }}" custom="true"
+                                                :fieldLabel="__('Work Ecd')" fieldName="work_ecd"
+                                                :fieldValue="($item->work_ecd ? $item->work_ecd->format(company()->date_format) : '')"
+                                                :fieldPlaceholder="__('placeholders.date')" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2">
+                                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')"
+                                                        fieldName="bid_approved_amount"  fieldId="bid_approved_amount-{{ $item->id }}"
+                                                        :fieldPlaceholder="__('Bid Approved Amount')" :fieldValue="$item->bid_approved_amount"/>
+                                        </div>
+                                    
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="invoiced_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Invoiced Date')" fieldName="invoiced_date"
                                                 :fieldValue="($item->invoiced_date ? $item->invoiced_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Invoiced Amount')"
                                                         fieldName="invoiced_amount"  fieldId="invoiced_amount-{{ $item->id }}"
                                                         :fieldPlaceholder="__('Invoiced Amount')" :fieldValue="$item->invoiced_amount"/>
                                         </div>
-                                        <div class="col-md-3 col-lg-3">
+                                        <div class="col-md-2 col-lg-2">
                                             <x-forms.datepicker fieldId="paid_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Paid Date')" fieldName="paid_date"
                                                 :fieldValue="($item->paid_date ? $item->paid_date->format(company()->date_format) : '')"
                                                 :fieldPlaceholder="__('placeholders.date')" />
                                         </div>
-                                        <div class="col-lg-3 col-md-3">
+                                        <div class="col-lg-2 col-md-2">
                                             <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Paid Amount')"
                                                 fieldName="paid_amount"  fieldId="paid_amount-{{ $item->id }}"
                                                 :fieldPlaceholder="__('Paid Amount')" :fieldValue="$item->paid_amount"/>
+                                        </div>
+                                        @php
+                                        $changeOrderAmounts = $item->changenotification
+                                            ->filter(function ($notification) {
+                                                return $notification->link_status === 'Accepted' && !is_null($notification->accepted_date);
+                                            })
+                                            ->pluck('project_amount');
+
+                                        // Convert each value to a float and calculate the total
+                                        $totalChangeOrderAmount = $changeOrderAmounts->map(function ($amount) {
+                                            return (float) $amount; // Convert VARCHAR to float
+                                        })->sum();
+                                        @endphp
+                                        <div class="col-lg-2 col-md-2">
+                                            <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')"
+                                                fieldName="change_order_amount" fieldReadOnly fieldId="change_order_amount-{{ $item->id }}"
+                                                :fieldPlaceholder="__('Change Order Amount')" :fieldValue="$totalChangeOrderAmount"/>
                                         </div>
                                         
                                         <input type="text" id="linkInput-{{ $item->id }}" value="{{$item->link}}" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
-
-                                             <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
-                                                data-link-id="{{ $item->id }}">
+                                            <a class="btn btn-primary m-2 btn-xs change-notify-history" href="javascript:;"
+                                                data-notify-history-id="{{ $item->id }}">
+                                                <i class="fa fa-table mr-2"></i>
+                                                @lang('Change Notification History')
+                                            </a>
+                                            <a class="btn btn-primary m-2 btn-xs change-notify" href="javascript:;"
+                                                data-notify-id="{{ $item->id }}">
                                                 <i class="fa fa-paper-plane mr-2"></i>
-                                                @lang('Resend Link')
+                                                @lang('Change Notification')
                                             </a>
                                             <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;"
                                             data-row-id="{{ $item->id }}">
                                                     <i class="fa fa-copy mr-2"></i>
                                                     @lang('Copy Link')
+                                            </a>
+                                            <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
+                                                data-link-id="{{ $item->id }}">
+                                                <i class="fa fa-paper-plane mr-2"></i>
+                                                @lang('Resend Link')
                                             </a>
                                             <a class="btn btn-primary m-2 btn-xs" href="{{route('projectvendors.download', $item->id)}}"
                                                 data-row-id="{{ $item->id }}">
@@ -329,6 +363,36 @@
         const url = "{{ route('projectvendors.create') }}" + "?id={{ $project->id }}";
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
+
+    });
+    $('.toggle-original').click(function () {
+            var id = $(this).data('original-id');
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#original-'+id).toggleClass('d-none');
+    });
+    $('.toggle-change-notify').click(function () {
+            var id = $(this).data('change-id');
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#change-notify-group-'+id).toggleClass('d-none');
+    });
+    
+    $('body').on('click', '.change-notify', function() {
+        
+        var id = $(this).data('notify-id');
+        var url = "{{ route('projectvendors.changenotification',':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_LG, url);
+
+    });
+
+    $('body').on('click', '.change-notify-history', function() {
+        
+        var id = $(this).data('notify-history-id');
+        var url = "{{ route('projectvendors.changenotificationhistory',':id') }}";
+        url = url.replace(':id', id);
+        $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
+        $.ajaxModal(MODAL_XL, url);
 
     });
 

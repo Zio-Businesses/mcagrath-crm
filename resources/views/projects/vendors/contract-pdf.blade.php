@@ -95,7 +95,7 @@
         }
         .pt-2
         {
-            padding-top:25px;
+            padding-top:10px;
         }
         ol {
             line-height: 1;
@@ -105,6 +105,21 @@
             margin-top: 0;
             position: relative;
             top: 7px;
+        }
+        .watermark-center {
+            
+            position: absolute;
+            z-index: -1;
+            text-align: center;
+            opacity: 0.3;
+            font-size: 3rem;
+            pointer-events: none;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .page-break {
+            page-break-after: always;
         }
 
     </style>
@@ -167,7 +182,19 @@
                     </table>     
                     
                 </div>
-                <div class="pt-2">
+                <div class="pt-2" style="position:relative;">
+                    @if($projectvendor->accepted_date)
+                    <div class="watermark-center">
+                        <img src="{{ $base64StringCheck }}" width="50" height="50"/>
+                        <span style="color:green;">Accepted</span>
+                    </div>
+                    @endif
+                    @if($projectvendor->rejected_date)
+                    <div class="watermark-center">
+                        <img src="{{ $base64StringTimes }}" width="50" height="50"/>
+                        <span style="color:red;">Accepted</span>
+                    </div>
+                    @endif
                     <table style="border-collapse: collapse; width: 100%;" >
                         <thead>
                             <tr>
@@ -175,6 +202,10 @@
                                 <th style="padding: 10px;  text-align: left; width:12.5%;">Priority</th>
                                 <th style="padding: 10px;  text-align: left; width:12.5%;">Project Type</th>
                                 <th style="padding: 10px;  text-align: left; width:12.5%;">Street Address</th>
+                                @if($projectid->propertyDetails->optional)
+                                        <th style="padding: 10px;  text-align: left; width:12.5%;">Suite # / House #</th>
+                                @endif
+                                <th style="padding: 10px;  text-align: left; width:12.5%;">City</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -183,6 +214,10 @@
                                 <td style="padding: 10px;  width:12.5%;">{{$projectid->priority}}</td>
                                 <td style="padding: 10px;  width:12.5%;">{{$projectvendor->project_type}}</td>
                                 <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->street_address}}</td>
+                                @if($projectid->propertyDetails->optional)
+                                        <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->optional}}</td>
+                                @endif
+                                <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->city}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -194,22 +229,19 @@
                         <table style="border-collapse: collapse; width: 100%;">
                             <thead>
                                 <tr>
-                                    @if($projectid->propertyDetails->optional)
-                                        <th style="padding: 10px;  text-align: left; width:12.5%;">Suite # / House #</th>
-                                    @endif
-                                    <th style="padding: 10px;  text-align: left; width:12.5%;">City</th>
                                     <th style="padding: 10px;  text-align: left; width:12.5%;">State</th>
                                     <th style="padding: 10px;  text-align: left; width:12.5%;">Zipcode</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">County</th>
+                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Project Category</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    @if($projectid->propertyDetails->optional)
-                                        <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->optional}}</td>
-                                    @endif
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->city}}</td>
                                     <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->state}}</td>
                                     <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->zipcode}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->county}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->category->category_name}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -219,43 +251,26 @@
                         <table style="border-collapse: collapse; width: 100%;">
                             <thead>
                                 <tr>
-                                    <th style="padding: 10px;  text-align: left; width:12.5%;">County</th>
-                                    <th style="padding: 10px;  text-align: left; width:12.5%;">Project Category</th>
                                     <th style="padding: 10px;  text-align: left; width:12.5%;">Project Sub-Category</th>
                                     <th style="padding: 10px;  text-align: left; width:12.5%;">Property Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->county}}</td>
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->category->category_name}}</td>
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->sub_category}}</td>
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->property_type}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Third row with 3 columns -->
-                    <div class="pt-2">
-                        <table style="border-collapse: collapse; width: 50%;">
-                            <thead>
-                                <tr>
                                     <th style="padding: 10px;  text-align: left; width: 12.5%;">Bedrooms</th>
                                     <th style="padding: 10px;  text-align: left; width: 12.5%;">Bathrooms</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->sub_category}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->property_type}}</td>
                                     <td style="padding: 10px; ">{{$projectid->propertyDetails->bedrooms}}</td>
                                     <td style="padding: 10px; ">{{$projectid->propertyDetails->bathrooms}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+
                     <hr class="custom-line">
                     <div class="row">
-                        <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+                        <table style="border-collapse: collapse; width: 100%; margin-top: 5px;">
                             <thead>
                                 <tr>
                                     <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Date</th>
@@ -280,6 +295,7 @@
                             </tr>
                         </table>
                     </div>
+                   
                     <hr class="custom-line">
                     <h5 class="f-13 font-weight-bold mb-4">Scope Of Work:</h5>
                     @foreach($projectvendor->sow_id as $sow)
@@ -302,6 +318,74 @@
                         </table>
                     </div>
                     @endforeach
+                    @if($projectvendor->changenotification)
+                        @foreach($projectvendor->changenotification as $key => $changenotify)
+                            <hr class="custom-line">
+                            <h4 class="f-14 font-weight-bold">Change Order - {{$key+1}}</h4>
+                            <div style="border: 1px solid #000; border-radius: 4px; padding: 0.5rem; position: relative;">
+                                 @if($changenotify->accepted_date)
+                                    <div class="watermark-center">
+                                        <img src="{{ $base64StringCheck }}" width="50" height="50"/>
+                                        <span style="color: green;">Accepted</span>
+                                    </div>
+                                    @endif
+                                    @if($changenotify->link_status=='Rejected')
+                                    <div class="watermark-center">
+                                        <img src="{{ $base64StringTimes }}" width="50" height="50"/>
+                                        <span style="color: red;">Rejected</span>
+                                    </div>
+                                    @endif
+                                <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+                                    <thead style="z-index:1; position:relative;">
+                                        <tr>
+                                            <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Type</th>
+                                            <th style="padding: 10px;  text-align: left; width: 33.33%;">Project Amount</th>
+                                            <th style="padding: 10px;  text-align: left; width: 33.33%;">Due Date</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody style="z-index:1; position:relative;">
+                                        <tr>
+                                            <td style="padding: 10px; ">{{$changenotify->project_type }}</td>
+                                            <td style="padding: 10px; ">{{currency_format($projectvendor->project_amount, $contractid->currency->id) }}</td>
+                                            <td style="padding: 10px; ">{{$projectvendor->due_date->translatedFormat($company->date_format) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                               
+                                <h5 class="f-14 font-weight-bold">Scope Of Work:</h5>
+                                @foreach($changenotify->sow_id as $sow)
+                                <table style="border-collapse: collapse; width: 100%; margin-top: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 10px; border: 1px solid #ddd; text-align: left; width: 25%;">Category</th>
+                                            <th style="padding: 10px; border: 1px solid #ddd; text-align: left; width: 25%;">Sub-Category</th>
+                                            <th style="padding: 10px; border: 1px solid #ddd; text-align: left; width: 50%;">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">{{$changenotify->sow($sow)->category}}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">{{$changenotify->sow($sow)->sub_category}}</td>
+                                            <td style="padding: 10px; border: 1px solid #ddd;">{{$changenotify->sow($sow)->description}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                @endforeach
+                                <div class="row mt-2">
+                                    <div class="col-md-2 col-12 grid-item">
+                                        <h5 class="f-13 font-weight-bold">Comments</h5>
+                                    </div>
+                                    <div class="col-md-5 col-12 grid-item">
+                                        <p>
+                                            {{$changenotify->add_notes}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page-break"></div>
+                        @endforeach
+                    @endif
                     <hr class="custom-line">
                     <h5 class="f-13 font-weight-bold mb-4">WORK ORDER INSTRUCTIONS: PLEASE READ CAREFULLY:</h5>
                     <div>{!! $contractid->contract_detail !!}</div>
