@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\VendorWaiverFormTemplate;
 use App\Models\WorkOrderStatus;
 use App\Models\SOWTitle;
+use App\Models\VendorWorkOrderStatus;
 use App\Helper\Reply;
 
 class VendorSettingsController extends AccountBaseController
@@ -27,12 +28,13 @@ class VendorSettingsController extends AccountBaseController
     public function index()
     {
         $tab = request('tab');
-        \Log::info($tab);
+
         switch ($tab) {
 
         case 'wcform':
             $this->contract=ContractTemplate::all();
             $this->wform=VendorWaiverFormTemplate::first();
+            $this->vendor_status = VendorWorkOrderStatus::first();
             $this->view = 'vendor-settings.ajax.wcform';
             break;
 
@@ -49,6 +51,7 @@ class VendorSettingsController extends AccountBaseController
         default:
             $this->contract=ContractTemplate::all();
             $this->wform=VendorWaiverFormTemplate::first();
+            $this->vendor_status = VendorWorkOrderStatus::first();
             $this->view = 'vendor-settings.ajax.wcform';
             break;
         }

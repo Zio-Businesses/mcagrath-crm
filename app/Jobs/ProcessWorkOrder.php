@@ -16,6 +16,9 @@ use App\Models\Project;
 use App\Models\ContractTemplate;
 use App\Models\VendorContract;
 use App\Models\Company;
+use App\Models\ProjectFile;
+use App\Helper\Files;
+use Illuminate\Http\UploadedFile;
 
 class ProcessWorkOrder implements ShouldQueue
 {
@@ -36,11 +39,11 @@ class ProcessWorkOrder implements ShouldQueue
     public function handle(): void
     {
         // \Log::info('Processing job for ProjectVendor ID: ' . $this->projectVendorId);
-        $pdfGenerated = $this->pdfGeneration($this->projectVendorId);
-        $vendorid = ProjectVendor::findOrFail($this->projectVendorId);
-        if($pdfGenerated){
-        Notification::route('mail', $vendorid->vendor_email_address)->notify(new WorkOrderAcceptNotification($vendorid->id, $pdfGenerated));
-        }
+        $this->pdfGeneration($this->projectVendorId);
+        // $vendorid = ProjectVendor::findOrFail($this->projectVendorId);
+        // if($pdfGenerated){
+        // Notification::route('mail', $vendorid->vendor_email_address)->notify(new WorkOrderAcceptNotification($vendorid->id, $pdfGenerated));
+        // }
     }
 
     public function pdfGeneration($projectvendorid)
@@ -83,10 +86,67 @@ class ProcessWorkOrder implements ShouldQueue
         $pdf->loadView('projects.vendors.contract-pdf', $data);
         
         $pdfContent = $pdf->download()->getOriginalContent();
-        $filePath = "app/pdf/{$projectvendorid}/workorder-{$projectvendorid}.pdf";
+        $filePath = "app/pdf/{$projectvendorid}/workorder-{$this->projectvendor->vendor_name}.pdf";
 
         \Storage::disk('localBackup')->put($filePath, $pdfContent);
-        return $filePath;
+
+        $projectfile = ProjectFile::where('project_vendor_id', $projectvendorid)->first();
+
+        if($projectfile)
+        {
+            Files::deleteFile($projectfile->hashname, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
+
+            ProjectFile::where('project_vendor_id', $projectvendorid)->delete();
+
+            $filePathOnDisk = \Storage::disk('localBackup')->path($filePath);
+
+            $uploadedFile = new UploadedFile(
+                $filePathOnDisk,         // Full file path to the file
+                basename($filePath),     // Original file name (without path)
+                mime_content_type($filePathOnDisk),  // Mime type (you can use mime_content_type() or leave it as null)
+                null,                    // Error flag (optional)
+                true                     // Ensure it is marked as valid
+            );
+
+            $pf = new ProjectFile();
+            $pf->project_id = $this->projectid->id;
+
+            $filename = Files::uploadLocalOrS3($uploadedFile, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
+
+            $pf->user_id = 1;
+            $pf->project_vendor_id = $projectvendorid;
+            $pf->filename = $uploadedFile->getClientOriginalName();
+            $pf->hashname = $filename;
+            $pf->size = $uploadedFile->getSize();
+            $pf->save();
+            
+        }
+        else{
+            
+            $filePathOnDisk = \Storage::disk('localBackup')->path($filePath);
+            $uploadedFile = new UploadedFile(
+                $filePathOnDisk,         // Full file path to the file
+                basename($filePath),     // Original file name (without path)
+                mime_content_type($filePathOnDisk),  // Mime type (you can use mime_content_type() or leave it as null)
+                null,                    // Error flag (optional)
+                true                     // Ensure it is marked as valid
+            );
+
+            $pf = new ProjectFile();
+            $pf->project_id = $this->projectid->id;
+
+            $filename = Files::uploadLocalOrS3($uploadedFile, ProjectFile::FILE_PATH . '/' . $this->projectid->id);
+
+            $pf->user_id = 1;
+            $pf->project_vendor_id = $projectvendorid;
+            $pf->filename = $uploadedFile->getClientOriginalName();
+            $pf->hashname = $filename;
+            $pf->size = $uploadedFile->getSize();
+            $pf->save();
+        }
+        
+    
+
         
     }
 }

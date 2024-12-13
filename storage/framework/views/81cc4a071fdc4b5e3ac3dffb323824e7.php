@@ -5,20 +5,33 @@
 <?php $__env->stopPush(); ?>
 
 <?php
-$viewProjectMemberPermission = user()->permission('view_project_members');
-$viewProjectMilestonePermission = ($project->project_admin == user()->id) ? 'all' : user()->permission('view_project_milestones');
-$viewTasksPermission = ($project->project_admin == user()->id) ? 'all' : user()->permission('view_project_tasks');
-$viewGanttPermission = ($project->project_admin == user()->id) ? 'all' : user()->permission('view_project_gantt_chart');
-$viewInvoicePermission = user()->permission('view_project_invoices');
-$viewDiscussionPermission = user()->permission('view_project_discussions');
-$viewNotePermission = user()->permission('view_project_note');
-$viewFilesPermission = user()->permission('view_project_files');
-$viewRatingPermission = user()->permission('view_project_rating');
-$viewOrderPermission = user()->permission('view_project_orders');
-
-$projectArchived = $project->trashed();
+$viewEmployeeTasks = user()->permission('view_employee_tasks');
+$viewTickets = user()->permission('view_tickets');
+$viewEmployeeProjects = user()->permission('view_employee_projects');
+$viewEmployeeTimelogs = user()->permission('view_employee_timelogs');
+$manageEmergencyContact = user()->permission('manage_emergency_contact');
+$manageRolePermissionSetting = user()->permission('manage_role_permission_setting');
+$manageShiftPermission = user()->permission('view_shift_roster');
+$viewLeavePermission = user()->permission('view_leave');
+$viewDocumentPermission = user()->permission('view_documents');
+$viewAppreciationPermission = user()->permission('view_appreciation');
+$viewImmigrationPermission = user()->permission('view_immigration');
 ?>
 
+<?php
+
+$showFullProfile = false;
+$employeeDetail = $employee->employeeDetail;
+
+if ($viewPermission == 'all'
+    || ($viewPermission == 'added' && $employeeDetail->added_by == user()->id)
+    || ($viewPermission == 'owned' && $employeeDetail->user_id == user()->id)
+    || ($viewPermission == 'both' && ($employeeDetail->user_id == user()->id || $employeeDetail->added_by == user()->id))
+) {
+    $showFullProfile = true;
+}
+
+?>
 
 <?php $__env->startSection('filter-section'); ?>
     <!-- FILTER START -->
@@ -37,14 +50,14 @@ $projectArchived = $project->trashed();
                     <li>
                         <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id),'text' => __('modules.projects.overview')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id),'text' => __('modules.employees.profile')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'overview']); ?>
+<?php $component->withAttributes(['class' => 'profile']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -57,20 +70,18 @@ $projectArchived = $project->trashed();
 <?php endif; ?>
                     </li>
 
-                    <?php if(
-                        !$project->public && $viewProjectMemberPermission == 'all'
-                    ): ?>
+                    <?php if($viewEmployeeProjects == 'all' && in_array('projects', user_modules())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=members','text' => __('modules.projects.members')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=projects','text' => __('app.menu.projects'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'members']); ?>
+<?php $component->withAttributes(['class' => 'projects']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -84,18 +95,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewFilesPermission == 'all' || ($viewFilesPermission == 'added' && user()->id == $project->added_by) || ($viewFilesPermission == 'owned' && user()->id == $project->client_id)): ?>
+                    <?php if($viewEmployeeTasks == 'all' && in_array('tasks', user_modules())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=files','text' => __('modules.projects.files')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=tasks','text' => __('app.menu.tasks'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'files']); ?>
+<?php $component->withAttributes(['class' => 'tasks']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -109,89 +120,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewProjectMilestonePermission == 'all' || $viewProjectMilestonePermission == 'added' || ($viewProjectMilestonePermission == 'owned' && user()->id == $project->client_id)): ?>
-                        <!--<li>-->
-                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=milestones'"-->
-                        <!--    :text="__('modules.projects.milestones')" class="milestones" />-->
-                        <!--</li>-->
-                    <?php endif; ?>
+                    <?php if(in_array('leaves', user_modules()) && ($viewLeavePermission == 'all' || ($viewLeavePermission == 'owned' || $viewLeavePermission == 'both') && $employee->id == user()->id )): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=sow','text' => __('SOW')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=leaves','text' => __('app.menu.leaves'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'sow']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-                        </li>
-                        <li>
-                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=vendors','text' => __('Vendors')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'vendors']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-                        </li>
-                        <li>
-                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=estimates','text' => __('Client Estimates'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'estimates']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-                        </li>
-                        <li>
-                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=vendor_estimates','text' => __('Vendor Estimates'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'vendor_estimates']); ?>
+<?php $component->withAttributes(['class' => 'leaves']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -204,24 +144,17 @@ $projectArchived = $project->trashed();
 <?php endif; ?>
                         </li>
 
-                    <?php if(in_array('tasks', user_modules()) && ($viewTasksPermission == 'all' || ($viewTasksPermission == 'added' && user()->id == $project->added_by) || ($viewTasksPermission == 'owned' && user()->id == $project->client_id))): ?>
-                        <!--<li>-->
-                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=tasks'" :text="__('app.menu.tasks')" class="tasks"-->
-                        <!--    ajax="false" />-->
-                        <!--</li>-->
-
-                        <?php if(!$projectArchived): ?>
-                            <!--<li>-->
-                            <!--    <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
+                    <li>
+                        <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=taskboard','text' => __('modules.tasks.taskBoard'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=leaves-quota','text' => __('app.menu.leavesQuota')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'taskboard']); ?>
+<?php $component->withAttributes(['class' => 'leaves-quota']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -231,91 +164,15 @@ $projectArchived = $project->trashed();
 <?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
 <?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
 <?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>-->
-                            <!--</li>-->
-
-                            <?php if($viewGanttPermission == 'all' || ($viewGanttPermission == 'added' && user()->id == $project->added_by) || ($viewGanttPermission == 'owned' && user()->id == $project->client_id)): ?>
-                                <!--<li>-->
-                                <!--    <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=gantt','text' => __('modules.projects.viewGanttChart')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'gantt']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>-->
-                                <!--</li>-->
-                            <?php endif; ?>
-                        <?php endif; ?>
+                    </li>
                     <?php endif; ?>
 
-                    <?php if(in_array('invoices', user_modules()) && !is_null($project->client_id) && ($viewInvoicePermission == 'all' || ($viewInvoicePermission == 'added' && user()->id == $project->added_by) || ($viewInvoicePermission == 'owned' && user()->id == $project->client_id))): ?>
+                    <?php if($viewEmployeeTimelogs == 'all' && in_array('timelogs', user_modules())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=invoices','text' => __('app.menu.invoices'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'invoices']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php if(in_array('orders', user_modules()) && !is_null($project->client_id) && ($viewOrderPermission == 'all' || ($viewOrderPermission == 'added' && user()->id == $project->added_by) || ($viewOrderPermission == 'owned' && user()->id == $project->client_id))): ?>
-                        <li>
-                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=orders','text' => __('app.menu.orders'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('tab'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
-<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'orders']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $attributes = $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
-<?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
-<?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php if(in_array('timelogs', user_modules()) && ($viewProjectTimelogPermission == 'all' || ($viewProjectTimelogPermission == 'added' && user()->id == $project->added_by) || ($viewProjectTimelogPermission == 'owned' && user()->id == $project->client_id))): ?>
-                        <!--<li>-->
-                        <!--    <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=timelogs','text' => __('app.menu.timeLogs'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=timelogs','text' => __('app.menu.timeLogs'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -332,22 +189,22 @@ $projectArchived = $project->trashed();
 <?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
 <?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
 <?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>-->
-                        <!--</li>-->
+<?php endif; ?>
+                        </li>
                     <?php endif; ?>
 
-                    <?php if(in_array('expenses', user_modules()) && ($viewExpensePermission == 'all' || ($viewExpensePermission == 'added' && user()->id == $project->added_by) || ($viewExpensePermission == 'owned' && user()->id == $project->client_id))): ?>
+                    <?php if($viewDocumentPermission != 'none'): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=expenses','text' => __('app.menu.expenses'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=documents','text' => __('app.menu.documents')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'expenses']); ?>
+<?php $component->withAttributes(['class' => 'documents']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -361,21 +218,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewMiroboardPermission == 'all' && $project->enable_miroboard &&
-                    ((in_array('client', user_roles()) && $project->client_access && $project->client_id == user()->id)
-                    || !in_array('client', user_roles()))
-                    ): ?>
+                    <?php if($showFullProfile && ($manageEmergencyContact == 'all' || $employee->id == user()->id)): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=miroboard','text' => __('app.menu.miroboard'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=emergency-contacts','text' => __('modules.emergencyContact.emergencyContact')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'miroboard']); ?>
+<?php $component->withAttributes(['class' => 'emergency-contacts']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -389,18 +243,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if(in_array('payments', user_modules()) && !is_null($project->client_id) && ($viewPaymentPermission == 'all' || ($viewPaymentPermission == 'added' && user()->id == $project->added_by) || ($viewPaymentPermission == 'owned' && user()->id == $project->client_id))): ?>
+                    <?php if($viewTickets == 'all' && in_array('tickets', user_modules())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=payments','text' => __('app.menu.payments'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=tickets','text' => __('modules.tickets.ticket'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'payments']); ?>
+<?php $component->withAttributes(['class' => 'tickets']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -414,18 +268,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewDiscussionPermission == 'all' || ($viewDiscussionPermission == 'added' && user()->id == $project->added_by) || ($viewDiscussionPermission == 'owned' && user()->id == $project->client_id)): ?>
+                    <?php if($showFullProfile && !in_array('client', user_roles())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=discussion','text' => __('modules.projects.discussion'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=appreciation','text' => __('app.menu.appreciation')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'discussion']); ?>
+<?php $component->withAttributes(['class' => 'appreciation']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -439,18 +293,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewNotePermission != 'none' ): ?>
+                    <?php if($manageShiftPermission == 'all' && in_array('attendance', user_modules())): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=notes','text' => __('modules.projects.note'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=shifts','text' => __('app.menu.shiftRoster')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'notes']); ?>
+<?php $component->withAttributes(['class' => 'shifts']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -464,18 +318,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewRatingPermission != 'none' && !is_null($project->client_id)): ?>
-                        <!--<li>-->
-                        <!--    <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
+                    <?php if($manageRolePermissionSetting == 'all'): ?>
+                        <li>
+                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=rating','text' => __('modules.projects.rating'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=permissions','text' => __('modules.permission.permissions')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'rating']); ?>
+<?php $component->withAttributes(['class' => 'permissions']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -485,22 +339,15 @@ $projectArchived = $project->trashed();
 <?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
 <?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
 <?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>-->
-                        <!--</li>-->
+<?php endif; ?>
+                        </li>
                     <?php endif; ?>
 
-                    <?php if($viewBurndownChartPermission != 'none' || $project->project_admin == user()->id): ?>
-                        <!--<li>-->
-                        <!--    <x-tab :href="route('projects.show', $project->id).'?tab=burndown-chart'"-->
-                        <!--        :text="__('modules.projects.burndownChart')" class="burndown-chart" ajax="false" />-->
-                        <!--</li>-->
-                    <?php endif; ?>
-
-                    <?php if(!in_array('client', user_roles())): ?>
+                    <?php if($showFullProfile): ?>
                         <li>
                             <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=activity','text' => __('modules.employees.activity')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=activity','text' => __('modules.employees.activity')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -521,18 +368,18 @@ $projectArchived = $project->trashed();
                         </li>
                     <?php endif; ?>
 
-                    <?php if($viewNotePermission != 'none' ): ?>
-                        <!--<li>-->
-                        <!--    <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
+                    <?php if($viewImmigrationPermission == 'all' ||  (in_array($viewImmigrationPermission, ['added', 'owned', 'both']) && user()->id == $employee->id)): ?>
+                        <li>
+                            <?php if (isset($component)) { $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab = $attributes; } ?>
-<?php $component = App\View\Components\Tab::resolve(['href' => route('projects.show', $project->id).'?tab=tickets','text' => __('app.menu.tickets'),'ajax' => 'false'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Tab::resolve(['href' => route('employees.show', $employee->id) . '?tab=immigration','text' => __('modules.employees.immigration')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('tab'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Tab::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'tickets']); ?>
+<?php $component->withAttributes(['class' => 'immigration']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
@@ -542,8 +389,8 @@ $projectArchived = $project->trashed();
 <?php if (isset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab)): ?>
 <?php $component = $__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab; ?>
 <?php unset($__componentOriginal4b0c45ee1a38bb46a01c2a25edd749ab); ?>
-<?php endif; ?>-->
-                        <!--</li>-->
+<?php endif; ?>
+                        </li>
                     <?php endif; ?>
                 </ul>
             </nav>
@@ -552,29 +399,22 @@ $projectArchived = $project->trashed();
         <a class="mb-0 d-block d-lg-none text-dark-grey ml-auto mr-2 border-left-grey" onclick="openClientDetailSidebar()"><i class="fa fa-ellipsis-v "></i></a>
     </div>
 
-
-
     <!-- PROJECT HEADER END -->
-
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-
     <div class="content-wrapper pt-0 border-top-0 client-detail-wrapper">
         <?php echo $__env->make($view, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </div>
-
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startPush('scripts'); ?>
-
     <script>
         $("body").on("click", ".project-menu .ajax-tab", function(event) {
             event.preventDefault();
 
             $('.project-menu .p-sub-menu').removeClass('active');
             $(this).addClass('active');
-
 
             const requestUrl = this.href;
 
@@ -685,4 +525,4 @@ $projectArchived = $project->trashed();
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\public_html\resources\views/projects/show.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\public_html\resources\views/employees/show.blade.php ENDPATH**/ ?>

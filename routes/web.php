@@ -151,6 +151,7 @@ use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController; 
 use App\Http\Controllers\VendorChangeNotificationController; 
+use App\Http\Controllers\VendorWorkOrderStatusController; 
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -951,4 +952,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
       //Vendor Change Notification
       Route::resource('change-notification', VendorChangeNotificationController::class);
       Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
+
+      //Vendor Work Order Status
+      Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
+
 });

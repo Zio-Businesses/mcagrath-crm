@@ -20,6 +20,7 @@ use App\Http\Requests\Project\StoreProjectVendor;
 use Illuminate\Support\Facades\App;
 use App\Notifications\ProjectVendorRemoved;
 use App\Models\CancelledReason;
+use App\Models\VendorWorkOrderStatus;
 
 class ProjectVendorController extends AccountBaseController
 {
@@ -56,27 +57,30 @@ class ProjectVendorController extends AccountBaseController
     
     public function store(StoreProjectVendor $request)
     {
+        $vwos = VendorWorkOrderStatus::first();
         $vendor = VendorContract::findOrFail($request->vendor_id);
-        if($vendor->status==='Compliant'||$vendor->status=='Non Compliant'){
-
-        $vpro= new ProjectVendor();
-        $vpro->project_id = $request->project_id;
-        $vpro->vendor_name=$vendor->vendor_name;
-        $vpro->vendor_phone=$vendor->cell;
-        $vpro->due_date=companyToYmd($request->due_date);
-        $vpro->vendor_email_address=$vendor->vendor_email;
-        $vpro->sow_id=$request->sow_id;
-        $vpro->vendor_id=$request->vendor_id;
-        $vpro->link_sent_by=user()->id;
-        $vpro->project_amount=$request->project_amount;
-        $vpro->add_notes=$request->add_notes;
-        $vpro->project_type=$request->project_vendor_type;
-        $vpro->contract_id=$request->contract_id;
-        $vpro->link_status='Sent';
-        $vpro->save();
-        $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
-        Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
-        return Reply::success(__('New Vendor Added Successfully'));
+        
+        $vendorStatuses = is_array($vwos->vendor_status) ? $vwos->vendor_status : json_decode($vwos->vendor_status, true);
+        
+        if (in_array($vendor->status, $vendorStatuses)){
+            $vpro= new ProjectVendor();
+            $vpro->project_id = $request->project_id;
+            $vpro->vendor_name=$vendor->vendor_name;
+            $vpro->vendor_phone=$vendor->cell;
+            $vpro->due_date=companyToYmd($request->due_date);
+            $vpro->vendor_email_address=$vendor->vendor_email;
+            $vpro->sow_id=$request->sow_id;
+            $vpro->vendor_id=$request->vendor_id;
+            $vpro->link_sent_by=user()->id;
+            $vpro->project_amount=$request->project_amount;
+            $vpro->add_notes=$request->add_notes;
+            $vpro->project_type=$request->project_vendor_type;
+            $vpro->contract_id=$request->contract_id;
+            $vpro->link_status='Sent';
+            $vpro->save();
+            $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
+            Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
+            return Reply::success(__('New Vendor Added Successfully'));
 
         }
         else{

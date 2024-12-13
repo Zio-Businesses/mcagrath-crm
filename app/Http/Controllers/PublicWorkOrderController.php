@@ -18,6 +18,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\WorkOrderAcceptNotification;
 use App\Jobs\ProcessWorkOrder;
+use App\Models\ProjectFile;
+use App\Helper\Files;
+use Illuminate\Http\UploadedFile;
 
 class PublicWorkOrderController extends Controller
 {
@@ -67,7 +70,8 @@ class PublicWorkOrderController extends Controller
             $projectvendor->accepted_date=date("Y-m-d");
             $projectvendor->save();
             Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'original'));
-            ProcessWorkOrder::dispatch($projectvendor->id)->onConnection('database')->onQueue('file-auto-upload');               
+            ProcessWorkOrder::dispatch($projectvendor->id)->onConnection('database')->onQueue('file-auto-upload');
+            // $this->pdfAutoGen($projectvendor->id);               
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
         } 
         elseif ($request->action == 'reject') {
@@ -89,7 +93,8 @@ class PublicWorkOrderController extends Controller
             $vcn->save();
             $projectvendor = ProjectVendor::findOrFail($vcn->project_vendor_id);
             Notification::route('mail', $projectvendor->vendor_email_address)->notify(new WorkOrderAcceptNotification($projectvendor->id,'change'));
-            ProcessWorkOrder::dispatch($vcn->project_vendor_id,'change')->onConnection('database')->onQueue('file-auto-upload');   
+            ProcessWorkOrder::dispatch($vcn->project_vendor_id)->onConnection('database')->onQueue('file-auto-upload');   
+            
             return Reply::success(__('Thank You. Your Response Has Been Noted'));
         } 
         elseif ($request->action == 'reject') {
@@ -97,7 +102,8 @@ class PublicWorkOrderController extends Controller
             $vcn->link_status='Rejected';
             $vcn->rejected_date=date("Y-m-d");
             $vcn->save();
-           return Reply::success(__('Thank You For Your Time'));
+            ProcessWorkOrder::dispatch($vcn->project_vendor_id)->onConnection('database')->onQueue('file-auto-upload');
+            return Reply::success(__('Thank You For Your Time'));
         } 
     }
 
