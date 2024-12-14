@@ -43,6 +43,7 @@
                             <span>{{ $vendor->vendor_name }}
                             </span>
                             <p class="usercontent">{{ $vendor->last_msg ? $vendor->last_msg : '' }}</p>
+                            <p class="hiddenPhone">{{$vendor->vendor_country_code}}{{$vendor->vendor_phone}}</p>
                         </div>
 
                         {{-- <div class="notif">
@@ -66,6 +67,8 @@
             <div class="chat-header" id="chatheader">
                 <img id="chat-image" src="" alt="Vendor" style="display: none" />
                 <h3 id="chat-title"></h3>
+                <i class="bi bi-info-circle" id="vendorinfo"></i>
+                <h4 id="vendor-number"></h4>
             </div>
             <!-- SPINNER-->
             <div class="spinner d-none justify-content-center align-items-center">

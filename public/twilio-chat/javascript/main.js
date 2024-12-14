@@ -7,6 +7,7 @@ $(document).ready(function () {
     const $messageInput = $("#messageInput");
     const $sendButton = $("#sendButton");
     const $chatTitle = $("#chat-title");
+    const $vendorInfo = $("#vendor-number");
     const $messagesDiv = $("#messages");
     const $chatImage = $("#chat-image");
     const $form = $("#message-input");
@@ -206,8 +207,10 @@ $(document).ready(function () {
             selected_vendor = $this.data("vendor-id");
             const vendorName = $this.find("span").text().trim();
             const vendorImage = $this.find("img").attr("src");
+            const vendorPhone = $this.find(".hiddenPhone").text().trim();
 
             $chatTitle.text(vendorName);
+            $vendorInfo.text(vendorPhone);
             $chatImage.attr("src", vendorImage).css("display", "inline-block");
             $form.css("display", "flex");
             $chatHeader.css("display", "flex");
@@ -600,6 +603,7 @@ $(document).ready(function () {
             <div class="userdetails">
                 <span>${vendor.vendor_name}</span>
                 <p class="usercontent">${vendor.last_msg || ""}</p>
+                <div class="hiddenPhone">${vendor.vendor_country_code}${vendor.vendor_phone}</div>
             </div>
             <div class="time">
                 <p>${

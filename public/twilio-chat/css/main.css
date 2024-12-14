@@ -7,6 +7,9 @@
     border: none;
 }
 
+.hiddenPhone {
+    display: none;
+}
 .spinner {
     width: 100%;
     height: 100%;
@@ -85,7 +88,26 @@
     white-space: nowrap;
     overflow: hidden;
 }
+#vendorinfo {
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+}
 
+#vendor-number {
+    display: none;
+    border: 1px solid #777;
+    border-radius: .4rem;
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    color: #ccc;
+}
+
+#vendorinfo:hover + #vendor-number {
+    display: block;
+}
 .user .notif {
     position: absolute;
     right: 2%;

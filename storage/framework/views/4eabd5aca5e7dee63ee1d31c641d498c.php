@@ -45,6 +45,7 @@
 
                             </span>
                             <p class="usercontent"><?php echo e($vendor->last_msg ? $vendor->last_msg : ''); ?></p>
+                            <p class="hiddenPhone"><?php echo e($vendor->vendor_country_code); ?><?php echo e($vendor->vendor_phone); ?></p>
                         </div>
 
                         
@@ -68,6 +69,8 @@
             <div class="chat-header" id="chatheader">
                 <img id="chat-image" src="" alt="Vendor" style="display: none" />
                 <h3 id="chat-title"></h3>
+                <i class="bi bi-info-circle" id="vendorinfo"></i>
+                <h4 id="vendor-number"></h4>
             </div>
             <!-- SPINNER-->
             <div class="spinner d-none justify-content-center align-items-center">
