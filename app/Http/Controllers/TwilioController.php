@@ -52,8 +52,7 @@ class TwilioController extends AccountBaseController
             $vendor = VendorInChat::create($validatedData);
 
             return response()->json([
-                'message' => 'Vendor created successfully',
-                'data' => $vendor,
+                'chatsid' => $vendor->channel_sid,
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([

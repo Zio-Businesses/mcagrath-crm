@@ -156,7 +156,6 @@ use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController;
-use App\Http\Controllers\VendorWnineDocController; 
 use App\Http\Controllers\VendorChangeNotificationController; 
 use App\Http\Controllers\VendorWorkOrderStatusController; 
 

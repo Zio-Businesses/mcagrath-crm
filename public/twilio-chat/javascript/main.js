@@ -13,6 +13,17 @@ $(document).ready(function () {
     const $chatHeader = $("#chatheader");
     const userList = $(".user-list");
     const PAGE_SIZE = 10;
+    const $popupOverlay = $("#popupOverlay");
+    const $formBtn = $("#formbtn");
+    const $closeForm = $("#closeForm");
+    const $selectVendorContracts = $("#selectVendorContracts");
+    const $selectVendorleads = $("#selectVendorleads");
+    const $nameInput = $("#name");
+    const $phoneInput = $("#phone");
+    let image_url = "";
+    const $countrycode = $("#countrycode");
+    const $submitButton = $("#submit");
+
     let disableClicks = false;
     let twilioClient = null;
     let chatsid = "";
@@ -21,6 +32,9 @@ $(document).ready(function () {
     let isLoadingMessages = false;
     let initialLoad = true;
     let twilioConversation = null;
+    $selectVendorleads.selectpicker();
+    $selectVendorContracts.selectpicker();
+    $countrycode.selectpicker();
     //END OF CACHE ELEMENTS
     connectToTwilio();
     // Connect to Twilio and fetch the token
@@ -50,35 +64,9 @@ $(document).ready(function () {
             .then((client) => {
                 twilioClient = client;
 
-                console.log("Twilio Conversations Client initialized.");
-
                 // Add event listeners for token expiration
                 client.on("tokenAboutToExpire", handleTokenRefresh);
                 client.on("tokenExpired", handleTokenRefresh);
-                client.on("conversationAdded", (conversation) => {
-                    fetch(`${window.appData.fetchUpdatedVendor}`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": window.appData.csrfToken,
-                        },
-                        body: JSON.stringify({
-                            channel_sid: conversation.sid,
-                        }),
-                    })
-                        .then((response) => response.json())
-                        .then((vendor) => {
-                            if (vendor) {
-                                updateVendor(vendor);
-                            }
-                        })
-                        .catch((error) => {
-                            console.error(
-                                "Error fetching updated vendor:",
-                                error
-                            );
-                        });
-                });
                 client.on("messageAdded", (message) => {
                     fetch(`${window.appData.fetchUpdatedVendor}`, {
                         method: "POST",
@@ -138,9 +126,6 @@ $(document).ready(function () {
 
     // Handle token refresh
     function handleTokenRefresh() {
-        console.log(
-            "Token is about to expire or has expired. Refreshing token..."
-        );
         fetch(window.appData.generatetwiliotoken)
             .then((response) => response.json())
             .then((data) => {
@@ -267,8 +252,8 @@ $(document).ready(function () {
                 if (data.sid) {
                     chatsid = data.sid;
                     Cookies.set(`conversation_${selected_vendor}`, chatsid, {
-                        expires: 7,
-                    }); // Cache for 7 days
+                        expires: 1 / 24,
+                    }); // Cache for 1 hour
                     initializeTwilio(chatsid);
                 } else {
                     alert("Unable to connect to the chat. Please try again.");
@@ -334,6 +319,156 @@ $(document).ready(function () {
         }
     });
     //END OF SENDING THE MSG
+
+    $selectVendorleads.on("changed.bs.select", function () {
+        const selectedVendorId = $(this).val();
+
+        if (!selectedVendorId) {
+            $countrycode.selectpicker("refresh");
+            $phoneInput.val("");
+            $nameInput.val("");
+            return;
+        }
+
+        $.ajax({
+            url: window.appData.getVendorInLeadsById,
+            method: "POST",
+            data: {
+                vendor_id: selectedVendorId,
+                _token: window.appData.csrfToken,
+            },
+            beforeSend: function () {
+                $submitButton.prop("disabled", true);
+            },
+            success: function (response) {
+                $nameInput.val(response.vendor_name);
+                $phoneInput.val(response.vendor_cell);
+
+                image_url = response.image_url;
+            },
+            error: function () {
+                alert("Failed to fetch vendor details. Please try again.");
+            },
+            complete: function () {
+                $submitButton.prop("disabled", false);
+            },
+        });
+    });
+    $selectVendorContracts.on("changed.bs.select", function () {
+        const selectedVendorId = $(this).val();
+
+        if (!selectedVendorId) {
+            $countrycode.selectpicker("refresh");
+            $phoneInput.val("");
+            $nameInput.val("");
+            return;
+        }
+
+        $.ajax({
+            url: window.appData.getVendorById,
+            method: "POST",
+            data: {
+                vendor_id: selectedVendorId,
+                _token: window.appData.csrfToken,
+            },
+            beforeSend: function () {
+                $submitButton.prop("disabled", true);
+            },
+            success: function (response) {
+                $nameInput.val(response.vendor_name);
+                $phoneInput.val(response.vendor_cell);
+
+                image_url = response.image_url;
+            },
+            error: function () {
+                alert("Failed to fetch vendor details. Please try again.");
+            },
+            complete: function () {
+                $submitButton.prop("disabled", false);
+            },
+        });
+    });
+
+    const $vendorChatForm = $("#vendorinChatForm");
+
+    $vendorChatForm.on("submit", function (e) {
+        e.preventDefault();
+
+        $submitButton.prop("disabled", true);
+
+        const formData = {
+            _token: window.appData.csrfToken,
+            vendor_name: $nameInput.val(),
+            vendor_country_code: $countrycode.val(),
+            vendor_phone: $phoneInput.val(),
+            company_logo: image_url,
+        };
+        $.ajax({
+            url: $vendorChatForm.attr("action"),
+            method: "POST",
+            data: formData,
+            success: function (response) {
+                $vendorChatForm
+                    .find('input[type="text"], input[type="number"], select')
+                    .val("");
+                $vendorChatForm.find(".selectpicker").selectpicker("refresh");
+
+                fetch(`${window.appData.fetchUpdatedVendor}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": window.appData.csrfToken,
+                    },
+                    body: JSON.stringify({
+                        channel_sid: response.chatsid,
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((vendor) => {
+                        if (vendor) {
+                            updateVendor(vendor);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching updated vendor:", error);
+                    });
+            },
+
+            error: function (xhr) {
+                const errors = xhr.responseJSON.message;
+                $("#error-messages").html(errors);
+            },
+
+            complete: function () {
+                $submitButton.prop("disabled", false);
+                closePopup();
+            },
+        });
+    });
+    // END OF SEA
+    $formBtn.on("click", function () {
+        $popupOverlay.fadeIn(300).css("display", "flex");
+        $("body").css("overflow", "hidden");
+    });
+
+    $closeForm.on("click", function () {
+        closePopup();
+    });
+
+    $popupOverlay.on("click", function (event) {
+        if ($(event.target).is($popupOverlay)) {
+            closePopup();
+        }
+    });
+
+    function closePopup() {
+        $popupOverlay.fadeOut(300);
+        $nameInput.val("");
+        $phoneInput.val("");
+        $selectVendorContracts.selectpicker("refresh");
+        $countrycode.selectpicker("refresh");
+        $("body").css("overflow", "");
+    }
 
     //LOAD THE MSGS
     function loadMessages() {

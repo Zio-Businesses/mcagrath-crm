@@ -198,7 +198,6 @@
     <script src="https://sdk.twilio.com/js/conversations/v1.0/twilio-conversations.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="<?php echo e(asset('twilio-chat/javascript/main.js')); ?>"></script>
-    <script src="<?php echo e(asset('twilio-chat/javascript/form.js')); ?>"></script>
     <script>
         window.appData = {
             csrfToken: "<?php echo e(csrf_token()); ?>",
