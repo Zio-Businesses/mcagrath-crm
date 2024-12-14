@@ -75,9 +75,18 @@
     flex-direction: column;
 }
 
+#chat-title{
+    max-width: 40rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .userdetails span {
     font-weight: bold;
     margin-top: 1rem;
+    max-width: 10rem;
+    overflow: hidden;
+    max-height: 1.5rem;
+    text-overflow: ellipsis;
 }
 
 .usercontent {
