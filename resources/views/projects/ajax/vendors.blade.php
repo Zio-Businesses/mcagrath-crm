@@ -84,7 +84,7 @@
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <a href="javascript:;" class="text-dark toggle-original" data-original-id="{{ $item->id }}"><i
                                             class="fa fa-chevron-down"></i>
-                                        @lang('Original')</a><br/>
+                                        @lang('Original')</a>
                                     <div class="row border rounded mr-0 bg-additional-grey d-none" id="original-{{ $item->id }}">
                                         
                                         <input type="hidden" name="project_id" value="{{ $project->id }}">
@@ -169,8 +169,8 @@
                                             </x-forms.input-group>
                                         </div>
                                     </div>
-                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="{{ $item->id }}"><i
-                                            class="fa fa-chevron-down"></i>
+                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="{{ $item->id }}">
+                                        <i class="fa fa-chevron-down"></i>
                                             @lang('Change Order')</a>
                                     <div class="row border rounded mr-0 bg-additional-grey d-none" id="change-notify-group-{{ $item->id }}">
                                         <div class="col-md-2 col-lg-2">

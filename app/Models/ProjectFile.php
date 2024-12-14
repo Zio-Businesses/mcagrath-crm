@@ -55,6 +55,8 @@ class ProjectFile extends BaseModel
 
     const FILE_PATH = 'project-files';
 
+    const AUTO_PATH = 'project-vendor-auto-files';
+
     protected $appends = ['file_url', 'icon'];
 
     public function getFileUrlAttribute()

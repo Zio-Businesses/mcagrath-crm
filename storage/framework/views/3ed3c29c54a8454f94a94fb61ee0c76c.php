@@ -133,7 +133,7 @@
 <?php $component->withAttributes(['id' => 'updateProjectVendor-'.e($item->id).'']); ?>
                                     <a href="javascript:;" class="text-dark toggle-original" data-original-id="<?php echo e($item->id); ?>"><i
                                             class="fa fa-chevron-down"></i>
-                                        <?php echo app('translator')->get('Original'); ?></a><br/>
+                                        <?php echo app('translator')->get('Original'); ?></a>
                                     <div class="row border rounded mr-0 bg-additional-grey d-none" id="original-<?php echo e($item->id); ?>">
                                         
                                         <input type="hidden" name="project_id" value="<?php echo e($project->id); ?>">
@@ -415,8 +415,8 @@
 <?php endif; ?>
                                         </div>
                                     </div>
-                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="<?php echo e($item->id); ?>"><i
-                                            class="fa fa-chevron-down"></i>
+                                    <a href="javascript:;" class="text-dark toggle-change-notify" data-change-id="<?php echo e($item->id); ?>">
+                                        <i class="fa fa-chevron-down"></i>
                                             <?php echo app('translator')->get('Change Order'); ?></a>
                                     <div class="row border rounded mr-0 bg-additional-grey d-none" id="change-notify-group-<?php echo e($item->id); ?>">
                                         <div class="col-md-2 col-lg-2">

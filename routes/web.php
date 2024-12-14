@@ -158,6 +158,7 @@ use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController;
 use App\Http\Controllers\VendorWnineDocController; 
 use App\Http\Controllers\VendorChangeNotificationController; 
+use App\Http\Controllers\VendorWorkOrderStatusController; 
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -977,4 +978,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
       //Vendor Change Notification
       Route::resource('change-notification', VendorChangeNotificationController::class);
       Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
+
+      //Vendor Work Order Status
+      Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
+
 });
