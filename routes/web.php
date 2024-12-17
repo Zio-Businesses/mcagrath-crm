@@ -156,8 +156,8 @@ use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController;
-use App\Http\Controllers\VendorChangeNotificationController; 
-use App\Http\Controllers\VendorWorkOrderStatusController; 
+use App\Http\Controllers\VendorChangeNotificationController;
+use App\Http\Controllers\VendorWorkOrderStatusController;
 
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
@@ -318,7 +318,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
-            
+
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');
@@ -964,21 +964,25 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('project-filter/change-status/{id}', [ProjectCustomFilterController::class, 'changestatus'])->name('project-filter.change-status');
     Route::post('project-filter/clear/{id}', [ProjectCustomFilterController::class, 'clear'])->name('project-filter.clear');
 
+    //Vendor-custom-filter 
+    Route::resource('vendor-filter', VendorCustomFilterController::class);
+    Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
+    Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
+    
     //Project-Vendor-custom-filter 
     Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
     Route::post('projectvendor-filter/change-status/{id}', [ProjectVendorCustomFilterController::class, 'changestatus'])->name('projectvendor-filter.change-status');
     Route::post('projectvendor-filter/clear/{id}', [ProjectVendorCustomFilterController::class, 'clear'])->name('projectvendor-filter.clear');
 
-      //Lead-Vendor-custom-filter 
-      Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
-      Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
-      Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
+    //Lead-Vendor-custom-filter 
+    Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
+    Route::post('lead-vendor-filter/change-status/{id}', [LeadVendorCustomFilterController::class, 'changestatus'])->name('lead-vendor-filter.change-status');
+    Route::post('lead-vendor-filter/clear/{id}', [LeadVendorCustomFilterController::class, 'clear'])->name('lead-vendor-filter.clear');
 
-      //Vendor Change Notification
-      Route::resource('change-notification', VendorChangeNotificationController::class);
-      Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
+    //Vendor Change Notification
+    Route::resource('change-notification', VendorChangeNotificationController::class);
+    Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
 
-      //Vendor Work Order Status
-      Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
-
+    //Vendor Work Order Status
+    Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
 });
