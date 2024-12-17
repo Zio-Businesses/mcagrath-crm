@@ -74,7 +74,6 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskCalendarController;
 use App\Http\Controllers\TaskCategoryController;
 use App\Http\Controllers\InvoiceFilesController;
-use App\Services\TwilioService;
 use App\Http\Controllers\ClientContactController;
 use App\Http\Controllers\ContractRenewController;
 use App\Http\Controllers\EventCalendarController;
@@ -140,11 +139,6 @@ use App\Http\Controllers\VendorProjectController;
 use App\Http\Controllers\CancelledReasonController;
 use App\Http\Controllers\VendorEstimateFilesController;
 use App\Http\Controllers\ProjectCustomFilterController;
-use App\Http\Controllers\TwilioController;
-use App\Http\Controllers\TwilioConversationController;
-use App\Http\Controllers\TwilioChatController;
-use App\Http\Controllers\TwilioWebhookController;
-use App\Http\Controllers\TwilioTokenController;
 use App\Http\Controllers\ProjectVendorCustomFilterController;
 use App\Http\Controllers\VendorCustomFilterController;
 use App\Http\Controllers\LeadVendorCustomFilterController;
@@ -158,9 +152,13 @@ use App\Http\Controllers\VendorWorkersCompDocController;
 use App\Http\Controllers\VendorWnineDocController;
 use App\Http\Controllers\VendorChangeNotificationController;
 use App\Http\Controllers\VendorWorkOrderStatusController;
-
+use App\Services\TwilioService;
+use App\Http\Controllers\TwilioController;
+use App\Http\Controllers\TwilioConversationController;
+use App\Http\Controllers\TwilioChatController;
+use App\Http\Controllers\TwilioWebhookController;
+use App\Http\Controllers\TwilioTokenController;
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
-
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -609,26 +607,24 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('messages', MessageController::class);
 
 
-    //Twilio
-    Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
-    Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
-    Route::post('getVendorInChat', [TwilioController::class, 'getVendorInChat'])->name('getVendorInChat');
-    Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
-    Route::post('getVendorInLeadsById', [TwilioController::class, 'getVendorInLeadsById'])->name('getVendorInLeadsById');
-    Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
-    Route::post('fetchUpdatedVendor', [TwilioController::class, 'fetchUpdatedVendor'])->name('fetchUpdatedVendor');
-    Route::post('handleMessageAdded', [TwilioController::class, 'handleMessageAdded'])->name('handleMessageAdded');
-
-    Route::get('/test-twilio', [TwilioConversationController::class, 'getConversation'])->name('getConversation');
-    Route::post('/create-conversation', [TwilioConversationController::class, 'createConversation'])->name('createConversation');
-    Route::get('/delete-conversation/{sid}', [TwilioConversationController::class, 'deleteConversation'])->name('deleteConversation');
-
-    Route::post('twilio-send', [TwilioChatController::class, 'send'])->name('twilio-send');
-    Route::get('twilio-conversations', [TwilioChatController::class, 'index']);
-    Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');
-
-
-
+     //Twilio
+     Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
+     Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
+     Route::post('getVendorInChat', [TwilioController::class, 'getVendorInChat'])->name('getVendorInChat');
+     Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
+     Route::post('getVendorInLeadsById', [TwilioController::class, 'getVendorInLeadsById'])->name('getVendorInLeadsById');
+     Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
+     Route::post('fetchUpdatedVendor', [TwilioController::class, 'fetchUpdatedVendor'])->name('fetchUpdatedVendor');
+     Route::post('handleMessageAdded', [TwilioController::class, 'handleMessageAdded'])->name('handleMessageAdded');
+ 
+     Route::get('/test-twilio', [TwilioConversationController::class, 'getConversation'])->name('getConversation');
+     Route::post('/create-conversation', [TwilioConversationController::class, 'createConversation'])->name('createConversation');
+     Route::get('/delete-conversation/{sid}', [TwilioConversationController::class, 'deleteConversation'])->name('deleteConversation');
+ 
+     Route::post('twilio-send', [TwilioChatController::class, 'send'])->name('twilio-send');
+     Route::get('twilio-conversations', [TwilioChatController::class, 'index']);
+     Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');
+     
     // Chat Files
     Route::get('message-file/download/{id}', [MessageFileController::class, 'download'])->name('message_file.download');
     Route::resource('message-file', MessageFileController::class);
@@ -964,15 +960,15 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('project-filter/change-status/{id}', [ProjectCustomFilterController::class, 'changestatus'])->name('project-filter.change-status');
     Route::post('project-filter/clear/{id}', [ProjectCustomFilterController::class, 'clear'])->name('project-filter.clear');
 
-    //Vendor-custom-filter 
-    Route::resource('vendor-filter', VendorCustomFilterController::class);
-    Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
-    Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
-    
     //Project-Vendor-custom-filter 
     Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
     Route::post('projectvendor-filter/change-status/{id}', [ProjectVendorCustomFilterController::class, 'changestatus'])->name('projectvendor-filter.change-status');
     Route::post('projectvendor-filter/clear/{id}', [ProjectVendorCustomFilterController::class, 'clear'])->name('projectvendor-filter.clear');
+
+    //Vendor-custom-filter 
+    Route::resource('vendor-filter', VendorCustomFilterController::class);
+    Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
+    Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
 
     //Lead-Vendor-custom-filter 
     Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
