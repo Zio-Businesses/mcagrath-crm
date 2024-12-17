@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use \Illuminate\Validation\ValidationException;
 
+
 class LoginController extends Controller
 {
 
@@ -58,7 +59,6 @@ class LoginController extends Controller
 
             // Attempt login
             Auth::login($user);
-
             return redirect()->route('dashboard');
         }
 
@@ -127,7 +127,6 @@ class LoginController extends Controller
             DB::commit();
 
             Auth::login($user, true);
-
             return redirect()->intended($this->redirectPath());
 
         } catch (Exception $e) {

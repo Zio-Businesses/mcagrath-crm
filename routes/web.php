@@ -149,9 +149,16 @@ use App\Http\Controllers\VendorCoiDocController;
 use App\Http\Controllers\VendorContractorLicenseDocController;
 use App\Http\Controllers\VendorBuisnessLicenseDocController;
 use App\Http\Controllers\VendorWorkersCompDocController;
-use App\Http\Controllers\VendorWnineDocController; 
-use App\Http\Controllers\VendorChangeNotificationController; 
-use App\Http\Controllers\VendorWorkOrderStatusController; 
+use App\Http\Controllers\VendorWnineDocController;
+use App\Http\Controllers\VendorChangeNotificationController;
+use App\Http\Controllers\VendorWorkOrderStatusController;
+use App\Services\TwilioService;
+use App\Http\Controllers\TwilioController;
+use App\Http\Controllers\TwilioConversationController;
+use App\Http\Controllers\TwilioChatController;
+use App\Http\Controllers\TwilioWebhookController;
+use App\Http\Controllers\TwilioTokenController;
+Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('image/upload', [ImageController::class, 'store'])->name('image.store');
@@ -163,7 +170,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('dashboard-advanced', [DashboardController::class, 'advancedDashboard'])->name('dashboard.advanced');
     Route::post('dashboard/widget/{dashboardType}', [DashboardController::class, 'widget'])->name('dashboard.widget');
     Route::post('dashboard/week-timelog', [DashboardController::class, 'weekTimelog'])->name('dashboard.week_timelog');
-    Route::get('dashboard/lead-data/{id}', [DashboardController  ::class, 'getLeadStage'])->name('dashboard.deal-stage-data');
+    Route::get('dashboard/lead-data/{id}', [DashboardController::class, 'getLeadStage'])->name('dashboard.deal-stage-data');
 
     Route::get('attendances/clock-in-modal', [DashboardController::class, 'clockInModal'])->name('attendances.clock_in_modal');
     Route::post('attendances/store-clock-in', [DashboardController::class, 'storeClockIn'])->name('attendances.store_clock_in');
@@ -259,7 +266,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('projectPriority', ProjectPriorityController::class);
     Route::resource('delayedBy', ProjectDelayedByController::class);
     Route::resource('propertyType', PropertyTypeController::class);
-    Route::resource('occupancyStatus',OccupancyStatusController::class);
+    Route::resource('occupancyStatus', OccupancyStatusController::class);
     Route::post('import-subcategories', [ProjectSubCategoryController::class, 'import'])->name('subcategory.import');
     Route::post('project-settings/import-project-subcategory', [ProjectSubCategoryController::class, 'import'])->name('project-settings.importProjectSubCategory');
     Route::get('project-settings/export-project-subcategory', [ProjectSubCategoryController::class, 'export'])->name('project-settings.exportProjectSubCategory');
@@ -302,14 +309,14 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);
             Route::resource('sow', ScopeOfWorkController::class);
-            
+
             Route::resource('projectvendors', ProjectVendorController::class);
             Route::get('projectvendors/changenotification/{id}', [ProjectVendorController::class, 'changenotification'])->name('projectvendors.changenotification');
             Route::get('projectvendors/changenotificationhistory/{id}', [ProjectVendorController::class, 'changenotificationhistory'])->name('projectvendors.changenotificationhistory');
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
-            
+
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');
@@ -335,7 +342,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('project-template-task', ProjectTemplateTaskController::class);
             Route::resource('project-template-sub-task', ProjectTemplateSubTaskController::class);
             Route::resource('project-calendar', ProjectCalendarController::class);
-
         }
     );
 
@@ -407,7 +413,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('awards/quick-create', [AwardController::class, 'quickCreate'])->name('awards.quick-create');
             Route::post('awards/quick-store', [AwardController::class, 'quickStore'])->name('awards.quick-store');
             Route::resource('awards', AwardController::class);
-        });
+        }
+    );
     Route::post('appreciations/apply-quick-action', [AppreciationController::class, 'applyQuickAction'])->name('appreciations.apply_quick_action');
     Route::resource('appreciations', AppreciationController::class);
 
@@ -543,29 +550,29 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::post('import/process', [LeadContactController::class, 'importProcess'])->name('lead-contact.import.process');
     });
 
-    
 
-    
+
+
     // deals route
-    Route::get('lead-handle',[LeadVendorController::class,'handle'])->name('lead-vendor.handle');
-    Route::get('vendors',[VendorController::class,'index'])->name('vendors.index');
+    Route::get('lead-handle', [LeadVendorController::class, 'handle'])->name('lead-vendor.handle');
+    Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::post('vendors/vendor-list/{id}', [VendorController::class, 'vendorList'])->name('vendors.vendors_list');
-    Route::get('vendorcheck/{email}',[LeadVendorController::class,'vendorcheck'])->name('vendors.check');
+    Route::get('vendorcheck/{email}', [LeadVendorController::class, 'vendorcheck'])->name('vendors.check');
     Route::get('vendors/download/{id}', [VendorController::class, 'download'])->name('vendors.download');
     Route::get('vendors/downloadwaiveform/{id}', [VendorController::class, 'downloadwaiverform'])->name('vendorswaiverform.download');
-    Route::get('vendortrack',[LeadVendorController::class,'index'])->name('vendortrack.index');
-    Route::post('vendors/sendwcform',[VendorController::class,'sendwcform'])->name('vendors.sendwcform');
+    Route::get('vendortrack', [LeadVendorController::class, 'index'])->name('vendortrack.index');
+    Route::post('vendors/sendwcform', [VendorController::class, 'sendwcform'])->name('vendors.sendwcform');
     Route::get('vendortrack/import-LeadVendor', [LeadVendorController::class, 'importLeadVendor'])->name('vendortrack.importLeadVendor');
     Route::post('vendortrack/import-store-LeadVendor', [LeadVendorController::class, 'importStore'])->name('vendortrack.importStore');
-    Route::post('sign',[VendorController::class,'companysign'])->name('vendors.companysign');
-    Route::post('changevendorstatus/{id}',[VendorController::class,'changevendorstatus'])->name('vendors.changevendorstatus');
-    Route::post('proposal/{id}',[LeadVendorController::class,'proposal'])->name('vendortrack.proposal');
-    Route::get('notes/{id}',[LeadVendorController::class,'notes'])->name('vendortrack.notes');
-    Route::get('notescreate/{id}',[LeadVendorController::class,'notescreate'])->name('vendortrack.notescreate');
-    Route::post('notesstore',[LeadVendorController::class,'notesstore'])->name('vendortrack.notesstore');
-    Route::resource('vendortrack',LeadVendorController::class);
+    Route::post('sign', [VendorController::class, 'companysign'])->name('vendors.companysign');
+    Route::post('changevendorstatus/{id}', [VendorController::class, 'changevendorstatus'])->name('vendors.changevendorstatus');
+    Route::post('proposal/{id}', [LeadVendorController::class, 'proposal'])->name('vendortrack.proposal');
+    Route::get('notes/{id}', [LeadVendorController::class, 'notes'])->name('vendortrack.notes');
+    Route::get('notescreate/{id}', [LeadVendorController::class, 'notescreate'])->name('vendortrack.notescreate');
+    Route::post('notesstore', [LeadVendorController::class, 'notesstore'])->name('vendortrack.notesstore');
+    Route::resource('vendortrack', LeadVendorController::class);
     Route::resource('clients', ClientController::class);
-    Route::resource('vendors',VendorController::class);
+    Route::resource('vendors', VendorController::class);
     Route::resource('vendor-crud', LeadVendorController::class);
     Route::resource('lead-contact', LeadContactController::class);
     Route::resource('vendor-module-notes', VendorModuleNotesController::class);
@@ -599,6 +606,25 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::post('messages/check_messages', [MessageController::class, 'checkNewMessages'])->name('messages.check_new_message');
     Route::resource('messages', MessageController::class);
 
+
+     //Twilio
+     Route::get('twilio-chat', [TwilioController::class, 'index'])->name('twilio-chat');
+     Route::post('fetchVendorsInchat', [TwilioController::class, 'fetchVendors'])->name('fetchVendors');
+     Route::post('getVendorInChat', [TwilioController::class, 'getVendorInChat'])->name('getVendorInChat');
+     Route::post('getVendorById', [TwilioController::class, 'getVendorById'])->name('getVendorById');
+     Route::post('getVendorInLeadsById', [TwilioController::class, 'getVendorInLeadsById'])->name('getVendorInLeadsById');
+     Route::post('vendor-store', [TwilioController::class, 'store'])->name('vendor-store');
+     Route::post('fetchUpdatedVendor', [TwilioController::class, 'fetchUpdatedVendor'])->name('fetchUpdatedVendor');
+     Route::post('handleMessageAdded', [TwilioController::class, 'handleMessageAdded'])->name('handleMessageAdded');
+ 
+     Route::get('/test-twilio', [TwilioConversationController::class, 'getConversation'])->name('getConversation');
+     Route::post('/create-conversation', [TwilioConversationController::class, 'createConversation'])->name('createConversation');
+     Route::get('/delete-conversation/{sid}', [TwilioConversationController::class, 'deleteConversation'])->name('deleteConversation');
+ 
+     Route::post('twilio-send', [TwilioChatController::class, 'send'])->name('twilio-send');
+     Route::get('twilio-conversations', [TwilioChatController::class, 'index']);
+     Route::get('generatetwiliotoken', [TwilioTokenController::class, 'generateToken'])->name('generatetwiliotoken');
+     
     // Chat Files
     Route::get('message-file/download/{id}', [MessageFileController::class, 'download'])->name('message_file.download');
     Route::resource('message-file', MessageFileController::class);
@@ -819,7 +845,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('task-report', TaskReportController::class);
 
     Route::post('time-log-report-chart', [TimelogReportController::class, 'timelogChartData'])->name('time-log-report.chart');
-    Route::get('time-log-consolidated-report', [TimelogReportController::class,'consolidateIndex'])->name('time-log-consolidated.report');
+    Route::get('time-log-consolidated-report', [TimelogReportController::class, 'consolidateIndex'])->name('time-log-consolidated.report');
     Route::resource('time-log-report', TimelogReportController::class);
     Route::post('time-log-report-time', [TimelogReportController::class, 'totalTime'])->name('time-log-report.time');
 
@@ -896,64 +922,63 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     // Vendor Estimates
     Route::resource('vendor-estimates', VendorEstimateController::class);
     Route::get('vendor-estimates/download/{id}', [VendorEstimateController::class, 'download'])->name('vendor-estimates.download');
-    Route::post('vendor-estimates/cbid/{id}',[VendorEstimateController::class,'changecbid'])->name('vendors.changecbid');
+    Route::post('vendor-estimates/cbid/{id}', [VendorEstimateController::class, 'changecbid'])->name('vendors.changecbid');
 
     //Project - Vendors
     Route::resource('vendorproject', VendorProjectController::class);
 
     //Vendor Estimate Files
-     Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');
-     Route::resource('vendor-estimates-files', VendorEstimateFilesController::class);
- 
-     //Vendor Docs
-     Route::get('vendor-docs/download/{id}', [VendorDocController::class, 'download'])->name('vendor-docs.download');
-     Route::resource('vendor-docs', VendorDocController::class);
+    Route::get('vendor-estimates-files/download/{id}', [VendorEstimateFilesController::class, 'download'])->name('vendor-estimates-files.download');
+    Route::resource('vendor-estimates-files', VendorEstimateFilesController::class);
 
-     //Vendor COI DOC
-     Route::resource('vendor-coi', VendorCoiDocController::class);
-     Route::get('vendor-coi/download/{id}', [VendorCoiDocController::class, 'download'])->name('vendor-coi.download');
+    //Vendor Docs
+    Route::get('vendor-docs/download/{id}', [VendorDocController::class, 'download'])->name('vendor-docs.download');
+    Route::resource('vendor-docs', VendorDocController::class);
 
-     //Vendor Contractor License DOC
-     Route::resource('vendor-contractor-license',  VendorContractorLicenseDocController::class);
-     Route::get('vendor-contractor-license/download/{id}', [VendorContractorLicenseDocController::class, 'download'])->name('vendor-contractor-license.download');
+    //Vendor COI DOC
+    Route::resource('vendor-coi', VendorCoiDocController::class);
+    Route::get('vendor-coi/download/{id}', [VendorCoiDocController::class, 'download'])->name('vendor-coi.download');
 
-     //Vendor Buisness License DOC
-     Route::resource('vendor-buisness-license',  VendorBuisnessLicenseDocController::class);
-     Route::get('vendor-buisness-license/download/{id}', [VendorBuisnessLicenseDocController::class, 'download'])->name('vendor-buisness-license.download');
+    //Vendor Contractor License DOC
+    Route::resource('vendor-contractor-license',  VendorContractorLicenseDocController::class);
+    Route::get('vendor-contractor-license/download/{id}', [VendorContractorLicenseDocController::class, 'download'])->name('vendor-contractor-license.download');
 
-     //Vendor Workers Comp DOC
-     Route::resource('vendor-wnine',  VendorWnineDocController::class);
-     Route::get('vendor-wnine/download/{id}', [VendorWnineDocController::class, 'download'])->name('vendor-wnine.download');
+    //Vendor Buisness License DOC
+    Route::resource('vendor-buisness-license',  VendorBuisnessLicenseDocController::class);
+    Route::get('vendor-buisness-license/download/{id}', [VendorBuisnessLicenseDocController::class, 'download'])->name('vendor-buisness-license.download');
 
-     //Vendor W9 DOC
-     Route::resource('vendor-workers-comp',  VendorWorkersCompDocController::class);
-     Route::get('vendor-workers-comp/download/{id}', [VendorWorkersCompDocController::class, 'download'])->name('vendor-workers-comp.download');
+    //Vendor Workers Comp DOC
+    Route::resource('vendor-wnine',  VendorWnineDocController::class);
+    Route::get('vendor-wnine/download/{id}', [VendorWnineDocController::class, 'download'])->name('vendor-wnine.download');
 
-     //Project-custom-filter 
-     Route::resource('project-filter', ProjectCustomFilterController::class);
-     Route::post('project-filter/change-status/{id}',[ProjectCustomFilterController::class,'changestatus'])->name('project-filter.change-status');
-     Route::post('project-filter/clear/{id}',[ProjectCustomFilterController::class,'clear'])->name('project-filter.clear');
+    //Vendor W9 DOC
+    Route::resource('vendor-workers-comp',  VendorWorkersCompDocController::class);
+    Route::get('vendor-workers-comp/download/{id}', [VendorWorkersCompDocController::class, 'download'])->name('vendor-workers-comp.download');
 
-     //Project-Vendor-custom-filter 
-     Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
-     Route::post('projectvendor-filter/change-status/{id}',[ProjectVendorCustomFilterController::class,'changestatus'])->name('projectvendor-filter.change-status');
-     Route::post('projectvendor-filter/clear/{id}',[ProjectVendorCustomFilterController::class,'clear'])->name('projectvendor-filter.clear');
+    //Project-custom-filter 
+    Route::resource('project-filter', ProjectCustomFilterController::class);
+    Route::post('project-filter/change-status/{id}', [ProjectCustomFilterController::class, 'changestatus'])->name('project-filter.change-status');
+    Route::post('project-filter/clear/{id}', [ProjectCustomFilterController::class, 'clear'])->name('project-filter.clear');
 
-     //Vendor-custom-filter 
-     Route::resource('vendor-filter', VendorCustomFilterController::class);
-     Route::post('vendor-filter/change-status/{id}',[VendorCustomFilterController::class,'changestatus'])->name('vendor-filter.change-status');
-     Route::post('vendor-filter/clear/{id}',[VendorCustomFilterController::class,'clear'])->name('vendor-filter.clear');
+    //Project-Vendor-custom-filter 
+    Route::resource('project-vendor-filter', ProjectVendorCustomFilterController::class);
+    Route::post('projectvendor-filter/change-status/{id}', [ProjectVendorCustomFilterController::class, 'changestatus'])->name('projectvendor-filter.change-status');
+    Route::post('projectvendor-filter/clear/{id}', [ProjectVendorCustomFilterController::class, 'clear'])->name('projectvendor-filter.clear');
 
-      //Lead-Vendor-custom-filter 
-      Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
-      Route::post('lead-vendor-filter/change-status/{id}',[LeadVendorCustomFilterController::class,'changestatus'])->name('lead-vendor-filter.change-status');
-      Route::post('lead-vendor-filter/clear/{id}',[LeadVendorCustomFilterController::class,'clear'])->name('lead-vendor-filter.clear');
+    //Vendor-custom-filter 
+    Route::resource('vendor-filter', VendorCustomFilterController::class);
+    Route::post('vendor-filter/change-status/{id}', [VendorCustomFilterController::class, 'changestatus'])->name('vendor-filter.change-status');
+    Route::post('vendor-filter/clear/{id}', [VendorCustomFilterController::class, 'clear'])->name('vendor-filter.clear');
 
-      //Vendor Change Notification
-      Route::resource('change-notification', VendorChangeNotificationController::class);
-      Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
+    //Lead-Vendor-custom-filter 
+    Route::resource('lead-vendor-filter', LeadVendorCustomFilterController::class);
+    Route::post('lead-vendor-filter/change-status/{id}', [LeadVendorCustomFilterController::class, 'changestatus'])->name('lead-vendor-filter.change-status');
+    Route::post('lead-vendor-filter/clear/{id}', [LeadVendorCustomFilterController::class, 'clear'])->name('lead-vendor-filter.clear');
 
-      //Vendor Work Order Status
-      Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
+    //Vendor Change Notification
+    Route::resource('change-notification', VendorChangeNotificationController::class);
+    Route::post('projectvendors/changenotifyresentlink/{id}', [VendorChangeNotificationController::class, 'resentLink'])->name('projectvendorschangenotify.resentlink');
 
+    //Vendor Work Order Status
+    Route::resource('vendor-work-status', VendorWorkOrderStatusController::class);
 });

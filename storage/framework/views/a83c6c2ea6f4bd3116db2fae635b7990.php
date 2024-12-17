@@ -1,1 +1,0 @@
-<?php echo e($text); ?><?php /**PATH C:\xampp\htdocs\public_html\resources\views/vendor/mail/text/text.blade.php ENDPATH**/ ?>
