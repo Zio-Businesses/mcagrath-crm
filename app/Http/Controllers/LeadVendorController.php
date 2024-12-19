@@ -71,7 +71,7 @@ class LeadVendorController extends AccountBaseController
                 $leadContact->poc = $request->poc;
                 $leadContact->state = $request->state;
                 $leadContact->county = $request->county;
-                $leadContact->city = $request->city;
+                $leadContact->city = $request->city
                 $leadContact->contractor_type = $request->contractor_type;
                 $leadContact->lead_source = $request->lead_source;
                 $leadContact->website=$request->website;
