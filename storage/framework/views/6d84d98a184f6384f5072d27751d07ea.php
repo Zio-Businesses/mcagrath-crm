@@ -1023,7 +1023,7 @@
         <?php endif; ?>
     <?php endif; ?>
 <!-- NAV ITEM - SMS_CHAT -->
-    <?php if (isset($component)) { $__componentOriginal16c5b89192469ba970d54fc9b83541bc = $component; } ?>
+    <!-- <?php if (isset($component)) { $__componentOriginal16c5b89192469ba970d54fc9b83541bc = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal16c5b89192469ba970d54fc9b83541bc = $attributes; } ?>
 <?php $component = App\View\Components\MenuItem::resolve(['icon' => 'chat-left-text','text' => __('app.menu.smschat'),'link' => route('twilio-chat')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('menu-item'); ?>
@@ -1048,7 +1048,7 @@
 <?php if (isset($__componentOriginal16c5b89192469ba970d54fc9b83541bc)): ?>
 <?php $component = $__componentOriginal16c5b89192469ba970d54fc9b83541bc; ?>
 <?php unset($__componentOriginal16c5b89192469ba970d54fc9b83541bc); ?>
-<?php endif; ?>
+<?php endif; ?> -->
 <!-- NAV ITEM - GDPR -->
     <?php if(in_array('client', user_roles()) && $gdpr->enable_gdpr): ?>
         <?php if (isset($component)) { $__componentOriginal16c5b89192469ba970d54fc9b83541bc = $component; } ?>

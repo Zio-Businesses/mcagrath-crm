@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ asset('vendor/css/dropzone.min.css') }}">
+<link rel="stylesheet" href="<?php echo e(asset('vendor/css/dropzone.min.css')); ?>">
 <style>
 .dropify-wrapper.has-preview .dropify-clear
 {
@@ -34,19 +34,28 @@
     <!-- Contractor License -->
     <div class="row p-2">
         <div class="col-12">
-            <x-form id="save-contractor-license">
+            <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-contractor-license']); ?>
                 <div class="border-grey d-xl-flex">
                     <div class="d-flex flex-wrap align-items-start">
-                        <input type="hidden" name="vendor_id_cont" value="{{$vendorDetail->id}}"/>
+                        <input type="hidden" name="vendor_id_cont" value="<?php echo e($vendorDetail->id); ?>"/>
                         <input type="file" class="dropify w-100-md" id="contractor_license_file" name="contractor_license_file" 
-                            data-default-file="{{$contractor_license?->filename ? $contractor_license->cot_image_url : null}}"/>
+                            data-default-file="<?php echo e($contractor_license?->filename ? $contractor_license->cot_image_url : null); ?>"/>
                     </div>
 
                     <!-- Title and Details -->
                     <div class="details-section flex-grow-1 ml-3 ml-0-md">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                             <p class="f-14 font-weight-bold mb-0">Contractor License</p>                           
-                            @if($contractor_license?->filename)
+                            <?php if($contractor_license?->filename): ?>
                             <div class="dropdown ml-auto">
                                 <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,53 +63,71 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                        href="{{ $contractor_license->cot_image_url }}">@lang('app.view')</a>
+                                        href="<?php echo e($contractor_license->cot_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-contractor-license"
-                                        data-row-id="{{ $contractor_license->id }}" href="javascript:;">@lang('Edit')</a>
+                                        data-row-id="<?php echo e($contractor_license->id); ?>" href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                        href="{{ route('vendor-contractor-license.download', md5($contractor_license->id)) }}">@lang('app.download')</a>
+                                        href="<?php echo e(route('vendor-contractor-license.download', md5($contractor_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-contractor-license"
-                                        data-row-id="{{ $contractor_license->id }}" href="javascript:;">@lang('Remove File')</a>
+                                        data-row-id="<?php echo e($contractor_license->id); ?>" href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                                 </div>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Expiry Date</p>
-                                <p class="f-14">{{ $contractor_license && $contractor_license->expiry_date ? $contractor_license->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($contractor_license && $contractor_license->expiry_date ? $contractor_license->expiry_date->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added By</p>
-                                <p class="f-14">{{ $contractor_license->added->name ?? '' }}</p>
+                                <p class="f-14"><?php echo e($contractor_license->added->name ?? ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added Date</p>
-                                <p class="f-14">{{ $contractor_license && $contractor_license->created_at ? $contractor_license->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($contractor_license && $contractor_license->created_at ? $contractor_license->created_at->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </x-form>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
         </div>
     </div>
 
     <!-- Business License -->
     <div class="row p-2">
         <div class="col-12">
-            <x-form id="save-buisness-license">
+            <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-buisness-license']); ?>
                 <div class="border-grey d-xl-flex">
                     <div class="d-flex flex-wrap align-items-start">
-                        <input type="hidden" name="vendor_id_buisness" value="{{$vendorDetail->id}}"/>
+                        <input type="hidden" name="vendor_id_buisness" value="<?php echo e($vendorDetail->id); ?>"/>
                         <input type="file" class="dropify w-100-md" id="buisness_license" name="buisness_license"
-                            data-default-file="{{$buisness_license?->filename ? $buisness_license->bul_image_url : null}}"/>
+                            data-default-file="<?php echo e($buisness_license?->filename ? $buisness_license->bul_image_url : null); ?>"/>
                     </div>
 
                     <!-- Title and Details -->
                     <div class="details-section flex-grow-1 ml-3 ml-0-md">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                             <p class="f-14 font-weight-bold mb-0">Business License</p>                           
-                            @if($buisness_license?->filename)
+                            <?php if($buisness_license?->filename): ?>
                             <div class="dropdown ml-auto">
                                 <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -108,53 +135,71 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                        href="{{ $buisness_license->bul_image_url }}">@lang('app.view')</a>
+                                        href="<?php echo e($buisness_license->bul_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-buisness-license"
-                                        data-row-id="{{ $buisness_license->id }}" href="javascript:;">@lang('Edit')</a>
+                                        data-row-id="<?php echo e($buisness_license->id); ?>" href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                        href="{{ route('vendor-buisness-license.download', md5($buisness_license->id)) }}">@lang('app.download')</a>
+                                        href="<?php echo e(route('vendor-buisness-license.download', md5($buisness_license->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-buisness-license"
-                                        data-row-id="{{ $buisness_license->id }}" href="javascript:;">@lang('Remove File')</a>
+                                        data-row-id="<?php echo e($buisness_license->id); ?>" href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                                 </div>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Expiry Date</p>
-                                <p class="f-14">{{ $buisness_license && $buisness_license->expiry_date ? $buisness_license->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($buisness_license && $buisness_license->expiry_date ? $buisness_license->expiry_date->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added By</p>
-                                <p class="f-14">{{ $buisness_license->added->name ?? '' }}</p>
+                                <p class="f-14"><?php echo e($buisness_license->added->name ?? ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added Date</p>
-                                <p class="f-14">{{ $buisness_license && $buisness_license->created_at ? $buisness_license->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($buisness_license && $buisness_license->created_at ? $buisness_license->created_at->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </x-form>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
         </div>
     </div>
 
     <!-- COI -->
     <div class="row p-2">
         <div class="col-12">
-            <x-form id="save-coi">
+            <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-coi']); ?>
                 <div class="border-grey d-xl-flex">
                     <div class="d-flex flex-wrap align-items-start">
-                        <input type="hidden" name="vendor_id_coi" value="{{$vendorDetail->id}}"/>
+                        <input type="hidden" name="vendor_id_coi" value="<?php echo e($vendorDetail->id); ?>"/>
                         <input type="file" class="dropify w-100-md" id="coi" name="coi"
-                            data-default-file="{{$coi?->filename ? $coi->coi_image_url : null}}"/>
+                            data-default-file="<?php echo e($coi?->filename ? $coi->coi_image_url : null); ?>"/>
                     </div>
 
                     <!-- Title and Details -->
                     <div class="details-section flex-grow-1 ml-3 ml-0-md">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                             <p class="f-14 font-weight-bold mb-0">COI</p>                           
-                            @if($coi?->filename)
+                            <?php if($coi?->filename): ?>
                             <div class="dropdown ml-auto">
                                 <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -162,51 +207,69 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                        href="{{ $coi->coi_image_url }}">@lang('app.view')</a>
+                                        href="<?php echo e($coi->coi_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-coi"
-                                        data-row-id="{{ $coi->id }}" href="javascript:;">@lang('Edit')</a>
+                                        data-row-id="<?php echo e($coi->id); ?>" href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                        href="{{ route('vendor-coi.download', md5($coi->id)) }}">@lang('app.download')</a>
+                                        href="<?php echo e(route('vendor-coi.download', md5($coi->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-coi"
-                                        data-row-id="{{ $coi->id }}" href="javascript:;">@lang('Remove File')</a>
+                                        data-row-id="<?php echo e($coi->id); ?>" href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                                 </div>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Expiry Date</p>
-                                <p class="f-14">{{ $coi && $coi->expiry_date ? $coi->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($coi && $coi->expiry_date ? $coi->expiry_date->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added By</p>
-                                <p class="f-14">{{ $coi->added->name ?? '' }}</p>
+                                <p class="f-14"><?php echo e($coi->added->name ?? ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4 mb-3">
                                 <p class="f-14 text-muted mb-1">Added Date</p>
-                                <p class="f-14">{{ $coi && $coi->created_at ? $coi->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($coi && $coi->created_at ? $coi->created_at->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </x-form>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
         </div>
     </div>
     <div class="row p-2">
     <div class="col-12">
-        <x-form id="save-workers-comp">
+        <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-workers-comp']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="d-flex flex-wrap align-items-start">
-                    <input type="hidden" name="vendor_id_wnine" value="{{$vendorDetail->id}}"/>
+                    <input type="hidden" name="vendor_id_wnine" value="<?php echo e($vendorDetail->id); ?>"/>
                     <input type="file" class="dropify w-100-md" id="wnine" name="wnine" 
-                        data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
+                        data-default-file="<?php echo e($workers_comp?->filename ? $workers_comp->wc_image_url : null); ?>"/>
                 </div>
 
                 <!-- Title and Details -->
                 <div class="details-section flex-grow-1 ml-3 ml-0-md">
                     <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                         <p class="f-14 font-weight-bold mb-0">Workers Comp</p>
-                        @if($workers_comp?->filename)
+                        <?php if($workers_comp?->filename): ?>
                         <div class="dropdown ml-auto">
                             <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -214,53 +277,71 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                    href="{{ $workers_comp->wc_image_url }}">@lang('app.view')</a>
+                                    href="<?php echo e($workers_comp->wc_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-workers-comp"
-                                    data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Edit')</a>
+                                    data-row-id="<?php echo e($workers_comp->id); ?>" href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                    href="{{ route('vendor-workers-comp.download', md5($workers_comp->id)) }}">@lang('app.download')</a>
+                                    href="<?php echo e(route('vendor-workers-comp.download', md5($workers_comp->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-workers-comp"
-                                    data-row-id="{{ $workers_comp->id }}" href="javascript:;">@lang('Remove File')</a>
+                                    data-row-id="<?php echo e($workers_comp->id); ?>" href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                             </div>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12 col-md-4 mb-3">
                             <p class="f-14 text-muted mb-1">Expiry Date</p>
-                            <p class="f-14">{{ $workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                            <p class="f-14"><?php echo e($workers_comp && $workers_comp->expiry_date ? $workers_comp->expiry_date->translatedFormat(company()->date_format) : ''); ?></p>
                         </div>
                         <div class="col-12 col-md-4 mb-3">
                             <p class="f-14 text-muted mb-1">Added By</p>
-                            <p class="f-14">{{ $workers_comp->added->name ?? '' }}</p>
+                            <p class="f-14"><?php echo e($workers_comp->added->name ?? ''); ?></p>
                         </div>
                         <div class="col-12 col-md-4 mb-3">
                             <p class="f-14 text-muted mb-1">Added Date</p>
-                            <p class="f-14">{{ $workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                            <p class="f-14"><?php echo e($workers_comp && $workers_comp->created_at ? $workers_comp->created_at->translatedFormat(company()->date_format) : ''); ?></p>
                         </div>
                     </div>
                 </div>
             </div>
-        </x-form>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
     </div>
 </div>
 
     <!--W9------------------------------------>
     <div class="row p-2 " >
     <div class="col-12">
-        <x-form id="save-wnine">
+        <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-wnine']); ?>
             <div class="border-grey d-xl-flex">
                 <div class="d-flex flex-wrap align-items-start">
-                        <input type="hidden" name="vendor_id_wnine" value="{{$vendorDetail->id}}" />
+                        <input type="hidden" name="vendor_id_wnine" value="<?php echo e($vendorDetail->id); ?>" />
                         <input type="file" class="dropify w-100-md" id="wnine" name="wnine"
-                            data-default-file="{{$wnine?->filename ? $wnine->wnine_image_url : null}}" />
+                            data-default-file="<?php echo e($wnine?->filename ? $wnine->wnine_image_url : null); ?>" />
                     </div>
 
                     <!-- Title and Details -->
                     <div class="details-section flex-grow-1 ml-3 ml-0-md">
                         <div class="d-flex justify-content-between align-items-center mb-2 border-bottom-grey pb-2 no-border-md">
                             <p class="f-14 font-weight-bold mb-0">W9</p>                           
-                            @if($wnine?->filename)
+                            <?php if($wnine?->filename): ?>
                             <div class="dropdown ml-auto">
                                 <button class="btn btn-lg f-14 p-0 text-lightest dropdown-toggle" type="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -268,69 +349,151 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0">
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3" target="_blank"
-                                        href="{{$wnine->wnine_image_url}}">@lang('app.view')</a>
+                                        href="<?php echo e($wnine->wnine_image_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 edit-wnine"
-                                        data-row-id="{{$wnine->id}}" href="javascript:;">@lang('Edit')</a>
+                                        data-row-id="<?php echo e($wnine->id); ?>" href="javascript:;"><?php echo app('translator')->get('Edit'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3"
-                                        href="{{ route('vendor-wnine.download', md5($wnine->id)) }}">@lang('app.download')</a>
+                                        href="<?php echo e(route('vendor-wnine.download', md5($wnine->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                     <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-wnine"
-                                        data-row-id="{{$wnine->id}}" href="javascript:;">@lang('Remove File')</a>
+                                        data-row-id="<?php echo e($wnine->id); ?>" href="javascript:;"><?php echo app('translator')->get('Remove File'); ?></a>
                                 </div>
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 col-md-4  mb-3">
                                 <p class="f-14 text-muted mb-1">Expiry Date</p>
-                                <p class="f-14">{{ $wnine && $wnine->expiry_date ? $wnine->expiry_date->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($wnine && $wnine->expiry_date ? $wnine->expiry_date->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4  mb-3">
                                 <p class="f-14 text-muted mb-1">Added By</p>
-                                <p class="f-14">{{ $wnine->added->name ?? '' }}</p>
+                                <p class="f-14"><?php echo e($wnine->added->name ?? ''); ?></p>
                             </div>
                             <div class="col-12 col-md-4  mb-3">
                                 <p class="f-14 text-muted mb-1">Added Date</p>
-                                <p class="f-14">{{ $wnine && $wnine->created_at ? $wnine->created_at->translatedFormat(company()->date_format) : '' }}</p>
+                                <p class="f-14"><?php echo e($wnine && $wnine->created_at ? $wnine->created_at->translatedFormat(company()->date_format) : ''); ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </x-form>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
     </div>
 </div>
 <div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab">
     
-    <x-cards.data :title="__('modules.projects.files')">
+    <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('modules.projects.files')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.data'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Data::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
         <div class="row" id="add-btn">
             <div class="col-md-12">
                 <a class="f-15 f-w-500" href="javascript:;" id="add-task-file"><i
-                        class="icons icon-plus font-weight-bold mr-1"></i>@lang('modules.projects.uploadFile')</a>
+                        class="icons icon-plus font-weight-bold mr-1"></i><?php echo app('translator')->get('modules.projects.uploadFile'); ?></a>
             </div>
         </div>
-        <x-form id="save-taskfile-data-form" class="d-none">
+        <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-taskfile-data-form','class' => 'd-none']); ?>
             <div class="row">
                 <div class="col-md-12">
-                    <x-forms.file-multiple :fieldLabel="__('modules.projects.uploadFile')" fieldName="file" fieldId="vendor_file" />
+                    <?php if (isset($component)) { $__componentOriginal22e84ee8172e1045de536542f4ffc9a0 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal22e84ee8172e1045de536542f4ffc9a0 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\FileMultiple::resolve(['fieldLabel' => __('modules.projects.uploadFile'),'fieldName' => 'file','fieldId' => 'vendor_file'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.file-multiple'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\FileMultiple::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal22e84ee8172e1045de536542f4ffc9a0)): ?>
+<?php $attributes = $__attributesOriginal22e84ee8172e1045de536542f4ffc9a0; ?>
+<?php unset($__attributesOriginal22e84ee8172e1045de536542f4ffc9a0); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal22e84ee8172e1045de536542f4ffc9a0)): ?>
+<?php $component = $__componentOriginal22e84ee8172e1045de536542f4ffc9a0; ?>
+<?php unset($__componentOriginal22e84ee8172e1045de536542f4ffc9a0); ?>
+<?php endif; ?>
                 </div>
                 <div class="col-md-12">
                     <div class="w-100 justify-content-end d-flex mt-2">
-                        <x-forms.button-cancel id="cancel-taskfile" class="border-0">@lang('app.cancel')
-                        </x-forms.button-cancel>
+                        <?php if (isset($component)) { $__componentOriginalc35c79ed7e812580313ad04118477974 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc35c79ed7e812580313ad04118477974 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonCancel::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-cancel'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonCancel::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'cancel-taskfile','class' => 'border-0']); ?><?php echo app('translator')->get('app.cancel'); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $attributes = $__attributesOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__attributesOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $component = $__componentOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__componentOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
                     </div>
                 </div>
             </div>
-        </x-form>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
       
         <div class="d-flex flex-wrap mt-3" id="task-file-list">
-            @forelse($vendorDetail->docs as $file)
-                <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
-                    @if ($file->icon == 'images')
-                        <img src="{{ $file->file_url }}">
-                    @else
-                        <i class="fa {{ $file->icon }} text-lightest"></i>
-                    @endif
-                    <x-slot name="action">
+            <?php $__empty_1 = true; $__currentLoopData = $vendorDetail->docs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <?php if (isset($component)) { $__componentOriginalcc3eadf431dc104666da55af50a04915 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcc3eadf431dc104666da55af50a04915 = $attributes; } ?>
+<?php $component = App\View\Components\FileCard::resolve(['fileName' => $file->filename,'dateAdded' => $file->created_at->diffForHumans()] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('file-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\FileCard::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                    <?php if($file->icon == 'images'): ?>
+                        <img src="<?php echo e($file->file_url); ?>">
+                    <?php else: ?>
+                        <i class="fa <?php echo e($file->icon); ?> text-lightest"></i>
+                    <?php endif; ?>
+                     <?php $__env->slot('action', null, []); ?> 
                         <div class="dropdown ml-auto file-action">
                             <button
                                 class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
@@ -342,30 +505,48 @@
                                 aria-labelledby="dropdownMenuLink" tabindex="0">
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
                                         target="_blank"
-                                        href="{{ $file->file_url }}">@lang('app.view')</a>
+                                        href="<?php echo e($file->file_url); ?>"><?php echo app('translator')->get('app.view'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 rename-file"
-                                    data-row-id="{{ $file->id }}"
-                                    href="javascript:;">@lang('Rename')</a>
+                                    data-row-id="<?php echo e($file->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('Rename'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
-                                    href="{{ route('vendor-docs.download', md5($file->id)) }}">@lang('app.download')</a>
+                                    href="<?php echo e(route('vendor-docs.download', md5($file->id))); ?>"><?php echo app('translator')->get('app.download'); ?></a>
                                 <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
-                                    data-row-id="{{ $file->id }}"
-                                    href="javascript:;">@lang('app.delete')</a>
+                                    data-row-id="<?php echo e($file->id); ?>"
+                                    href="javascript:;"><?php echo app('translator')->get('app.delete'); ?></a>
                             </div>
                         </div>
-                    </x-slot>
-                </x-file-card>
-            @empty
+                     <?php $__env->endSlot(); ?>
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcc3eadf431dc104666da55af50a04915)): ?>
+<?php $attributes = $__attributesOriginalcc3eadf431dc104666da55af50a04915; ?>
+<?php unset($__attributesOriginalcc3eadf431dc104666da55af50a04915); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcc3eadf431dc104666da55af50a04915)): ?>
+<?php $component = $__componentOriginalcc3eadf431dc104666da55af50a04915; ?>
+<?php unset($__componentOriginalcc3eadf431dc104666da55af50a04915); ?>
+<?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
                     <i class="fa fa-file-excel f-21 w-100"></i>
 
                     <div class="f-15 mt-4">
-                        - @lang('messages.noFileUploaded') -
+                        - <?php echo app('translator')->get('messages.noFileUploaded'); ?> -
                     </div>
                 </div>
-            @endforelse
+            <?php endif; ?>
         </div>
-    </x-cards.data>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $attributes = $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $component = $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
 </div>
 <script>
 $(document).ready(function() {
@@ -387,10 +568,10 @@ $(document).ready(function() {
     })
     Dropzone.autoDiscover = false;
     taskDropzone = new Dropzone("#vendor_file", {
-        dictDefaultMessage: "{{ __('app.dragDrop') }}",
-        url: "{{ route('vendor-docs.store') }}",
+        dictDefaultMessage: "<?php echo e(__('app.dragDrop')); ?>",
+        url: "<?php echo e(route('vendor-docs.store')); ?>",
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
         },
         paramName: "file",
         maxFilesize: DROPZONE_MAX_FILESIZE,
@@ -405,7 +586,7 @@ $(document).ready(function() {
         }
     });
     taskDropzone.on('sending', function(file, xhr, formData) {
-        var ids = "{{ $vendorDetail->id }}";
+        var ids = "<?php echo e($vendorDetail->id); ?>";
         formData.append('vendor_id', ids);
         $.easyBlockUI();
     });
@@ -453,7 +634,7 @@ $(document).ready(function() {
     $('body').on('click', '.rename-file', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-docs.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-docs.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -462,13 +643,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-file', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -480,10 +661,10 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-docs.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-docs.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
 
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
 
                 $.easyAjax({
                     type: 'POST',
@@ -504,7 +685,7 @@ $(document).ready(function() {
     $('#save-coi .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
-                url: "{{route('vendor-coi.store')}}",
+                url: "<?php echo e(route('vendor-coi.store')); ?>",
                 container: '#save-coi',
                 type: "POST",
                 file: true,
@@ -520,13 +701,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-coi', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -538,9 +719,9 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-coi.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-coi.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
                 $.easyAjax({
                     type: 'POST',
                     url: url,
@@ -561,7 +742,7 @@ $(document).ready(function() {
     $('body').on('click', '.edit-coi', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-coi.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-coi.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -570,7 +751,7 @@ $(document).ready(function() {
     $('#save-contractor-license .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
-                url: "{{route('vendor-contractor-license.store')}}",
+                url: "<?php echo e(route('vendor-contractor-license.store')); ?>",
                 container: '#save-contractor-license',
                 type: "POST",
                 file: true,
@@ -586,13 +767,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-contractor-license', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -604,9 +785,9 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-contractor-license.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-contractor-license.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
                 $.easyAjax({
                     type: 'POST',
                     url: url,
@@ -627,7 +808,7 @@ $(document).ready(function() {
     $('body').on('click', '.edit-contractor-license', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-contractor-license.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-contractor-license.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -636,7 +817,7 @@ $(document).ready(function() {
     $('#save-buisness-license .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
-                url: "{{route('vendor-buisness-license.store')}}",
+                url: "<?php echo e(route('vendor-buisness-license.store')); ?>",
                 container: '#save-buisness-license',
                 type: "POST",
                 file: true,
@@ -652,13 +833,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-buisness-license', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -670,9 +851,9 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-buisness-license.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-buisness-license.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
                 $.easyAjax({
                     type: 'POST',
                     url: url,
@@ -693,7 +874,7 @@ $(document).ready(function() {
     $('body').on('click', '.edit-buisness-license', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-buisness-license.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-buisness-license.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -703,7 +884,7 @@ $(document).ready(function() {
     $('#save-wcomp .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
-                url: "{{route('vendor-workers-comp.store')}}",
+                url: "<?php echo e(route('vendor-workers-comp.store')); ?>",
                 container: '#save-wcomp',
                 type: "POST",
                 file: true,
@@ -719,13 +900,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-workers-comp', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -737,9 +918,9 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-workers-comp.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-workers-comp.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
                 $.easyAjax({
                     type: 'POST',
                     url: url,
@@ -760,7 +941,7 @@ $(document).ready(function() {
     $('body').on('click', '.edit-workers-comp', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-workers-comp.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-workers-comp.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -770,7 +951,7 @@ $(document).ready(function() {
     $('#save-wnine .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
-                url: "{{route('vendor-wnine.store')}}",
+                url: "<?php echo e(route('vendor-wnine.store')); ?>",
                 container: '#save-wnine',
                 type: "POST",
                 file: true,
@@ -786,13 +967,13 @@ $(document).ready(function() {
     $('body').on('click', '.delete-wnine', function() {
         var id = $(this).data('row-id');
         Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
             icon: 'warning',
             showCancelButton: true,
             focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
             customClass: {
                 confirmButton: 'btn btn-primary mr-3',
                 cancelButton: 'btn btn-secondary'
@@ -804,9 +985,9 @@ $(document).ready(function() {
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                var url = "{{ route('vendor-wnine.destroy', ':id') }}";
+                var url = "<?php echo e(route('vendor-wnine.destroy', ':id')); ?>";
                 url = url.replace(':id', id);
-                var token = "{{ csrf_token() }}";
+                var token = "<?php echo e(csrf_token()); ?>";
                 $.easyAjax({
                     type: 'POST',
                     url: url,
@@ -827,7 +1008,7 @@ $(document).ready(function() {
     $('body').on('click', '.edit-wnine', function() {
 
         var id = $(this).data('row-id');
-        var url = "{{ route('vendor-wnine.edit', ':id') }}";
+        var url = "<?php echo e(route('vendor-wnine.edit', ':id')); ?>";
         url = url.replace(':id', id);
         $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
         $.ajaxModal(MODAL_LG, url);
@@ -836,4 +1017,4 @@ $(document).ready(function() {
     
 });
 
-</script>
+</script><?php /**PATH C:\laragon\www\public_html\resources\views/vendors/ajax/docs.blade.php ENDPATH**/ ?>
