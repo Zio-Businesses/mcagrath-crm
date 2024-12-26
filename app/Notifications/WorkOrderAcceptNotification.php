@@ -60,12 +60,12 @@ class WorkOrderAcceptNotification extends BaseNotification
         $pro = Project::with('propertyDetails')->findOrFail($vpro->project_id);
         if($this->from=='original')
         {
-            $content = __('This is an Work Order Accpeted Notification') .' for Property Address - '. $pro->propertyDetails->property_address .'. Please click the download button below to get a copy.';
-            $subject = 'Work Order Accepted';
+            $content = __('Thank you for accepting the WO # -') . $pro->project_short_code .' for Property Address - '. $pro->propertyDetails->property_address .'. Click the download pdf below to get the copy. Please contact your Project Coordinator to update them with the appointment date and time.';
+            $subject = 'Work Order Accepted - WO # ' . $pro->project_short_code . ' and Property Address - ' . $pro->propertyDetails->property_address;
         }
         else{
-            $content = __('This is an Change Order Accpeted Notification') .' for Property Address - '. $pro->propertyDetails->property_address .'. Please click the download button below to get a copy.';
-            $subject = 'Change Order Accepted';
+            $content = __('Thank you for accepting the Change Order submitted WO # -') . $pro->project_short_code .' for Property Address - '. $pro->propertyDetails->property_address .'. Click the download pdf below to get the copy. Please contact your Project Coordinator to update them with any further changes or progress.';
+            $subject = 'Change Order Accepted - WO # ' . $pro->project_short_code . ' and Property Address - ' . $pro->propertyDetails->property_address;
         }
         // $filename = 'workorder-' . $vpro->id;
         // $pdfPath = storage_path($this->pdfsent);
@@ -79,6 +79,7 @@ class WorkOrderAcceptNotification extends BaseNotification
                 'content'=>$content,
                 'url' => $url,
                 'themeColor' => $this->company->header_color,
+                'phone'=> $this->company->company_phone,
                 'actionText' => __('Download') . ' ' . __('PDF'),
                 'notifiableName' => $vpro->vendor_name,
             ]);

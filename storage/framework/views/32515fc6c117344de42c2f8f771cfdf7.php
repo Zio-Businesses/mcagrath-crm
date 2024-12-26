@@ -1,0 +1,1 @@
+<?php echo e($text); ?><?php /**PATH C:\laragon\www\public_html\resources\views/vendor/mail/text/text.blade.php ENDPATH**/ ?>

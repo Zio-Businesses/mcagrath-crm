@@ -15,5 +15,6 @@
 @endif
 
 @lang('email.regards'),<br>
-{{ config('app.name') }}
+{{ config('app.name') }}<br>
+{{ $phone }}
 @endcomponent

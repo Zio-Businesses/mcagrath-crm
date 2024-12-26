@@ -87,6 +87,7 @@ class NewVendorWorkOrder extends BaseNotification
                 'content' => $content,
                 'url' => $url,
                 'themeColor' => $this->company->header_color,
+                'phone'=> $this->company->company_phone,
                 'actionText' => __('app.view') . ' ' . __('Work Order'),
                 'notifiableName' => $vpro->vendor_name,
                 ]);

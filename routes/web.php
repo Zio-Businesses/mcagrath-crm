@@ -315,6 +315,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('projectvendors/changenotificationhistory/{id}', [ProjectVendorController::class, 'changenotificationhistory'])->name('projectvendors.changenotificationhistory');
             Route::get('projectvendors/download/{id}', [ProjectVendorController::class, 'download'])->name('projectvendors.download');
             Route::post('projectvendors/linkstatuschange/{id}', [ProjectVendorController::class, 'linkstatuschange'])->name('projectvendors.linkstatuschange');
+            Route::post('projectvendors/wostatuschange/{id}', [ProjectVendorController::class, 'wostatuschange'])->name('projectvendors.wostatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
 
             // Discussion category routes

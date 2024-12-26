@@ -78,6 +78,7 @@ class ProjectVendorController extends AccountBaseController
             $vpro->contract_id=$request->contract_id;
             $vpro->link_status='Sent';
             $vpro->save();
+            \Log::info(config('app.phone'));
             $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
             Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
             return Reply::success(__('New Vendor Added Successfully'));
@@ -92,7 +93,7 @@ class ProjectVendorController extends AccountBaseController
     {
         $vpro = ProjectVendor::findOrFail($id);
         $vpro->project_id = $request->project_id;
-        $vpro->wo_status = $request->wo_status;
+        // $vpro->wo_status = $request->wo_status;
         $vpro->inspection_date = $request->inspection_date == null ? null : companyToYmd($request->inspection_date);
         $vpro->inspection_time = $request->inspection_time == null ? null : Carbon::createFromFormat($this->company->time_format, $request->inspection_time)->format('H:i:s');
         $vpro->re_inspection_date = $request->re_inspection_date == null ? null : companyToYmd($request->re_inspection_date);
@@ -167,6 +168,13 @@ class ProjectVendorController extends AccountBaseController
         if($request->value=='Removed'){
             Notification::route('mail', $vpro->vendor_email_address)->notify(new ProjectVendorRemoved($vpro->id));
         }
+        $vpro->save();
+        return Reply::success(__('Updated Successfully'));
+    }
+    public function wostatuschange(Request $request, $id)
+    {
+        $vpro = ProjectVendor::findOrFail($id);
+        $vpro->wo_status=$request->value;
         $vpro->save();
         return Reply::success(__('Updated Successfully'));
     }

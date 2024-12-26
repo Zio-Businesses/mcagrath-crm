@@ -13,8 +13,8 @@
                 @lang('Add Vendors')
             </x-forms.button-primary>
               <x-cards.data :title="__('Vendors')"
-                otherClasses="border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm">
-                <x-table class="border-0 pb-3 admin-dash-table table-hover">
+                otherClasses="border-0 p-0 d-flex justify-content-between align-items-center ">
+                <x-table class="border-0 pb-3 admin-dash-table table-hover table-responsive-sm">
                     <x-slot name="thead">
                         <th class="pl-20">#</th>
                         <th>@lang('Vendor Name')</th>
@@ -24,6 +24,7 @@
                         <th>@lang('Sow')</th>
                         <th>@lang('Link Sent By')</th>
                         <th>@lang('Link Date')</th>
+                        <th>@lang('Work Order Status')</th>
                         <th>@lang('Link Status')</th>
                         
                         <th class="text-right pr-20">@lang('app.action')</th>
@@ -62,6 +63,15 @@
                                 {{ $item->created_at->format(company()->date_format) }}
                             </td>
                             <td>
+                                <select class="form-control select-picker update-select-wo" name="wo_status" id="wo_status-{{ $item->id }}" data-wo-status-id="{{ $item->id }}">
+                                    <option value="">--</option>
+                                    @foreach ($wostatus as $category)
+                                        <option @selected($item->wo_status == $category->wo_status) value="{{ $category->wo_status }}">
+                                        {{ $category->wo_status }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
                                 <select class="form-control select-picker update-select" name="link_status" id="link_status" data-status-id="{{ $item->id }}">
                                     <option @selected($item->link_status == 'Accepted') value="Accepted" data-content='<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>Accepted'>
                                     </option>
@@ -73,6 +83,7 @@
                                     Removed</option>
                                 </select>
                             </td>
+                            
                             <td class="text-right pr-20">
                                 <a href="javascript:;" class="text-dark toggle-contact-information" data-target="#contact-information-{{ $item->id }}" data-date="{{$item->id}}">
                                     <i class="fa fa-chevron-down"></i> @lang('Show More')
@@ -80,7 +91,7 @@
                             </td>
                         </tr>
                         <tr id="contact-information-{{ $item->id }}" class="contact-information-row d-none">
-                            <td colspan="10">
+                            <td colspan="11">
                                 <x-form id="updateProjectVendor-{{ $item->id }}" method="PUT">
                                     <a href="javascript:;" class="text-dark toggle-original" data-original-id="{{ $item->id }}"><i
                                             class="fa fa-chevron-down"></i>
@@ -88,16 +99,6 @@
                                     <div class="row border rounded mr-0 bg-additional-grey d-none" id="original-{{ $item->id }}">
                                         
                                         <input type="hidden" name="project_id" value="{{ $project->id }}">
-                                        <div class="col-md-2 col-lg-2">
-                                            <x-forms.select fieldId="wo_status-{{ $item->id }}"
-                                                :fieldLabel="__('Work Order Status')" fieldName="wo_status" search="true">
-                                                <option value="">--</option>
-                                                @foreach ($wostatus as $category)
-                                                    <option @selected($item->wo_status == $category->wo_status) value="{{ $category->wo_status }}">
-                                                    {{ $category->wo_status }}</option>
-                                                @endforeach
-                                            </x-forms.select>
-                                        </div>
                                         <div class="col-lg-2">
                                             <x-forms.datepicker fieldId="inspection_date-{{ $item->id }}" custom="true"
                                                 :fieldLabel="__('Inspection Date')" fieldName="inspection_date"
@@ -422,6 +423,28 @@
         var id = select.data('status-id');
         var value = select.val();
         var url="{{ route('projectvendors.linkstatuschange',':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+                url: url,
+                type: 'POST',
+                blockUI: true,
+                data: {
+                        _token: '{{ csrf_token() }}',
+                        value: value
+                    },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        window.location.reload();
+                    } 
+                },
+            });
+        
+    });
+    $('.update-select-wo').change(function() {
+        var select = $(this);
+        var id = select.data('wo-status-id');
+        var value = select.val();
+        var url="{{ route('projectvendors.wostatuschange',':id') }}";
         url = url.replace(':id', id);
         $.easyAjax({
                 url: url,
