@@ -144,7 +144,6 @@ class VendorDataTable extends BaseDataTable
     {
         $request = $this->request();
         $users = VendorContract::query();
-        $users = $users->orderBy('id', 'desc');
         if ($request->searchText != '') {
             $users = $users->where(function ($query) {
                 $query->where('vendor_name', 'like', '%' . request('searchText') . '%')
@@ -211,7 +210,7 @@ class VendorDataTable extends BaseDataTable
      */
     public function html()
     {
-        $dataTable = $this->setBuilder('vendors-table', 2)
+        $dataTable = $this->setBuilder('vendors-table', 3)
             ->parameters([
                 'initComplete' => 'function () {
                    window.LaravelDataTables["vendors-table"].buttons().container()
@@ -254,9 +253,9 @@ class VendorDataTable extends BaseDataTable
             ],
             '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'title' => '#'],
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
-            __('app.name') => ['data' => 'name', 'name' => 'name', 'exportable' => false, 'title' => __('app.name')],
-            __('app.company_name') => ['data' => 'company_name', 'name' => 'compnay_name', 'title' => __('app.company_name')],
-            __('app.email') => ['data' => 'email', 'name' => 'email', 'title' => __('app.email')],
+            __('app.name') => ['data' => 'name', 'name' => 'vendor_name', 'exportable' => false, 'title' => __('app.name')],
+            __('app.company_name') => ['data' => 'company_name', 'name' => 'company_name', 'title' => __('app.company_name')],
+            __('app.email') => ['data' => 'email', 'name' => 'vendor_email', 'title' => __('app.email')],
             __('app.phone') => ['data' => 'cell', 'name' => 'cell', 'title' => __('app.phone')],
             __('app.county') => ['data' => 'county', 'name' => 'county', 'title' => __('app.county')],
             __('app.state') => ['data' => 'state', 'name' => 'state', 'title' => __('app.state')],

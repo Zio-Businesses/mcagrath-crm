@@ -248,7 +248,7 @@ class VendorTrackDataTable extends BaseDataTable
      */
     public function html()
     {
-        $dataTable = $this->setBuilder('vendorstrack-table', 2)
+        $dataTable = $this->setBuilder('vendorstrack-table', 3)
             ->parameters([
                 'initComplete' => 'function () {
                    window.LaravelDataTables["vendorstrack-table"].buttons().container()
