@@ -12,7 +12,9 @@ class VendorChangeNotification extends BaseModel
     protected $casts = [
         'sow_id' => 'array',
         'created_at' => 'datetime',
+        'due_date'=>'datetime',
         'accepted_date'=>'datetime',
+        'rejected_date'=>'datetime',
     ];
     protected $cachedSowRecords = null;
 
