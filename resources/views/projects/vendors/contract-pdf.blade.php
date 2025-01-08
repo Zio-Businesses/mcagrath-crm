@@ -318,6 +318,7 @@
                         </table>
                     </div>
                     @endforeach
+                    <div class="page-break"></div>
                     @if($projectvendor->changenotification)
                         @foreach($projectvendor->changenotification as $key => $changenotify)
                             <hr class="custom-line">
