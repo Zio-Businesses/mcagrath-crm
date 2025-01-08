@@ -23,15 +23,14 @@ $projectArchived = $project->trashed();
 <?php $__env->startSection('filter-section'); ?>
     <!-- FILTER START -->
     <!-- PROJECT HEADER START -->
-
-    <div class="d-flex d-lg-block filter-box project-header bg-white">
+    <?php echo $__env->make('projects.static', ['project' => $project], \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <div class="d-flex d-lg-block filter-box project-header bg-white border-top-grey">
         <div class="mobile-close-overlay w-100 h-100" id="close-client-overlay"></div>
 
         <div class="project-menu" id="mob-client-detail">
             <a class="d-none close-it" href="javascript:;" id="close-client-detail">
                 <i class="fa fa-times"></i>
             </a>
-
             <nav class="tabs">
                 <ul class="-primary">
                     <li>

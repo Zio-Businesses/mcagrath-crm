@@ -35,6 +35,7 @@ class VendorProjectDataTable extends BaseDataTable
         $datatables->editColumn('client_id', fn($row) => $row->client?->id ? view('components.client', ['user' => $row->client]) : '');
         $datatables->editColumn('client_name', fn($row) => $row->client?->id ? $row->client->name_salutation : '');
         $datatables->editColumn('vendor_id', fn($row) => $row?->vendors ? view('components.vendor', ['vendor' => $row->vendors]) : '');
+        $datatables->editColumn('vendor_status', fn($row) => $row?->vendors ? $row->vendors->status : '');
         $datatables->editColumn('property_address', fn($row) => $row->project->propertyDetails?$row->project->propertyDetails->property_address:'N/A');
         $datatables->editColumn('project_status', fn($row) => $row->project->status);
         $datatables->editColumn('created_at', fn($row) => $row->created_at?Carbon::parse($row->created_at)->translatedFormat($this->company->date_format):'N/A');
@@ -285,6 +286,7 @@ class VendorProjectDataTable extends BaseDataTable
             __('Internal Team') => ['data' => 'name', 'name' => 'name', 'visible'=>false, 'title' => __('Internal Team')],
             __('Work Order #') => ['data' => 'project', 'name' => 'project_id', 'title' => __('Work Order #')],
             __('Vendor') => ['data' => 'vendor_id', 'name' => 'vendor_id', 'width' => '15%', 'exportable' => false, 'title' => __('Vendor')],
+            __('Vendor Status') => ['data' => 'vendor_status', 'name' => 'vendor_status', 'width' => '15%', 'title' => __('Vendor status')],
             __('Vendors') => ['data' => 'vendor_name', 'name' => 'vendor_name', 'width' => '15%', 'visible' => false, 'title' => __('Vendors')],
             __('Vendor Ph #') => ['data' => 'vendor_phone', 'name' => 'vendor_phone', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Ph #')],
             __('Vendor Email') => ['data' => 'vendor_email_address', 'name' => 'vendor_email_address', 'width' => '15%', 'visible' => false, 'title' => __('Vendor Email')],

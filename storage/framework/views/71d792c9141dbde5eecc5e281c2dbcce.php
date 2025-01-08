@@ -1,10 +1,10 @@
-@extends('layouts.app')
 
-@push('datatable-styles')
-    @include('sections.datatable_css')
-@endpush
 
-@section('filter-section')
+<?php $__env->startPush('datatable-styles'); ?>
+    <?php echo $__env->make('sections.datatable_css', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+<?php $__env->stopPush(); ?>
+
+<?php $__env->startSection('filter-section'); ?>
 <style>
 
 #vendors-projects-table th:nth-child(4),
@@ -47,7 +47,16 @@
     }
 </style>
 
-<x-filters.filter-box-moded>
+<?php if (isset($component)) { $__componentOriginalc460a37d150a16feae9643b9afc5d7a0 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc460a37d150a16feae9643b9afc5d7a0 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.filters.filter-box-moded','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('filters.filter-box-moded'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
     <div class="task-search d-flex  py-1 px-lg-3 px-0 align-items-center">
         <form class="w-100 mr-1 mr-lg-0 mr-md-1 ml-md-1 ml-0 ml-lg-0">
             <div class="input-group bg-grey rounded">
@@ -57,81 +66,109 @@
                     </span>
                 </div>
                 <input type="text" class="form-control f-14 p-1 border-additional-grey" id="search-text-field"
-                    placeholder="@lang('app.startTyping')">
+                    placeholder="<?php echo app('translator')->get('app.startTyping'); ?>">
             </div>
         </form>
     </div>
 
     <div class="select-box d-flex py-1 px-lg-2 px-md-2 px-0">
-        <x-forms.button-secondary class="btn-xs d-none" id="reset-filters" icon="times-circle">
-            @lang('app.clearFilters')
-        </x-forms.button-secondary>
+        <?php if (isset($component)) { $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonSecondary::resolve(['icon' => 'times-circle'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-secondary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonSecondary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'btn-xs d-none','id' => 'reset-filters']); ?>
+            <?php echo app('translator')->get('app.clearFilters'); ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $attributes = $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $component = $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
     </div>     
-</x-filters.filter-box-moded>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc460a37d150a16feae9643b9afc5d7a0)): ?>
+<?php $attributes = $__attributesOriginalc460a37d150a16feae9643b9afc5d7a0; ?>
+<?php unset($__attributesOriginalc460a37d150a16feae9643b9afc5d7a0); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc460a37d150a16feae9643b9afc5d7a0)): ?>
+<?php $component = $__componentOriginalc460a37d150a16feae9643b9afc5d7a0; ?>
+<?php unset($__componentOriginalc460a37d150a16feae9643b9afc5d7a0); ?>
+<?php endif; ?>
 <div class="container-fluid d-flex position-relative border-bottom-grey">
     <!-- Left Scroll Button -->
     <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
     <!-- Scrollable Button Wrapper -->
     <div id="buttonWrapper" class="button-wrapper d-flex overflow-auto flex-nowrap my-2">
-    @foreach ($projectVendorFilter as $filter)
+    <?php $__currentLoopData = $projectVendorFilter; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $filter): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <!-- Buttons in a horizontal line -->
         <div class="task_view mx-1">
             
-            <div class="taskView text-darkest-grey f-w-500">@if($filter->status=='active')<i class="fa fa-circle mr-2" style="color:#679c0d;"></i>@endif{{$filter->name}}</div>
+            <div class="taskView text-darkest-grey f-w-500"><?php if($filter->status=='active'): ?><i class="fa fa-circle mr-2" style="color:#679c0d;"></i><?php endif; ?><?php echo e($filter->name); ?></div>
             <div class="dropdown">
                 <a class="task_view_more d-flex align-items-center justify-content-center dropdown-toggle"
-                    type="link" id="dropdownMenuLink-{{$filter->id}}" data-toggle="dropdown"
+                    type="link" id="dropdownMenuLink-<?php echo e($filter->id); ?>" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     <i class="icon-options-vertical icons"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" 
-                    aria-labelledby="dropdownMenuLink-{{$filter->id}}" tabindex="0" >
-                    @if($filter->status=='inactive')
+                    aria-labelledby="dropdownMenuLink-<?php echo e($filter->id); ?>" tabindex="0" >
+                    <?php if($filter->status=='inactive'): ?>
                         <a class="dropdown-item apply-filter" href="javascript:;"
-                            data-row-id="{{$filter->id}}">
+                            data-row-id="<?php echo e($filter->id); ?>">
                             <i class="bi bi-save2 mr-2"></i>
-                            @lang('Apply')
+                            <?php echo app('translator')->get('Apply'); ?>
                         </a>
-                    @endif
+                    <?php endif; ?>
                         <a class="dropdown-item edit-filter-vendor-projects" href="javascript:;"
-                            data-row-id="{{$filter->id}}">
+                            data-row-id="<?php echo e($filter->id); ?>">
                             <i class="fa fa-edit mr-2"></i>
-                            @lang('app.edit')
+                            <?php echo app('translator')->get('app.edit'); ?>
                         </a>
                         <a class="dropdown-item delete-row" href="javascript:;"
-                            data-row-id="{{$filter->id}}">
+                            data-row-id="<?php echo e($filter->id); ?>">
                             <i class="fa fa-trash mr-2"></i>
-                            @lang('app.delete')
+                            <?php echo app('translator')->get('app.delete'); ?>
                         </a>
-                        @if($filter->status=='active')
+                        <?php if($filter->status=='active'): ?>
                             <a class="dropdown-item clear-filter" href="javascript:;"
-                                data-row-id="{{$filter->id}}">
+                                data-row-id="<?php echo e($filter->id); ?>">
                                 <i class="bi bi-save2 mr-2"></i>
-                                @lang('Clear')
+                                <?php echo app('translator')->get('Clear'); ?>
                             </a>
-                        @endif
+                        <?php endif; ?>
                 </div>
             </div>
         </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
     <!-- Right Scroll Button -->
     <button class="btn btn-dark" id="scrollRightBtn" style="display: none; right: 0;">&#9654;</button>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
     <!-- CONTENT WRAPPER START -->
     <div class="content-wrapper">
         
         <a class="btn btn-secondary f-14 float-right mb-3" data-toggle="tooltip" id="custom-filter"
-        data-original-title="@lang('Custom Filter')"><i class="side-icon bi bi-filter"></i></a>
+        data-original-title="<?php echo app('translator')->get('Custom Filter'); ?>"><i class="side-icon bi bi-filter"></i></a>
         <div id="table-actions" class="flex-grow-1 align-items-center mb-2 mb-lg-0 mb-md-0"></div>
         <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
 
-            {!! $dataTable->table(['class' => 'table table-hover border-0 w-100']) !!}
+            <?php echo $dataTable->table(['class' => 'table table-hover border-0 w-100']); ?>
+
 
         </div>
         <!-- Task Box End -->
@@ -143,89 +180,119 @@
                     <h4 class="modal-title" id="modelHeading">Custom Filter</h4>
                 </div>
                 <div class="modal-body"> 
-                    <x-form id="save-project-vendor-filter-form">
-                        <input type="hidden" name="user_id" value=" {{user()->id}} ">
+                    <?php if (isset($component)) { $__componentOriginal18ad2e0d264f9740dc73fff715357c28 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal18ad2e0d264f9740dc73fff715357c28 = $attributes; } ?>
+<?php $component = App\View\Components\Form::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('form'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Form::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'save-project-vendor-filter-form']); ?>
+                        <input type="hidden" name="user_id" value=" <?php echo e(user()->id); ?> ">
                         <input type="hidden" name="startDate" id="startDate">
                         <input type="hidden" name="endDate" id="endDate">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <x-forms.text :fieldLabel="__('Filter Name')"
-                                      fieldName="filter_name" fieldRequired="true" fieldId="filter_name"
-                                      :fieldPlaceholder="__('Enter filter name')"/>
+                                    <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Filter Name'),'fieldName' => 'filter_name','fieldRequired' => 'true','fieldId' => 'filter_name','fieldPlaceholder' => __('Enter filter name')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
                                 </div>
                                
                                 <div class="col-md-4 mt-3">
-                                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Link Sent Date')</label>
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr"><?php echo app('translator')->get('Link Sent Date'); ?></label>
                                     <div class="select-status d-flex">
                                         <input type="text" class="position-relative  form-control p-2 text-left border-additional-grey"
-                                        placeholder="@lang('placeholders.dateRange')" id="customRange">
+                                        placeholder="<?php echo app('translator')->get('placeholders.dateRange'); ?>" id="customRange">
                                     </div>
                                 </div>
                             
                                 <div class="col-md-4 mt-3">
                                     <label class="f-14 text-dark-grey text-capitalize"
-                                        for="usr">@lang('modules.projects.projectCategory')</label>
+                                        for="usr"><?php echo app('translator')->get('modules.projects.projectCategory'); ?></label>
                                     <div class="mt-1">
                                     <select class="form-control select-picker" name="filter_category_id[]" id="filter_category_id"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}" >
-                                                {{ $category->category_name }}
+                                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->id); ?>" >
+                                                <?php echo e($category->category_name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
                              
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Members')</label>
+                                        for="usr"><?php echo app('translator')->get('Members'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_members[]" id="filter_members"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($allEmployees as $category)
-                                            <option value="{{ $category->id }}" >
-                                                {{ $category->name }}
+                                        <?php $__currentLoopData = $allEmployees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->id); ?>" >
+                                                <?php echo e($category->name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Client')</label>
+                                        for="usr"><?php echo app('translator')->get('Client'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_client[]" id="filter_client"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($clients as $category)
-                                            <option value="{{ $category->id }}">
-                                                {{ $category->name }}
+                                        <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->id); ?>">
+                                                <?php echo e($category->name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Vendors')</label>
+                                        for="usr"><?php echo app('translator')->get('Vendors'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_vendor[]" id="filter_vendor"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($vendor as $category)
-                                            <option value="{{ $category->id }}">
-                                                {{ $category->vendor_name }}
+                                        <?php $__currentLoopData = $vendor; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->id); ?>">
+                                                <?php echo e($category->vendor_name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
                               
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Link Status')</label>
+                                        for="usr"><?php echo app('translator')->get('Link Status'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_link_status[]" id="filter_link_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
@@ -239,36 +306,47 @@
                   
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('WO Status')</label>
+                                        for="usr"><?php echo app('translator')->get('WO Status'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_wo_status[]" id="filter_wo_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                            @foreach ($wostatus as $category)
-                                            <option value="{{ $category->wo_status }}">
-                                                {{ $category->wo_status }}
+                                            <?php $__currentLoopData = $wostatus; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->wo_status); ?>">
+                                                <?php echo e($category->wo_status); ?>
+
                                             </option>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
-                                        for="usr">@lang('Project Status')</label>
+                                        for="usr"><?php echo app('translator')->get('Project Status'); ?></label>
                                     <div class="mb-4">
                                     <select class="form-control select-picker" name="filter_project_status[]" id="filter_project_status"
                                             data-live-search="true" data-container="body" data-size="8" multiple>
-                                        @foreach ($projectStatus as $category)
-                                            <option value="{{ $category->status_name }}">
-                                                {{ $category->status_name }}
+                                        <?php $__currentLoopData = $projectStatus; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->status_name); ?>">
+                                                <?php echo e($category->status_name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </x-form>
+                     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $attributes = $__attributesOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__attributesOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal18ad2e0d264f9740dc73fff715357c28)): ?>
+<?php $component = $__componentOriginal18ad2e0d264f9740dc73fff715357c28; ?>
+<?php unset($__componentOriginal18ad2e0d264f9740dc73fff715357c28); ?>
+<?php endif; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="clear">Reset</button>
@@ -279,10 +357,10 @@
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
-    @include('sections.datatable_js')
+<?php $__env->startPush('scripts'); ?>
+    <?php echo $__env->make('sections.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <script>
 $(document).ready(function () {
     var startDate = '';
@@ -310,7 +388,7 @@ $(document).ready(function () {
         endDate = picker.endDate.format('YYYY-MM-DD');
         document.getElementById('endDate').value=endDate;
         
-        $(this).val(picker.startDate.format('{{ company()->moment_date_format }}') + ' - ' + picker.endDate.format('{{ company()->moment_date_format }}'));
+        $(this).val(picker.startDate.format('<?php echo e(company()->moment_date_format); ?>') + ' - ' + picker.endDate.format('<?php echo e(company()->moment_date_format); ?>'));
         
     });
     $('#custom-filter').click(function () {
@@ -373,7 +451,7 @@ $(document).ready(function () {
                 document.getElementById('startDate').value='';
                 document.getElementById('endDate').value='';
             }
-            var url = "{{ route('project-vendor-filter.store') }}";
+            var url = "<?php echo e(route('project-vendor-filter.store')); ?>";
             $.easyAjax({
                 url: url,
                 container: '#save-project-vendor-filter-form',
@@ -394,7 +472,7 @@ $(document).ready(function () {
         $('body').on('click', '.edit-filter-vendor-projects', function() {
             var id = $(this).data('row-id');
 
-            var url = "{{ route('project-vendor-filter.edit', ':id') }}";
+            var url = "<?php echo e(route('project-vendor-filter.edit', ':id')); ?>";
             url = url.replace(':id', id);
 
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
@@ -404,13 +482,13 @@ $(document).ready(function () {
         $('body').on('click', '.delete-row', function() {
             var id = $(this).data('row-id');
             Swal.fire({
-                title: "@lang('messages.sweetAlertTitle')",
-                text: "@lang('messages.recoverRecord')",
+                title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+                text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
                 icon: 'warning',
                 showCancelButton: true,
                 focusConfirm: false,
-                confirmButtonText: "@lang('messages.confirmDelete')",
-                cancelButtonText: "@lang('app.cancel')",
+                confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+                cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
                 customClass: {
                     confirmButton: 'btn btn-primary mr-3',
                     cancelButton: 'btn btn-secondary'
@@ -422,9 +500,9 @@ $(document).ready(function () {
                 buttonsStyling: false
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('project-vendor-filter.destroy', ':id') }}";
+                    var url = "<?php echo e(route('project-vendor-filter.destroy', ':id')); ?>";
                     url = url.replace(':id', id);
-                    var token = "{{ csrf_token() }}";
+                    var token = "<?php echo e(csrf_token()); ?>";
                     $.easyAjax({
                         type: 'POST',
                         url: url,
@@ -447,9 +525,9 @@ $(document).ready(function () {
         $('body').on('click', '.apply-filter', function() {
 
             var id = $(this).data('row-id');
-            var url = "{{ route('projectvendor-filter.change-status',':id') }}";
+            var url = "<?php echo e(route('projectvendor-filter.change-status',':id')); ?>";
             url = url.replace(':id', id);
-            var token = "{{ csrf_token() }}";
+            var token = "<?php echo e(csrf_token()); ?>";
             $.easyAjax({
                 type: 'POST',
                 url: url,
@@ -467,9 +545,9 @@ $(document).ready(function () {
         });
         $('body').on('click', '.clear-filter', function() {
             var id = $(this).data('row-id');
-            var url = "{{ route('projectvendor-filter.clear',':id') }}";
+            var url = "<?php echo e(route('projectvendor-filter.clear',':id')); ?>";
             url = url.replace(':id', id);
-            var token = "{{ csrf_token() }}";
+            var token = "<?php echo e(csrf_token()); ?>";
             $.easyAjax({
                 type: 'POST',
                 url: url,
@@ -523,4 +601,6 @@ $('#reset-filters,#reset-filters-2').click(function() {
     showTable();
 });    
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\public_html\resources\views/vendors-projects/index.blade.php ENDPATH**/ ?>

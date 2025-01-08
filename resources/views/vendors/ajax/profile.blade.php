@@ -80,8 +80,8 @@
 <!-- ROW START -->
 <div class="row mt-4">
     <div class="col-xl-7 col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
-        <x-cards.data :title="__('modules.client.profileInfo')">
-        <x-cards.data-row :label="__('status')" :value="$vendorDetail->status" />
+            <x-cards.data :title="__('modules.client.profileInfo')">
+            <x-cards.data-row :label="__('status')" :value="$vendorDetail->status" />
             <x-cards.data-row :label="__('modules.employees.fullName')" :value="$vendorDetail->vendor_name" />
             
             <x-cards.data-row :label="__('app.email')" :value="$vendorDetail->vendor_email" />
