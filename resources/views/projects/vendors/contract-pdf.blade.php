@@ -378,7 +378,7 @@
                                     </div>
                                     <div class="col-md-5 col-12 grid-item">
                                         <p>
-                                            {{$changenotify->add_notes}}
+                                            {{$changenotify->add_note}}
                                         </p>
                                     </div>
                                 </div>
