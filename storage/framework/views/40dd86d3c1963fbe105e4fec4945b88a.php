@@ -3,8 +3,9 @@
   padding: .25rem .4rem;
   font-size: .875rem;
   line-height: .5;
-  border-radius: .2rem;
+  border-radius: .2rem; 
 }
+
 </style>
 <div class="row py-5">
     <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
@@ -710,33 +711,33 @@
                                         <input type="text" id="linkInput-<?php echo e($item->id); ?>" value="<?php echo e($item->link); ?>" class="d-none">
                                     </div>
                                     <div class="row justify-content-end mr-2">
-                                            <a class="btn btn-primary m-2 btn-xs change-notify-history" href="javascript:;"
+                                            <a class="btn btn-secondary m-2 btn-xs change-notify-history" href="javascript:;"
                                                 data-notify-history-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-table mr-2"></i>
                                                 <?php echo app('translator')->get('Change Notification History'); ?>
                                             </a>
-                                            <a class="btn btn-primary m-2 btn-xs change-notify" href="javascript:;"
+                                            <a class="btn btn-secondary m-2 btn-xs change-notify" href="javascript:;"
                                                 data-notify-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 <?php echo app('translator')->get('Change Notification'); ?>
                                             </a>
-                                            <a class="btn btn-primary m-2 btn-xs copy-vpro" href="javascript:;"
+                                            <a class="btn btn-secondary m-2 btn-xs copy-vpro" href="javascript:;"
                                             data-row-id="<?php echo e($item->id); ?>">
                                                     <i class="fa fa-copy mr-2"></i>
                                                     <?php echo app('translator')->get('Copy Link'); ?>
                                             </a>
-                                            <a class="btn btn-primary m-2 btn-xs relink-vpro" href="javascript:;"
+                                            <a class="btn btn-secondary m-2 btn-xs relink-vpro" href="javascript:;"
                                                 data-link-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-paper-plane mr-2"></i>
                                                 <?php echo app('translator')->get('Resend Link'); ?>
                                             </a>
-                                            <a class="btn btn-primary m-2 btn-xs" href="<?php echo e(route('projectvendors.download', $item->id)); ?>"
+                                            <a class="btn btn-secondary m-2 btn-xs" href="<?php echo e(route('projectvendors.download', $item->id)); ?>"
                                                 data-row-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-download mr-2"></i>
                                                 <?php echo app('translator')->get('Download'); ?>
                                             </a>
                                             
-                                            <a class="btn btn-primary m-2 btn-xs edit-vpro" href="javascript:;"
+                                            <a class="btn btn-secondary m-2 btn-xs edit-vpro" href="javascript:;"
                                                 data-row-id="<?php echo e($item->id); ?>">
                                                 <i class="fa fa-edit mr-2"></i>
                                                 <?php echo app('translator')->get('Save'); ?>

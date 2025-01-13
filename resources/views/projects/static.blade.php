@@ -1,3 +1,12 @@
+<style>
+.btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem; 
+}
+
+</style>
 <div class=" d-flex flex-col">
         <div class="col-sm border-right-grey">
             <div class="row border-bottom-grey">
@@ -57,7 +66,7 @@
                         Property Address - {{$project->propertyDetails->property_address ?? ''}} - {{$project->propertyDetails->optional ?? ''}}
                 </div>
                 <div class="col border-left-grey">
-                        Property Type - {{$project->property_type ?? ''}} 
+                        Property Type - {{$project->propertyDetails->property_type ?? ''}} 
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -99,5 +108,58 @@
                     <h5 class="f-15 f-w-500 text-darkest-grey mb-0 py-2">Contact Information</h5>
                 </div>
             </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                        Asset Manager Details - {{$project->projectContacts->amname ?? ''}}, {{$project->projectContacts->amph ?? ''}}, {{$project->projectContacts->amemail ?? ''}}
+                </div>
+            </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                    Tenant Details - 
+                    <span class=" float-right">
+                        <a class="btn btn-secondary m-2 btn-xs view-tenants" href="javascript:;">
+                            <i class="fa fa-eye mr-2"></i>
+                            @lang('View')
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                        Project Coordinators - 
+                        @foreach($project->projectMembersWithoutScope as $pm)
+                        {{$pm->name ?? ''}}, {{$pm->mobile}}, {{$pm->email}}
+                        @endforeach
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Assigned Vendors -
+                    <span class=" float-right">
+                        <a class="btn btn-secondary m-2 btn-xs view-vendors" href="javascript:;">
+                                <i class="fa fa-eye mr-2"></i>
+                                @lang('View')
+                            </a>
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+    $(document).ready(function() {
+        $('body').on('click', '.view-tenants', function() {
+            var id = "{{$project->id}}";
+            var url = "{{ route('projects.viewTenants',':id') }}";
+            url = url.replace(':id', id);
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+        $('body').on('click', '.view-vendors', function() {
+            var id = "{{$project->id}}";
+            var url = "{{ route('projects.viewVendors',':id') }}";
+            url = url.replace(':id', id);
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+    });
+    </script>

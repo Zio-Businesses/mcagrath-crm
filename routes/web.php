@@ -318,6 +318,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::post('projectvendors/wostatuschange/{id}', [ProjectVendorController::class, 'wostatuschange'])->name('projectvendors.wostatuschange');
             Route::post('projectvendors/resentlink/{id}', [ProjectVendorController::class, 'resentLink'])->name('projectvendors.resentlink');
 
+            //static
+            Route::get('projects/viewtenants/{id}', [ProjectController::class, 'viewTenants'])->name('projects.viewTenants');
+            Route::get('projects/viewvendors/{id}', [ProjectController::class, 'viewVendors'])->name('projects.viewVendors');
             // Discussion category routes
             Route::resource('discussion-category', DiscussionCategoryController::class);
             Route::post('discussion/setBestAnswer', [DiscussionController::class, 'setBestAnswer'])->name('discussion.set_best_answer');

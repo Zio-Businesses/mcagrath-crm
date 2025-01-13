@@ -82,6 +82,7 @@ class ChangeOrderNotification extends BaseNotification
                 'themeColor' => $this->company->header_color,
                 'actionText' => __('app.view') . ' ' . __('Change Order'),
                 'notifiableName' => $vpro->vendor_name,
+                'phone'=> $this->company->company_phone,
                 ]);
     }
 

@@ -72,6 +72,7 @@ use GuzzleHttp\Client;
 use App\Models\ProjectCustomFilter;
 use Exception;
 use App\Models\WorkOrderStatus;
+use App\Models\ProjectVendor;
 
 class ProjectController extends AccountBaseController
 {
@@ -2029,6 +2030,18 @@ class ProjectController extends AccountBaseController
             return Reply::error('Unable to parse address. Please try again.');
         }
 
+    }
+
+    public function viewTenants($id)
+    {
+        $this->project=Project::findOrFail($id);
+        return view('projects.ajax.view-tenants', $this->data);
+    }
+
+    public function viewVendors($id)
+    {
+        $this->projectvendor = ProjectVendor::where('project_id',$id)->where('link_status','Accepted')->get();
+        return view('projects.ajax.view-vendors', $this->data);
     }
 
 }

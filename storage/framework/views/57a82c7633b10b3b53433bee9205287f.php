@@ -241,7 +241,7 @@
                                     <td style="padding: 10px;  width:12.5%;"><?php echo e($projectid->propertyDetails->state); ?></td>
                                     <td style="padding: 10px;  width:12.5%;"><?php echo e($projectid->propertyDetails->zipcode); ?></td>
                                     <td style="padding: 10px;  width:12.5%;"><?php echo e($projectid->propertyDetails->county); ?></td>
-                                    <td style="padding: 10px;  width:12.5%;"><?php echo e($projectid->category->category_name); ?></td>
+                                    <td style="padding: 10px;  width:12.5%;"><?php echo e($projectid->category?->category_name); ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -318,6 +318,7 @@
                         </table>
                     </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <div class="page-break"></div>
                     <?php if($projectvendor->changenotification): ?>
                         <?php $__currentLoopData = $projectvendor->changenotification; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $changenotify): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <hr class="custom-line">
@@ -347,8 +348,8 @@
                                     <tbody style="z-index:1; position:relative;">
                                         <tr>
                                             <td style="padding: 10px; "><?php echo e($changenotify->project_type); ?></td>
-                                            <td style="padding: 10px; "><?php echo e(currency_format($projectvendor->project_amount, $contractid->currency->id)); ?></td>
-                                            <td style="padding: 10px; "><?php echo e($projectvendor->due_date->translatedFormat($company->date_format)); ?></td>
+                                            <td style="padding: 10px; "><?php echo e(currency_format($changenotify->project_amount, $contractid->currency->id)); ?></td>
+                                            <td style="padding: 10px; "><?php echo e($changenotify->due_date->translatedFormat($company->date_format)); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -384,7 +385,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="page-break"></div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <?php endif; ?>
                     <hr class="custom-line">

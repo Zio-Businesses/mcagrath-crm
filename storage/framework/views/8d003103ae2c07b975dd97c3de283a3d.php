@@ -307,7 +307,7 @@
                                 </div>
                                 <div class="col-md-3 col-sm-6 col-12 grid-item">
                                     <h5 class="f-13 font-weight-bold">Due Date</h5>
-                                    <p><?php echo e($changenotify->due_date); ?></p>
+                                    <p><?php echo e($changenotify->due_date->translatedFormat($company->date_format)); ?></p>
                                 </div>
                             </div>
                             <h5 class="f-13 font-weight-bold mb-4">Scope Of Work:</h5>

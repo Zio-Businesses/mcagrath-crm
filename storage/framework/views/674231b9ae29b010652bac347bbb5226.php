@@ -1,3 +1,12 @@
+<style>
+.btn-xs {
+  padding: .25rem .4rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem; 
+}
+
+</style>
 <div class=" d-flex flex-col">
         <div class="col-sm border-right-grey">
             <div class="row border-bottom-grey">
@@ -63,7 +72,7 @@
 
                 </div>
                 <div class="col border-left-grey">
-                        Property Type - <?php echo e($project->property_type ?? ''); ?> 
+                        Property Type - <?php echo e($project->propertyDetails->property_type ?? ''); ?> 
                 </div>
             </div>
             <div class="row border-bottom-grey">
@@ -109,5 +118,60 @@
                     <h5 class="f-15 f-w-500 text-darkest-grey mb-0 py-2">Contact Information</h5>
                 </div>
             </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                        Asset Manager Details - <?php echo e($project->projectContacts->amname ?? ''); ?>, <?php echo e($project->projectContacts->amph ?? ''); ?>, <?php echo e($project->projectContacts->amemail ?? ''); ?>
+
+                </div>
+            </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                    Tenant Details - 
+                    <span class=" float-right">
+                        <a class="btn btn-secondary m-2 btn-xs view-tenants" href="javascript:;">
+                            <i class="fa fa-eye mr-2"></i>
+                            <?php echo app('translator')->get('View'); ?>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="row border-bottom-grey">
+                <div class="col">
+                        Project Coordinators - 
+                        <?php $__currentLoopData = $project->projectMembersWithoutScope; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php echo e($pm->name ?? ''); ?>, <?php echo e($pm->mobile); ?>, <?php echo e($pm->email); ?>
+
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Assigned Vendors -
+                    <span class=" float-right">
+                        <a class="btn btn-secondary m-2 btn-xs view-vendors" href="javascript:;">
+                                <i class="fa fa-eye mr-2"></i>
+                                <?php echo app('translator')->get('View'); ?>
+                            </a>
+                    </span>
+                </div>
+            </div>
         </div>
-    </div><?php /**PATH C:\laragon\www\public_html\resources\views/projects/static.blade.php ENDPATH**/ ?>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $('body').on('click', '.view-tenants', function() {
+            var id = "<?php echo e($project->id); ?>";
+            var url = "<?php echo e(route('projects.viewTenants',':id')); ?>";
+            url = url.replace(':id', id);
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+        $('body').on('click', '.view-vendors', function() {
+            var id = "<?php echo e($project->id); ?>";
+            var url = "<?php echo e(route('projects.viewVendors',':id')); ?>";
+            url = url.replace(':id', id);
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+    });
+    </script><?php /**PATH C:\laragon\www\public_html\resources\views/projects/static.blade.php ENDPATH**/ ?>

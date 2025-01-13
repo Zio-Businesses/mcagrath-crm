@@ -241,7 +241,7 @@
                                     <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->state}}</td>
                                     <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->zipcode}}</td>
                                     <td style="padding: 10px;  width:12.5%;">{{$projectid->propertyDetails->county}}</td>
-                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->category->category_name}}</td>
+                                    <td style="padding: 10px;  width:12.5%;">{{$projectid->category?->category_name}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -349,7 +349,7 @@
                                         <tr>
                                             <td style="padding: 10px; ">{{$changenotify->project_type }}</td>
                                             <td style="padding: 10px; ">{{currency_format($changenotify->project_amount, $contractid->currency->id) }}</td>
-                                            <td style="padding: 10px; ">{{$changenotify->due_date->translatedFormat($company->date_format) }}</td>
+                                            <td style="padding: 10px; ">{{$changenotify->due_date->translatedFormat($company->date_format)}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
