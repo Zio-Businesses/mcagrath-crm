@@ -194,11 +194,11 @@
     </div>
     <div class="row p-2">
     <div class="col-12">
-        <x-form id="save-workers-comp">
+        <x-form id="save-wcomp">
             <div class="border-grey d-xl-flex">
                 <div class="d-flex flex-wrap align-items-start">
-                    <input type="hidden" name="vendor_id_wnine" value="{{$vendorDetail->id}}"/>
-                    <input type="file" class="dropify w-100-md" id="wnine" name="wnine" 
+                    <input type="hidden" name="vendor_id_wc" value="{{$vendorDetail->id}}"/>
+                    <input type="file" class="dropify w-100-md" id="wcomp" name="wcomp" 
                         data-default-file="{{$workers_comp?->filename ? $workers_comp->wc_image_url : null}}"/>
                 </div>
 
