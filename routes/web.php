@@ -305,6 +305,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::get('files/thumbnail', [ProjectFileController::class, 'thumbnailShow'])->name('files.thumbnail');
             Route::post('files/multiple-upload', [ProjectFileController::class, 'storeMultiple'])->name('files.multiple_upload');
             Route::resource('files', ProjectFileController::class);
+            Route::get('files/external/{id}', [ProjectFileController::class, 'FilesExternal'])->name('files.external');
 
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);

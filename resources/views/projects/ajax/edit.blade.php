@@ -123,6 +123,21 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                             :fieldValue="($project->deadline ? $project->deadline->format(company()->date_format) : '')"
                             :fieldPlaceholder="__('placeholders.date')" />
                     </div>
+                    <div class="col-md-3 col-lg-3">
+                        <x-forms.datepicker fieldId="nxt_follow_up_date" custom="true"
+                            :fieldLabel="__('Next Follow Up Date')" fieldName="nxt_follow_up_date"
+                            :fieldValue="($project->nxt_follow_up_date ? $project->nxt_follow_up_date->format(company()->date_format) : '')"
+                            :fieldPlaceholder="__('placeholders.date')" />
+                    </div>
+                    
+                    <div class="col-md-3 col-lg-3">
+                        <div>
+                         <x-forms.text :fieldLabel="__('Next Follow Up Time')"
+                            :fieldPlaceholder="__('placeholders.hours')" fieldName="nxt_follow_up_time"
+                            fieldId="nxt_follow_up_time" 
+                            :fieldValue="($project->nxt_follow_up_time ? \Carbon\Carbon::createFromFormat('H:i:s', $project->nxt_follow_up_time)->format(company()->time_format) : '')" />        
+                        </div>          
+                    </div>
                     <div class="col-md-3">
                         <x-forms.label class="mb-12 mt-3" fieldId="type"
                                        :fieldLabel="__('Delayed By')">
@@ -960,7 +975,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
             }
         });
 
-        $('#inspection_time,#re_inspection_time,#work_schedule_time,#work_schedule_re_time').datetimepicker({
+        $('#inspection_time,#re_inspection_time,#work_schedule_time,#work_schedule_re_time,#nxt_follow_up_time').datetimepicker({
             @if (company()->time_format == 'H:i')
                 showMeridian: false,
             @endif

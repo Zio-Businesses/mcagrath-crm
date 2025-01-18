@@ -30,6 +30,8 @@ class ProjectCustomFilterController extends AccountBaseController
             $pcf->filter_on = $request->custom_date_filter_on;
             $pcf->start_date = $request->startDate;
             $pcf->end_date = $request->endDate;
+            $pcf->start_date_nxt = $request->startDatenxt;
+            $pcf->end_date_nxt = $request->endDatenxt;
             $pcf->project_category = $request->filter_category_id;
             $pcf->project_sub_category = $request->filter_sub_category;
             $pcf->project_type = $request->filter_type;
@@ -89,6 +91,8 @@ class ProjectCustomFilterController extends AccountBaseController
         $pcf->project_category = $request->filter_category_id;
         $pcf->project_sub_category = $request->filter_sub_category;
         $pcf->project_type = $request->filter_type;
+        $pcf->start_date_nxt = $request->filterstartDatenxt;
+        $pcf->end_date_nxt = $request->filterendDatenxt;
         $pcf->project_priority = $request->filter_priority;
         $pcf->project_status = $request->filter_status;
         $pcf->delayed_by = $request->filter_delayed;

@@ -1,0 +1,1 @@
+<?php echo $ticketReply->message; ?><?php /**PATH C:\laragon\www\mcagrath-crm\resources\views\emails\ticket\reply.blade.php ENDPATH**/ ?>

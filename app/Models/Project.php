@@ -162,7 +162,7 @@ class Project extends BaseModel
         'work_completion_date'=>'datetime',
         'invoiced_date'=>'datetime',
         'cancelled_date'=>'datetime',
-        
+        'nxt_follow_up_date' => 'datetime',
     ];
 
     protected $guarded = ['id'];
@@ -224,6 +224,11 @@ class Project extends BaseModel
     public function files(): HasMany
     {
         return $this->hasMany(ProjectFile::class, 'project_id')->orderByDesc('id');
+    }
+
+    public function externalFiles(): HasMany
+    {
+        return $this->hasMany(ProjectExternalFile::class, 'project_id')->orderByDesc('id');
     }
 
     public function invoices(): HasMany

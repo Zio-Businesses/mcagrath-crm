@@ -12,6 +12,8 @@
     <div class="modal-body">
     <input type="hidden" name="filterstartDate" id="filterstartDate">
     <input type="hidden" name="filterendDate" id="filterendDate">
+    <input type="hidden" name="filterstartDatenxt" id="filterstartDatenxt">
+    <input type="hidden" name="filterendDatenxt" id="filterendDatenxt">
         <div class="row">
             <div class="col-md-4">
                 <x-forms.text :fieldLabel="__('Filter Name')"
@@ -34,6 +36,13 @@
                     placeholder="@lang('placeholders.dateRange')" id="customRangeEdit">
                 </div>
             </div>       
+            <div class="col-md-4">
+                <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Next Follow Up Date')</label>
+                <div class="select-status d-flex">
+                    <input type="text" class="position-relative  form-control p-2 text-left border-additional-grey"
+                    placeholder="@lang('placeholders.dateRange')" id="nxtRangeEdit">
+                </div>
+            </div>
             @php
             $selectedCategories = $filter->project_category ?? [];
             @endphp
@@ -247,8 +256,10 @@ $(document).ready(function() {
 
     var startDate = '{{$filter->start_date}}';
     var endDate = '{{$filter->end_date}}';
+    var startDatenxt = '{{$filter->start_date_nxt}}';
+    var endDatenxt = '{{$filter->end_date_nxt}}';
 
-    $('#customRangeEdit').daterangepicker({
+    $('#customRangeEdit,#nxtRangeEdit').daterangepicker({
         autoUpdateInput: false,
         locale: {
             cancelLabel: 'Clear'
@@ -282,11 +293,35 @@ $(document).ready(function() {
             );
         }
 
+        $('#nxtRangeEdit').on('apply.daterangepicker', function(ev, picker) {
+            // Get start and end dates
+            startDatenxt = picker.startDate.format('YYYY-MM-DD');
+            document.getElementById('filterstartDatenxt').value=startDatenxt;
+            endDatenxt = picker.endDate.format('YYYY-MM-DD');
+            document.getElementById('filterendDatenxt').value=endDatenxt;
+            
+            $(this).val(picker.startDate.format('{{ company()->moment_date_format }}') + ' - ' + picker.endDate.format('{{ company()->moment_date_format }}'));
+            
+        });
+
+        if(startDatenxt!='' && endDatenxt!=''){
+            document.getElementById('filterstartDatenxt').value=startDatenxt;
+            document.getElementById('filterendDatenxt').value=endDatenxt;
+            $('#nxtRangeEdit').val(
+                moment(startDatenxt).format('{{ company()->moment_date_format }}') + ' - ' + moment(endDatenxt).format('{{ company()->moment_date_format }}')
+            );
+        }
+
         $('#edit-filter').click(function () {
             if($('#customRangeEdit').val()=='')
             {
                 document.getElementById('filterstartDate').value='';
                 document.getElementById('filterendDate').value='';
+            }
+            if($('#nxtRangeEdit').val()=='')
+            {
+                document.getElementById('filterstartDatenxt').value='';
+                document.getElementById('filterendDatenxt').value='';
             }
             var url = "{{ route('project-filter.update',$filter->id) }}";
             $.easyAjax({
@@ -320,9 +355,12 @@ $(document).ready(function() {
             $('#filter_state_edit').val([]).selectpicker('refresh');
             $('#filter_county_edit').val([]).selectpicker('refresh');
             $('#filter_members_edit').val([]).selectpicker('refresh');
-            document.getElementById('startDate').value='';
-            document.getElementById('endDate').value='';
+            document.getElementById('filterstartDate').value='';
+            document.getElementById('filterendDate').value='';
+            document.getElementById('filterstartDatenxt').value='';
+            document.getElementById('filterendDatenxt').value='';
             $('#customRangeEdit').val('');
+            $('#nxtRangeEdit').val('');
             $('#filter_name_edit').val('');
         });
 

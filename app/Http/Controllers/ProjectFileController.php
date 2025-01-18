@@ -7,6 +7,7 @@ use App\Helper\Reply;
 use App\Models\ProjectFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use App\Models\GlobalSetting;
 
 class ProjectFileController extends AccountBaseController
 {
@@ -80,6 +81,16 @@ class ProjectFileController extends AccountBaseController
 
         return download_local_s3($file, ProjectFile::FILE_PATH . '/' . $file->project_id . '/' . $file->hashname);
 
+    }
+
+    public function FilesExternal($id)
+    {
+        
+        $url = url()->temporarySignedRoute('external.file.view', now()->addDays(GlobalSetting::SIGNED_ROUTE_EXPIRY),[
+            'data' => $id,
+        ]);
+        $url = getDomainSpecificUrl($url, $this->company);
+        return Reply::dataOnly(['status' => 'success', 'url' => $url]);
     }
 
 }

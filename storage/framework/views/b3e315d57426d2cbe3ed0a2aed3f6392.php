@@ -1,0 +1,26 @@
+<?php
+    use App\Models\Order;$user =  Order::find($notification->data['id'])->client;
+    $subject = (!in_array('client', user_roles()) ? __('email.orders.subject') : __('email.order.subject'));
+?>
+
+<?php if (isset($component)) { $__componentOriginal42cf517c5716db26aa0e5d62b08b607b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal42cf517c5716db26aa0e5d62b08b607b = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Notification::resolve(['notification' => $notification,'link' => route('orders.show', $notification->data['id']),'image' => $user->image_url,'title' => $subject,'text' => $notification->data['order_number'],'time' => $notification->created_at] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.notification'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Notification::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal42cf517c5716db26aa0e5d62b08b607b)): ?>
+<?php $attributes = $__attributesOriginal42cf517c5716db26aa0e5d62b08b607b; ?>
+<?php unset($__attributesOriginal42cf517c5716db26aa0e5d62b08b607b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal42cf517c5716db26aa0e5d62b08b607b)): ?>
+<?php $component = $__componentOriginal42cf517c5716db26aa0e5d62b08b607b; ?>
+<?php unset($__componentOriginal42cf517c5716db26aa0e5d62b08b607b); ?>
+<?php endif; ?>
+<?php /**PATH C:\laragon\www\mcagrath-crm\resources\views\notifications\all\new_order.blade.php ENDPATH**/ ?>

@@ -309,6 +309,14 @@ class ProjectsDataTable extends BaseDataTable
                     </div>
                       ';
         });
+        $datatables->editColumn('nxtfollowdt', function ($row){
+            return '
+                    <div class="media align-items-center justify-content-center mr-3">
+                    <td> '. $row->nxt_follow_up_date?->translatedFormat($this->company->date_format) . '</td> 
+                    <td> '. ($row->nxt_follow_up_time ? Carbon::createFromFormat('H:i:s', $row->nxt_follow_up_time)->format($this->company->time_format) : null) . '</td>
+                    </div>
+                      ';
+        });
         $datatables->editColumn('wsdt', function ($row){
             return '
                     <div class="media align-items-center justify-content-center mr-3">
@@ -402,7 +410,7 @@ class ProjectsDataTable extends BaseDataTable
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Project::CUSTOM_FIELD_MODEL);
 
-        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline','rinspectiondt','inspectiondt','wsdt','wrsdt','vendors'], $customFieldColumns));
+        $datatables->rawColumns(array_merge(['project_name', 'action', 'completion_percent', 'members', 'status', 'client_id', 'check', 'project_short_code', 'deadline','rinspectiondt','inspectiondt','wsdt','wrsdt','vendors','nxtfollowdt'], $customFieldColumns));
 
         return $datatables;
     }
@@ -444,7 +452,7 @@ class ProjectsDataTable extends BaseDataTable
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
               projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,
-              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,
+              projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
             projects.status, users.salutation, users.name, client.name as client_name, client.email as client_email, projects.public, mention_users.user_id as mention_user,
@@ -592,6 +600,10 @@ class ProjectsDataTable extends BaseDataTable
             {
                 $model->whereBetween(DB::raw("DATE(projects.`{$customfilter->filter_on}`)"), [$customfilter->start_date, $customfilter->end_date]);
             }
+            if($customfilter->start_date_nxt!=''&& $customfilter->end_date_nxt!='')
+            {
+                $model->whereBetween(DB::raw("DATE(projects.`nxt_follow_up_date`)"), [$customfilter->start_date_nxt, $customfilter->end_date_nxt]);
+            }
             if($customfilter->project_category!='')
             {
                 $model->whereIn('projects.category_id', $customfilter->project_category)->get();
@@ -726,6 +738,7 @@ class ProjectsDataTable extends BaseDataTable
             __('Vendor') => ['data' => 'vendors_name', 'name' => 'vendors_name', 'visible' => false, 'title' => __('Vendor')],
             __('app.pdate') => ['data' => 'start_date', 'name' => 'start_date', 'title' => __('app.pdate'), 'width' => '12%'],
             __('app.due') => ['data' => 'deadline', 'name' => 'deadline', 'title' => __('app.due'), 'width' => '12%'],
+            __('Next Follow Up Date & Time') => ['data' => 'nxtfollowdt', 'name' => 'nxtfollowdt', 'title' => __('Next Follow Up Date & Time'), 'width' => '12%'],
             __('app.inspectiondt') => ['data' => 'inspectiondt', 'name' => 'inspectiondt', 'title' => __('app.inspectiondt'), 'width' => '12%'],
             __('app.rinspectiondt') => ['data' => 'rinspectiondt', 'name' => 'rinspectiondt', 'title' => __('app.rinspectiondt'), 'width' => '12%'],
             __('app.bsdate') => ['data' => 'bsdate', 'name' => 'bsdate', 'title' => __('app.bsdate'), 'width' => '12%'],

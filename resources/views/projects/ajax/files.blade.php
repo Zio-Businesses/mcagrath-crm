@@ -18,7 +18,10 @@ $deleteFilePermission = user()->permission('delete_project_files');
 </style>
 
 <!-- TAB CONTENT START -->
-<div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab">
+<div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab" id="files-upload-site">
+    <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3">
+        @lang('Generate Link')
+    </x-forms.button-primary>
 
     <x-cards.data :title="__('modules.projects.files')">
 
@@ -102,6 +105,50 @@ $deleteFilePermission = user()->permission('delete_project_files');
             </div>
         @endif
 
+    </x-cards.data>
+    <x-cards.data :title="__('External Files')" class="mt-2">
+        <div class="d-flex flex-wrap mt-3" id="task-file-list">
+            @forelse($project->externalFiles as $file)
+                <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email"> 
+                    @if ($file->icon == 'images')
+                        <img src="{{ $file->file_url }}">
+                    @else
+                        <i class="fa {{ $file->icon }} text-lightest"></i>
+                    @endif
+                    <x-slot name="action">
+                        <div class="dropdown ml-auto file-action">
+                            <button
+                                class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
+                                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
+                                aria-labelledby="dropdownMenuLink" tabindex="0">
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                        target="_blank"
+                                        href="{{ $file->file_url }}">@lang('app.view')</a>
+
+                                <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                    href="{{ route('external-file.download', md5($file->id)) }}">@lang('app.download')</a>
+                        
+                                <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-external-file"
+                                    data-row-id="{{ $file->id }}"
+                                    href="javascript:;">@lang('app.delete')</a>
+                            </div>
+                        </div>
+                    </x-slot>
+                </x-cards.external-card>
+            @empty
+                <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
+                    <i class="fa fa-file-excel f-21 w-100"></i>
+                    <div class="f-15 mt-4">
+                        - @lang('messages.noFileUploaded') -
+                    </div>
+                </div>
+            @endforelse
+
+        </div>
     </x-cards.data>
 </div>
 <!-- TAB CONTENT END -->
@@ -225,6 +272,86 @@ $deleteFilePermission = user()->permission('delete_project_files');
                         }
                     }
                 });
+            }
+        });
+    });
+
+    $('body').on('click', '.delete-external-file', function() {
+        var id = $(this).data('row-id');
+        Swal.fire({
+            title: "@lang('messages.sweetAlertTitle')",
+            text: "@lang('messages.recoverRecord')",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "@lang('messages.confirmDelete')",
+            cancelButtonText: "@lang('app.cancel')",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var url = "{{ route('external-file-upload.destroy', ':id') }}";
+                url = url.replace(':id', id);
+
+                var token = "{{ csrf_token() }}";
+
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    container: "#files-upload-site",
+                    blockUI: true,
+                    data: {
+                        '_token': token,
+                        '_method': 'DELETE'
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                           window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    $('#generate-link').click(function() {
+        var id = "{{ $project->id }}";
+        var url = "{{ route('files.external', ':id') }}";
+        url = url.replace(':id', id);
+        $.easyAjax({
+            type: 'GET',
+            url: url,
+            disableButton: true,
+            container: "#files-upload-site",
+            blockUI: true,
+            buttonSelector: "#generate-link",
+            success: function(response) {
+                if (response.status == "success") {
+                    navigator.clipboard.writeText(response.url).then(function() {
+                    Swal.fire({
+                        icon: 'success',
+                        text: '{{ __('Link Copied') }}',
+
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                            backdrop: 'swal2-noanimation'
+                        },
+                        buttonsStyling: false
+                    });
+                }).catch(function(err) {
+                console.error('Failed to copy text: ', err);
+                });
+                }
             }
         });
     });

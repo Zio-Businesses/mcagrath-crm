@@ -24,6 +24,7 @@ use App\Http\Controllers\PublicWorkOrderController;
 use App\Http\Controllers\PublicWaiverFormCotnroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PublicProjectFileController;
 
 Route::get('/', function () {
     return redirect(route('login'));
@@ -150,6 +151,9 @@ Route::get('/proposal/{hash}', [HomeController::class, 'proposal'])->name('front
 Route::get('/contract/{hash}', [PublicUrlController::class, 'contractView'])->name('front.contract.show')->middleware('signed');
 Route::get('/ota', [OneTimeAgreeController::class, 'OtaView'])->name('front.ota.show')->middleware('signed');
 Route::get('/wo', [PublicWorkOrderController::class, 'WoView'])->name('front.wo.show')->middleware('signed');
+Route::get('/external-file', [PublicProjectFileController::class, 'FileView'])->name('external.file.view')->middleware('signed');
+Route::resource('external-file-upload', PublicProjectFileController::class);
+Route::get('external-file/download/{id}', [PublicProjectFileController::class, 'download'])->name('external-file.download');
 Route::get('/downloadpdf', [PublicWorkOrderController::class, 'downloadPdf'])->name('front.wo.download')->middleware('signed');
 Route::get('/waiver', [PublicWaiverFormCotnroller::class, 'WaiverView'])->name('front.waiver.show')->middleware('signed');
 Route::post('/waiverstore', [PublicWaiverFormCotnroller::class, 'WaiverStore'])->name('front.waiver.store');

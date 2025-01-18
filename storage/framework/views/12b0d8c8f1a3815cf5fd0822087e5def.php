@@ -1,0 +1,30 @@
+<?php
+    use App\Models\Estimate;if ($notification->data['estimate_number'] == '') {
+        $estimate = Estimate::find($notification->data['id']);
+        $estimateNumber = $estimate->estimate_number;
+    } else {
+        $estimateNumber = $notification->data['estimate_number'];
+    }
+?>
+
+<?php if (isset($component)) { $__componentOriginal42cf517c5716db26aa0e5d62b08b607b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal42cf517c5716db26aa0e5d62b08b607b = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Notification::resolve(['notification' => $notification,'link' => route('estimates.show', $notification->data['id']),'image' => company()->logo_url,'title' => __('email.estimateDeclined.subject'),'text' => $estimateNumber,'time' => $notification->created_at] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.notification'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Notification::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal42cf517c5716db26aa0e5d62b08b607b)): ?>
+<?php $attributes = $__attributesOriginal42cf517c5716db26aa0e5d62b08b607b; ?>
+<?php unset($__attributesOriginal42cf517c5716db26aa0e5d62b08b607b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal42cf517c5716db26aa0e5d62b08b607b)): ?>
+<?php $component = $__componentOriginal42cf517c5716db26aa0e5d62b08b607b; ?>
+<?php unset($__componentOriginal42cf517c5716db26aa0e5d62b08b607b); ?>
+<?php endif; ?>
+<?php /**PATH C:\laragon\www\mcagrath-crm\resources\views\notifications\all\estimate_declined.blade.php ENDPATH**/ ?>

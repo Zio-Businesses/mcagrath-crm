@@ -182,6 +182,8 @@ $deleteProjectPermission = user()->permission('delete_projects');
                         <input type="hidden" name="user_id" value=" {{user()->id}} ">
                         <input type="hidden" name="startDate" id="startDate">
                         <input type="hidden" name="endDate" id="endDate">
+                        <input type="hidden" name="startDatenxt" id="startDatenxt">
+                        <input type="hidden" name="endDatenxt" id="endDatenxt">
                         <div class="container">
                             <div class="row">
                                 <div class="col-md-4">
@@ -198,11 +200,20 @@ $deleteProjectPermission = user()->permission('delete_projects');
                                         </select>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-4 mt-3">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('app.duration')</label>
                                     <div class="select-status d-flex">
                                         <input type="text" class="position-relative  form-control p-2 text-left border-additional-grey"
                                         placeholder="@lang('placeholders.dateRange')" id="customRange">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="f-14 text-dark-grey mb-12 text-capitalize" for="usr">@lang('Next Follow Up Date')</label>
+                                    <div class="select-status d-flex">
+                                        <input type="text" class="position-relative  form-control p-2 text-left border-additional-grey"
+                                        placeholder="@lang('placeholders.dateRange')" id="nxtRange">
                                     </div>
                                 </div>
                             
@@ -356,6 +367,7 @@ $deleteProjectPermission = user()->permission('delete_projects');
                                     </div>
                                 </div>
                                 
+                                
                                 <div class="col-md-4">
                                     <label class="f-14 text-dark-grey mb-12 text-capitalize"
                                         for="usr">@lang('Members')</label>
@@ -392,8 +404,10 @@ $deleteProjectPermission = user()->permission('delete_projects');
     $(document).ready(function () {
         var startDate = '';
         var endDate = '';
+        var startDatenxt = '';
+        var endDatenxt = '';
 
-        $('#customRange').daterangepicker({
+        $('#customRange,#nxtRange').daterangepicker({
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear'
@@ -408,6 +422,17 @@ $deleteProjectPermission = user()->permission('delete_projects');
            }
         });
         
+        $('#nxtRange').on('apply.daterangepicker', function(ev, picker) {
+            // Get start and end dates
+            startDatenxt = picker.startDate.format('YYYY-MM-DD');
+            document.getElementById('startDatenxt').value=startDatenxt;
+            endDatenxt = picker.endDate.format('YYYY-MM-DD');
+            document.getElementById('endDatenxt').value=endDatenxt;
+            
+            $(this).val(picker.startDate.format('{{ company()->moment_date_format }}') + ' - ' + picker.endDate.format('{{ company()->moment_date_format }}'));
+            
+        });
+
         $('#customRange').on('apply.daterangepicker', function(ev, picker) {
             // Get start and end dates
             startDate = picker.startDate.format('YYYY-MM-DD');
@@ -424,6 +449,11 @@ $deleteProjectPermission = user()->permission('delete_projects');
             {
                 document.getElementById('startDate').value='';
                 document.getElementById('endDate').value='';
+            }
+            if($('#nxtRange').val()=='')
+            {
+                document.getElementById('startDatenxt').value='';
+                document.getElementById('endDatenxt').value='';
             }
             var url = "{{ route('project-filter.store') }}";
             $.easyAjax({
@@ -457,7 +487,10 @@ $deleteProjectPermission = user()->permission('delete_projects');
             $('#filter_members').val([]).selectpicker('refresh');
             document.getElementById('startDate').value='';
             document.getElementById('endDate').value='';
+            document.getElementById('startDatenxt').value='';
+            document.getElementById('endDatenxt').value='';
             $('#customRange').val('');
+            $('#nxtRange').val('');
             $('#filter_name').val('');
         });
 

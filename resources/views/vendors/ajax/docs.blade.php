@@ -699,7 +699,7 @@ $(document).ready(function() {
         $.ajaxModal(MODAL_LG, url);
         
     });
-    //save-wcomp
+    
     $('#save-wcomp .dropify').on('change', function (event) {
         if (event.target.files.length > 0) {
             $.easyAjax({
