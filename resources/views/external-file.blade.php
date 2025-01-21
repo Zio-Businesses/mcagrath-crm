@@ -74,16 +74,20 @@
                 <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.menu.addFile')" fieldName="file" fieldId="file-upload-dropzone"/>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
+                    <x-forms.text :fieldLabel="__('File Name')" fieldName="tag_name"
+                        fieldId="tag_name" :fieldPlaceholder="__('File Name')" fieldRequired="true"/>
+                </div>
+                <div class="col-lg-3 col-md-6">
                     <x-forms.text :fieldLabel="__('Name')" fieldName="name"
                         fieldId="name" :fieldPlaceholder="__('placeholders.name')" fieldRequired="true"/>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <x-forms.email fieldId="email" :fieldLabel="__('app.email')"
                                 fieldName="email" :fieldPlaceholder="__('placeholders.email')" fieldRequired="true">
                     </x-forms.email>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <x-forms.text fieldId="phone" :fieldLabel="__('modules.lead.mobile')" fieldName="phone"
                                 :fieldPlaceholder="__('placeholders.mobile')" fieldRequired="true">
                     </x-forms.text>
@@ -142,10 +146,12 @@ $(document).ready(function() {
         const name = $('#name').val();
         const phone = $('#phone').val();
         const email = $('#email').val();
+        const tag_name = $('#tag_name').val();
         formData.append('projectid', projectid);
         formData.append('name', name);
         formData.append('email', email);
         formData.append('phone', phone);
+        formData.append('tag_name',tag_name);
         $.easyBlockUI();
     });
     invoiceDropzone.on('uploadprogress', function () {
@@ -218,7 +224,7 @@ $(document).ready(function() {
         file.previewTemplate.appendChild(div);
     });
     $('#save-file').click(function() {
-        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#email').val()!='')
+        if($('#name').val()!=''&&$('#phone').val()!=''&&$('#email').val()!=''&&$('#tag_name').val()!='')
         {
             invoiceDropzone.processQueue();
         }

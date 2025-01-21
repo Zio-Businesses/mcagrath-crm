@@ -754,7 +754,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         @if ($editProjectMembersPermission == 'all' || $editPermission == 'all')
                         <div class="col-md-3 " id="edit_members">
                            <div class="form-group my-3">
-                                <x-forms.label fieldId="selectAssignee" :fieldLabel="__('Project Coordinators')" fieldRequired="true"> 
+                                <x-forms.label fieldId="selectAssignee" :fieldLabel="__('Project Manager')" fieldRequired="true"> 
                                 </x-forms.label>
                                 <x-forms.input-group>
                                     <select class="form-control multiple-users" multiple name="member_id[]"
@@ -786,7 +786,33 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         @endif
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label fieldId="selectEmployee" 
+                                               :fieldLabel="__('Project Coordinator')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="project_coordinator"
+                                            id="project_coordinator" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                            @foreach ($all_employees as $item)
+                                            @php
+                                                $selected = '';
+                                            @endphp
+
+                                            @if ($project->project_coordinator_id == $item->id)
+                                                @php
+                                                    $selected = 'selected';
+                                                @endphp
+                                            @endif
+                                            
+                                            <x-user-option :user="$item" :selected="$selected" :pill="true"/>
+                                            @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label fieldId="selectEmployee" 
                                                :fieldLabel="__('Project Estimators')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -812,7 +838,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         </div>
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label fieldId="selectEmployee" 
                                                :fieldLabel="__('Project Accounting Analyst')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -838,7 +864,7 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                         </div>
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
-                                <x-forms.label fieldId="selectEmployee" fieldRequired="true"
+                                <x-forms.label fieldId="selectEmployee" 
                                                :fieldLabel="__('Project Escalation Manager')">
                                 </x-forms.label>
                                 <x-forms.input-group>
@@ -856,6 +882,59 @@ $createPublicProjectPermission = user()->permission('create_public_project');
                                                     @endphp
                                                 @endif
                                             @endforeach
+                                            <x-user-option :user="$item" :selected="$selected" :pill="true"/>
+                                            @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label fieldId="selectEmployee" 
+                                               :fieldLabel="__('Vendor Recruiter')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="vendor_recruiter"
+                                            id="vendor_recruiter" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                            @foreach ($all_employees as $item)
+                                            @php
+                                                $selected = '';
+                                            @endphp
+
+                                            @if ($project->vendor_recruiter_id == $item->id)
+                                                @php
+                                                    $selected = 'selected';
+                                                @endphp
+                                            @endif
+
+                                            <x-user-option :user="$item" :selected="$selected" :pill="true"/>
+                                            @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label fieldId="selectEmployee" 
+                                               :fieldLabel="__('Project Scheduler')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="project_scheduler"
+                                            id="project_scheduler" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                            @foreach ($all_employees as $item)
+                                            @php
+                                                $selected = '';
+                                            @endphp
+
+                                            @if ($project->project_scheduler_id == $item->id)
+                                                @php
+                                                    $selected = 'selected';
+                                                @endphp
+                                            @endif
+
                                             <x-user-option :user="$item" :selected="$selected" :pill="true"/>
                                             @endforeach
                                     </select>

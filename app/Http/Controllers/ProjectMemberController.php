@@ -149,4 +149,28 @@ class ProjectMemberController extends AccountBaseController
         return Reply::success(__('messages.recordSaved'));
     }
 
+    public function removeExt(Request $request,$id)
+    {
+        if($request->action=='coordinator')
+        {
+            $project = Project::findOrFail($id);
+            $project->project_coordinator_id=null;
+            $project->save();
+        }
+        if($request->action=='scheduler')
+        {
+            $project = Project::findOrFail($id);
+            $project->project_scheduler_id= null;
+            $project->save();
+        }
+        if($request->action=='recruiter')
+        {
+            $project = Project::findOrFail($id);
+            $project->vendor_recruiter_id=null;
+            $project->save();
+        }
+        return Reply::success(__('messages.memberRemovedFromProject'));
+
+    }
+
 }

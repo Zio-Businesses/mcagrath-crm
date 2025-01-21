@@ -299,6 +299,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
 
             Route::post('project-members/save-group', [ProjectMemberController::class, 'storeGroup'])->name('project-members.store_group');
             Route::resource('project-members', ProjectMemberController::class);
+            Route::post('project-members/remove-ext/{id}', [ProjectMemberController::class, 'removeExt'])->name('project-members.remove_ext');
 
             Route::post('files/store-link', [ProjectFileController::class, 'storeLink'])->name('files.store_link');
             Route::get('files/download/{id}', [ProjectFileController::class, 'download'])->name('files.download');

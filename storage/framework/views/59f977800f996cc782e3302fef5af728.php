@@ -18,6 +18,11 @@
                  <?php endif; ?>
              </div>
              <div class="d-flex flex-grow-1">
+                <h4 class="card-title f-12 text-dark-grey mr-3 text-truncate">Tag Name :</h4>
+                <?php echo e($tagname); ?>
+
+             </div>
+             <div class="d-flex flex-grow-1">
                 <h4 class="card-title f-12 text-dark-grey mr-3 text-truncate">Name :</h4>
                 <?php echo e($name); ?>
 

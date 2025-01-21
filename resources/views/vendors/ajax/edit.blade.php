@@ -36,17 +36,12 @@
                                     <x-forms.text :fieldLabel="__('app.street_address')" fieldName="street_address"
                                     fieldId="street_address"  fieldRequired="true" :fieldValue="$vendor->street_address"/>
                                 </div>
-                       
                                 <div class="col-lg-4 col-md-6">
-                                    <x-forms.text :fieldLabel="__('County')" fieldName="county" fieldId="county" :fieldValue="$vendor->county" fieldRequired="true"/>
+                                    <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
+                                    fieldId="city"  fieldRequired="true" :fieldValue="$vendor->city"/>
                                 </div>
                             </div>
                          </div>
-                    
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('app.city')" fieldName="city"
-                            fieldId="city"  fieldRequired="true" :fieldValue="$vendor->city"/>
-                        </div>
 
                         <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('app.state')" fieldName="state"
@@ -56,6 +51,10 @@
                         <div class="col-lg-4 col-md-6">
                             <x-forms.text :fieldLabel="__('app.zipcode')" fieldName="zipcode"
                             fieldId="zipcode"  fieldRequired="true" :fieldValue="$vendor->zip_code"/>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('County')" fieldName="county" fieldId="county" :fieldValue="$vendor->county" fieldRequired="true"/>
                         </div>
 
                         <div class="col-lg-4 col-md-6">

@@ -131,6 +131,16 @@ class ProjectsDataTable extends BaseDataTable
             if ($row->public) {
                 return '--';
             }
+            $allMembers = collect()
+            ->merge($row->est_users)
+            ->merge($row->acct_users)
+            ->merge($row->emanager_users);
+            
+            $roleMembers = [
+                0 => $row->project_coordinator,
+                1 => $row->project_scheduler,
+                2 => $row->vendor_recruiter
+            ];            
 
             $members = '<div class="position-relative">';
             if (count($row->members) > 0) {
@@ -144,47 +154,29 @@ class ProjectsDataTable extends BaseDataTable
 
                 }
             }
-            if (count($row->est_users) > 0) {
-                foreach ($row->est_users as $key => $member) {
-                    if ($key < 4) {
+            
+            if ($allMembers->count() > 0) {
+                foreach ($allMembers as $key => $member) {
+                    if ($key+=1 < 4) {
                         $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
 
                         $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
+                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px">
+                                        <a href="' . route('employees.show', $member->id) . '">' . $img . '</a>
+                                    </div>';
                     }
-
                 }
             }
-            if (count($row->acct_users) > 0) {
-                foreach ($row->acct_users as $key => $member) {
-                    if ($key < 4) {
-                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-
-                        $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
-                    }
-
+            $members .= '<br/>';
+            foreach ($roleMembers as $key => $member) {
+                if ($member) {
+                    $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
+                    $position = $key > 0 ? 'position-absolute' : '';
+                    $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left: ' . ($key * 13) . 'px">
+                                    <a href="' . route('employees.show', $member->id) . '">' . $img . '</a>
+                                 </div>';
                 }
             }
-            if (count($row->emanager_users) > 0) {
-                foreach ($row->emanager_users as $key => $member) {
-                    if ($key < 4) {
-                        $img = '<img data-toggle="tooltip" height="25" width="25" data-original-title="' . $member->name . '" src="' . $member->image_url . '">';
-
-                        $position = $key > 0 ? 'position-absolute' : '';
-                        $members .= '<div class="taskEmployeeImg rounded-circle ' . $position . '" style="left:  ' . ($key * 13) . 'px"><a href="' . route('employees.show', $member->id) . '">' . $img . '</a></div> ';
-                    }
-
-                }
-            }
-            // else if ($this->addProjectMemberPermission == 'all') {
-            //     $members .= '<a href="' . route('projects.show', $row->id) . '?tab=members" class="f-12 text-dark-grey"><i class="fa fa-plus" ></i> ' . __('modules.projects.addMemberTitle') . '</a>';
-
-            // }
-            // else {
-
-            //     $members .= '--';
-            // }
 
             if (count($row->members) > 4) {
                 $members .= '<div class="taskEmployeeImg more-user-count text-center rounded-circle bg-amt-grey position-absolute" style="left:  52px"><a href="' . route('projects.show', $row->id) . '?tab=members" class="text-dark f-10">+' . (count($row->members) - 4) . '</a></div> ';
@@ -247,6 +239,63 @@ class ProjectsDataTable extends BaseDataTable
                 }
 
                 return implode(',', $members);
+            }
+        });
+        $datatables->addColumn('coordinator', function ($row) {
+
+            if($row->project_coordinator_id)
+            {
+                return $row->project_coordinator->name;
+            }
+        });
+        $datatables->addColumn('estimator', function ($row) {
+            $members = [];
+
+            if (count($row->est_users) > 0) {
+
+                foreach ($row->est_users as $member) {
+                    $members[] = $member->name;
+                }
+
+                return implode(',', $members);
+            }
+        });
+        $datatables->addColumn('acc_analyst', function ($row) {
+            $members = [];
+
+            if (count($row->acct_users) > 0) {
+
+                foreach ($row->acct_users as $member) {
+                    $members[] = $member->name;
+                }
+
+                return implode(',', $members);
+            }
+        });
+        $datatables->addColumn('esc_manager', function ($row) {
+            $members = [];
+
+            if (count($row->emanager_users) > 0) {
+
+                foreach ($row->emanager_users as $member) {
+                    $members[] = $member->name;
+                }
+
+                return implode(',', $members);
+            }
+        });
+        $datatables->addColumn('recruiter', function ($row) {
+
+            if($row->vendor_recruiter_id)
+            {
+                return $row->vendor_recruiter->name;
+            }
+        });
+        $datatables->addColumn('scheduler', function ($row) {
+
+            if($row->project_scheduler_id)
+            {
+                return $row->project_scheduler->name;
             }
         });
         $datatables->addColumn('project', function ($row) {
@@ -451,7 +500,7 @@ class ProjectsDataTable extends BaseDataTable
             ->leftJoin('project_category', 'projects.category_id', 'project_category.id')
             ->selectRaw(
                 'projects.id, projects.project_short_code, projects.hash, projects.added_by, projects.project_name, projects.start_date, projects.deadline, projects.client_id,
-              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,
+              projects.completion_percent, projects.project_budget, projects.currency_id,projects.type,projects.priority,projects.sub_category,projects.nte,projects.bid_submitted_amount,projects.bid_approved_amount,projects.delayed_by,projects.cancelled_date,projects.cancelled_reason,projects.project_coordinator_id,projects.project_scheduler_id,projects.vendor_recruiter_id,
               projects.inspection_date,projects.inspection_time,projects.re_inspection_date,projects.re_inspection_time,projects.bid_submitted,projects.vendor_amount,projects.bid_rejected,projects.bid_approval,projects.work_schedule_date,projects.work_schedule_time,projects.nxt_follow_up_time,projects.nxt_follow_up_date,
               property_details.state,property_details.city,property_details.zipcode,property_details.street_address,property_details.county,
               projects.work_schedule_re_date,projects.work_schedule_re_time,projects.work_completion_date,project_category.category_name,
@@ -650,6 +699,9 @@ class ProjectsDataTable extends BaseDataTable
                 ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
                 ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
                 ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
+                ->orWhereIn('projects.project_coordinator_id', $customfilter->project_members)
+                ->orWhereIn('projects.project_scheduler_id', $customfilter->project_members)
+                ->orWhereIn('projects.vendor_recruiter_id', $customfilter->project_members)
                 ->get();
                 
             }
@@ -724,7 +776,13 @@ class ProjectsDataTable extends BaseDataTable
             __('app.client') => ['data' => 'client_id', 'name' => 'client_id', 'width' => '15%', 'exportable' => false, 'title' => __('app.client'), 'visible' => !in_array('client', user_roles())],
             __('app.customers') => ['data' => 'client_name', 'name' => 'client_id', 'visible' => false, 'title' => __('app.customers')],
             __('app.client') . ' ' . __('app.email') => ['data' => 'client_email', 'name' => 'client_id', 'visible' => false, 'title' => __('app.client') . ' ' . __('app.email')],
-            __('modules.projects.projectMembers') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'title' => __('modules.projects.projectMembers')],
+            __('Project Manager') => ['data' => 'name', 'name' => 'name', 'visible' => false, 'title' => __('Project Manager')],
+            __('Project Coordinator') => ['data' => 'coordinator', 'name' => 'coordinator', 'visible' => false, 'title' => __('Project Coordinator')],
+            __('Project Estimator') => ['data' => 'estimator', 'name' => 'estimator', 'visible' => false, 'title' => __('Project Estimator')],
+            __('Project Accounting Analyst') => ['data' => 'acc_analyst', 'name' => 'acc_analyst', 'visible' => false, 'title' => __('Project Accounting Analyst')],
+            __('Project Escalation Manager') => ['data' => 'esc_manager', 'name' => 'esc_manager', 'visible' => false, 'title' => __('Project Escalation Manager')],
+            __('Vendor Recruiter') => ['data' => 'recruiter', 'name' => 'recruiter', 'visible' => false, 'title' => __('Vendor Recruiter')],
+            __('Project Scheduler') => ['data' => 'scheduler', 'name' => 'scheduler', 'visible' => false, 'title' => __('Project Scheduler')],
             __('app.ptype') => ['data' => 'type', 'name' => 'type', 'title' => __('app.ptype')],
             __('app.priority') => ['data' => 'priority', 'name' => 'priority', 'title' => __('app.priority')],
             __('app.pcategory') => ['data' => 'category_name', 'name' => 'category_name', 'title' => __('app.pcategory')],

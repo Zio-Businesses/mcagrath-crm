@@ -57,6 +57,7 @@ use App\Models\ProjectType;
 use App\Models\PropertyType;
 use App\Models\OccupancyStatus;
 use App\Models\Team;
+use App\Models\ProjectExtMembers;
 use App\Models\User;
 use App\Models\DelayedBy;
 use App\Models\PropertyDetails;
@@ -264,7 +265,7 @@ class ProjectController extends AccountBaseController
         $this->emanager=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1, function ($query) {
             $query->where('designation_id', 10);
         });
-        
+        $this->all_employee=  User::allEmployees(null, false, ($this->addPermission == 'all' ? 'all' : null),1);
         
         $this->redirectUrl = request()->redirectUrl;
 
@@ -389,6 +390,9 @@ class ProjectController extends AccountBaseController
             $project->nte=$request->nte;
             $project->bid_submitted_amount=$request->bid_submitted_amount;
             $project->bid_approved_amount=$request->bid_approved_amount;
+            $project->vendor_recruiter_id = $request->vendor_recruiter;
+            $project->project_coordinator_id = $request->project_coordinator;
+            $project->project_scheduler_id = $request->project_scheduler;
             // $project->est_users()->attach($request->estimator_id);
             if (!is_null($request->duplicateProjectID)) {
 
@@ -486,6 +490,7 @@ class ProjectController extends AccountBaseController
                 }
             }
 
+
             if (!is_null($request->duplicateProjectID)) {
                 $this->storeDuplicateProject($request, $project);
             }
@@ -574,6 +579,7 @@ class ProjectController extends AccountBaseController
         $this->emanager=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
             $query->where('designation_id', 10);
         });
+        $this->all_employees=  User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1);
 
         if ($this->editPermission == 'all' || $this->editProjectMembersPermission == 'all') {
             $this->employees = User::allEmployees(null, false, ($this->editPermission == 'all' ? 'all' : null),1, function ($query) {
@@ -648,6 +654,10 @@ class ProjectController extends AccountBaseController
         $project->priority=$request->priority;
         $project->sub_category=$request->sub_category;
         $project->delayed_by=$request->delayed_by;
+        $project->vendor_recruiter_id = $request->vendor_recruiter;
+        $project->project_coordinator_id = $request->project_coordinator;
+        $project->project_scheduler_id = $request->project_scheduler;
+        $propertyDetails->property_address = $request->property_add;
         $propertyDetails->property_address = $request->property_address;
         $propertyDetails->street_address = $request->street_address;
         $propertyDetails->city = $request->city;
@@ -684,6 +694,7 @@ class ProjectController extends AccountBaseController
         $projectContacts->tenant_name_5 = $request->tenant_name_5;
         $projectContacts->tenant_email_5 = $request->tenant_email_5;
         $projectContacts->tenant_phone_5 = $request->tenant_phone_5;
+
         $projectContacts->save();
         if (!$request->has('without_deadline')) {
             $project->deadline = companyToYmd($request->deadline);
@@ -775,7 +786,7 @@ class ProjectController extends AccountBaseController
 
         $project->save();
 
-
+        
         // To add custom fields data
         if ($request->custom_fields_data) {
             $project->updateCustomFieldData($request->custom_fields_data);

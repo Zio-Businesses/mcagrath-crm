@@ -36,7 +36,7 @@ $viewProjectHourlyRatePermission = user()->permission('view_project_hourly_rates
         <?php if($viewProjectMemberPermission == 'all'): ?>
             <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
-<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('Project Coordinators'),'otherClasses' => 'border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('Project Manager'),'otherClasses' => 'border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('cards.data'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -173,6 +173,171 @@ $viewProjectHourlyRatePermission = user()->permission('view_project_hourly_rates
         <?php endif; ?>
     </div>
 
+</div>
+<div class="row py-5">
+    <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
+        <?php if(($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added' || $project->project_admin == user()->id) && !$project->trashed()): ?>
+            <!-- <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'add-project-member','class' => 'type-btn mb-3']); ?>
+                <?php echo app('translator')->get('modules.projects.addMemberTitle'); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?> -->
+        <?php endif; ?>
+
+        <?php if($viewProjectMemberPermission == 'all'): ?>
+            <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('Project Coordinator'),'otherClasses' => 'border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.data'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Data::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>
+<?php $component = App\View\Components\Table::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('table'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Table::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-0 pb-3 admin-dash-table table-hover']); ?>
+
+                     <?php $__env->slot('thead', null, []); ?> 
+                        <th class="pl-20">#</th>
+                        <th><?php echo app('translator')->get('app.name'); ?></th>
+                        <th><?php echo app('translator')->get('app.email'); ?></th>
+                        <th><?php echo app('translator')->get('app.phone'); ?></th>
+                        <th class="text-right pr-20"><?php echo app('translator')->get('app.action'); ?></th>
+                     <?php $__env->endSlot(); ?>
+                    <?php if($project->project_coordinator): ?>
+                    <tr id="row-<?php echo e($project->project_coordinator->id); ?>">
+                        <td class="pl-20"> 1 </td>
+                        <td>
+                            <?php if (isset($component)) { $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f = $attributes; } ?>
+<?php $component = App\View\Components\Employee::resolve(['user' => $project->project_coordinator] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('employee'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Employee::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $attributes = $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $component = $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+                        </td>
+                            
+                        <td>
+                                <?php echo e($project->project_coordinator->email); ?>
+
+                        </td>
+                        
+                        <td>
+                                <?php echo e($project->project_coordinator->mobile); ?>
+
+                        </td>
+                        <td class="text-right pr-20">
+
+                            <?php if($deleteProjectMemberPermission == 'all'): ?>
+                                <?php if (isset($component)) { $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonSecondary::resolve(['icon' => 'trash'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-secondary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonSecondary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['data-row-id' => ''.e($project->id).'','class' => 'delete-coordinator']); ?>
+                                    <?php echo app('translator')->get('app.delete'); ?> <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $attributes = $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $component = $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="5">
+                            <?php if (isset($component)) { $__componentOriginal269164c77d9d34462c34359c03da6a68 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal269164c77d9d34462c34359c03da6a68 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\NoRecord::resolve(['icon' => 'user','message' => __('messages.noMemberAddedToProject')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.no-record'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\NoRecord::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $attributes = $__attributesOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__attributesOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $component = $__componentOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__componentOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $attributes = $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $component = $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $attributes = $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $component = $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+        <?php endif; ?>
+    </div>
 </div>
 <div class="row py-5">
     <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
@@ -673,8 +838,338 @@ $viewProjectHourlyRatePermission = user()->permission('view_project_hourly_rates
 <?php endif; ?>
         <?php endif; ?>
     </div>
-
 </div>
+<div class="row py-5">
+    <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
+        <?php if(($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added' || $project->project_admin == user()->id) && !$project->trashed()): ?>
+            <!-- <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'add-project-member','class' => 'type-btn mb-3']); ?>
+                <?php echo app('translator')->get('modules.projects.addMemberTitle'); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?> -->
+        <?php endif; ?>
+
+        <?php if($viewProjectMemberPermission == 'all'): ?>
+            <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('Project Schdeuler'),'otherClasses' => 'border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.data'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Data::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>
+<?php $component = App\View\Components\Table::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('table'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Table::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-0 pb-3 admin-dash-table table-hover']); ?>
+
+                     <?php $__env->slot('thead', null, []); ?> 
+                        <th class="pl-20">#</th>
+                        <th><?php echo app('translator')->get('app.name'); ?></th>
+                        <th><?php echo app('translator')->get('app.email'); ?></th>
+                        <th><?php echo app('translator')->get('app.phone'); ?></th>
+                        <th class="text-right pr-20"><?php echo app('translator')->get('app.action'); ?></th>
+                     <?php $__env->endSlot(); ?>
+                    <?php if($project->project_scheduler): ?>
+                    <tr id="row-<?php echo e($project->project_scheduler->id); ?>">
+                        <td class="pl-20"> 1 </td>
+                        <td>
+                            <?php if (isset($component)) { $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f = $attributes; } ?>
+<?php $component = App\View\Components\Employee::resolve(['user' => $project->project_scheduler] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('employee'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Employee::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $attributes = $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $component = $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+                        </td>
+                            
+                        <td>
+                                <?php echo e($project->project_scheduler->email); ?>
+
+                        </td>
+                        
+                        <td>
+                                <?php echo e($project->project_scheduler->mobile); ?>
+
+                        </td>
+                        <td class="text-right pr-20">
+
+                            <?php if($deleteProjectMemberPermission == 'all'): ?>
+                                <?php if (isset($component)) { $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonSecondary::resolve(['icon' => 'trash'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-secondary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonSecondary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['data-row-id' => ''.e($project->id).'','class' => 'delete-scheduler']); ?>
+                                    <?php echo app('translator')->get('app.delete'); ?> <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $attributes = $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $component = $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="5">
+                            <?php if (isset($component)) { $__componentOriginal269164c77d9d34462c34359c03da6a68 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal269164c77d9d34462c34359c03da6a68 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\NoRecord::resolve(['icon' => 'user','message' => __('messages.noMemberAddedToProject')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.no-record'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\NoRecord::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $attributes = $__attributesOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__attributesOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $component = $__componentOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__componentOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $attributes = $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $component = $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $attributes = $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $component = $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+<div class="row py-5">
+    <div class="col-lg-12 col-md-12 mb-4 mb-xl-0 mb-lg-4">
+        <?php if(($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added' || $project->project_admin == user()->id) && !$project->trashed()): ?>
+            <!-- <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'add-project-member','class' => 'type-btn mb-3']); ?>
+                <?php echo app('translator')->get('modules.projects.addMemberTitle'); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?> -->
+        <?php endif; ?>
+
+        <?php if($viewProjectMemberPermission == 'all'): ?>
+            <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\Data::resolve(['title' => __('Vendor Recruiter'),'otherClasses' => 'border-0 p-0 d-flex justify-content-between align-items-center table-responsive-sm'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.data'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\Data::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                <?php if (isset($component)) { $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f = $attributes; } ?>
+<?php $component = App\View\Components\Table::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('table'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Table::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'border-0 pb-3 admin-dash-table table-hover']); ?>
+
+                     <?php $__env->slot('thead', null, []); ?> 
+                        <th class="pl-20">#</th>
+                        <th><?php echo app('translator')->get('app.name'); ?></th>
+                        <th><?php echo app('translator')->get('app.email'); ?></th>
+                        <th><?php echo app('translator')->get('app.phone'); ?></th>
+                        <th class="text-right pr-20"><?php echo app('translator')->get('app.action'); ?></th>
+                     <?php $__env->endSlot(); ?>
+                    <?php if($project->vendor_recruiter): ?>
+                    <tr id="row-<?php echo e($project->vendor_recruiter->id); ?>">
+                        <td class="pl-20"> 1 </td>
+                        <td>
+                            <?php if (isset($component)) { $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f = $attributes; } ?>
+<?php $component = App\View\Components\Employee::resolve(['user' => $project->vendor_recruiter] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('employee'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Employee::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $attributes = $__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__attributesOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f)): ?>
+<?php $component = $__componentOriginal9a71dc76dd25d4db3618f7b2896e958f; ?>
+<?php unset($__componentOriginal9a71dc76dd25d4db3618f7b2896e958f); ?>
+<?php endif; ?>
+                        </td>
+                            
+                        <td>
+                                <?php echo e($project->vendor_recruiter->email); ?>
+
+                        </td>
+                        
+                        <td>
+                                <?php echo e($project->vendor_recruiter->mobile); ?>
+
+                        </td>
+                        <td class="text-right pr-20">
+
+                            <?php if($deleteProjectMemberPermission == 'all'): ?>
+                                <?php if (isset($component)) { $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonSecondary::resolve(['icon' => 'trash'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-secondary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonSecondary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['data-row-id' => ''.e($project->id).'','class' => 'delete-recruiter']); ?>
+                                    <?php echo app('translator')->get('app.delete'); ?> <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $attributes = $__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__attributesOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad)): ?>
+<?php $component = $__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad; ?>
+<?php unset($__componentOriginal5e57c6582b8a883148a28bb7ee46d2ad); ?>
+<?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="5">
+                            <?php if (isset($component)) { $__componentOriginal269164c77d9d34462c34359c03da6a68 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal269164c77d9d34462c34359c03da6a68 = $attributes; } ?>
+<?php $component = App\View\Components\Cards\NoRecord::resolve(['icon' => 'user','message' => __('messages.noMemberAddedToProject')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('cards.no-record'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Cards\NoRecord::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $attributes = $__attributesOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__attributesOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal269164c77d9d34462c34359c03da6a68)): ?>
+<?php $component = $__componentOriginal269164c77d9d34462c34359c03da6a68; ?>
+<?php unset($__componentOriginal269164c77d9d34462c34359c03da6a68); ?>
+<?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                 <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $attributes = $__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__attributesOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f)): ?>
+<?php $component = $__componentOriginal7d9f6e0b9001f5841f72577781b2d17f; ?>
+<?php unset($__componentOriginal7d9f6e0b9001f5841f72577781b2d17f); ?>
+<?php endif; ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $attributes = $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9)): ?>
+<?php $component = $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9; ?>
+<?php unset($__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9); ?>
+<?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
 <!-- ROW END -->
 
 <script>
@@ -783,6 +1278,141 @@ $viewProjectHourlyRatePermission = user()->permission('view_project_hourly_rates
         });
 
         });
+        $('.delete-coordinator').click(function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('project-members.remove_ext', ':id')); ?>";
+        url = url.replace(':id', id);
+
+        var token = "<?php echo e(csrf_token()); ?>";
+
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        'action':'coordinator',
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#row-' + id).fadeOut();
+                        }
+                    }
+                });
+            }
+        });
+
+        });
+
+        $('.delete-recruiter').click(function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('project-members.remove_ext', ':id')); ?>";
+        url = url.replace(':id', id);
+
+        var token = "<?php echo e(csrf_token()); ?>";
+
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        'action':'recruiter',
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#row-' + id).fadeOut();
+                        }
+                    }
+                });
+            }
+        });
+
+        });
+
+        $('.delete-scheduler').click(function() {
+
+        var id = $(this).data('row-id');
+        var url = "<?php echo e(route('project-members.remove_ext', ':id')); ?>";
+        url = url.replace(':id', id);
+
+        var token = "<?php echo e(csrf_token()); ?>";
+
+        Swal.fire({
+            title: "<?php echo app('translator')->get('messages.sweetAlertTitle'); ?>",
+            text: "<?php echo app('translator')->get('messages.recoverRecord'); ?>",
+            icon: 'warning',
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "<?php echo app('translator')->get('messages.confirmDelete'); ?>",
+            cancelButtonText: "<?php echo app('translator')->get('app.cancel'); ?>",
+            customClass: {
+                confirmButton: 'btn btn-primary mr-3',
+                cancelButton: 'btn btn-secondary'
+            },
+            showClass: {
+                popup: 'swal2-noanimation',
+                backdrop: 'swal2-noanimation'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.easyAjax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        '_token': token,
+                        'action':'scheduler',
+                    },
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $('#row-' + id).fadeOut();
+                        }
+                    }
+                });
+            }
+        });
+
+        });
+
         $('.delete-acct').click(function() {
 
         var id = $(this).data('row-id');

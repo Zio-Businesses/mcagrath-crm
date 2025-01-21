@@ -29,7 +29,7 @@ class PublicProjectFileController extends Controller
                 $file->project_id = $request->projectid;
 
                 $filename = Files::uploadLocalOrS3($fileData, ProjectExternalFile::FILE_PATH);
-
+                $file->tag_name = $request->tag_name;
                 $file->filename = $fileData->getClientOriginalName();
                 $file->hashname = $filename;
                 $file->size = $fileData->getSize();

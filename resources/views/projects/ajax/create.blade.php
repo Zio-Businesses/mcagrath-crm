@@ -446,10 +446,11 @@
                             </div>
                         </div>
                         @if ($addProjectMemberPermission == 'all' || $addProjectMemberPermission == 'added')
+                        
                         <div class="col-md-3" id="add_members">
                             <div class="form-group my-3">
                                 <x-forms.label class="my-3" fieldId="selectEmployee" 
-                                               :fieldLabel="__('Add Project Coordinator')">
+                                               :fieldLabel="__('Add Project Manager')" fieldRequired="true">
                                 </x-forms.label>
 
                                 <x-forms.input-group>
@@ -471,6 +472,26 @@
                                                     data-toggle="tooltip" data-original-title="{{ __('modules.projects.addMemberTitle') }}">@lang('app.add')</button>
                                         </x-slot>
                                     @endif
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
+                                               :fieldLabel="__('Add Project Coordinator')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="project_coordinator"
+                                            id="project_coordinator" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                        @foreach ($all_employee as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
                                 </x-forms.input-group>
                             </div>
                         </div>
@@ -525,6 +546,46 @@
                                     <select class="form-control multiple-users" multiple name="emanager_id[]"
                                             id="selectEscalationManager" data-live-search="true" data-size="8">
                                         @foreach ($emanager as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
+                                               :fieldLabel="__('Add Vendor Recruiter')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="vendor_recruiter"
+                                            id="vendor_recruiter" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                        @foreach ($all_employee as $item)
+                                            <x-user-option
+                                                :user="$item"
+                                                :pill="true"
+                                                :selected="(request()->has('default_assign') && request('default_assign') == $item->id) || (isset($projectTemplateMembers) && in_array($item->id, $projectTemplateMembers)) || (isset($projectMembers) && in_array($item->id, $projectMembers))"
+                                            />
+                                        @endforeach
+                                    </select>
+                                </x-forms.input-group>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="add_members">
+                            <div class="form-group my-3">
+                                <x-forms.label class="my-3" fieldId="selectEmployee" 
+                                               :fieldLabel="__('Add Project Scheduler')">
+                                </x-forms.label>
+                                <x-forms.input-group>
+                                    <select class="form-control multiple-users" name="project_scheduler"
+                                            id="project_scheduler" data-live-search="true" data-size="8">
+                                            <option value="">--</option>
+                                        @foreach ($all_employee as $item)
                                             <x-user-option
                                                 :user="$item"
                                                 :pill="true"
@@ -753,6 +814,7 @@
                 return selected + " {{ __('app.membersSelected') }} ";
             }
         });
+        
         $("#selectAccountingAnalyst").selectpicker({
             actionsBox: true,
             selectAllText: "{{ __('modules.permission.selectAll') }}",
@@ -763,7 +825,7 @@
                 return selected + " {{ __('app.membersSelected') }} ";
             }
         });
-        
+        $("#vendor_recruiter,#project_coordinator,#project_scheduler").selectpicker();
         var userValues = @json($userData);
         quillMention(userValues, '#project_summary');
 
