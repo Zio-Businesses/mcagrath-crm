@@ -70,6 +70,8 @@
 <div class="content-wrapper container">
     <div class="card border-0 invoice">
         <div class="card-body">
+            <h2 class="mb-0 pr-3 text-dark f-18 font-weight-bold d-flex align-items-center">{{$projectData->project_short_code}} - {{$projectData->propertyDetails->property_address}}</h2>
+            
             <div class="col-md-12">
                 <x-forms.file-multiple class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.menu.addFile')" fieldName="file" fieldId="file-upload-dropzone"/>
             </div>

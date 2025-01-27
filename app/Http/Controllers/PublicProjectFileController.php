@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Company;
 use App\Helper\Files;
 use App\Helper\Reply;
+use App\Models\Project;
 use App\Models\ProjectExternalFile;
 class PublicProjectFileController extends Controller
 {
@@ -16,6 +17,7 @@ class PublicProjectFileController extends Controller
         $this->pageTitle = 'File Upload';
         $this->pageIcon = 'fa fa-file';
         $this->projectid = $request->query('data');
+        $this->projectData = Project::select('id', 'project_short_code', 'property_details_id') ->where('id', $this->projectid)->with(['propertyDetails:id,property_address']) ->first();
         return view('external-file', $this->data);
     }
     public function store(Request $request)
@@ -27,7 +29,6 @@ class PublicProjectFileController extends Controller
             foreach ($request->file as $fileData) {
                 $file = new ProjectExternalFile();
                 $file->project_id = $request->projectid;
-
                 $filename = Files::uploadLocalOrS3($fileData, ProjectExternalFile::FILE_PATH);
                 $file->tag_name = $request->tag_name;
                 $file->filename = $fileData->getClientOriginalName();
