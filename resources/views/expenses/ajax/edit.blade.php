@@ -11,13 +11,63 @@ $approveExpensePermission = user()->permission('approve_expenses');
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('app.expenseDetails')</h4>
                 <div class="row p-20">
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.expenses.itemName')"
                             fieldName="item_name" fieldRequired="true" fieldId="item_name"
                             :fieldPlaceholder="__('placeholders.expense.item')" :fieldValue="$expense->item_name" />
                     </div>
-
                     <div class="col-md-6 col-lg-3">
+                        <x-forms.label class="mt-3" fieldId="project_id" :fieldLabel="__('app.project')" fieldRequired="true">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="project_id" id="project_id"
+                                data-live-search="true" data-size="8">
+                                <option value="">--</option>
+                                @foreach ($projects as $project)
+                                    <option data-currency-id="{{ $project->currency_id }}" @selected($project->id == $expense->project_id) value="{{ $project->id }}">
+                                        {{ $project->project_short_code }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </x-forms.input-group>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.select fieldId="vendor_id" fieldName="vendor_id" :fieldLabel="__('Vendor')"
+                            search="true">
+                            <option value="">--</option>
+                            @foreach ($vendor as $vendors)
+                                <option  @selected($expense->vendor_id == $vendors->id ) value="{{ $vendors->id }}">
+                                    {{ $vendors->vendor_name }}
+                                </option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.datepicker fieldId="pay_date" 
+                            :fieldLabel="__('Payment Date')" fieldName="pay_date"
+                            :fieldPlaceholder="__('placeholders.date')"
+                            :fieldValue="$expense->pay_date?->format(company()->date_format)"/>
+                    </div>
+                    <div class="col-md-6 col-lg-3 ">
+                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
+                            fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')"
+                            :fieldValue="$expense->price" />
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.select fieldId="payment_method" fieldName="payment_method" :fieldLabel="__('Payment Method')"
+                            search="true">
+                            <option value="">--</option>
+                            <option @selected($expense->payment_method == 'Credit Card') value="Credit Card">Credit Card</option>
+                            <option @selected($expense->payment_method == 'PayPa') value="PayPal">PayPal</option>
+                            <option @selected($expense->payment_method == 'ACH') value="ACH">ACH</option>
+                            <option @selected($expense->payment_method == 'Check') value="Check">Check</option>
+                            <option @selected($expense->payment_method == 'CashApp') value="CashApp">CashApp</option>
+                            <option @selected($expense->payment_method == 'Zelle') value="Zelle">Zelle</option>
+                            <option @selected($expense->payment_method == 'Venmo') value="Venmo">Venmo</option>
+                        </x-forms.select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3 d-none">
                         <input type="hidden" id="currency_id" name="currency_id" value="{{$expense->currency_id}}">
                         <x-forms.select :fieldLabel="__('modules.invoices.currency')" fieldName="currency"
                             fieldRequired="true" fieldId="currency">
@@ -31,43 +81,21 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     </div>
                     <input type = "hidden" name = "mention_user_ids" id = "mentionUserId" class ="mention_user_ids">
 
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number fieldId="exchange_rate" :fieldLabel="__('modules.currencySettings.exchangeRate')"
                         fieldName="exchange_rate" fieldRequired="true" :fieldValue="$expense->exchange_rate" :fieldReadOnly="($companyCurrency->id == $expense->currency_id)"
                         :fieldHelp="$expense->currency->currency_name != company()->currency->currency_name ? '( '.$expense->currency->currency_name.' '.__('app.to').' '.company()->currency->currency_name.' )' : ' '"/>
                     </div>
 
-                    <div class="col-md-6 col-lg-3">
-                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
-                            fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')"
-                            :fieldValue="$expense->price" />
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 d-none">
                         <x-forms.datepicker fieldId="purchase_date" fieldRequired="true"
                             :fieldLabel="__('modules.expenses.purchaseDate')" fieldName="purchase_date"
                             :fieldPlaceholder="__('placeholders.date')"
                             :fieldValue="$expense->purchase_date->format(company()->date_format)" />
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
-                        <x-forms.label class="mt-3" fieldId="project_id" :fieldLabel="__('app.project')">
-                        </x-forms.label>
-                        <x-forms.input-group>
-                            <select class="form-control select-picker" name="project_id" id="project_id"
-                                data-live-search="true" data-size="8">
-                                <option value="">--</option>
-                                @foreach ($projects as $project)
-                                    <option data-currency-id="{{ $project->currency_id }}" @selected($project->id == $expense->project_id) value="{{ $project->id }}">
-                                        {{ $project->project_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </x-forms.input-group>
-                    </div>
-
                     @if (user()->permission('add_expenses') == 'all')
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6 col-lg-4 d-none">
                             <x-forms.label class="mt-3" fieldId="user_id" :fieldLabel="__('app.employee')">
                             </x-forms.label>
                             <x-forms.input-group>
@@ -109,7 +137,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                         </x-forms.input-group>
                     </div>
 
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 d-none">
                         <x-forms.text :fieldLabel="__('modules.expenses.purchaseFrom')" fieldName="purchase_from"
                             fieldId="purchase_from" :fieldPlaceholder="__('placeholders.expense.vendor')"
                             :fieldValue="$expense->purchase_from" />
@@ -124,7 +152,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             || ($approveExpensePermission == 'both' && ($expense->user_id == user()->id || $expense->added_by == user()->id))
                             )
                         )
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <x-forms.select :fieldLabel="__('app.status')" fieldName="status" fieldId="status">
                                 <option @selected ($expense->status == 'approved') value="approved">@lang('app.approved')</option>
                                 <option @selected($expense->status == 'pending') value="pending">@lang('app.pending')</option>
@@ -135,7 +163,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     @endif
 
                     @if($linkExpensePermission == 'all')
-                        <div class="col-md-4">
+                        <div class="col-md-4 d-none">
                             <x-forms.select fieldId="bank_account_id" :fieldLabel="__('app.menu.bankaccount')" fieldName="bank_account_id"
                                 search="true">
                                 <option value="">--</option>
@@ -224,9 +252,8 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
         quillMention(null, '#description');
 
-        const dp1 = datepicker('#purchase_date', {
+        const dp1 = datepicker('#pay_date', {
             position: 'bl',
-            dateSelected: new Date("{{ str_replace('-', '/', $expense->purchase_date) }}"),
             ...datepickerConfig
         });
 

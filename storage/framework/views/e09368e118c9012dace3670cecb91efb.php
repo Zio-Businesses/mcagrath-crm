@@ -1,1 +1,0 @@
-<?php /**PATH C:\laragon\www\mcagrath-crm\resources\views\front\tasks\history\show.blade.php ENDPATH**/ ?>

@@ -17,7 +17,7 @@ class PublicProjectFileController extends Controller
         $this->pageTitle = 'File Upload';
         $this->pageIcon = 'fa fa-file';
         $this->projectid = $request->query('data');
-        $this->projectData = Project::select('id', 'project_short_code', 'property_details_id') ->where('id', $this->projectid)->with(['propertyDetails:id,property_address']) ->first();
+        $this->projectData = Project::select('id', 'project_short_code', 'property_details_id')->where('id', $this->projectid)->with(['propertyDetails:id,property_address'])->first();
         return view('external-file', $this->data);
     }
     public function store(Request $request)

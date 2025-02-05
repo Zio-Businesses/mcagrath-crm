@@ -28,11 +28,8 @@ class StoreExpense extends CoreRequest
     public function rules()
     {
         $rules = [
-            'item_name' => 'required',
-            'purchase_date' => 'required',
-            'user_id' => 'required',
+            'project_id' =>'required',
             'price' => 'required|numeric',
-            'currency_id' => 'required'
         ];
 
         $rules = $this->customFieldRules($rules);

@@ -1,0 +1,1 @@
+<p><?php echo $text; ?></p><?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/vendor/mail/html/text.blade.php ENDPATH**/ ?>

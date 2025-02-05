@@ -102,10 +102,16 @@ class ExpensesDataTable extends BaseDataTable
         $datatables->addColumn('employee_name', function ($row) {
             return $row->user->name;
         });
+        $datatables->editColumn('vendor', function ($row) {
+            return $row->projectvendor->vendor_name??"";
+        });
         $datatables->editColumn('user_id', function ($row) {
             return view('components.employee', [
                 'user' => $row->user
             ]);
+        });
+        $datatables->editColumn('project_id', function ($row) {
+            return $row->project->project_short_code;
         });
         $datatables->editColumn('status', function ($row) {
             if (
@@ -179,19 +185,36 @@ class ExpensesDataTable extends BaseDataTable
             }
         );
         $datatables->editColumn(
-            'purchase_from',
+            'created_at',
             function ($row) {
-                return !is_null($row->purchase_from) ? $row->purchase_from : '--';
+                if (!is_null($row->created_at)) {
+                    return $row->created_at->translatedFormat($this->company->date_format);
+                }
             }
         );
+        $datatables->editColumn(
+            'pay_date',
+            function ($row) {
+                if (!is_null($row->pay_date)) {
+                    return $row->pay_date->translatedFormat($this->company->date_format);
+                }
+                else{
+                    return 'N/A';
+                }
+            }
+        );
+        // $datatables->editColumn(
+        //     'purchase_from',
+        //     function ($row) {
+        //         return !is_null($row->purchase_from) ? $row->purchase_from : '--';
+        //     }
+        // );
         $datatables->smart(false);
         $datatables->setRowId(fn($row) => 'row-' . $row->id);
         $datatables->addIndexColumn();
         $datatables->removeColumn('currency_id');
         $datatables->removeColumn('name');
         $datatables->removeColumn('currency_symbol');
-        $datatables->removeColumn('updated_at');
-        $datatables->removeColumn('created_at');
 
         // Custom Fields For export
         $customFieldColumns = CustomField::customFieldData($datatables, Expense::CUSTOM_FIELD_MODEL);
@@ -208,10 +231,11 @@ class ExpensesDataTable extends BaseDataTable
     {
         $request = $this->request();
 
-        $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session')
-            ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.user_id', 'expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+        $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session','projectvendor')
+            ->select('expenses.id', 'expenses.project_id', 'expenses.item_name','expenses.vendor_id' ,'expenses.created_at','expenses.pay_date','expenses.user_id','expenses.payment_method', 'expenses.price', 'users.salutation', 'users.name','expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
             ->join('users', 'users.id', 'expenses.user_id')
             ->leftJoin('employee_details', 'employee_details.user_id', '=', 'users.id')
+            ->leftJoin('project_vendors', 'project_vendors.id', '=', 'expenses.vendor_id')
             ->leftJoin('designations', 'employee_details.designation_id', '=', 'designations.id')
             ->leftJoin('projects', 'projects.id', 'expenses.project_id')
             ->join('currencies', 'currencies.id', 'expenses.currency_id');
@@ -315,15 +339,16 @@ class ExpensesDataTable extends BaseDataTable
                 'orderable' => false,
                 'searchable' => false
             ],
-            '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId()],
+            '#' => ['data' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'visible' => !showId(), 'exportable' => false],
             __('app.id') => ['data' => 'id', 'name' => 'expenses.id', 'title' => __('app.id'),'visible' => showId()],
-            __('modules.expenses.itemName') => ['data' => 'item_name', 'name' => 'item_name', 'exportable' => false, 'title' => __('modules.expenses.itemName')],
-            __('app.menu.itemName') => ['data' => 'export_item_name', 'name' => 'export_item_name', 'visible' => false, 'title' => __('modules.expenses.itemName')],
+            __('Project') => ['data' => 'project_id', 'name' => 'project_id', 'title' => __('Project')],
+            __('Vendor') => ['data' => 'vendor', 'name' => 'vendor', 'title' => __('Vendor')],
             __('app.price') => ['data' => 'price', 'name' => 'price', 'title' => __('app.price')],
-            __('app.menu.employees') => ['data' => 'user_id', 'name' => 'user_id', 'exportable' => false, 'title' => __('app.menu.employees')],
-            __('app.employee') => ['data' => 'employee_name', 'name' => 'user_id', 'visible' => false, 'title' => __('app.employee')],
-            __('modules.expenses.purchaseFrom') => ['data' => 'purchase_from', 'name' => 'purchase_from', 'title' => __('modules.expenses.purchaseFrom')],
-            __('modules.expenses.purchaseDate') => ['data' => 'purchase_date', 'name' => 'purchase_date', 'title' => __('modules.expenses.purchaseDate')],
+            __('Created By') => ['data' => 'user_id', 'name' => 'user_id', 'exportable' => false, 'title' => __('Created By')],
+            __('Expense Created By') => ['data' => 'employee_name', 'name' => 'user_id', 'visible' => false, 'title' => __('Expense Created By')],
+            __('Created at') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created at')],
+            __('Payment Date') => ['data' => 'pay_date', 'name' => 'pay_date', 'title' => __('Payment Date')],
+            __('Payment Method') => ['data' => 'payment_method', 'name' => 'payment_method', 'title' => __('Payment Method')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];

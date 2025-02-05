@@ -101,6 +101,7 @@ class Expense extends BaseModel
     protected $casts = [
         'purchase_date' => 'datetime',
         'purchase_on' => 'datetime',
+        'pay_date'=> 'datetime',
     ];
     protected $appends = ['total_amount', 'purchase_on', 'bill_url', 'default_currency_price'];
     protected $with = ['currency', 'company:id'];
@@ -118,6 +119,11 @@ class Expense extends BaseModel
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id')->withTrashed();
+    }
+    
+    public function projectvendor(): BelongsTo
+    {
+        return $this->belongsTo(ProjectVendor::class, 'vendor_id');
     }
 
     public function category(): BelongsTo

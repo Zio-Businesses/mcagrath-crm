@@ -158,6 +158,8 @@ use App\Http\Controllers\TwilioConversationController;
 use App\Http\Controllers\TwilioChatController;
 use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\TwilioTokenController;
+use App\Http\Controllers\ExpensePaymentMethodController;
+
 Route::post('twilio-webhook/handle', [TwilioWebhookController::class, 'handleWebhook']);
 
 Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
@@ -748,6 +750,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     });
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expenseCategory', ExpenseCategoryController::class);
+    Route::resource('expensePaymentMethod', ExpensePaymentMethodController::class);
 
     // Timelogs
     Route::group(['prefix' => 'timelogs'], function () {

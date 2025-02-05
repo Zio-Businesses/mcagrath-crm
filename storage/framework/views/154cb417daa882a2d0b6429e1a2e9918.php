@@ -70,6 +70,8 @@
 <div class="content-wrapper container">
     <div class="card border-0 invoice">
         <div class="card-body">
+            <h2 class="mb-0 pr-3 text-dark f-18 font-weight-bold d-flex align-items-center"><?php echo e($projectData->project_short_code); ?> - <?php echo e($projectData->propertyDetails->property_address); ?></h2>
+            
             <div class="col-md-12">
                 <?php if (isset($component)) { $__componentOriginal22e84ee8172e1045de536542f4ffc9a0 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal22e84ee8172e1045de536542f4ffc9a0 = $attributes; } ?>

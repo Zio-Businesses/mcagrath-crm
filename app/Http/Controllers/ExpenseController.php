@@ -17,6 +17,8 @@ use App\Models\ExpensesCategory;
 use App\Models\ExpensesCategoryRole;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\ProjectVendor;
+use App\Models\VendorContract;
 use App\Scopes\ActiveScope;
 use App\Traits\ImportExcel;
 use Illuminate\Http\Request;
@@ -128,7 +130,9 @@ class ExpenseController extends AccountBaseController
         if (!is_null($this->projectId)) {
             $this->project = Project::with('projectMembers')->where('id', $this->projectId)->first();
             $this->projectName = $this->project->project_name;
+            $this->projectShort = $this->project->project_short_code;
             $this->employees = $this->project->projectMembers;
+            $this->vendor = ProjectVendor::where('project_id',$this->projectId)->where('link_status', 'accepted')->groupBy('vendor_id')->get();
 
         } else {
             $this->employees = User::allEmployees(null, false);
@@ -154,17 +158,20 @@ class ExpenseController extends AccountBaseController
     {
         $userRole = session('user_roles');
         $expense = new Expense();
-        $expense->item_name = $request->item_name;
-        $expense->purchase_date = companyToYmd($request->purchase_date);
-        $expense->purchase_from = $request->purchase_from;
+        $expense->item_name = '--';
+        $expense->purchase_date = date('Y-m-d');
+        $expense->purchase_from = '--';
         $expense->price = round($request->price, 2);
         $expense->currency_id = $request->currency_id;
+        \Log::info($request->category_id);
         $expense->category_id = $request->category_id;
-        $expense->user_id = $request->user_id;
+        $expense->user_id = user()->id;
         $expense->default_currency_id = company()->currency_id;
         $expense->exchange_rate = $request->exchange_rate;
         $expense->description = trim_editor($request->description);
-
+        $expense->vendor_id = $request->vendor_id;
+        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+        $expense->payment_method =  $request->payment_method;
         if ($userRole[0] == 'admin') {
             $expense->status = 'approved';
             $expense->approver_id = user()->id;
@@ -215,7 +222,7 @@ class ExpenseController extends AccountBaseController
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
-
+        $this->vendor = ProjectVendor::where('project_id',$this->expense->project_id)->where('link_status', 'accepted')->groupBy('vendor_id')->get();
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', $this->expense->currency_id);
 
         if($this->viewBankAccountPermission == 'added'){
@@ -226,12 +233,10 @@ class ExpenseController extends AccountBaseController
         $this->bankDetails = $bankAccounts;
 
 
-        $userId = $this->expense->user_id;
+        $projectId = $this->expense->project_id;
 
-        if (!is_null($userId)) {
-            $this->projects = Project::with('members')->whereHas('members', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            })->get();
+        if (!is_null($projectId)) {
+            $this->projects = Project::where('id',$projectId)->get();
         }
         else {
             $this->projects = Project::get();
@@ -248,6 +253,7 @@ class ExpenseController extends AccountBaseController
         $this->view = 'expenses.ajax.edit';
 
         if (request()->ajax()) {
+
             return $this->returnAjax($this->view);
         }
 
@@ -258,17 +264,19 @@ class ExpenseController extends AccountBaseController
     public function update(StoreExpense $request, $id)
     {
         $expense = Expense::findOrFail($id);
-        $expense->item_name = $request->item_name;
-        $expense->purchase_date = companyToYmd($request->purchase_date);
-        $expense->purchase_from = $request->purchase_from;
+        $expense->item_name = '--';
+        $expense->purchase_date = date('Y-m-d');
+        $expense->purchase_from = '--';
         $expense->price = round($request->price, 2);
         $expense->currency_id = $request->currency_id;
-        $expense->user_id = $request->user_id;
+        $expense->user_id = user()->id;
         $expense->category_id = $request->category_id;
         $expense->default_currency_id = company()->currency_id;
         $expense->exchange_rate = $request->exchange_rate;
         $expense->description = trim_editor($request->description);
-
+        $expense->vendor_id = $request->vendor_id;
+        $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
+        $expense->payment_method =  $request->payment_method;
         $expense->project_id = ($request->project_id > 0) ? $request->project_id : null;
 
 
@@ -295,8 +303,14 @@ class ExpenseController extends AccountBaseController
         if ($request->custom_fields_data) {
             $expense->updateCustomFieldData($request->custom_fields_data);
         }
-
-        return Reply::successWithData(__('messages.updateSuccess'), ['redirectUrl' => route('expenses.index')]);
+        
+        if ($request->project_id == '') {
+            $redirectUrl = route('expenses.index');
+        }
+        else{
+            $redirectUrl =route('projects.show', ['project' => $request->project_id, 'tab' => 'expenses']);
+        }
+        return Reply::successWithData(__('messages.updateSuccess'), ['redirectUrl' => $redirectUrl]);
 
     }
 

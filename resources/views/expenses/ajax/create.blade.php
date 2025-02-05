@@ -10,13 +10,61 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('app.expenseDetails')</h4>
                 <div class="row p-20">
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.expenses.itemName')"
                             fieldName="item_name" fieldRequired="true" fieldId="item_name"
                             :fieldPlaceholder="__('placeholders.expense.item')" />
                     </div>
 
                     <div class="col-md-6 col-lg-3">
+                        @if(isset($projectName))
+                            <input type="hidden" name="project_id" id="project_id" value="{{ $projectId }}">
+                            <x-forms.text :fieldLabel="__('app.project')" fieldName="projectName" fieldId="projectName" :fieldValue="$projectShort" fieldReadOnly="true" />
+                        @else
+                            <x-forms.select fieldId="project_id" fieldName="project_id" :fieldLabel="__('app.project')"
+                                search="true" fieldRequired="true">
+                                <option value="">--</option>
+                                @foreach ($projects as $project)
+                                    <option data-currency-id="{{ $project->currency_id }}" @selected ($projectId == $project->id) value="{{ $project->id }}">
+                                        {{ $project->project_short_code }}
+                                    </option>
+                                @endforeach
+                            </x-forms.select>
+                        @endif
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        @if(isset($projectName))
+                            <x-forms.select fieldId="vendor_id" fieldName="vendor_id" :fieldLabel="__('Vendor')"
+                                search="true">
+                                <option value="">--</option>
+                                @foreach ($vendor as $vendors)
+                                    <option  value="{{ $vendors->id }}">
+                                        {{ $vendors->vendor_name }}
+                                    </option>
+                                @endforeach
+                            </x-forms.select>
+                        @else
+                            <x-forms.select fieldId="vendor_id" fieldName="vendor_id" :fieldLabel="__('Vendor')"
+                                search="true">
+                                <option value="">--</option>
+                            </x-forms.select>
+                        @endif
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.datepicker fieldId="pay_date" 
+                            :fieldLabel="__('Payment Date')" fieldName="pay_date"
+                            :fieldPlaceholder="__('placeholders.date')"
+                            />
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
+                            fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')" />
+
+                    </div>
+
+                    <div class="col-md-6 col-lg-3 d-none">
                         @if(isset($projectName))
                             <input type="hidden" id="currency_id" name="currency_id" value="{{ $project->currency_id}}">
                             <x-forms.text :fieldLabel="__('modules.invoices.currency')" fieldName="project-currency" fieldId="project-currency" :fieldValue="$project->currency->currency_name" fieldReadOnly="true" />
@@ -33,19 +81,12 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                         @endif
                     </div>
 
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-md-6 col-lg-3 d-none">
                         <x-forms.number fieldId="exchange_rate" :fieldLabel="__('modules.currencySettings.exchangeRate')"
                         fieldName="exchange_rate" fieldRequired="true" :fieldValue="(isset($projectName) ? $project->currency->exchange_rate : $companyCurrency->exchange_rate)" fieldReadOnly="true"
                         :fieldHelp="' '"/>
                     </div>
-
-                    <div class="col-md-6 col-lg-3">
-                        <x-forms.number class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.price')" fieldName="price"
-                            fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')" />
-
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-6 col-lg-4 d-none">
                         <x-forms.datepicker fieldId="purchase_date" fieldRequired="true"
                             :fieldLabel="__('modules.expenses.purchaseDate')" fieldName="purchase_date"
                             :fieldPlaceholder="__('placeholders.date')"
@@ -53,7 +94,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                     </div>
 
                     @if (user()->permission('add_expenses') == 'all')
-                        <div class="col-md-6 col-lg-4">
+                        <div class="col-md-6 col-lg-4 d-none">
                             <x-forms.label class="mt-3" fieldId="user_id" :fieldLabel="__('app.employee')" fieldRequired="true">
                             </x-forms.label>
                             <x-forms.input-group>
@@ -69,23 +110,6 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                     @else
                         <input type="hidden" name="user_id" value="{{ user()->id }}">
                     @endif
-
-                    <div class="col-md-6 col-lg-4">
-                        @if(isset($projectName))
-                            <input type="hidden" name="project_id" id="project_id" value="{{ $projectId }}">
-                            <x-forms.text :fieldLabel="__('app.project')" fieldName="projectName" fieldId="projectName" :fieldValue="$projectName" fieldReadOnly="true" />
-                        @else
-                            <x-forms.select fieldId="project_id" fieldName="project_id" :fieldLabel="__('app.project')"
-                                search="true">
-                                <option value="">--</option>
-                                @foreach ($projects as $project)
-                                    <option data-currency-id="{{ $project->currency_id }}" @selected ($projectId == $project->id) value="{{ $project->id }}">
-                                        {{ $project->project_name }}
-                                    </option>
-                                @endforeach
-                            </x-forms.select>
-                        @endif
-                    </div>
 
                     <div class="col-md-4">
                         <x-forms.label class="mt-3" fieldId="category_id"
@@ -110,14 +134,37 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                             @endif
                         </x-forms.input-group>
                     </div>
-
                     <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="payment_method"
+                            :fieldLabel="__('Payment Method')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="payment_method" id="payment_method_id"
+                                data-live-search="true">
+                                <option value="">--</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}">{{ $category->category_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @if ($addExpenseCategoryPermission == 'all' || $addExpenseCategoryPermission == 'added')
+                                <x-slot name="append">
+                                    <button id="addPaymentMethod" type="button"
+                                        class="btn btn-outline-secondary border-grey"
+                                        data-toggle="tooltip" data-original-title="{{__('Add Payment Method') }}">@lang('app.add')</button>
+                                </x-slot>
+                            @endif
+                        </x-forms.input-group>
+                    </div>
+
+                    <div class="col-md-4 d-none">
                         <x-forms.text :fieldLabel="__('modules.expenses.purchaseFrom')" fieldName="purchase_from"
                             fieldId="purchase_from" :fieldPlaceholder="__('placeholders.expense.vendor')" />
                     </div>
 
                     @if($linkExpensePermission == 'all')
-                        <div class="col-md-4">
+                        <div class="col-md-4 d-none">
                             <x-forms.select fieldId="bank_account_id" :fieldLabel="__('app.menu.bankaccount')" fieldName="bank_account_id"
                                 search="true">
                                 <option value="">--</option>
@@ -174,7 +221,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
             });
         });
 
-        const dp1 = datepicker('#purchase_date', {
+        const dp1 = datepicker('#pay_date', {
             position: 'bl',
             ...datepickerConfig
         });
@@ -207,6 +254,13 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
         $('#addExpenseCategory').click(function() {
             let userId = $('#user_id').val();
             const url = "{{ route('expenseCategory.create') }}?user_id="+userId;
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#addPaymentMethod').click(function() {
+            let userId = $('#user_id').val();
+            const url = "{{ route('expensePaymentMethod.create') }}?user_id="+userId;
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
             $.ajaxModal(MODAL_LG, url);
         });
@@ -252,8 +306,32 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 
         init(RIGHT_MODAL);
     });
+    $('body').on("change", '#project_id', function() {
+        if ($('#project_id').val() != '') {
+            var id = $('#project_id').val();
+            var url = "{{ route('vendors.vendors_list', ':id') }}";
+            url = url.replace(':id', id);
+            var token = "{{ csrf_token() }}";
 
-    $('body').on("change", '#currency, #project_id', function() {
+            $.easyAjax({
+                url: url,
+                container: '#save-expense-data-form',
+                type: "POST",
+                blockUI: true,
+                data: {
+                    _token: token
+                },
+                success: function(response) {
+                    if (response.status == 'success') {
+                        $('#vendor_id').html(response.data);
+                        $('#vendor_id').selectpicker('refresh');
+                    }
+                }
+            });
+        }
+    });
+
+    /*$('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {
             var curId = $('#project_id option:selected').attr('data-currency-id');
             $('#currency').removeAttr('disabled');
@@ -298,7 +376,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                 }
             }
         });
-    });
+    });*/
 
     @if(isset($projectName))
         setExchangeRateHelp();
