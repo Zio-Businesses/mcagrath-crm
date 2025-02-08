@@ -4,8 +4,9 @@
 
 <div class="modal-header">
     <h5 class="modal-title" id="modelHeading">@lang('Expense Payment Method')</h5>
-    <button type="button"  class="close" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">×</span></button>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
 </div>
 <div class="modal-body">
     <x-table class="table-bordered" headType="thead-light">
@@ -15,25 +16,25 @@
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
 
-        @forelse($payment_method as $key=>$item)
+        @forelse($payment_method ?? [] as $key => $item)  {{-- ✅ Prevent undefined variable error --}}
             <tr id="row-{{ $item->id }}">
                 <td>{{ $key + 1 }}</td>
                 <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->payment_method }}</td>
                 <td class="text-right">
                     @if ($deleteExpenseCategoryPermission == 'all' || ($deleteExpenseCategoryPermission == 'added' && $item->added_by == user()->id))
                         <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row">
-                            @lang('app.delete')</x-forms.button-secondary>
+                            @lang('app.delete')
+                        </x-forms.button-secondary>
                     @endif
                 </td>
             </tr>
         @empty
             <x-cards.no-record-found-list colspan="4" />
-
         @endforelse
     </x-table>
 
     <x-form id="createProjectPayment">
-        <div class="row border-top-grey ">
+        <div class="row border-top-grey">
             <div class="col-sm-12">
                 <x-forms.text fieldId="payment_method" :fieldLabel="__('Payment Method')" fieldName="payment_method"
                     fieldRequired="true" :fieldPlaceholder="__('Enter a payment method')">
@@ -47,7 +48,26 @@
     <x-forms.button-primary id="save-payment" icon="check">@lang('app.save')</x-forms.button-primary>
 </div>
 
+
+
 <script>
+    function refreshPaymentMethods() {
+    $.ajax({
+        url: "{{ route('expensePaymentMethod.create') }}", // Fetch latest payment methods
+        type: "GET",
+        success: function(response) {
+            let options = '<option value="">-- Select Payment Method --</option>';
+
+            response.paymentMethods.forEach(method => {
+                options += `<option value="${method.id}">${method.payment_method}</option>`;
+            });
+
+            $('#payment_method_id').html(options);
+            $('#payment_method_id').selectpicker('refresh');
+        }
+    });
+}
+
     $(".select-picker").selectpicker();
 
     $('.delete-row').click(function() {
@@ -96,28 +116,30 @@
         });
 
     });
+$('#save-payment').click(function() {
+    var url = "{{ route('expensePaymentMethod.store') }}";
 
-    $('#save-payment').click(function() {
-        var url = "{{ route('expensePaymentMethod.store') }}";
-        $.easyAjax({
-            url: url,
-            container: '#createProjectPayment',
-            type: "POST",
-            data: $('#createProjectPayment').serialize(),
-            disableButton: true,
-            blockUI: true,
-            buttonSelector: "#save-payment",
-            success: function(response) {
-                if (response.status == 'success') {
-                    if (response.status == 'success') {
-                        $('#payment_method_id').html(response.data);
-                        $('#payment_method_id').selectpicker('refresh');
-                        $(MODAL_LG).modal('hide');
-                    }
-                }
+    $.easyAjax({
+        url: url,
+        container: '#createProjectPayment',
+        type: "POST",
+        data: $('#createProjectPayment').serialize(),
+        disableButton: true,
+        blockUI: true,
+        buttonSelector: "#save-payment",
+        success: function(response) {
+            if (response.status == 'success') {
+                // 🔹 Update dropdown with new options
+                $('#payment_method_id').html(response.options);
+                $('#payment_method_id').selectpicker('refresh');
+
+                // Close modal after saving
+                $(MODAL_LG).modal('hide');
             }
-        })
+        }
     });
+});
+
 
 
     $('[contenteditable=true]').focus(function() {
@@ -153,6 +175,79 @@
             })
         }
     });
+    $('.delete-row').click(function() {
+    var id = $(this).data('row-id');
+    var url = "{{ route('expensePaymentMethod.destroy', ':id') }}";
+    url = url.replace(':id', id);
+
+    var token = "{{ csrf_token() }}";
+
+    Swal.fire({
+        title: "@lang('messages.sweetAlertTitle')",
+        text: "@lang('messages.recoverRecord')",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "@lang('messages.confirmDelete')",
+        cancelButtonText: "@lang('app.cancel')",
+        buttonsStyling: false,
+        customClass: {
+            confirmButton: 'btn btn-primary mr-3',
+            cancelButton: 'btn btn-secondary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.easyAjax({
+                type: 'POST',
+                url: url,
+                data: {
+                    '_token': token,
+                    '_method': 'DELETE'
+                },
+                success: function(response) {
+                    if (response.status == "success") {
+                        $('#row-' + id).fadeOut();
+                        $('#payment_method_id').html(response.data);
+                        $('#payment_method_id').selectpicker('refresh');
+                    }
+                }
+            });
+        }
+    });
+});
+
+$('[contenteditable=true]').focus(function() {
+    $(this).data("initialText", $(this).text());
+}).blur(function() {
+    if ($(this).data("initialText") !== $(this).text()) {
+        let id = $(this).data('row-id');
+        let value = $(this).text().trim();
+
+        var url = "{{ route('expensePaymentMethod.update', ':id') }}";
+        url = url.replace(':id', id);
+
+        var token = "{{ csrf_token() }}";
+
+        $.easyAjax({
+            url: url,
+            type: "POST",
+            data: {
+                'payment_method': value,
+                '_token': token,
+                '_method': 'PUT'
+            },
+            success: function(response) {
+                if (response.status == 'success') {
+                    $('#payment_method_id').html(response.data);
+                    $('#payment_method_id').selectpicker('refresh');
+                }
+            }
+        });
+    }
+});
+
+
+
+
 
 
 </script>
