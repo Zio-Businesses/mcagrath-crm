@@ -134,29 +134,28 @@
                         </x-forms.input-group>
                     </div>
 
-
                     <div class="col-md-4">
-                        <x-forms.label class="mt-3" fieldId="payment_method" :fieldLabel="__('Payment Method')"></x-forms.label>
+                        <x-forms.label class="mt-3" fieldId="payment_method" :fieldLabel="__('Payment Method')">
+                        </x-forms.label>
                         <x-forms.input-group>
-                            <select class="form-control select-picker" name="payment_method" id="payment_method_id"
-                                data-live-search="true">
+                            <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
                                 <option value="">-- Select Payment Method --</option>
-                               
-                                @foreach ($paymentMethods ?? [] as $method)
-                                    <option value="{{ $method->id }}">{{ $method->payment_method }}</option>
-                                @endforeach
+                                @if(isset($paymentMethods) && count($paymentMethods) > 0)
+                                    @foreach ($paymentMethods as $method)
+                                        <option value="{{ $method->id }}">{{ $method->payment_method }}</option>
+                                    @endforeach
+                                @endif
                             </select>
-                          @if ($addExpenseCategoryPermission == 'all' || $addExpenseCategoryPermission == 'added')
-                                <x-slot name="append">
-                                    <button id="addPaymentMethod" type="button"
-                                        class="btn btn-outline-secondary border-grey" data-toggle="tooltip"
-                                        data-original-title="{{ __('Add Payment Method') }}">
-                                        @lang('app.add')
-                                    </button>
-                                </x-slot>
-                            @endif
+                            <x-slot name="append">
+                                <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
                         </x-forms.input-group>
                     </div>
+                    
+                    
+                    
                     <div class="col-md-4 d-none">
                         <x-forms.text :fieldLabel="__('modules.expenses.purchaseFrom')" fieldName="purchase_from" fieldId="purchase_from"
                             :fieldPlaceholder="__('placeholders.expense.vendor')" />
@@ -262,17 +261,20 @@
         });
 
         $('#addPaymentMethod').click(function() {
-            const url = "{{ route('expensePaymentMethod.create') }}";
-            $.ajaxModal(MODAL_LG, url);
-        });
+    const url = "{{ route('expensePaymentMethod.create') }}";
+    $.ajaxModal(MODAL_LG, url);
+});
 
-        // Listen for event when a new method is added
-        $('body').on('paymentMethodAdded', function(event, newMethod) {
-            let paymentMethodDropdown = $('#payment_method_id');
-            paymentMethodDropdown.append(
-                `<option value="${newMethod.id}">${newMethod.payment_method}</option>`);
-            paymentMethodDropdown.selectpicker('refresh');
-        });
+
+// Listen for event when a new method is added
+$('body').on('paymentMethodAdded', function(event, newMethod) {
+    let paymentMethodDropdown = $('#payment_method_id');
+    paymentMethodDropdown.append(
+        `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
+    );
+    paymentMethodDropdown.selectpicker('refresh');
+});
+
 
         // Function to refresh dropdown after adding new payment method
         function refreshPaymentMethods() {
@@ -430,7 +432,6 @@
             $('#exchange_rateHelp').html(currencyExchange);
         }
     @endif
-
 
 
     $(document).ready(function() {

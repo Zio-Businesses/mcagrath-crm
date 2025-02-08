@@ -103,8 +103,10 @@ class ExpenseController extends AccountBaseController
         $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
+        $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
 
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', company()->currency_id);
+
 
         if($this->viewBankAccountPermission == 'added'){
             $bankAccounts = $bankAccounts->where('added_by', user()->id);

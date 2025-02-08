@@ -16,7 +16,8 @@
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
 
-        @forelse($payment_method ?? [] as $key => $item)  {{-- ✅ Prevent undefined variable error --}}
+        @forelse($paymentMethods ?? [] as $key => $item) 
+
             <tr id="row-{{ $item->id }}">
                 <td>{{ $key + 1 }}</td>
                 <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->payment_method }}</td>
@@ -51,135 +52,53 @@
 
 
 <script>
-    function refreshPaymentMethods() {
-    $.ajax({
-        url: "{{ route('expensePaymentMethod.create') }}", // Fetch latest payment methods
-        type: "GET",
-        success: function(response) {
-            let options = '<option value="">-- Select Payment Method --</option>';
 
-            response.paymentMethods.forEach(method => {
-                options += `<option value="${method.id}">${method.payment_method}</option>`;
+// ✅ Function to refresh the payment method dropdown
+function refreshPaymentMethods() {
+    $.ajax({
+        url: "{{ route('expensePaymentMethod.list') }}", // ✅ Fetch latest data
+        type: "GET",
+        success: function (response) {
+            let paymentMethodDropdown = $('#payment_method_id');
+            paymentMethodDropdown.html('<option value="">-- Select Payment Method --</option>');
+
+            response.paymentMethods.forEach(function (method) {
+                paymentMethodDropdown.append(
+                    `<option value="${method.id}">${method.payment_method}</option>`
+                );
             });
 
-            $('#payment_method_id').html(options);
-            $('#payment_method_id').selectpicker('refresh');
+            paymentMethodDropdown.selectpicker('refresh'); // ✅ Refresh dropdown
         }
     });
 }
 
-    $(".select-picker").selectpicker();
+// ✅ Refresh dropdown on page load
+$(document).ready(function () {
+    refreshPaymentMethods();
+});
 
-    $('.delete-row').click(function() {
-
-        var id = $(this).data('row-id');
-        var url = "{{ route('expenseCategory.destroy', ':id') }}";
-        url = url.replace(':id', id);
-
-        var token = "{{ csrf_token() }}";
-
-        Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
-            icon: 'warning',
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
-            customClass: {
-                confirmButton: 'btn btn-primary mr-3',
-                cancelButton: 'btn btn-secondary'
-            },
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        '_token': token,
-                        '_method': 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.status == "success") {
-                            $('#row-' + id).fadeOut();
-                            $('#expense_category_id').html(response.data);
-                            $('#expense_category_id').selectpicker('refresh');
-                        }
-                    }
-                });
-            }
-        });
-
-    });
-$('#save-payment').click(function() {
-    var url = "{{ route('expensePaymentMethod.store') }}";
+// ✅ Update dropdown after adding a new payment method
+$('#save-payment').click(function () {
+    let formData = $('#createProjectPayment').serialize();
 
     $.easyAjax({
-        url: url,
-        container: '#createProjectPayment',
+        url: "{{ route('expensePaymentMethod.store') }}",
         type: "POST",
-        data: $('#createProjectPayment').serialize(),
-        disableButton: true,
-        blockUI: true,
-        buttonSelector: "#save-payment",
-        success: function(response) {
-            if (response.status == 'success') {
-                // 🔹 Update dropdown with new options
-                $('#payment_method_id').html(response.options);
-                $('#payment_method_id').selectpicker('refresh');
-
-                // Close modal after saving
-                $(MODAL_LG).modal('hide');
+        data: formData,
+        success: function (response) {
+            if (response.status === 'success') {
+                refreshPaymentMethods(); // ✅ Refresh dropdown after adding
+                $(MODAL_LG).modal('hide'); // ✅ Close modal
             }
         }
     });
 });
 
-
-
-    $('[contenteditable=true]').focus(function() {
-        $(this).data("initialText", $(this).html());
-        let rowId = $(this).data('row-id');
-    }).blur(function() {
-        // ...if content is different...
-        if ($(this).data("initialText") !== $(this).html()) {
-            let id = $(this).data('row-id');
-            let value = $(this).html();
-
-            var url = "{{ route('expenseCategory.update', ':id') }}";
-            url = url.replace(':id', id);
-
-            var token = "{{ csrf_token() }}";
-
-            $.easyAjax({
-                url: url,
-                container: '#row-' + id,
-                type: "POST",
-                data: {
-                    'category_name': value,
-                    '_token': token,
-                    '_method': 'PUT'
-                },
-                blockUI: true,
-                success: function(response) {
-                    if (response.status == 'success') {
-                        $('#expense_category_id').html(response.data);
-                        $('#expense_category_id').selectpicker('refresh');
-                    }
-                }
-            })
-        }
-    });
-    $('.delete-row').click(function() {
+// ✅ Delete Payment Method and Refresh Dropdown
+$('body').on('click', '.delete-row', function() {
     var id = $(this).data('row-id');
-    var url = "{{ route('expensePaymentMethod.destroy', ':id') }}";
-    url = url.replace(':id', id);
-
+    var url = "{{ route('expensePaymentMethod.destroy', ':id') }}".replace(':id', id);
     var token = "{{ csrf_token() }}";
 
     Swal.fire({
@@ -189,11 +108,6 @@ $('#save-payment').click(function() {
         showCancelButton: true,
         confirmButtonText: "@lang('messages.confirmDelete')",
         cancelButtonText: "@lang('app.cancel')",
-        buttonsStyling: false,
-        customClass: {
-            confirmButton: 'btn btn-primary mr-3',
-            cancelButton: 'btn btn-secondary'
-        }
     }).then((result) => {
         if (result.isConfirmed) {
             $.easyAjax({
@@ -205,9 +119,7 @@ $('#save-payment').click(function() {
                 },
                 success: function(response) {
                     if (response.status == "success") {
-                        $('#row-' + id).fadeOut();
-                        $('#payment_method_id').html(response.data);
-                        $('#payment_method_id').selectpicker('refresh');
+                        refreshPaymentMethods(); // ✅ Refresh dropdown after deletion
                     }
                 }
             });
@@ -215,34 +127,27 @@ $('#save-payment').click(function() {
     });
 });
 
-$('[contenteditable=true]').focus(function() {
-    $(this).data("initialText", $(this).text());
-}).blur(function() {
-    if ($(this).data("initialText") !== $(this).text()) {
-        let id = $(this).data('row-id');
-        let value = $(this).text().trim();
+// ✅ Update Payment Method and Refresh Dropdown
+$('body').on('blur', '[contenteditable=true]', function() {
+    let id = $(this).data('row-id');
+    let value = $(this).text().trim();
+    let url = "{{ route('expensePaymentMethod.update', ':id') }}".replace(':id', id);
+    let token = "{{ csrf_token() }}";
 
-        var url = "{{ route('expensePaymentMethod.update', ':id') }}";
-        url = url.replace(':id', id);
-
-        var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
-            url: url,
-            type: "POST",
-            data: {
-                'payment_method': value,
-                '_token': token,
-                '_method': 'PUT'
-            },
-            success: function(response) {
-                if (response.status == 'success') {
-                    $('#payment_method_id').html(response.data);
-                    $('#payment_method_id').selectpicker('refresh');
-                }
+    $.easyAjax({
+        url: url,
+        type: "POST",
+        data: {
+            'payment_method': value,
+            '_token': token,
+            '_method': 'PUT'
+        },
+        success: function(response) {
+            if (response.status == 'success') {
+                refreshPaymentMethods(); // ✅ Refresh dropdown after update
             }
-        });
-    }
+        }
+    });
 });
 
 

@@ -751,7 +751,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expenseCategory', ExpenseCategoryController::class);
     Route::resource('expensePaymentMethod', ExpensePaymentMethodController::class);
+    Route::get('expense-payment-methods/list', [ExpensePaymentMethodController::class, 'getList'])
+    ->name('expensePaymentMethod.list');
 
+    
     // Timelogs
     Route::group(['prefix' => 'timelogs'], function () {
         Route::resource('timelog-calendar', TimelogCalendarController::class);
