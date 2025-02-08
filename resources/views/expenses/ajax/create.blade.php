@@ -153,6 +153,27 @@
                             </x-slot>
                         </x-forms.input-group>
                     </div>
+
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="fee_method" :fieldLabel="__('Additional Fee Method')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="fee_method_id" id="fee_method_id" data-live-search="true">
+                                <option value="">-- Select Fee Method --</option>
+                                @if(isset($feeMethods) && count($feeMethods) > 0)
+                                    @foreach ($feeMethods as $method)
+                                        <option value="{{ $method->id }}">{{ $method->fee_method }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                            <x-slot name="append">
+                                <button id="addFeeMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
+                        </x-forms.input-group>
+                    </div>
+                    
                     
                     
                     
@@ -457,4 +478,45 @@ $('body').on('paymentMethodAdded', function(event, newMethod) {
         }
     });
 });
+
+
+// Open modal to add new Fee Method
+$('#addFeeMethod').click(function() {
+        const url = "{{ route('expenseAdditionalFee.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+    });
+
+    // Listen for event when a new Fee Method is added
+    $('body').on('feeMethodAdded', function(event, newMethod) {
+        let feeMethodDropdown = $('#fee_method_id');
+        feeMethodDropdown.append(
+            `<option value="${newMethod.id}">${newMethod.fee_method}</option>`
+        );
+        feeMethodDropdown.selectpicker('refresh');
+    });
+
+    // Function to refresh dropdown after adding new Fee Method
+    function refreshFeeMethods() {
+        $.ajax({
+            url: "{{ route('expenseAdditionalFee.list') }}",
+            type: "GET",
+            success: function(response) {
+                let feeMethodDropdown = $('#fee_method_id');
+                feeMethodDropdown.html(
+                    '<option value="">-- Select Fee Method --</option>'
+                );
+                response.feeMethods.forEach(function(method) {
+                    feeMethodDropdown.append(
+                        `<option value="${method.id}">${method.fee_method}</option>`
+                    );
+                });
+                feeMethodDropdown.selectpicker('refresh');
+            }
+        });
+    }
+
+    // Call refresh function after adding a Fee Method
+    $('body').on('feeMethodAdded', function(event, newMethod) {
+        refreshFeeMethods();
+    });
 </script>
