@@ -29,7 +29,7 @@ class ExpenseAdditionalFeeTypeController extends AccountBaseController
     public function create()
     {
         $feeMethods = ExpenseAdditionalFee::all();
-        return view('expenses.additionalfee_type.create', compact('feeMethods'));
+        return view('expenses.fee_type.create', compact('feeMethods'));
     }
 
     // ✅ Store New Fee Method

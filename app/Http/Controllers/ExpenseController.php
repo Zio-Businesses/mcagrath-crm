@@ -104,6 +104,9 @@ class ExpenseController extends AccountBaseController
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
         $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
+        $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Fetch fee methods
+
+        
 
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', company()->currency_id);
 
