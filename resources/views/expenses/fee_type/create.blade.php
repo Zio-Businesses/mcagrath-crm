@@ -97,7 +97,7 @@ $('#save-fee-method').click(function () {
 });
 
 // ✅ Delete Fee Method and Refresh Dropdown
-$('body').on('click', '.delete-row', function() {
+$('body').off('click', '.delete-row').on('click', '.delete-row', function () {
     var id = $(this).data('row-id');
     var url = "{{ route('expenseAdditionalFee.destroy', ':id') }}".replace(':id', id);
     var token = "{{ csrf_token() }}";
@@ -129,7 +129,7 @@ $('body').on('click', '.delete-row', function() {
 });
 
 // ✅ Update Fee Method and Refresh Dropdown
-$('body').on('blur', '[contenteditable=true]', function() {
+$('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=true]', function () {
     let id = $(this).data('row-id');
     let value = $(this).text().trim();
     //this is changed
