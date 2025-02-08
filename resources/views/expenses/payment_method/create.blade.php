@@ -131,12 +131,12 @@ $('body').on('click', '.delete-row', function() {
 $('body').on('blur', '[contenteditable=true]', function() {
     let id = $(this).data('row-id');
     let value = $(this).text().trim();
-    let url = "{{ route('expensePaymentMethod.update', ':id') }}".replace(':id', id);
+    let url = "{{ route('expensePaymentMethod.update', '') }}/"+id;
     let token = "{{ csrf_token() }}";
 
     $.easyAjax({
         url: url,
-        type: "POST",
+        type: "PUT",
         data: {
             'payment_method': value,
             '_token': token,
