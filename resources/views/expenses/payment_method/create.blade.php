@@ -96,7 +96,7 @@ $('#save-payment').click(function () {
 });
 
 // ✅ Delete Payment Method and Refresh Dropdown
-$('body').on('click', '.delete-row', function() {
+$('body').off('click', '.delete-row').on('click', '.delete-row', function () {
     var id = $(this).data('row-id');
     var url = "{{ route('expensePaymentMethod.destroy', ':id') }}".replace(':id', id);
     var token = "{{ csrf_token() }}";
@@ -128,7 +128,7 @@ $('body').on('click', '.delete-row', function() {
 });
 
 // ✅ Update Payment Method and Refresh Dropdown
-$('body').on('blur', '[contenteditable=true]', function() {
+$('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=true]', function () {
     let id = $(this).data('row-id');
     let value = $(this).text().trim();
     let url = "{{ route('expensePaymentMethod.update', '') }}/"+id;
