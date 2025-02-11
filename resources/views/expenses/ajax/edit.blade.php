@@ -53,19 +53,32 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             fieldRequired="true" fieldId="price" :fieldPlaceholder="__('placeholders.price')"
                             :fieldValue="$expense->price" />
                     </div>
-                    <div class="col-md-6 col-lg-3">
-                        <x-forms.select fieldId="payment_method" fieldName="payment_method" :fieldLabel="__('Payment Method')"
-                            search="true">
-                            <option value="">--</option>
-                            <option @selected($expense->payment_method == 'Credit Card') value="Credit Card">Credit Card</option>
-                            <option @selected($expense->payment_method == 'PayPa') value="PayPal">PayPal</option>
-                            <option @selected($expense->payment_method == 'ACH') value="ACH">ACH</option>
-                            <option @selected($expense->payment_method == 'Check') value="Check">Check</option>
-                            <option @selected($expense->payment_method == 'CashApp') value="CashApp">CashApp</option>
-                            <option @selected($expense->payment_method == 'Zelle') value="Zelle">Zelle</option>
-                            <option @selected($expense->payment_method == 'Venmo') value="Venmo">Venmo</option>
-                        </x-forms.select>
+
+
+
+                    <!---->
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="payment_method_id" :fieldLabel="__('Payment Method')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
+                                <option value="">-- Select Payment Method --</option>
+                                @foreach ($paymentMethods as $method)
+                                <option value="{{ $method->id }}" @selected($expense->payment_method == $method->payment_method)>
+                                    {{ $method->payment_method }}
+                                </option>
+                            @endforeach
+                            
+                            </select>
+                            <x-slot name="append">
+                                <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
+                        </x-forms.input-group>
                     </div>
+                    
+                    
 
                     <div class="col-md-6 col-lg-3 d-none">
                         <input type="hidden" id="currency_id" name="currency_id" value="{{$expense->currency_id}}">
@@ -237,6 +250,44 @@ $approveExpensePermission = user()->permission('approve_expenses');
 </div>
 
 <script>
+
+$(document).ready(function () {
+    // Open modal to add a new Payment Method
+    $('#addPaymentMethod').click(function () {
+        const url = "{{ route('expensePaymentMethod.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+    });
+
+    // Refresh Payment Methods after adding, updating, or deleting
+    $(document).ajaxComplete(function (event, xhr, settings) {
+        if (
+            settings.url.includes("expensePaymentMethod.store") || 
+            settings.url.includes("expensePaymentMethod.update") || 
+            settings.url.includes("expensePaymentMethod.destroy")
+        ) {
+            refreshPaymentMethods(); // Auto-refresh dropdown
+        }
+    });
+
+    // Function to refresh the Payment Method dropdown
+    function refreshPaymentMethods() {
+        $.ajax({
+            url: "{{ route('expensePaymentMethod.list') }}",
+            type: "GET",
+            success: function (response) {
+                let paymentMethodDropdown = $('#payment_method_id');
+                paymentMethodDropdown.html('<option value="">-- Select Payment Method --</option>');
+                response.paymentMethods.forEach(function (method) {
+                    let isSelected = (method.payment_method === "{{ $expense->payment_method }}") ? "selected" : "";
+                    paymentMethodDropdown.append(`<option value="${method.id}" ${isSelected}>${method.payment_method}</option>`);
+                });
+                paymentMethodDropdown.selectpicker('refresh');
+            }
+        });
+    }
+});
+
+
     $(document).ready(function() {
 
         if($('#project_id').val() != ''){

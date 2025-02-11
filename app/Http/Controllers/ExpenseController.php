@@ -239,6 +239,8 @@ class ExpenseController extends AccountBaseController
         $this->currencies = Currency::all();
         $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
         $this->employees = User::allEmployees();
+        $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Ensure fee methods are loaded
+    $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Ensure payment methods are loaded
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
@@ -296,7 +298,9 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->payment_method =  $request->payment_method;
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
+
         $expense->project_id = ($request->project_id > 0) ? $request->project_id : null;
 
 
