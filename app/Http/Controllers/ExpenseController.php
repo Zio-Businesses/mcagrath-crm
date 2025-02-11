@@ -46,6 +46,10 @@ class ExpenseController extends AccountBaseController
             $this->employees = User::allEmployees(null, true);
             $this->projects = Project::allProjects();
             $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
+            //$this->categories = ExpenseCategoryController::all();
+
+            
+
         }
 
         return $dataTable->render('expenses.index', $this->data);
@@ -103,8 +107,13 @@ class ExpenseController extends AccountBaseController
         $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
+        $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Fetch payment methods
+        $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Fetch fee methods
+
+        
 
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', company()->currency_id);
+
 
         if($this->viewBankAccountPermission == 'added'){
             $bankAccounts = $bankAccounts->where('added_by', user()->id);
@@ -156,6 +165,7 @@ class ExpenseController extends AccountBaseController
 
     public function store(StoreExpense $request)
     {
+        \Log::info('Request Data:', $request->all()); // 🔍 Debug request data
         $userRole = session('user_roles');
         $expense = new Expense();
         $expense->item_name = '--';
@@ -171,7 +181,26 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->payment_method =  $request->payment_method;
+        $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)
+    ->value('payment_method'); // ✅ Get name instead of ID
+    // ✅ Store Additional Fee
+   // ✅ Fetch Additional Fee Method Name Instead of ID
+   if ($request->has('fee_method_id') && !empty($request->fee_method_id)) {
+    $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->fee_method_id);
+    $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+}
+
+  // ✅ Store Additional Fee Name Instead of ID
+  if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
+    $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
+    $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+}
+
+        // ✅ Fetch the Payment Method Name instead of ID
+    if ($request->has('payment_method')) {
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null; // Store the name
+    }
         if ($userRole[0] == 'admin') {
             $expense->status = 'approved';
             $expense->approver_id = user()->id;
@@ -219,6 +248,8 @@ class ExpenseController extends AccountBaseController
         $this->currencies = Currency::all();
         $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
         $this->employees = User::allEmployees();
+        $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Ensure fee methods are loaded
+        $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Ensure payment methods are loaded
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
@@ -276,7 +307,9 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->payment_method =  $request->payment_method;
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
+
         $expense->project_id = ($request->project_id > 0) ? $request->project_id : null;
 
 
@@ -291,6 +324,19 @@ class ExpenseController extends AccountBaseController
             $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
             $expense->bill = $filename;
         }
+
+
+         // ✅ Store Additional Fee Name Instead of ID
+    if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
+        $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
+        $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+    }
+
+    // ✅ Store Payment Method Name Instead of ID
+    if ($request->has('payment_method')) {
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
+    }
 
         if ($request->has('status')) {
             $expense->status = $request->status;

@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExpensesPaymentMethod extends BaseModel
+class ExpenseAdditionalFee extends Model
 {
     use HasFactory;
-
-    protected $table = 'expenses_payment_methods'; // Ensure correct table name
+    protected $table = 'expenses_additional_fee'; // Ensure correct table name
 
     protected $fillable = [
         'company_id', 
-        'payment_method', 
+        'fee_method', 
         'added_by', 
         'last_updated_by'
     ];
+
 }

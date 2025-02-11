@@ -695,14 +695,15 @@ class ProjectsDataTable extends BaseDataTable
             }
             if($customfilter->project_members!='')
             {
-                $model->whereIn('project_members.user_id', $customfilter->project_members)
-                ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
-                ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
-                ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
-                ->orWhereIn('projects.project_coordinator_id', $customfilter->project_members)
-                ->orWhereIn('projects.project_scheduler_id', $customfilter->project_members)
-                ->orWhereIn('projects.vendor_recruiter_id', $customfilter->project_members)
-                ->get();
+               $model->where(function ($query) use ($customfilter) {
+                    $query->whereIn('project_members.user_id', $customfilter->project_members)
+                        ->orWhereIn('project_estimators.user_id', $customfilter->project_members)
+                        ->orWhereIn('project_accountings.user_id', $customfilter->project_members)
+                        ->orWhereIn('project_emanagers.user_id', $customfilter->project_members)
+                        ->orWhereIn('projects.project_coordinator_id', $customfilter->project_members)
+                        ->orWhereIn('projects.project_scheduler_id', $customfilter->project_members)
+                        ->orWhereIn('projects.vendor_recruiter_id', $customfilter->project_members);
+                });
                 
             }
         }
