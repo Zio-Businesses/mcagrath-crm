@@ -46,6 +46,10 @@ class ExpenseController extends AccountBaseController
             $this->employees = User::allEmployees(null, true);
             $this->projects = Project::allProjects();
             $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
+            //$this->categories = ExpenseCategoryController::all();
+
+            
+
         }
 
         return $dataTable->render('expenses.index', $this->data);
