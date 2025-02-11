@@ -77,6 +77,28 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
+
+                    <!---->
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="additional_fee_id" :fieldLabel="__('Additional Fee')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="additional_fee_id" id="additional_fee_id" data-live-search="true">
+                                <option value="">-- Select Additional Fee --</option>
+                                @foreach ($feeMethods as $feeMethod)
+                                    <option value="{{ $feeMethod->id }}" @selected($expense->additional_fee == $feeMethod->fee_method)>
+                                        {{ $feeMethod->fee_method }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-slot name="append">
+                                <button id="addAdditionalFee" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
+                        </x-forms.input-group>
+                    </div>
+                    
                     
                     
 

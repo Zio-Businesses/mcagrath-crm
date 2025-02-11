@@ -186,6 +186,11 @@ class ExpenseController extends AccountBaseController
     $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
 }
 
+  // ✅ Store Additional Fee Name Instead of ID
+  if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
+    $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
+    $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+}
 
         // ✅ Fetch the Payment Method Name instead of ID
     if ($request->has('payment_method')) {
@@ -240,7 +245,7 @@ class ExpenseController extends AccountBaseController
         $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
         $this->employees = User::allEmployees();
         $this->feeMethods = \App\Models\ExpenseAdditionalFee::all(); // ✅ Ensure fee methods are loaded
-    $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Ensure payment methods are loaded
+        $this->paymentMethods = \App\Models\ExpensesPaymentMethod::all(); // ✅ Ensure payment methods are loaded
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
@@ -315,6 +320,19 @@ class ExpenseController extends AccountBaseController
             $filename = Files::uploadLocalOrS3($request->bill, Expense::FILE_PATH);
             $expense->bill = $filename;
         }
+
+
+         // ✅ Store Additional Fee Name Instead of ID
+    if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
+        $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
+        $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+    }
+
+    // ✅ Store Payment Method Name Instead of ID
+    if ($request->has('payment_method')) {
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
+    }
 
         if ($request->has('status')) {
             $expense->status = $request->status;
