@@ -231,8 +231,10 @@ class ExpensesDataTable extends BaseDataTable
     {
         $request = $this->request();
 
-        $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session','projectvendor')
-            ->select('expenses.id', 'expenses.project_id', 'expenses.item_name','expenses.vendor_id' ,'expenses.created_at','expenses.pay_date','expenses.user_id','expenses.payment_method', 'expenses.price', 'users.salutation', 'users.name','expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+        $model = Expense::with('currency', 'user', 'user.employeeDetail', 'user.employeeDetail.designation', 'user.session', 'projectvendor')
+    ->select('expenses.id', 'expenses.project_id', 'expenses.item_name', 'expenses.vendor_id', 'expenses.created_at', 'expenses.pay_date', 'expenses.user_id', 'expenses.payment_method', 'expenses.price', 'users.salutation', 'users.name', 'expenses.purchase_date', 'expenses.currency_id', 'currencies.currency_symbol', 'expenses.status', 'expenses.purchase_from', 'expenses.expenses_recurring_id', 'designations.name as designation_name', 'expenses.added_by', 'projects.deleted_at as project_deleted_at')
+
+    
             ->join('users', 'users.id', 'expenses.user_id')
             ->leftJoin('employee_details', 'employee_details.user_id', '=', 'users.id')
             ->leftJoin('project_vendors', 'project_vendors.id', '=', 'expenses.vendor_id')
@@ -348,7 +350,7 @@ class ExpensesDataTable extends BaseDataTable
             __('Expense Created By') => ['data' => 'employee_name', 'name' => 'user_id', 'visible' => false, 'title' => __('Expense Created By')],
             __('Created at') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created at')],
             __('Payment Date') => ['data' => 'pay_date', 'name' => 'pay_date', 'title' => __('Payment Date')],
-            __('Payment Method') => ['data' => 'payment_method', 'name' => 'payment_method', 'title' => __('Payment Method')],
+            __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];

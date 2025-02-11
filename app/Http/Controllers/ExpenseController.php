@@ -161,6 +161,7 @@ class ExpenseController extends AccountBaseController
 
     public function store(StoreExpense $request)
     {
+        \Log::info('Request Data:', $request->all()); // 🔍 Debug request data
         $userRole = session('user_roles');
         $expense = new Expense();
         $expense->item_name = '--';
@@ -176,7 +177,15 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->payment_method =  $request->payment_method;
+        $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)
+    ->value('payment_method'); // ✅ Get name instead of ID
+
+
+        // ✅ Fetch the Payment Method Name instead of ID
+    if ($request->has('payment_method')) {
+        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
+        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null; // Store the name
+    }
         if ($userRole[0] == 'admin') {
             $expense->status = 'approved';
             $expense->approver_id = user()->id;

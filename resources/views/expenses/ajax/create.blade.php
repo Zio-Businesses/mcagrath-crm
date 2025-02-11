@@ -140,12 +140,13 @@
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
                                 <option value="">-- Select Payment Method --</option>
-                                @if(isset($paymentMethods) && count($paymentMethods) > 0)
-                                    @foreach ($paymentMethods as $method)
-                                        <option value="{{ $method->id }}">{{ $method->payment_method }}</option>
-                                    @endforeach
-                                @endif
+                                @foreach ($paymentMethods as $method)
+                                    <option value="{{ $method->id }}">{{ $method->payment_method }}</option>
+                                @endforeach
                             </select>
+                            
+
+                            
                             <x-slot name="append">
                                 <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
                                     @lang('app.add')
