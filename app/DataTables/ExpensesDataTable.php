@@ -96,6 +96,17 @@ class ExpensesDataTable extends BaseDataTable
             return '<a href="' . route('expenses.show', $row->id) . '" class="openRightModal text-darkest-grey">' . $row->item_name . '</a>
                 <p class="mb-0"><span class="badge badge-primary"> ' . __('app.recurring') . ' </span></p>';
         });
+
+          // ✅ Additional Fee Column
+    $datatables->editColumn('additional_fee', function ($row) {
+        return $row->additional_fee ?? '--';
+    });
+
+     // ✅ Payment Method Column
+     $datatables->editColumn('payment_method', function ($row) {
+        return $row->payment_method ?? '--';
+    });
+
         $datatables->addColumn('export_item_name', function ($row) {
             return $row->item_name;
         });
@@ -351,6 +362,7 @@ class ExpensesDataTable extends BaseDataTable
             __('Created at') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created at')],
             __('Payment Date') => ['data' => 'pay_date', 'name' => 'pay_date', 'title' => __('Payment Date')],
             __('Payment Method') => ['data' => 'payment_method', 'name' => 'expenses.payment_method', 'title' => __('Payment Method')],
+            __('Additional Fee') => ['data' => 'additional_fee', 'name' => 'additional_fee', 'title' => __('Additional Fee')], // ✅ Added column
             __('app.status') => ['data' => 'status', 'name' => 'status', 'exportable' => false, 'title' => __('app.status')],
             __('app.expense') . ' ' . __('app.status') => ['data' => 'status_export', 'name' => 'status', 'visible' => false, 'title' => __('app.expense')]
         ];
