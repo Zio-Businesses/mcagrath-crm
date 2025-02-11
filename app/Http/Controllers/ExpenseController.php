@@ -179,6 +179,12 @@ class ExpenseController extends AccountBaseController
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
         $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)
     ->value('payment_method'); // ✅ Get name instead of ID
+    // ✅ Store Additional Fee
+   // ✅ Fetch Additional Fee Method Name Instead of ID
+   if ($request->has('fee_method_id') && !empty($request->fee_method_id)) {
+    $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->fee_method_id);
+    $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
+}
 
 
         // ✅ Fetch the Payment Method Name instead of ID
