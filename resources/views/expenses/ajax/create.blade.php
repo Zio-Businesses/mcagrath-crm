@@ -51,6 +51,26 @@
                         @endif
                     </div>
 
+                    <!--here...-->
+                    <!--readonly textbox-->
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('W/O Status')" fieldName="wo_status"
+                            fieldRequired="true" fieldReadOnly fieldId="wo_status" />
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
+                            fieldRequired="true" fieldReadOnly fieldId="bid_approved_amount" />
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
+                            fieldRequired="true" fieldReadOnly fieldId="change_order_amount" />
+                    </div>
+                    
+                   
+
                     <div class="col-md-6 col-lg-3">
                         <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date"
                             :fieldPlaceholder="__('placeholders.date')" />
@@ -394,6 +414,40 @@ $('body').on('paymentMethodAdded', function(event, newMethod) {
             });
         }
     });
+
+
+    $('body').on("change", '#vendor_id', function() {
+    let vendorId = $('#vendor_id').val();
+    let projectId = $('#project_id').val();
+    
+    if (vendorId && projectId) {
+        var url = "{{ route('projectvendors.get_vendor_details', [':vendorId', ':projectId']) }}";
+        url = url.replace(':vendorId', vendorId).replace(':projectId', projectId);
+
+        $.easyAjax({
+            url: url,
+            type: "GET",
+            blockUI: true,
+            success: function(response) {
+                console.log("Full Response:", response); // 🔍 Debug the response
+                if (response.status === 'success') {
+                    console.log("WO Status:", response.data.wo_status);  // Check if wo_status exists
+                    console.log("Bid Approved Amount:", response.data.bid_approved_amount); // Check bid amount
+                    // If link_status is 'approved', set the W/O status
+                    if (response.data.link_status === 'approved') {
+                        $('#wo_status').val(response.data.wo_status);
+                    } else {
+                        $('#wo_status').val(''); // Clear if not approved
+                    }
+
+                    // Set Bid Approved Amount
+                    $('#wo_status').val(response.data.wo_status);
+                    $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                }
+            }
+        });
+    }
+});
 
     /*$('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {
