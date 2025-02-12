@@ -414,40 +414,41 @@ $('body').on('paymentMethodAdded', function(event, newMethod) {
             });
         }
     });
+    $('body').on("change", '#vendor_id', function () {
+    var vendorId = $(this).val();
+    var projectId = $('#project_id').val();
 
-
-    $('body').on("change", '#vendor_id', function() {
-    let vendorId = $('#vendor_id').val();
-    let projectId = $('#project_id').val();
-    
     if (vendorId && projectId) {
-        var url = "{{ route('projectvendors.get_vendor_details', [':vendorId', ':projectId']) }}";
-        url = url.replace(':vendorId', vendorId).replace(':projectId', projectId);
+        var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
 
-        $.easyAjax({
+        url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+
+        console.log("Fetching URL: " + url); // Debugging
+
+        $.ajax({
             url: url,
             type: "GET",
-            blockUI: true,
-            success: function(response) {
-                console.log("Full Response:", response); // 🔍 Debug the response
+            success: function (response) {
                 if (response.status === 'success') {
-                    console.log("WO Status:", response.data.wo_status);  // Check if wo_status exists
-                    console.log("Bid Approved Amount:", response.data.bid_approved_amount); // Check bid amount
-                    // If link_status is 'approved', set the W/O status
-                    if (response.data.link_status === 'approved') {
-                        $('#wo_status').val(response.data.wo_status);
-                    } else {
-                        $('#wo_status').val(''); // Clear if not approved
-                    }
-
-                    // Set Bid Approved Amount
+                    console.log("Vendor Data:", response.data);
                     $('#wo_status').val(response.data.wo_status);
                     $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                    $('#change_order_amount').val(response.data.change_order_amount);
+                } else {
+                    console.error("Vendor details not found");
+                    $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
                 }
+            },
+            error: function (xhr) {
+                console.error("AJAX Error:", xhr);
+                $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
             }
         });
     }
 });
+
+
+
 
     /*$('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {
