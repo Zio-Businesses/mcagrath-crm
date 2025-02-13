@@ -211,4 +211,36 @@ class ProjectVendorController extends AccountBaseController
         $this->projectvendor=ProjectVendor::findOrFail($id);
         return view('projects.vendors.changenotificationhistory', $this->data);
     }
+
+    public function getVendorDetails($vendorId, $projectId)
+    {
+        $vendor = VendorContract::find($vendorId);
+        $projectVendor = ProjectVendor::where('vendor_id', $vendorId)
+            ->where('project_id', $projectId)
+            ->first();
+    
+        if (!$vendor || !$projectVendor) {
+            return response()->json(['status' => 'error', 'message' => 'Vendor details not found']);
+        }
+    
+        // Calculate Change Order Amount
+    $changeOrderAmounts = $projectVendor->changenotification
+    ->where('link_status', 'Accepted')
+    ->whereNotNull('accepted_date')
+    ->pluck('project_amount')
+    ->map(fn($amount) => (float) $amount) // Convert VARCHAR to float
+    ->sum();
+
+return response()->json([
+    'status' => 'success',
+    'data' => [
+        'link_status' => $projectVendor->link_status,
+        'wo_status' => $projectVendor->wo_status,
+        'bid_approved_amount' => $projectVendor->bid_approved_amount,
+        'change_order_amount' => $changeOrderAmounts
+    ]
+]);
+    }
+    
+
 }

@@ -51,6 +51,26 @@
                         @endif
                     </div>
 
+                    <!--here...-->
+                    <!--readonly textbox-->
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('W/O Status')" fieldName="wo_status"
+                            fieldRequired="false" fieldReadOnly fieldId="wo_status" />
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="bid_approved_amount" />
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="change_order_amount" />
+                    </div>
+                    
+                   
+
                     <div class="col-md-6 col-lg-3">
                         <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date"
                             :fieldPlaceholder="__('placeholders.date')" />
@@ -394,6 +414,41 @@ $('body').on('paymentMethodAdded', function(event, newMethod) {
             });
         }
     });
+    $('body').on("change", '#vendor_id', function () {
+    var vendorId = $(this).val();
+    var projectId = $('#project_id').val();
+
+    if (vendorId && projectId) {
+        var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
+
+        url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+
+        console.log("Fetching URL: " + url); // Debugging
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (response) {
+                if (response.status === 'success') {
+                    console.log("Vendor Data:", response.data);
+                    $('#wo_status').val(response.data.wo_status);
+                    $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                    $('#change_order_amount').val(response.data.change_order_amount);
+                } else {
+                    console.error("Vendor details not found");
+                    $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+                }
+            },
+            error: function (xhr) {
+                console.error("AJAX Error:", xhr);
+                $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+            }
+        });
+    }
+});
+
+
+
 
     /*$('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {

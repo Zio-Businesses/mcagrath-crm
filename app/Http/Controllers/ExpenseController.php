@@ -47,9 +47,6 @@ class ExpenseController extends AccountBaseController
             $this->projects = Project::allProjects();
             $this->categories = ExpenseCategoryController::getCategoryByCurrentRole();
             //$this->categories = ExpenseCategoryController::all();
-
-            
-
         }
 
         return $dataTable->render('expenses.index', $this->data);
@@ -183,7 +180,14 @@ class ExpenseController extends AccountBaseController
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
         $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)
     ->value('payment_method'); // ✅ Get name instead of ID
-    // ✅ Store Additional Fee
+
+
+
+    // ✅ Store the new fields
+    $expense->wo_status = $request->wo_status;
+    $expense->bid_approved_amt = $request->bid_approved_amount;
+    $expense->change_amt = $request->change_order_amount;
+    
    // ✅ Fetch Additional Fee Method Name Instead of ID
    if ($request->has('fee_method_id') && !empty($request->fee_method_id)) {
     $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->fee_method_id);
