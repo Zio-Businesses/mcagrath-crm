@@ -56,17 +56,17 @@
 
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('W/O Status')" fieldName="wo_status"
-                            fieldRequired="true" fieldReadOnly fieldId="wo_status" />
+                            fieldRequired="false" fieldReadOnly fieldId="wo_status" />
                     </div>
                     
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
-                            fieldRequired="true" fieldReadOnly fieldId="bid_approved_amount" />
+                            fieldRequired="false" fieldReadOnly fieldId="bid_approved_amount" />
                     </div>
 
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
-                            fieldRequired="true" fieldReadOnly fieldId="change_order_amount" />
+                            fieldRequired="false" fieldReadOnly fieldId="change_order_amount" />
                     </div>
                     
                    
