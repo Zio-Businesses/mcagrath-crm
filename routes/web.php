@@ -756,16 +756,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     ->name('expensePaymentMethod.list');
 
     Route::resource('expenseAdditionalFee', ExpenseAdditionalFeeTypeController::class);
-    Route::get('expense-additional-fees/list', [ExpenseAdditionalFeeTypeController::class, 'getList'])
-        ->name('expenseAdditionalFee.list');
-
-    
-        Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', 
-        [ProjectVendorController::class, 'getVendorDetails']
-    )->name('projectvendors.get_vendor_details');
-    
-    
-        
+    Route::get('expense-additional-fees/list', [ExpenseAdditionalFeeTypeController::class, 'getList'])->name('expenseAdditionalFee.list');
+    Route::get('projectvendors/get-vendor-details/{vendorId}/{projectId}', [ProjectVendorController::class, 'getVendorDetails'])->name('projectvendors.get_vendor_details');
 
     // Timelogs
     Route::group(['prefix' => 'timelogs'], function () {

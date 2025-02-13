@@ -167,36 +167,128 @@ $approveExpensePermission = user()->permission('approve_expenses');
 <?php unset($__componentOriginal1fded940a0a5d34bf1b88a1f45916593); ?>
 <?php endif; ?>
                     </div>
-                    <div class="col-md-6 col-lg-3">
-                        <?php if (isset($component)) { $__componentOriginal67cd5dc9866c6185ad92d933c387fa86 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Select::resolve(['fieldId' => 'payment_method','fieldName' => 'payment_method','fieldLabel' => __('Payment Method'),'search' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.select'); ?>
+
+
+
+                    <!---->
+                    <div class="col-md-4">
+                        <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'payment_method_id','fieldLabel' => __('Payment Method')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Select::class))->getConstructor()): ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Label::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mt-3']); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $attributes = $__attributesOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__attributesOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $component = $__componentOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__componentOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\InputGroup::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.input-group'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\InputGroup::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-                            <option value="">--</option>
-                            <option <?php if($expense->payment_method == 'Credit Card'): echo 'selected'; endif; ?> value="Credit Card">Credit Card</option>
-                            <option <?php if($expense->payment_method == 'PayPa'): echo 'selected'; endif; ?> value="PayPal">PayPal</option>
-                            <option <?php if($expense->payment_method == 'ACH'): echo 'selected'; endif; ?> value="ACH">ACH</option>
-                            <option <?php if($expense->payment_method == 'Check'): echo 'selected'; endif; ?> value="Check">Check</option>
-                            <option <?php if($expense->payment_method == 'CashApp'): echo 'selected'; endif; ?> value="CashApp">CashApp</option>
-                            <option <?php if($expense->payment_method == 'Zelle'): echo 'selected'; endif; ?> value="Zelle">Zelle</option>
-                            <option <?php if($expense->payment_method == 'Venmo'): echo 'selected'; endif; ?> value="Venmo">Venmo</option>
+                            <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
+                                <option value="">-- Select Payment Method --</option>
+                                <?php $__currentLoopData = $paymentMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($method->id); ?>" <?php if($expense->payment_method == $method->payment_method): echo 'selected'; endif; ?>>
+                                    <?php echo e($method->payment_method); ?>
+
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            
+                            </select>
+                             <?php $__env->slot('append', null, []); ?> 
+                                <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    <?php echo app('translator')->get('app.add'); ?>
+                                </button>
+                             <?php $__env->endSlot(); ?>
                          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal67cd5dc9866c6185ad92d933c387fa86)): ?>
-<?php $attributes = $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86; ?>
-<?php unset($__attributesOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
+<?php if (isset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $attributes = $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86)): ?>
-<?php $component = $__componentOriginal67cd5dc9866c6185ad92d933c387fa86; ?>
-<?php unset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
+<?php if (isset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $component = $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
 <?php endif; ?>
                     </div>
+
+                    <!---->
+                    <div class="col-md-4">
+                        <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'additional_fee_id','fieldLabel' => __('Additional Fee')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Label::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mt-3']); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $attributes = $__attributesOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__attributesOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $component = $__componentOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__componentOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\InputGroup::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.input-group'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\InputGroup::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                            <select class="form-control select-picker" name="additional_fee_id" id="additional_fee_id" data-live-search="true">
+                                <option value="">-- Select Additional Fee --</option>
+                                <?php $__currentLoopData = $feeMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feeMethod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($feeMethod->id); ?>" <?php if($expense->additional_fee == $feeMethod->fee_method): echo 'selected'; endif; ?>>
+                                        <?php echo e($feeMethod->fee_method); ?>
+
+                                    </option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                             <?php $__env->slot('append', null, []); ?> 
+                                <button id="addAdditionalFee" type="button" class="btn btn-outline-secondary border-grey">
+                                    <?php echo app('translator')->get('app.add'); ?>
+                                </button>
+                             <?php $__env->endSlot(); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $attributes = $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $component = $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+                    </div>
+                    
+                    
+                    
 
                     <div class="col-md-6 col-lg-3 d-none">
                         <input type="hidden" id="currency_id" name="currency_id" value="<?php echo e($expense->currency_id); ?>">
@@ -697,6 +789,44 @@ $approveExpensePermission = user()->permission('approve_expenses');
 </div>
 
 <script>
+
+$(document).ready(function () {
+    // Open modal to add a new Payment Method
+    $('#addPaymentMethod').click(function () {
+        const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
+        $.ajaxModal(MODAL_LG, url);
+    });
+
+    // Refresh Payment Methods after adding, updating, or deleting
+    $(document).ajaxComplete(function (event, xhr, settings) {
+        if (
+            settings.url.includes("expensePaymentMethod.store") || 
+            settings.url.includes("expensePaymentMethod.update") || 
+            settings.url.includes("expensePaymentMethod.destroy")
+        ) {
+            refreshPaymentMethods(); // Auto-refresh dropdown
+        }
+    });
+
+    // Function to refresh the Payment Method dropdown
+    function refreshPaymentMethods() {
+        $.ajax({
+            url: "<?php echo e(route('expensePaymentMethod.list')); ?>",
+            type: "GET",
+            success: function (response) {
+                let paymentMethodDropdown = $('#payment_method_id');
+                paymentMethodDropdown.html('<option value="">-- Select Payment Method --</option>');
+                response.paymentMethods.forEach(function (method) {
+                    let isSelected = (method.payment_method === "<?php echo e($expense->payment_method); ?>") ? "selected" : "";
+                    paymentMethodDropdown.append(`<option value="${method.id}" ${isSelected}>${method.payment_method}</option>`);
+                });
+                paymentMethodDropdown.selectpicker('refresh');
+            }
+        });
+    }
+});
+
+
     $(document).ready(function() {
 
         if($('#project_id').val() != ''){

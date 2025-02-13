@@ -1,5 +1,5 @@
 <?php
-$addExpenseCategoryPermission = user()->permission('manage_expense_category');
+    $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 ?>
 
 <div class="row">
@@ -78,7 +78,8 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php $component->withAttributes([]); ?>
                                 <option value="">--</option>
                                 <?php $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option data-currency-id="<?php echo e($project->currency_id); ?>" <?php if($projectId == $project->id): echo 'selected'; endif; ?> value="<?php echo e($project->id); ?>">
+                                    <option data-currency-id="<?php echo e($project->currency_id); ?>" <?php if($projectId == $project->id): echo 'selected'; endif; ?>
+                                        value="<?php echo e($project->id); ?>">
                                         <?php echo e($project->project_short_code); ?>
 
                                     </option>
@@ -110,7 +111,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php $component->withAttributes([]); ?>
                                 <option value="">--</option>
                                 <?php $__currentLoopData = $vendor; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendors): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option  value="<?php echo e($vendors->id); ?>">
+                                    <option value="<?php echo e($vendors->id); ?>">
                                         <?php echo e($vendors->vendor_name); ?>
 
                                     </option>
@@ -149,6 +150,80 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php endif; ?>
                         <?php endif; ?>
                     </div>
+
+                    <!--here...-->
+                    <!--readonly textbox-->
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('W/O Status'),'fieldName' => 'wo_status','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'wo_status'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Bid Approved Amount'),'fieldName' => 'bid_approved_amount','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'bid_approved_amount'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Change Order Amount'),'fieldName' => 'change_order_amount','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'change_order_amount'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+                    
+                   
 
                     <div class="col-md-6 col-lg-3">
                         <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
@@ -198,7 +273,8 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 
                     <div class="col-md-6 col-lg-3 d-none">
                         <?php if(isset($projectName)): ?>
-                            <input type="hidden" id="currency_id" name="currency_id" value="<?php echo e($project->currency_id); ?>">
+                            <input type="hidden" id="currency_id" name="currency_id"
+                                value="<?php echo e($project->currency_id); ?>">
                             <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('modules.invoices.currency'),'fieldName' => 'project-currency','fieldId' => 'project-currency','fieldValue' => $project->currency->currency_name,'fieldReadOnly' => 'true'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -220,7 +296,8 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
 <?php endif; ?>
                         <?php else: ?>
-                            <input type="hidden" id="currency_id" name="currency_id" value="<?php echo e(company()->currency_id); ?>">
+                            <input type="hidden" id="currency_id" name="currency_id"
+                                value="<?php echo e(company()->currency_id); ?>">
                             <?php if (isset($component)) { $__componentOriginal67cd5dc9866c6185ad92d933c387fa86 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal67cd5dc9866c6185ad92d933c387fa86 = $attributes; } ?>
 <?php $component = App\View\Components\Forms\Select::resolve(['fieldLabel' => __('modules.invoices.currency'),'fieldName' => 'currency','fieldRequired' => 'true','fieldId' => 'currency'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
@@ -232,7 +309,8 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
                                 <?php $__currentLoopData = $currencies; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $currency): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option <?php if($currency->id == company()->currency_id): echo 'selected'; endif; ?>  value="<?php echo e($currency->id); ?>" data-currency-name="<?php echo e($currency->currency_name); ?>">
+                                    <option <?php if($currency->id == company()->currency_id): echo 'selected'; endif; ?> value="<?php echo e($currency->id); ?>"
+                                        data-currency-name="<?php echo e($currency->currency_name); ?>">
                                         <?php echo e($currency->currency_name); ?> - (<?php echo e($currency->currency_symbol); ?>)
                                     </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -252,7 +330,9 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                     <div class="col-md-6 col-lg-3 d-none">
                         <?php if (isset($component)) { $__componentOriginal1fded940a0a5d34bf1b88a1f45916593 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1fded940a0a5d34bf1b88a1f45916593 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Number::resolve(['fieldId' => 'exchange_rate','fieldLabel' => __('modules.currencySettings.exchangeRate'),'fieldName' => 'exchange_rate','fieldRequired' => 'true','fieldValue' => (isset($projectName) ? $project->currency->exchange_rate : $companyCurrency->exchange_rate),'fieldReadOnly' => 'true','fieldHelp' => ' '] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Number::resolve(['fieldId' => 'exchange_rate','fieldLabel' => __('modules.currencySettings.exchangeRate'),'fieldName' => 'exchange_rate','fieldRequired' => 'true','fieldValue' => isset($projectName)
+                                ? $project->currency->exchange_rate
+                                : $companyCurrency->exchange_rate,'fieldReadOnly' => 'true','fieldHelp' => ' '] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.number'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -411,8 +491,8 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                             <?php if($addExpenseCategoryPermission == 'all' || $addExpenseCategoryPermission == 'added'): ?>
                                  <?php $__env->slot('append', null, []); ?> 
                                     <button id="addExpenseCategory" type="button"
-                                        class="btn btn-outline-secondary border-grey"
-                                        data-toggle="tooltip" data-original-title="<?php echo e(__('modules.expenseCategory.addExpenseCategory')); ?>"><?php echo app('translator')->get('app.add'); ?></button>
+                                        class="btn btn-outline-secondary border-grey" data-toggle="tooltip"
+                                        data-original-title="<?php echo e(__('modules.expenseCategory.addExpenseCategory')); ?>"><?php echo app('translator')->get('app.add'); ?></button>
                                  <?php $__env->endSlot(); ?>
                             <?php endif; ?>
                          <?php echo $__env->renderComponent(); ?>
@@ -426,6 +506,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
 <?php endif; ?>
                     </div>
+
                     <div class="col-md-4">
                         <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
@@ -457,23 +538,20 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
-                            <select class="form-control select-picker" name="payment_method" id="payment_method_id"
-                                data-live-search="true">
-                                <option value="">--</option>
-                                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($category->id); ?>"><?php echo e($category->category_name); ?>
-
-                                    </option>
+                            <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
+                                <option value="">-- Select Payment Method --</option>
+                                <?php $__currentLoopData = $paymentMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($method->id); ?>"><?php echo e($method->payment_method); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
+                            
 
-                            <?php if($addExpenseCategoryPermission == 'all' || $addExpenseCategoryPermission == 'added'): ?>
-                                 <?php $__env->slot('append', null, []); ?> 
-                                    <button id="addPaymentMethod" type="button"
-                                        class="btn btn-outline-secondary border-grey"
-                                        data-toggle="tooltip" data-original-title="<?php echo e(__('Add Payment Method')); ?>"><?php echo app('translator')->get('app.add'); ?></button>
-                                 <?php $__env->endSlot(); ?>
-                            <?php endif; ?>
+                            
+                             <?php $__env->slot('append', null, []); ?> 
+                                <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    <?php echo app('translator')->get('app.add'); ?>
+                                </button>
+                             <?php $__env->endSlot(); ?>
                          <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
@@ -486,6 +564,65 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 <?php endif; ?>
                     </div>
 
+                    <div class="col-md-4">
+                        <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'fee_method','fieldLabel' => __('Additional Fee Method')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Label::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mt-3']); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $attributes = $__attributesOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__attributesOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal89b295b0763c93abe0143426334eb5d6)): ?>
+<?php $component = $__componentOriginal89b295b0763c93abe0143426334eb5d6; ?>
+<?php unset($__componentOriginal89b295b0763c93abe0143426334eb5d6); ?>
+<?php endif; ?>
+                        <?php if (isset($component)) { $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\InputGroup::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.input-group'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\InputGroup::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+                            <select class="form-control select-picker" name="fee_method_id" id="fee_method_id" data-live-search="true">
+                                <option value="">-- Select Fee Method --</option>
+                                <?php if(isset($feeMethods) && count($feeMethods) > 0): ?>
+                                    <?php $__currentLoopData = $feeMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($method->id); ?>"><?php echo e($method->fee_method); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
+                            </select>
+                             <?php $__env->slot('append', null, []); ?> 
+                                <button id="addFeeMethod" type="button" class="btn btn-outline-secondary border-grey">
+                                    <?php echo app('translator')->get('app.add'); ?>
+                                </button>
+                             <?php $__env->endSlot(); ?>
+                         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $attributes = $__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__attributesOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7)): ?>
+<?php $component = $__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7; ?>
+<?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
+<?php endif; ?>
+                    </div>
+                    
+                    
+                    
+                    
                     <div class="col-md-4 d-none">
                         <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
@@ -524,8 +661,10 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                                 <option value="">--</option>
                                 <?php if($viewBankAccountPermission != 'none'): ?>
                                     <?php $__currentLoopData = $bankDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bankDetail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($bankDetail->id); ?>"><?php if($bankDetail->type == 'bank'): ?>
-                                            <?php echo e($bankDetail->bank_name); ?> | <?php endif; ?> <?php echo e($bankDetail->account_name); ?>
+                                        <option value="<?php echo e($bankDetail->id); ?>">
+                                            <?php if($bankDetail->type == 'bank'): ?>
+                                                <?php echo e($bankDetail->bank_name); ?> |
+                                            <?php endif; ?> <?php echo e($bankDetail->account_name); ?>
 
                                         </option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -711,9 +850,9 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
         $('#save-expense-form').click(function() {
             let note = document.getElementById('description').children[0].innerHTML;
             document.getElementById('description-text').value = note;
-            var mention_user_id = $('#description span[data-id]').map(function(){
-                            return $(this).attr('data-id')
-                        }).get();
+            var mention_user_id = $('#description span[data-id]').map(function() {
+                return $(this).attr('data-id')
+            }).get();
             $('#mentionUserId').val(mention_user_id.join(','));
             const url = "<?php echo e(route('expenses.store')); ?>";
             var data = $('#save-expense-data-form').serialize();
@@ -735,19 +874,52 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 
         $('#addExpenseCategory').click(function() {
             let userId = $('#user_id').val();
-            const url = "<?php echo e(route('expenseCategory.create')); ?>?user_id="+userId;
+            const url = "<?php echo e(route('expenseCategory.create')); ?>?user_id=" + userId;
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
             $.ajaxModal(MODAL_LG, url);
         });
 
         $('#addPaymentMethod').click(function() {
-            let userId = $('#user_id').val();
-            const url = "<?php echo e(route('expensePaymentMethod.create')); ?>?user_id="+userId;
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
+    const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
+    $.ajaxModal(MODAL_LG, url);
+});
+
+
+        // Listen for event when a new method is added
+        $('body').on('paymentMethodAdded', function(event, newMethod) {
+            let paymentMethodDropdown = $('#payment_method_id');
+            paymentMethodDropdown.append(
+                `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
+            );
+            paymentMethodDropdown.selectpicker('refresh');
         });
 
-        $('body').on('change', '#user_id', function(){
+
+        // Function to refresh dropdown after adding new payment method
+        function refreshPaymentMethods() {
+            $.ajax({
+                url: "<?php echo e(route('expensePaymentMethod.create')); ?>",
+                type: "GET",
+                success: function(response) {
+                    let paymentMethodDropdown = $('#payment_method_id');
+                    paymentMethodDropdown.html(
+                        '<option value="">-- Select Payment Method --</option>');
+                    response.paymentMethods.forEach(function(method) {
+                        paymentMethodDropdown.append(
+                            `<option value="${method.id}">${method.payment_method}</option>`
+                            );
+                    });
+                    paymentMethodDropdown.selectpicker('refresh');
+                }
+            });
+        }
+
+        // Call refresh function after adding a payment method
+        $('body').on('paymentMethodAdded', function(event, newMethod) {
+            refreshPaymentMethods();
+        });
+
+        $('body').on('change', '#user_id', function() {
             let userId = $(this).val();
             let categoryId = $('#expense_category_id').val();
 
@@ -757,18 +929,22 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
             $.easyAjax({
                 url: url,
                 type: "GET",
-                data: {'userId' : userId, 'categoryId' : categoryId},
+                data: {
+                    'userId': userId,
+                    'categoryId': categoryId
+                },
                 success: function(response) {
-                    $('#project_id').html('<option value="">--</option>'+response.data);
+                    $('#project_id').html('<option value="">--</option>' + response.data);
                     $('#project_id').selectpicker('refresh')
-                    $('#expense_category_id').html('<option value="">--</option>'+response.category);
+                    $('#expense_category_id').html('<option value="">--</option>' + response
+                        .category);
                     $('#expense_category_id').selectpicker('refresh')
                 }
             });
 
         });
 
-        $('body').on('change', '#expense_category_id', function(){
+        $('body').on('change', '#expense_category_id', function() {
             let categoryId = $(this).val();
             let userId = $('#user_id').val();
 
@@ -778,9 +954,12 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
             $.easyAjax({
                 url: url,
                 type: "GET",
-                data: {'categoryId' : categoryId, 'userId' : userId},
+                data: {
+                    'categoryId': categoryId,
+                    'userId': userId
+                },
                 success: function(response) {
-                    $('#user_id').html('<option value="">--</option>'+response.employees);
+                    $('#user_id').html('<option value="">--</option>' + response.employees);
                     $('#user_id').selectpicker('refresh')
                 }
             });
@@ -812,6 +991,41 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
             });
         }
     });
+    $('body').on("change", '#vendor_id', function () {
+    var vendorId = $(this).val();
+    var projectId = $('#project_id').val();
+    
+    if (vendorId && projectId) {
+        var url = "<?php echo e(route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__'])); ?>";
+
+        url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+
+        console.log("Fetching URL: " + url); // Debugging
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (response) {
+                if (response.status === 'success') {
+                    console.log("Vendor Data:", response.data);
+                    $('#wo_status').val(response.data.wo_status);
+                    $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                    $('#change_order_amount').val(response.data.change_order_amount);
+                } else {
+                    console.error("Vendor details not found");
+                    $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+                }
+            },
+            error: function (xhr) {
+                console.error("AJAX Error:", xhr);
+                $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+            }
+        });
+    }
+});
+
+
+
 
     /*$('body').on("change", '#currency, #project_id', function() {
         if ($('#project_id').val() != '') {
@@ -853,7 +1067,7 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
                     $('#bank_account_id').html(response.data);
                     $('#bank_account_id').selectpicker('refresh');
                     $('#exchange_rate').val(1/response.exchangeRate);
-                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' <?php echo app('translator')->get('app.to'); ?> '+companyCurrencyName+' )' : '';
+                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' <?php echo app('translator')->get('app.expenseDetails'); ?> '+companyCurrencyName+' )' : '';
                     $('#exchange_rateHelp').html(currencyExchange);
                 }
             }
@@ -862,14 +1076,81 @@ $addExpenseCategoryPermission = user()->permission('manage_expense_category');
 
     <?php if(isset($projectName)): ?>
         setExchangeRateHelp();
-        function setExchangeRateHelp(){
+
+        function setExchangeRateHelp() {
             $('#exchange_rate').prop('readonly', false);
             var companyCurrencyName = "<?php echo e($companyCurrency->currency_name); ?>";
-            var currentCurrencyName = `<?php echo e($project->currency->currency_name); ?>` ;
-            let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' <?php echo app('translator')->get('app.to'); ?> '+currentCurrencyName+' )' : '';
+            var currentCurrencyName = `<?php echo e($project->currency->currency_name); ?>`;
+            let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( ' + currentCurrencyName +
+                ' <?php echo app('translator')->get('app.add'); ?> ' + currentCurrencyName + ' )' : '';
             $('#exchange_rateHelp').html(currencyExchange);
         }
     <?php endif; ?>
 
+
+    $(document).ready(function() {
+    var url = "<?php echo e(route('expensePaymentMethod.store')); ?>";
+
+    $.easyAjax({
+        url: url,
+        container: '#createProjectPayment',
+        type: "POST",
+        data: $('#createProjectPayment').serialize(),
+        disableButton: true,
+        blockUI: true,
+        buttonSelector: "#save-payment",
+        success: function(response) {
+            if (response.status == 'success') {
+                // 🔹 Update dropdown with new options
+                $('#payment_method_id').html(response.options);
+                $('#payment_method_id').selectpicker('refresh');
+
+                // Close modal after saving
+                $(MODAL_LG).modal('hide');
+            }
+        }
+    });
+});
+
+
+// Open modal to add new Fee Method
+$('#addFeeMethod').click(function() {
+        const url = "<?php echo e(route('expenseAdditionalFee.create')); ?>";
+        $.ajaxModal(MODAL_LG, url);
+    });
+
+    // Listen for event when a new Fee Method is added
+    $('body').on('feeMethodAdded', function(event, newMethod) {
+        let feeMethodDropdown = $('#fee_method_id');
+        feeMethodDropdown.append(
+            `<option value="${newMethod.id}">${newMethod.fee_method}</option>`
+        );
+        feeMethodDropdown.selectpicker('refresh');
+    });
+
+    // Function to refresh dropdown after adding new Fee Method
+    function refreshFeeMethods() {
+        $.ajax({
+            url: "<?php echo e(route('expenseAdditionalFee.list')); ?>",
+            type: "GET",
+            success: function(response) {
+                let feeMethodDropdown = $('#fee_method_id');
+                feeMethodDropdown.html(
+                    '<option value="">-- Select Fee Method --</option>'
+                );
+                response.feeMethods.forEach(function(method) {
+                    feeMethodDropdown.append(
+                        `<option value="${method.id}">${method.fee_method}</option>`
+                    );
+                });
+                feeMethodDropdown.selectpicker('refresh');
+            }
+        });
+    }
+
+    // Call refresh function after adding a Fee Method
+    $('body').on('feeMethodAdded', function(event, newMethod) {
+        refreshFeeMethods();
+    });
 </script>
 <?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/expenses/ajax/create.blade.php ENDPATH**/ ?>

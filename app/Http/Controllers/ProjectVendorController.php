@@ -78,7 +78,6 @@ class ProjectVendorController extends AccountBaseController
             $vpro->contract_id=$request->contract_id;
             $vpro->link_status='Sent';
             $vpro->save();
-            \Log::info(config('app.phone'));
             $this->logProjectActivity($request->project_id, 'messages.vendorcreated');
             Notification::route('mail', $vendor->vendor_email)->notify(new NewVendorWorkOrder($vpro->id,$request->project_id,$request->contract_id,$request->vendor_id));
             return Reply::success(__('New Vendor Added Successfully'));
@@ -214,32 +213,32 @@ class ProjectVendorController extends AccountBaseController
 
     public function getVendorDetails($vendorId, $projectId)
     {
-        $vendor = VendorContract::find($vendorId);
-        $projectVendor = ProjectVendor::where('vendor_id', $vendorId)
+        $projectVendor = ProjectVendor::where('id', $vendorId)
             ->where('project_id', $projectId)
             ->first();
     
-        if (!$vendor || !$projectVendor) {
+        if (!$projectVendor) {
             return response()->json(['status' => 'error', 'message' => 'Vendor details not found']);
         }
     
         // Calculate Change Order Amount
-    $changeOrderAmounts = $projectVendor->changenotification
-    ->where('link_status', 'Accepted')
-    ->whereNotNull('accepted_date')
-    ->pluck('project_amount')
-    ->map(fn($amount) => (float) $amount) // Convert VARCHAR to float
-    ->sum();
+        $changeOrderAmounts = $projectVendor->changenotification
+        ->where('link_status', 'Accepted')
+        ->whereNotNull('accepted_date')
+        ->pluck('project_amount')
+        ->map(fn($amount) => (float) $amount) // Convert VARCHAR to float
+        ->sum();
 
-return response()->json([
-    'status' => 'success',
-    'data' => [
-        'link_status' => $projectVendor->link_status,
-        'wo_status' => $projectVendor->wo_status,
-        'bid_approved_amount' => $projectVendor->bid_approved_amount,
-        'change_order_amount' => $changeOrderAmounts
-    ]
-]);
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'link_status' => $projectVendor->link_status,
+                'wo_status' => $projectVendor->wo_status,
+                'bid_approved_amount' => $projectVendor->bid_approved_amount,
+                'change_order_amount' => $changeOrderAmounts
+            ]
+        ]);
+
     }
     
 

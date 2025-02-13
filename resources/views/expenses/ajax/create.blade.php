@@ -308,14 +308,14 @@
 });
 
 
-// Listen for event when a new method is added
-$('body').on('paymentMethodAdded', function(event, newMethod) {
-    let paymentMethodDropdown = $('#payment_method_id');
-    paymentMethodDropdown.append(
-        `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
-    );
-    paymentMethodDropdown.selectpicker('refresh');
-});
+        // Listen for event when a new method is added
+        $('body').on('paymentMethodAdded', function(event, newMethod) {
+            let paymentMethodDropdown = $('#payment_method_id');
+            paymentMethodDropdown.append(
+                `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
+            );
+            paymentMethodDropdown.selectpicker('refresh');
+        });
 
 
         // Function to refresh dropdown after adding new payment method
@@ -417,7 +417,7 @@ $('body').on('paymentMethodAdded', function(event, newMethod) {
     $('body').on("change", '#vendor_id', function () {
     var vendorId = $(this).val();
     var projectId = $('#project_id').val();
-
+    
     if (vendorId && projectId) {
         var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
 

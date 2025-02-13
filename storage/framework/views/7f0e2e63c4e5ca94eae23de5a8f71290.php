@@ -1,7 +1,7 @@
-<div <?php echo e($attributes->merge(['class' => 'form-group my-3'])); ?>>
+<div <?php echo e($attributes->merge(['class' => 'form-group my-3'])); ?>   >
     <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => $fieldId,'fieldLabel' => $fieldLabel,'fieldRequired' => $fieldRequired,'popover' => $popover] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => $fieldId,'fieldLabel' => $fieldLabel,'fieldRequired' => $fieldRequired] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -19,21 +19,6 @@
 <?php unset($__componentOriginal89b295b0763c93abe0143426334eb5d6); ?>
 <?php endif; ?>
 
-    <div id="file-upload-box">
-        <div class="row" id="file-dropzone">
-            <div class="col-md-12">
-                <div class="dropzone rounded border" id="<?php echo e($fieldId); ?>">
-                    <?php echo csrf_field(); ?>
-                    <div class="fallback">
-                        <input name="<?php echo e($fieldName); ?>" type="file" multiple />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <?php if($fieldHelp): ?>
-        <small id="<?php echo e($fieldId); ?>Help" class="form-text text-muted"><?php echo e($fieldHelp); ?></small>
-    <?php endif; ?>
+    <input type="tel" class="form-control height-35 f-14" placeholder="<?php echo e($fieldPlaceholder); ?>" value="<?php echo e($fieldValue); ?>" name="<?php echo e($fieldName); ?>" id="<?php echo e($fieldId); ?>">
 </div>
-<?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/components/forms/file-multiple.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/components/forms/tel.blade.php ENDPATH**/ ?>
