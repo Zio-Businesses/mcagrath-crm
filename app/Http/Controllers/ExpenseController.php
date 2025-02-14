@@ -176,7 +176,6 @@ class ExpenseController extends AccountBaseController
         $expense->description = trim_editor($request->description);
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
-        $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)->value('payment_method'); // ✅ Get name instead of ID
         $expense->wo_status = $request->wo_status;
         $expense->bid_approved_amt = $request->bid_approved_amount;
         $expense->change_amt = $request->change_order_amount;

@@ -50,7 +50,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Link Status')" fieldName="link_status"
-                            fieldRequired="false" fieldReadOnly fieldId="link_status" :fieldValue="$expense->projectvendor->link_status"/>
+                            fieldRequired="false" fieldReadOnly fieldId="link_status" :fieldValue="$expense->projectvendor->link_status??''"/>
                     </div>
                     
                     <div class="col-md-6 col-lg-3">

@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="<?php echo e(asset('vendor/css/daterangepicker.css')); ?>">
+<?php /**PATH /home/u659716913/domains/crm.mcresi.com/public_html/resources/views/sections/daterange_css.blade.php ENDPATH**/ ?>
