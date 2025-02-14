@@ -150,9 +150,4 @@ $('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=tru
     });
 });
 
-
-
-
-
-
 </script>

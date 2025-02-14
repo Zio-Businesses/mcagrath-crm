@@ -84,7 +84,7 @@ class ExpenseController extends AccountBaseController
             $this->fields = $this->expense->getCustomFieldGroupsWithFields()->fields;
         }
 
-        $this->pageTitle = $this->expense->item_name;
+        $this->pageTitle = $this->expense->projectvendor->vendor_name;
         $this->view = 'expenses.ajax.show';
 
         if (request()->ajax()) {
@@ -177,29 +177,12 @@ class ExpenseController extends AccountBaseController
         $expense->vendor_id = $request->vendor_id;
         $expense->pay_date =  $request->pay_date == null ? null : companyToYmd($request->pay_date);
         $expense->payment_method = \App\Models\ExpensesPaymentMethod::where('id', $request->payment_method)->value('payment_method'); // ✅ Get name instead of ID
-
-        // ✅ Store the new fields
         $expense->wo_status = $request->wo_status;
         $expense->bid_approved_amt = $request->bid_approved_amount;
         $expense->change_amt = $request->change_order_amount;
-    
-        // ✅ Fetch Additional Fee Method Name Instead of ID
-        if ($request->has('fee_method_id') && !empty($request->fee_method_id)) {
-            $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->fee_method_id);
-            $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
-        }
+        $expense->additional_fee = $request->fee_method_id;
+        $expense->payment_method = $request->payment_method; // Store the name
 
-        // ✅ Store Additional Fee Name Instead of ID
-        if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
-            $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
-            $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
-        }
-
-        // ✅ Fetch the Payment Method Name instead of ID
-        if ($request->has('payment_method')) {
-            $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
-            $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null; // Store the name
-        }
         if ($userRole[0] == 'admin') {
             $expense->status = 'approved';
             $expense->approver_id = user()->id;
@@ -324,18 +307,8 @@ class ExpenseController extends AccountBaseController
             $expense->bill = $filename;
         }
 
-
-         // ✅ Store Additional Fee Name Instead of ID
-    if ($request->has('additional_fee_id') && !empty($request->additional_fee_id)) {
-        $feeMethod = \App\Models\ExpenseAdditionalFee::find($request->additional_fee_id);
-        $expense->additional_fee = $feeMethod ? $feeMethod->fee_method : null;
-    }
-
-    // ✅ Store Payment Method Name Instead of ID
-    if ($request->has('payment_method')) {
-        $paymentMethod = \App\Models\ExpensesPaymentMethod::find($request->payment_method);
-        $expense->payment_method = $paymentMethod ? $paymentMethod->payment_method : null;
-    }
+        $expense->payment_method = $request->payment_method;
+        $expense->additional_fee = $request->additional_fee_id;
 
         if ($request->has('status')) {
             $expense->status = $request->status;

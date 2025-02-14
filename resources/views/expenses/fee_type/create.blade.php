@@ -3,7 +3,7 @@
 @endphp
 
 <div class="modal-header">
-    <h5 class="modal-title" id="modelHeading">@lang('Expense Additional Fee Method')</h5>
+    <h5 class="modal-title" id="modelHeading">@lang('Expense Additional Fee Type')</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
@@ -14,7 +14,7 @@
     <x-table class="table-bordered" headType="thead-light">
         <x-slot name="thead">
             <th>#</th>
-            <th>@lang('Fee Method')</th>
+            <th>@lang('Fee Type')</th>
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
 

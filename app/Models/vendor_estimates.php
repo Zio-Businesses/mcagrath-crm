@@ -49,4 +49,8 @@ class vendor_estimates extends BaseModel
     {
         return $this->hasMany(VendorEstimateFiles::class, 'vendor_estimates_id')->orderByDesc('id');
     }
+    public function added(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
+    }
 }

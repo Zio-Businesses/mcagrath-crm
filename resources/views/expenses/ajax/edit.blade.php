@@ -42,6 +42,27 @@ $approveExpensePermission = user()->permission('approve_expenses');
                             @endforeach
                         </x-forms.select>
                     </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('W/O Status')" fieldName="wo_status"
+                            fieldRequired="false" fieldReadOnly fieldId="wo_status" :fieldValue="$expense->wo_status"/>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Link Status')" fieldName="link_status"
+                            fieldRequired="false" fieldReadOnly fieldId="link_status" :fieldValue="$expense->projectvendor->link_status"/>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="bid_approved_amount" :fieldValue="$expense->bid_approved_amt"/>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Change Order Amount')" fieldName="change_order_amount"
+                            fieldRequired="false" fieldReadOnly fieldId="change_order_amount" :fieldValue="$expense->change_amt"/>
+                    </div>
+
                     <div class="col-md-6 col-lg-3">
                         <x-forms.datepicker fieldId="pay_date" 
                             :fieldLabel="__('Payment Date')" fieldName="pay_date"
@@ -62,9 +83,9 @@ $approveExpensePermission = user()->permission('approve_expenses');
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
-                                <option value="">-- Select Payment Method --</option>
+                                <option value="">--</option>
                                 @foreach ($paymentMethods as $method)
-                                <option value="{{ $method->id }}" @selected($expense->payment_method == $method->payment_method)>
+                                <option value="{{ $method->payment_method }}" @selected($expense->payment_method == $method->payment_method)>
                                     {{ $method->payment_method }}
                                 </option>
                             @endforeach
@@ -80,13 +101,13 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
                     <!---->
                     <div class="col-md-4">
-                        <x-forms.label class="mt-3" fieldId="additional_fee_id" :fieldLabel="__('Additional Fee')">
+                        <x-forms.label class="mt-3" fieldId="additional_fee_id" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="additional_fee_id" id="additional_fee_id" data-live-search="true">
-                                <option value="">-- Select Additional Fee --</option>
+                                <option value="">--</option>
                                 @foreach ($feeMethods as $feeMethod)
-                                    <option value="{{ $feeMethod->id }}" @selected($expense->additional_fee == $feeMethod->fee_method)>
+                                    <option value="{{ $feeMethod->fee_method }}" @selected($expense->additional_fee == $feeMethod->fee_method)>
                                         {{ $feeMethod->fee_method }}
                                     </option>
                                 @endforeach
@@ -273,44 +294,17 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
 <script>
 
-$(document).ready(function () {
-    // Open modal to add a new Payment Method
-    $('#addPaymentMethod').click(function () {
-        const url = "{{ route('expensePaymentMethod.create') }}";
-        $.ajaxModal(MODAL_LG, url);
-    });
-
-    // Refresh Payment Methods after adding, updating, or deleting
-    $(document).ajaxComplete(function (event, xhr, settings) {
-        if (
-            settings.url.includes("expensePaymentMethod.store") || 
-            settings.url.includes("expensePaymentMethod.update") || 
-            settings.url.includes("expensePaymentMethod.destroy")
-        ) {
-            refreshPaymentMethods(); // Auto-refresh dropdown
-        }
-    });
-
-    // Function to refresh the Payment Method dropdown
-    function refreshPaymentMethods() {
-        $.ajax({
-            url: "{{ route('expensePaymentMethod.list') }}",
-            type: "GET",
-            success: function (response) {
-                let paymentMethodDropdown = $('#payment_method_id');
-                paymentMethodDropdown.html('<option value="">-- Select Payment Method --</option>');
-                response.paymentMethods.forEach(function (method) {
-                    let isSelected = (method.payment_method === "{{ $expense->payment_method }}") ? "selected" : "";
-                    paymentMethodDropdown.append(`<option value="${method.id}" ${isSelected}>${method.payment_method}</option>`);
-                });
-                paymentMethodDropdown.selectpicker('refresh');
-            }
-        });
-    }
-});
-
-
     $(document).ready(function() {
+
+        $('#addPaymentMethod').click(function () {
+            const url = "{{ route('expensePaymentMethod.create') }}";
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#addAdditionalFee').click(function() {
+            const url = "{{ route('expenseAdditionalFee.create') }}";
+            $.ajaxModal(MODAL_LG, url);
+        });
 
         if($('#project_id').val() != ''){
             $('#currency').prop('disabled', true);
@@ -463,6 +457,34 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+    $('body').on("change", '#vendor_id', function () {
+    var vendorId = $('#vendor_id').val();
+    var projectId = $('#project_id').val();
+        if (vendorId && projectId) {
+            var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
+            url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+            $.easyAjax({
+                url: url,
+                type: "GET",
+                container: '#save-expense-data-form',
+                blockUI: true,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $('#wo_status').val(response.data.wo_status);
+                        $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        $('#change_order_amount').val(response.data.change_order_amount);
+                        $('#link_status').val(response.data.link_status);
+                    } else {
+                        $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                    }
+                },
+                error: function (xhr) {
+                    console.error("AJAX Error:", xhr);
+                    $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                }
+            });
+        }
     });
 
 </script>

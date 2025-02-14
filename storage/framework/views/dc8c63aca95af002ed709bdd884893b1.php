@@ -276,10 +276,5 @@ $('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=tru
     });
 });
 
-
-
-
-
-
 </script>
 <?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/expenses/payment_method/create.blade.php ENDPATH**/ ?>

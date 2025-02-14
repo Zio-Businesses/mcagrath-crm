@@ -189,6 +189,12 @@ class EstimatesDataTable extends BaseDataTable
                 return Carbon::parse($row->created_at)->translatedFormat($this->company->date_format);
             }
         );
+         $datatables->editColumn(
+            'created_by',
+            function ($row) {
+                return $row->added->name_salutation;
+            }
+        );
         $datatables->removeColumn('currency_symbol');
         $datatables->removeColumn('client_id');
 
@@ -216,7 +222,7 @@ class EstimatesDataTable extends BaseDataTable
                 },
             ]
         )
-            ->with('client', 'client.session', 'company:id')
+            ->with('client', 'client.session', 'company:id','added')
             ->join('client_details', 'estimates.client_id', '=', 'client_details.user_id')
             ->join('currencies', 'currencies.id', '=', 'estimates.currency_id')
             ->join('users', 'users.id', '=', 'estimates.client_id')
@@ -347,6 +353,7 @@ class EstimatesDataTable extends BaseDataTable
             __('modules.invoices.total') => ['data' => 'total', 'name' => 'total', 'title' => __('modules.invoices.total')],
             __('modules.estimates.validTill') => ['data' => 'valid_till', 'name' => 'valid_till', 'title' => __('modules.estimates.validTill')],
             __('app.createdOn') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('app.createdOn')],
+            __('Created By') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('Created By')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'title' => __('app.status')]
         ];
 

@@ -123,6 +123,99 @@ $approveExpensePermission = user()->permission('approve_expenses');
 <?php unset($__componentOriginal67cd5dc9866c6185ad92d933c387fa86); ?>
 <?php endif; ?>
                     </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('W/O Status'),'fieldName' => 'wo_status','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'wo_status','fieldValue' => $expense->wo_status] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Link Status'),'fieldName' => 'link_status','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'link_status','fieldValue' => $expense->projectvendor->link_status] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Bid Approved Amount'),'fieldName' => 'bid_approved_amount','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'bid_approved_amount','fieldValue' => $expense->bid_approved_amt] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Change Order Amount'),'fieldName' => 'change_order_amount','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'change_order_amount','fieldValue' => $expense->change_amt] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
+
                     <div class="col-md-6 col-lg-3">
                         <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
@@ -203,9 +296,9 @@ $approveExpensePermission = user()->permission('approve_expenses');
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
                             <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
-                                <option value="">-- Select Payment Method --</option>
+                                <option value="">--</option>
                                 <?php $__currentLoopData = $paymentMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <option value="<?php echo e($method->id); ?>" <?php if($expense->payment_method == $method->payment_method): echo 'selected'; endif; ?>>
+                                <option value="<?php echo e($method->payment_method); ?>" <?php if($expense->payment_method == $method->payment_method): echo 'selected'; endif; ?>>
                                     <?php echo e($method->payment_method); ?>
 
                                 </option>
@@ -233,7 +326,7 @@ $approveExpensePermission = user()->permission('approve_expenses');
                     <div class="col-md-4">
                         <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'additional_fee_id','fieldLabel' => __('Additional Fee')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'additional_fee_id','fieldLabel' => __('Additional Fee Type')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -262,9 +355,9 @@ $approveExpensePermission = user()->permission('approve_expenses');
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
                             <select class="form-control select-picker" name="additional_fee_id" id="additional_fee_id" data-live-search="true">
-                                <option value="">-- Select Additional Fee --</option>
+                                <option value="">--</option>
                                 <?php $__currentLoopData = $feeMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feeMethod): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($feeMethod->id); ?>" <?php if($expense->additional_fee == $feeMethod->fee_method): echo 'selected'; endif; ?>>
+                                    <option value="<?php echo e($feeMethod->fee_method); ?>" <?php if($expense->additional_fee == $feeMethod->fee_method): echo 'selected'; endif; ?>>
                                         <?php echo e($feeMethod->fee_method); ?>
 
                                     </option>
@@ -790,44 +883,17 @@ $approveExpensePermission = user()->permission('approve_expenses');
 
 <script>
 
-$(document).ready(function () {
-    // Open modal to add a new Payment Method
-    $('#addPaymentMethod').click(function () {
-        const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
-        $.ajaxModal(MODAL_LG, url);
-    });
-
-    // Refresh Payment Methods after adding, updating, or deleting
-    $(document).ajaxComplete(function (event, xhr, settings) {
-        if (
-            settings.url.includes("expensePaymentMethod.store") || 
-            settings.url.includes("expensePaymentMethod.update") || 
-            settings.url.includes("expensePaymentMethod.destroy")
-        ) {
-            refreshPaymentMethods(); // Auto-refresh dropdown
-        }
-    });
-
-    // Function to refresh the Payment Method dropdown
-    function refreshPaymentMethods() {
-        $.ajax({
-            url: "<?php echo e(route('expensePaymentMethod.list')); ?>",
-            type: "GET",
-            success: function (response) {
-                let paymentMethodDropdown = $('#payment_method_id');
-                paymentMethodDropdown.html('<option value="">-- Select Payment Method --</option>');
-                response.paymentMethods.forEach(function (method) {
-                    let isSelected = (method.payment_method === "<?php echo e($expense->payment_method); ?>") ? "selected" : "";
-                    paymentMethodDropdown.append(`<option value="${method.id}" ${isSelected}>${method.payment_method}</option>`);
-                });
-                paymentMethodDropdown.selectpicker('refresh');
-            }
-        });
-    }
-});
-
-
     $(document).ready(function() {
+
+        $('#addPaymentMethod').click(function () {
+            const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#addAdditionalFee').click(function() {
+            const url = "<?php echo e(route('expenseAdditionalFee.create')); ?>";
+            $.ajaxModal(MODAL_LG, url);
+        });
 
         if($('#project_id').val() != ''){
             $('#currency').prop('disabled', true);
@@ -999,6 +1065,34 @@ $(document).ready(function () {
                 }
             }
         });
+    });
+    $('body').on("change", '#vendor_id', function () {
+    var vendorId = $('#vendor_id').val();
+    var projectId = $('#project_id').val();
+        if (vendorId && projectId) {
+            var url = "<?php echo e(route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__'])); ?>";
+            url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+            $.easyAjax({
+                url: url,
+                type: "GET",
+                container: '#save-expense-data-form',
+                blockUI: true,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $('#wo_status').val(response.data.wo_status);
+                        $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        $('#change_order_amount').val(response.data.change_order_amount);
+                        $('#link_status').val(response.data.link_status);
+                    } else {
+                        $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                    }
+                },
+                error: function (xhr) {
+                    console.error("AJAX Error:", xhr);
+                    $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                }
+            });
+        }
     });
 
 </script>

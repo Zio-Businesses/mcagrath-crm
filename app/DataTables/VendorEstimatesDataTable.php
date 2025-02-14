@@ -95,7 +95,12 @@ class VendorEstimatesDataTable extends BaseDataTable
         $datatables->addColumn('estimate_number', function ($row) {
             return '<a href="' . route('vendor-estimates.show', $row->id) . '" class="text-darkest-grey">' . $row->estimate_number . '</a>';
         });
-        
+        $datatables->editColumn(
+            'created_by',
+            function ($row) {
+                return $row->added->name_salutation??'';
+            }
+        );
         
         $datatables->addIndexColumn();
         $datatables->smart(false);
@@ -115,7 +120,7 @@ class VendorEstimatesDataTable extends BaseDataTable
         $users = vendor_estimates::query()
         ->leftJoin('projects', 'projects.id', '=', 'vendor_estimates.project_id')
         ->leftJoin('vendor_contracts', 'vendor_contracts.id', '=', 'vendor_estimates.vendor_id')
-        ->with(['project','vendors'])
+        ->with(['project','vendors','added'])
         ->select('vendor_estimates.*', 'projects.project_short_code','vendor_contracts.vendor_name','vendor_contracts.vendor_email','vendor_contracts.cell');
 
         if ($request->searchText != '') {
@@ -196,6 +201,7 @@ class VendorEstimatesDataTable extends BaseDataTable
             __('Total') => ['data' => 'total', 'name' => 'total', 'title' => __('Total')],
             __('Valid Till') => ['data' => 'valid_till', 'name' => 'valid_till', 'title' => __('Valid Till')],
             __('Created') => ['data' => 'created_at', 'name' => 'created_at', 'title' => __('Created')],
+            __('Created By') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('Created By')],
             __('Considered For Bid') => ['data' => 'cbid', 'name' => 'cbid', 'title' => __('Considered For Bid')],
             
         ];

@@ -58,6 +58,11 @@
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('W/O Status')" fieldName="wo_status"
                             fieldRequired="false" fieldReadOnly fieldId="wo_status" />
                     </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Link Status')" fieldName="link_status"
+                            fieldRequired="false" fieldReadOnly fieldId="link_status" />
+                    </div>
                     
                     <div class="col-md-6 col-lg-3">
                         <x-forms.text class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('Bid Approved Amount')" fieldName="bid_approved_amount"
@@ -69,8 +74,6 @@
                             fieldRequired="false" fieldReadOnly fieldId="change_order_amount" />
                     </div>
                     
-                   
-
                     <div class="col-md-6 col-lg-3">
                         <x-forms.datepicker fieldId="pay_date" :fieldLabel="__('Payment Date')" fieldName="pay_date"
                             :fieldPlaceholder="__('placeholders.date')" />
@@ -159,14 +162,11 @@
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
-                                <option value="">-- Select Payment Method --</option>
+                                <option value="">--</option>
                                 @foreach ($paymentMethods as $method)
-                                    <option value="{{ $method->id }}">{{ $method->payment_method }}</option>
+                                    <option value="{{ $method->payment_method }}">{{ $method->payment_method }}</option>
                                 @endforeach
                             </select>
-                            
-
-                            
                             <x-slot name="append">
                                 <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
                                     @lang('app.add')
@@ -176,14 +176,14 @@
                     </div>
 
                     <div class="col-md-4">
-                        <x-forms.label class="mt-3" fieldId="fee_method" :fieldLabel="__('Additional Fee Method')">
+                        <x-forms.label class="mt-3" fieldId="fee_method" :fieldLabel="__('Additional Fee Type')">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="fee_method_id" id="fee_method_id" data-live-search="true">
-                                <option value="">-- Select Fee Method --</option>
+                                <option value="">--</option>
                                 @if(isset($feeMethods) && count($feeMethods) > 0)
                                     @foreach ($feeMethods as $method)
-                                        <option value="{{ $method->id }}">{{ $method->fee_method }}</option>
+                                        <option value="{{ $method->fee_method }}">{{ $method->fee_method }}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -194,9 +194,6 @@
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-                    
-                    
-                    
                     
                     <div class="col-md-4 d-none">
                         <x-forms.text :fieldLabel="__('modules.expenses.purchaseFrom')" fieldName="purchase_from" fieldId="purchase_from"
@@ -303,43 +300,8 @@
         });
 
         $('#addPaymentMethod').click(function() {
-    const url = "{{ route('expensePaymentMethod.create') }}";
-    $.ajaxModal(MODAL_LG, url);
-});
-
-
-        // Listen for event when a new method is added
-        $('body').on('paymentMethodAdded', function(event, newMethod) {
-            let paymentMethodDropdown = $('#payment_method_id');
-            paymentMethodDropdown.append(
-                `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
-            );
-            paymentMethodDropdown.selectpicker('refresh');
-        });
-
-
-        // Function to refresh dropdown after adding new payment method
-        function refreshPaymentMethods() {
-            $.ajax({
-                url: "{{ route('expensePaymentMethod.create') }}",
-                type: "GET",
-                success: function(response) {
-                    let paymentMethodDropdown = $('#payment_method_id');
-                    paymentMethodDropdown.html(
-                        '<option value="">-- Select Payment Method --</option>');
-                    response.paymentMethods.forEach(function(method) {
-                        paymentMethodDropdown.append(
-                            `<option value="${method.id}">${method.payment_method}</option>`
-                            );
-                    });
-                    paymentMethodDropdown.selectpicker('refresh');
-                }
-            });
-        }
-
-        // Call refresh function after adding a payment method
-        $('body').on('paymentMethodAdded', function(event, newMethod) {
-            refreshPaymentMethods();
+            const url = "{{ route('expensePaymentMethod.create') }}";
+            $.ajaxModal(MODAL_LG, url);
         });
 
         $('body').on('change', '#user_id', function() {
@@ -415,88 +377,33 @@
         }
     });
     $('body').on("change", '#vendor_id', function () {
-    var vendorId = $(this).val();
+    var vendorId = $('#vendor_id').val();
     var projectId = $('#project_id').val();
-    
-    if (vendorId && projectId) {
-        var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
-
-        url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
-
-        console.log("Fetching URL: " + url); // Debugging
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: function (response) {
-                if (response.status === 'success') {
-                    console.log("Vendor Data:", response.data);
-                    $('#wo_status').val(response.data.wo_status);
-                    $('#bid_approved_amount').val(response.data.bid_approved_amount);
-                    $('#change_order_amount').val(response.data.change_order_amount);
-                } else {
-                    console.error("Vendor details not found");
-                    $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+        if (vendorId && projectId) {
+            var url = "{{ route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__']) }}";
+            url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+            $.easyAjax({
+                url: url,
+                type: "GET",
+                container: '#save-expense-data-form',
+                blockUI: true,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $('#wo_status').val(response.data.wo_status);
+                        $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        $('#change_order_amount').val(response.data.change_order_amount);
+                        $('#link_status').val(response.data.link_status);
+                    } else {
+                        $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                    }
+                },
+                error: function (xhr) {
+                    console.error("AJAX Error:", xhr);
+                    $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
                 }
-            },
-            error: function (xhr) {
-                console.error("AJAX Error:", xhr);
-                $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
-            }
-        });
-    }
-});
-
-
-
-
-    /*$('body').on("change", '#currency, #project_id', function() {
-        if ($('#project_id').val() != '') {
-            var curId = $('#project_id option:selected').attr('data-currency-id');
-            $('#currency').removeAttr('disabled');
-            $('#currency').selectpicker('refresh');
-            // $('#currency_id').val(curId);
-            $('#currency').val(curId);
-            $('#currency').prop('disabled', true);
-            $('#currency').selectpicker('refresh');
-        } else {
-            $('#currency').prop('disabled', false);
-            $('#currency').selectpicker('refresh');
+            });
         }
-
-        var id = $('#currency').val();
-        $('#currency_id').val(id);
-        var currencyId = $('#currency_id').val();
-
-        var companyCurrencyName = "{{ $companyCurrency->currency_name }}";
-        var currentCurrencyName = $('#currency option:selected').attr('data-currency-name');
-        var companyCurrency = '{{ $companyCurrency->id }}';
-
-        if(currencyId == companyCurrency){
-            $('#exchange_rate').prop('readonly', true);
-        } else{
-            $('#exchange_rate').prop('readonly', false);
-        }
-
-        var token = "{{ csrf_token() }}";
-
-        $.easyAjax({
-            url: "{{ route('payments.account_list') }}",
-            type: "GET",
-            blockUI: true,
-            data: { 'curId' : currencyId , _token: token},
-            success: function(response) {
-                if (response.status == 'success') {
-                    $('#bank_account_id').html(response.data);
-                    $('#bank_account_id').selectpicker('refresh');
-                    $('#exchange_rate').val(1/response.exchangeRate);
-                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' @lang('app.expenseDetails') '+companyCurrencyName+' )' : '';
-                    $('#exchange_rateHelp').html(currencyExchange);
-                }
-            }
-        });
-    });*/
-
+    });
     @if (isset($projectName))
         setExchangeRateHelp();
 
@@ -510,69 +417,9 @@
         }
     @endif
 
-
-    $(document).ready(function() {
-    var url = "{{ route('expensePaymentMethod.store') }}";
-
-    $.easyAjax({
-        url: url,
-        container: '#createProjectPayment',
-        type: "POST",
-        data: $('#createProjectPayment').serialize(),
-        disableButton: true,
-        blockUI: true,
-        buttonSelector: "#save-payment",
-        success: function(response) {
-            if (response.status == 'success') {
-                // 🔹 Update dropdown with new options
-                $('#payment_method_id').html(response.options);
-                $('#payment_method_id').selectpicker('refresh');
-
-                // Close modal after saving
-                $(MODAL_LG).modal('hide');
-            }
-        }
-    });
-});
-
-
-// Open modal to add new Fee Method
-$('#addFeeMethod').click(function() {
+    $('#addFeeMethod').click(function() {
         const url = "{{ route('expenseAdditionalFee.create') }}";
         $.ajaxModal(MODAL_LG, url);
     });
 
-    // Listen for event when a new Fee Method is added
-    $('body').on('feeMethodAdded', function(event, newMethod) {
-        let feeMethodDropdown = $('#fee_method_id');
-        feeMethodDropdown.append(
-            `<option value="${newMethod.id}">${newMethod.fee_method}</option>`
-        );
-        feeMethodDropdown.selectpicker('refresh');
-    });
-
-    // Function to refresh dropdown after adding new Fee Method
-    function refreshFeeMethods() {
-        $.ajax({
-            url: "{{ route('expenseAdditionalFee.list') }}",
-            type: "GET",
-            success: function(response) {
-                let feeMethodDropdown = $('#fee_method_id');
-                feeMethodDropdown.html(
-                    '<option value="">-- Select Fee Method --</option>'
-                );
-                response.feeMethods.forEach(function(method) {
-                    feeMethodDropdown.append(
-                        `<option value="${method.id}">${method.fee_method}</option>`
-                    );
-                });
-                feeMethodDropdown.selectpicker('refresh');
-            }
-        });
-    }
-
-    // Call refresh function after adding a Fee Method
-    $('body').on('feeMethodAdded', function(event, newMethod) {
-        refreshFeeMethods();
-    });
 </script>

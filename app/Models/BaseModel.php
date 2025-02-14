@@ -59,7 +59,7 @@ class BaseModel extends ApiModel
 
         return array_unique(array_merge($this->dates, $defaults));
     }
-
+    
     public static function optionsvendor($items, $group = null, $columnName = null): string
     {
         $options = '<option value="">--</option>';
@@ -70,7 +70,7 @@ class BaseModel extends ApiModel
 
             $selected = (!is_null($group) && ($item->id == $group->id)) ? 'selected' : '';
 
-            $options .= '<option ' . $selected . ' value="' . $item->vendor_id . '"> ' . ($name) . ' </option>';
+            $options .= '<option ' . $selected . ' value="' . $item->id . '"> ' . ($name) . ' </option>';
         }
 
         return $options;

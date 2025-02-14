@@ -205,7 +205,10 @@ class Invoice extends BaseModel
     {
         return $this->belongsTo(Currency::class, 'currency_id');
     }
-
+    public function added(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
+    }
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');

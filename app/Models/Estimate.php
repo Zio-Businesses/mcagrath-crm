@@ -120,6 +120,10 @@ class Estimate extends BaseModel
     {
         return $this->belongsTo(ClientDetails::class, 'client_id', 'user_id');
     }
+    public function added(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by')->withoutGlobalScope(ActiveScope::class);
+    }
 
     public function currency(): BelongsTo
     {

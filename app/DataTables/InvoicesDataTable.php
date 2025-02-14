@@ -45,7 +45,7 @@ class InvoicesDataTable extends BaseDataTable
      */
     public function dataTable($query)
     {
-        \Log::info(request()->projectID);
+        
 
         $firstInvoice = $this->firstInvoice;
         $datatables = datatables()->eloquent($query);
@@ -357,6 +357,12 @@ class InvoicesDataTable extends BaseDataTable
                 return $row->created_at->timezone($this->company->timezone)->translatedFormat($this->company->date_format);
             }
         );
+        $datatables->editColumn(
+            'created_by',
+            function ($row) {
+                return $row->added->name_salutation;
+            }
+        );
         $datatables->orderColumn('short_code', 'invoice_number $1');
         $datatables->removeColumn('currency_symbol');
         $datatables->removeColumn('currency_code');
@@ -387,7 +393,7 @@ class InvoicesDataTable extends BaseDataTable
                 'currency:id,currency_symbol,currency_code', 'project.client', 'client', 'payment', 'estimate', 'project.clientdetails'
             ]
         )
-            ->with('client', 'client.session', 'client.clientdetails', 'payment', 'clientdetails')
+            ->with('client', 'client.session', 'client.clientdetails', 'payment', 'clientdetails','added')
             ->select([
                 'invoices.id', 'invoices.due_amount', 'invoices.project_id', 'invoices.client_id', 'invoices.invoice_number',
                 'invoices.currency_id', 'invoices.total', 'invoices.status', 'invoices.issue_date', 'invoices.credit_note',
@@ -532,6 +538,7 @@ class InvoicesDataTable extends BaseDataTable
             __('app.email') => ['data' => 'client_email', 'name' => 'project.client.email', 'visible' => false, 'title' => __('app.email')],
             __('modules.invoices.total') => ['data' => 'total', 'name' => 'total', 'class' => 'text-right', 'title' => __('modules.invoices.total')],
             __('modules.invoices.invoiceDate') => ['data' => 'issue_date', 'name' => 'issue_date', 'title' => __('modules.invoices.invoiceDate')],
+            __('Created By') => ['data' => 'created_by', 'name' => 'created_by', 'title' => __('Created By')],
             __('app.status') => ['data' => 'status', 'name' => 'status', 'width' => '10%', 'title' => __('app.status')]
         ];
 

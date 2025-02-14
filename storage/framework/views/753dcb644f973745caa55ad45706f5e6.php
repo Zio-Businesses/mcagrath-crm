@@ -3,7 +3,7 @@
 ?>
 
 <div class="modal-header">
-    <h5 class="modal-title" id="modelHeading"><?php echo app('translator')->get('Expense Additional Fee Method'); ?></h5>
+    <h5 class="modal-title" id="modelHeading"><?php echo app('translator')->get('Expense Additional Fee Type'); ?></h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
@@ -23,7 +23,7 @@
 <?php $component->withAttributes(['class' => 'table-bordered']); ?>
          <?php $__env->slot('thead', null, []); ?> 
             <th>#</th>
-            <th><?php echo app('translator')->get('Fee Method'); ?></th>
+            <th><?php echo app('translator')->get('Fee Type'); ?></th>
             <th class="text-right"><?php echo app('translator')->get('app.action'); ?></th>
          <?php $__env->endSlot(); ?>
 

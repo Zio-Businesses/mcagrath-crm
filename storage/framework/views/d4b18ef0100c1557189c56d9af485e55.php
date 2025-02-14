@@ -176,6 +176,29 @@
 <?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
 <?php endif; ?>
                     </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4e45e801405ab67097982370a6a83cba = $attributes; } ?>
+<?php $component = App\View\Components\Forms\Text::resolve(['fieldLabel' => __('Link Status'),'fieldName' => 'link_status','fieldRequired' => 'false','fieldReadOnly' => true,'fieldId' => 'link_status'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.text'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\Text::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['class' => 'mr-0 mr-lg-2 mr-md-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $attributes = $__attributesOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__attributesOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4e45e801405ab67097982370a6a83cba)): ?>
+<?php $component = $__componentOriginal4e45e801405ab67097982370a6a83cba; ?>
+<?php unset($__componentOriginal4e45e801405ab67097982370a6a83cba); ?>
+<?php endif; ?>
+                    </div>
                     
                     <div class="col-md-6 col-lg-3">
                         <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
@@ -223,8 +246,6 @@
 <?php endif; ?>
                     </div>
                     
-                   
-
                     <div class="col-md-6 col-lg-3">
                         <?php if (isset($component)) { $__componentOriginalf704f069031d81dfb7cf95f6709a6a66 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf704f069031d81dfb7cf95f6709a6a66 = $attributes; } ?>
@@ -539,14 +560,11 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
                             <select class="form-control select-picker" name="payment_method" id="payment_method_id" data-live-search="true">
-                                <option value="">-- Select Payment Method --</option>
+                                <option value="">--</option>
                                 <?php $__currentLoopData = $paymentMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($method->id); ?>"><?php echo e($method->payment_method); ?></option>
+                                    <option value="<?php echo e($method->payment_method); ?>"><?php echo e($method->payment_method); ?></option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
-                            
-
-                            
                              <?php $__env->slot('append', null, []); ?> 
                                 <button id="addPaymentMethod" type="button" class="btn btn-outline-secondary border-grey">
                                     <?php echo app('translator')->get('app.add'); ?>
@@ -567,7 +585,7 @@
                     <div class="col-md-4">
                         <?php if (isset($component)) { $__componentOriginal89b295b0763c93abe0143426334eb5d6 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal89b295b0763c93abe0143426334eb5d6 = $attributes; } ?>
-<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'fee_method','fieldLabel' => __('Additional Fee Method')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = App\View\Components\Forms\Label::resolve(['fieldId' => 'fee_method','fieldLabel' => __('Additional Fee Type')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('forms.label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -596,10 +614,10 @@
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
                             <select class="form-control select-picker" name="fee_method_id" id="fee_method_id" data-live-search="true">
-                                <option value="">-- Select Fee Method --</option>
+                                <option value="">--</option>
                                 <?php if(isset($feeMethods) && count($feeMethods) > 0): ?>
                                     <?php $__currentLoopData = $feeMethods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $method): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($method->id); ?>"><?php echo e($method->fee_method); ?></option>
+                                        <option value="<?php echo e($method->fee_method); ?>"><?php echo e($method->fee_method); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 <?php endif; ?>
                             </select>
@@ -619,9 +637,6 @@
 <?php unset($__componentOriginalcbf9105fd4879d5d6ef9e1f6fe271af7); ?>
 <?php endif; ?>
                     </div>
-                    
-                    
-                    
                     
                     <div class="col-md-4 d-none">
                         <?php if (isset($component)) { $__componentOriginal4e45e801405ab67097982370a6a83cba = $component; } ?>
@@ -880,43 +895,8 @@
         });
 
         $('#addPaymentMethod').click(function() {
-    const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
-    $.ajaxModal(MODAL_LG, url);
-});
-
-
-        // Listen for event when a new method is added
-        $('body').on('paymentMethodAdded', function(event, newMethod) {
-            let paymentMethodDropdown = $('#payment_method_id');
-            paymentMethodDropdown.append(
-                `<option value="${newMethod.id}">${newMethod.payment_method}</option>`
-            );
-            paymentMethodDropdown.selectpicker('refresh');
-        });
-
-
-        // Function to refresh dropdown after adding new payment method
-        function refreshPaymentMethods() {
-            $.ajax({
-                url: "<?php echo e(route('expensePaymentMethod.create')); ?>",
-                type: "GET",
-                success: function(response) {
-                    let paymentMethodDropdown = $('#payment_method_id');
-                    paymentMethodDropdown.html(
-                        '<option value="">-- Select Payment Method --</option>');
-                    response.paymentMethods.forEach(function(method) {
-                        paymentMethodDropdown.append(
-                            `<option value="${method.id}">${method.payment_method}</option>`
-                            );
-                    });
-                    paymentMethodDropdown.selectpicker('refresh');
-                }
-            });
-        }
-
-        // Call refresh function after adding a payment method
-        $('body').on('paymentMethodAdded', function(event, newMethod) {
-            refreshPaymentMethods();
+            const url = "<?php echo e(route('expensePaymentMethod.create')); ?>";
+            $.ajaxModal(MODAL_LG, url);
         });
 
         $('body').on('change', '#user_id', function() {
@@ -992,88 +972,33 @@
         }
     });
     $('body').on("change", '#vendor_id', function () {
-    var vendorId = $(this).val();
+    var vendorId = $('#vendor_id').val();
     var projectId = $('#project_id').val();
-    
-    if (vendorId && projectId) {
-        var url = "<?php echo e(route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__'])); ?>";
-
-        url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
-
-        console.log("Fetching URL: " + url); // Debugging
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            success: function (response) {
-                if (response.status === 'success') {
-                    console.log("Vendor Data:", response.data);
-                    $('#wo_status').val(response.data.wo_status);
-                    $('#bid_approved_amount').val(response.data.bid_approved_amount);
-                    $('#change_order_amount').val(response.data.change_order_amount);
-                } else {
-                    console.error("Vendor details not found");
-                    $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
+        if (vendorId && projectId) {
+            var url = "<?php echo e(route('projectvendors.get_vendor_details', ['vendorId' => '__vendor__', 'projectId' => '__project__'])); ?>";
+            url = url.replace('__vendor__', vendorId).replace('__project__', projectId);
+            $.easyAjax({
+                url: url,
+                type: "GET",
+                container: '#save-expense-data-form',
+                blockUI: true,
+                success: function (response) {
+                    if (response.status === 'success') {
+                        $('#wo_status').val(response.data.wo_status);
+                        $('#bid_approved_amount').val(response.data.bid_approved_amount);
+                        $('#change_order_amount').val(response.data.change_order_amount);
+                        $('#link_status').val(response.data.link_status);
+                    } else {
+                        $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
+                    }
+                },
+                error: function (xhr) {
+                    console.error("AJAX Error:", xhr);
+                    $('#wo_status, #bid_approved_amount, #change_order_amount,#link_status').val('');
                 }
-            },
-            error: function (xhr) {
-                console.error("AJAX Error:", xhr);
-                $('#wo_status, #bid_approved_amount, #change_order_amount').val('');
-            }
-        });
-    }
-});
-
-
-
-
-    /*$('body').on("change", '#currency, #project_id', function() {
-        if ($('#project_id').val() != '') {
-            var curId = $('#project_id option:selected').attr('data-currency-id');
-            $('#currency').removeAttr('disabled');
-            $('#currency').selectpicker('refresh');
-            // $('#currency_id').val(curId);
-            $('#currency').val(curId);
-            $('#currency').prop('disabled', true);
-            $('#currency').selectpicker('refresh');
-        } else {
-            $('#currency').prop('disabled', false);
-            $('#currency').selectpicker('refresh');
+            });
         }
-
-        var id = $('#currency').val();
-        $('#currency_id').val(id);
-        var currencyId = $('#currency_id').val();
-
-        var companyCurrencyName = "<?php echo e($companyCurrency->currency_name); ?>";
-        var currentCurrencyName = $('#currency option:selected').attr('data-currency-name');
-        var companyCurrency = '<?php echo e($companyCurrency->id); ?>';
-
-        if(currencyId == companyCurrency){
-            $('#exchange_rate').prop('readonly', true);
-        } else{
-            $('#exchange_rate').prop('readonly', false);
-        }
-
-        var token = "<?php echo e(csrf_token()); ?>";
-
-        $.easyAjax({
-            url: "<?php echo e(route('payments.account_list')); ?>",
-            type: "GET",
-            blockUI: true,
-            data: { 'curId' : currencyId , _token: token},
-            success: function(response) {
-                if (response.status == 'success') {
-                    $('#bank_account_id').html(response.data);
-                    $('#bank_account_id').selectpicker('refresh');
-                    $('#exchange_rate').val(1/response.exchangeRate);
-                    let currencyExchange = (companyCurrencyName != currentCurrencyName) ? '( '+currentCurrencyName+' <?php echo app('translator')->get('app.expenseDetails'); ?> '+companyCurrencyName+' )' : '';
-                    $('#exchange_rateHelp').html(currencyExchange);
-                }
-            }
-        });
-    });*/
-
+    });
     <?php if(isset($projectName)): ?>
         setExchangeRateHelp();
 
@@ -1087,70 +1012,10 @@
         }
     <?php endif; ?>
 
-
-    $(document).ready(function() {
-    var url = "<?php echo e(route('expensePaymentMethod.store')); ?>";
-
-    $.easyAjax({
-        url: url,
-        container: '#createProjectPayment',
-        type: "POST",
-        data: $('#createProjectPayment').serialize(),
-        disableButton: true,
-        blockUI: true,
-        buttonSelector: "#save-payment",
-        success: function(response) {
-            if (response.status == 'success') {
-                // 🔹 Update dropdown with new options
-                $('#payment_method_id').html(response.options);
-                $('#payment_method_id').selectpicker('refresh');
-
-                // Close modal after saving
-                $(MODAL_LG).modal('hide');
-            }
-        }
-    });
-});
-
-
-// Open modal to add new Fee Method
-$('#addFeeMethod').click(function() {
+    $('#addFeeMethod').click(function() {
         const url = "<?php echo e(route('expenseAdditionalFee.create')); ?>";
         $.ajaxModal(MODAL_LG, url);
     });
 
-    // Listen for event when a new Fee Method is added
-    $('body').on('feeMethodAdded', function(event, newMethod) {
-        let feeMethodDropdown = $('#fee_method_id');
-        feeMethodDropdown.append(
-            `<option value="${newMethod.id}">${newMethod.fee_method}</option>`
-        );
-        feeMethodDropdown.selectpicker('refresh');
-    });
-
-    // Function to refresh dropdown after adding new Fee Method
-    function refreshFeeMethods() {
-        $.ajax({
-            url: "<?php echo e(route('expenseAdditionalFee.list')); ?>",
-            type: "GET",
-            success: function(response) {
-                let feeMethodDropdown = $('#fee_method_id');
-                feeMethodDropdown.html(
-                    '<option value="">-- Select Fee Method --</option>'
-                );
-                response.feeMethods.forEach(function(method) {
-                    feeMethodDropdown.append(
-                        `<option value="${method.id}">${method.fee_method}</option>`
-                    );
-                });
-                feeMethodDropdown.selectpicker('refresh');
-            }
-        });
-    }
-
-    // Call refresh function after adding a Fee Method
-    $('body').on('feeMethodAdded', function(event, newMethod) {
-        refreshFeeMethods();
-    });
 </script>
 <?php /**PATH C:\laragon\www\mcagrath-crm\resources\views/expenses/ajax/create.blade.php ENDPATH**/ ?>

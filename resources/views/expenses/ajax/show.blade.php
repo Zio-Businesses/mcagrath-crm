@@ -27,24 +27,22 @@
                     </div>
                 </x-slot>
             @endif
-            <x-cards.data-row :label="__('modules.expenses.itemName')" :value="$expense->item_name" />
+            <!-- <x-cards.data-row :label="__('modules.expenses.itemName')" :value="$expense->item_name" /> -->
+            <x-cards.data-row :label="__('app.project')"
+            :value="(!is_null($expense->project) && !is_null($expense->project->withTrashed()) ? $expense->project->project_short_code : '--')" />
 
-            <x-cards.data-row :label="__('app.category')" :value="$expense->category->category_name ?? '--'" />
+            <x-cards.data-row :label="__('Vendor')" :value="$expense->projectvendor->vendor_name ?? '--'" />
+
+            <x-cards.data-row :label="__('Purchase Date')"
+                :value="(!is_null($expense->pay_date) ? $expense->pay_date->translatedFormat(company()->date_format) : '--')" />
 
             <x-cards.data-row :label="__('app.price')" :value="$expense->total_amount" />
 
-            <x-cards.data-row :label="__('modules.expenses.purchaseDate')"
-                :value="(!is_null($expense->purchase_date) ? $expense->purchase_date->translatedFormat(company()->date_format) : '--')" />
+            <x-cards.data-row :label="__('Payment Method')" :value="$expense->payment_method" />
 
-            <x-cards.data-row :label="__('modules.expenses.purchaseFrom')" :value="$expense->purchase_from ?? '--'" />
+            <x-cards.data-row :label="__('Payment Method')" :value="$expense->additional_fee" />
 
-            <x-cards.data-row :label="__('app.project')"
-                :value="(!is_null($expense->project) && !is_null($expense->project->withTrashed()) ? $expense->project->project_name : '--')" />
-
-            @php
-                $bankName = !is_null($expense->bankAccount) ? ($expense->bankAccount->bank_name . ' | ' . $expense->bankAccount->account_name ?? '') : '--';
-            @endphp
-            <x-cards.data-row :label="__('app.menu.bankaccount')" :value="$bankName !== '' ? $bankName : '--'" />
+            <x-cards.data-row :label="__('app.category')" :value="$expense->category->category_name ?? '--'" />
 
             <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
                 <p class="mb-0 text-lightest f-14 w-30 text-capitalize">
@@ -58,14 +56,6 @@
                     @else
                         --
                     @endif
-                </p>
-            </div>
-
-            <div class="col-12 px-0 pb-3 d-lg-flex d-md-flex d-block">
-                <p class="mb-0 text-lightest f-14 w-30 text-capitalize">
-                    @lang('app.employee')</p>
-                <p class="mb-0 text-dark-grey f-14">
-                    <x-employee :user="$expense->user" />
                 </p>
             </div>
 
