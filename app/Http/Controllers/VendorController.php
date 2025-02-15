@@ -337,4 +337,22 @@ class VendorController extends AccountBaseController
 
         return Reply::dataOnly(['status' => 'success', 'data' => $options]);
     }
+
+    public function vendorListExpenses($id)
+    {
+        if ($id != 0) {
+            $vendor =ProjectVendor::where('project_id', $id)
+            ->where('link_status', 'accepted')
+            ->select('id','vendor_id','vendor_name') // replace 'column_name' with the actual column you want distinct values from
+            ->distinct()
+            ->get();
+            $options = BaseModel::optionsvendorexpense($vendor, null, 'vendor_name');
+            // \Log::info($options);
+        }
+        else {
+            $options = '<option value="">--</option>';
+        }
+
+        return Reply::dataOnly(['status' => 'success', 'data' => $options]);
+    }
 }

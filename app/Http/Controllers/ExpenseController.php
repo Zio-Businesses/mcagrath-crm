@@ -138,7 +138,7 @@ class ExpenseController extends AccountBaseController
             $this->projectName = $this->project->project_name;
             $this->projectShort = $this->project->project_short_code;
             $this->employees = $this->project->projectMembers;
-            $this->vendor = ProjectVendor::where('project_id',$this->projectId)->where('link_status', 'accepted')->groupBy('vendor_id')->get();
+            $this->vendor = ProjectVendor::where('project_id',$this->projectId)->where('link_status', 'accepted')->get();
 
         } else {
             $this->employees = User::allEmployees(null, false);
@@ -234,7 +234,7 @@ class ExpenseController extends AccountBaseController
         $this->pageTitle = __('modules.expenses.updateExpense');
         $this->linkExpensePermission = user()->permission('link_expense_bank_account');
         $this->viewBankAccountPermission = user()->permission('view_bankaccount');
-        $this->vendor = ProjectVendor::where('project_id',$this->expense->project_id)->where('link_status', 'accepted')->groupBy('vendor_id')->get();
+        $this->vendor = ProjectVendor::where('project_id',$this->expense->project_id)->where('link_status', 'accepted')->get();
         $bankAccounts = BankAccount::where('status', 1)->where('currency_id', $this->expense->currency_id);
 
         if($this->viewBankAccountPermission == 'added'){

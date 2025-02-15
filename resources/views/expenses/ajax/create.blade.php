@@ -355,7 +355,7 @@
     $('body').on("change", '#project_id', function() {
         if ($('#project_id').val() != '') {
             var id = $('#project_id').val();
-            var url = "{{ route('vendors.vendors_list', ':id') }}";
+            var url = "{{ route('vendors.vendors_list_expense', ':id') }}";
             url = url.replace(':id', id);
             var token = "{{ csrf_token() }}";
 

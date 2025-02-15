@@ -566,6 +566,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::get('lead-handle', [LeadVendorController::class, 'handle'])->name('lead-vendor.handle');
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::post('vendors/vendor-list/{id}', [VendorController::class, 'vendorList'])->name('vendors.vendors_list');
+    Route::post('vendors/vendor-list-expense/{id}', [VendorController::class, 'vendorListExpenses'])->name('vendors.vendors_list_expense');
     Route::get('vendorcheck/{email}', [LeadVendorController::class, 'vendorcheck'])->name('vendors.check');
     Route::get('vendors/download/{id}', [VendorController::class, 'download'])->name('vendors.download');
     Route::get('vendors/downloadwaiveform/{id}', [VendorController::class, 'downloadwaiverform'])->name('vendorswaiverform.download');

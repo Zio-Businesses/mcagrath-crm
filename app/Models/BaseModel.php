@@ -59,8 +59,24 @@ class BaseModel extends ApiModel
 
         return array_unique(array_merge($this->dates, $defaults));
     }
-    
+
     public static function optionsvendor($items, $group = null, $columnName = null): string
+    {
+        $options = '<option value="">--</option>';
+
+        foreach ($items as $item) {
+
+            $name = is_null($columnName) ? $item->name : $item->{$columnName};
+
+            $selected = (!is_null($group) && ($item->id == $group->id)) ? 'selected' : '';
+
+            $options .= '<option ' . $selected . ' value="' . $item->vendor_id . '"> ' . ($name) . ' </option>';
+        }
+
+        return $options;
+    }
+
+    public static function optionsvendorexpense($items, $group = null, $columnName = null): string
     {
         $options = '<option value="">--</option>';
 
