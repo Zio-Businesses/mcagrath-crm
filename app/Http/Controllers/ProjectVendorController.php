@@ -222,13 +222,16 @@ class ProjectVendorController extends AccountBaseController
         }
     
         // Calculate Change Order Amount
-        $changeOrderAmounts = $projectVendor->changenotification
-        ->where('link_status', 'Accepted')
-        ->whereNotNull('accepted_date')
-        ->pluck('project_amount')
-        ->map(fn($amount) => (float) $amount) // Convert VARCHAR to float
-        ->sum();
-
+        $changeOrderAmounts = number_format(
+            $projectVendor->changenotification
+                ->where('link_status', 'Accepted')
+                ->whereNotNull('accepted_date')
+                ->pluck('project_amount')
+                ->map(fn($amount) => (float) $amount)
+                ->sum(), 
+            2, '.', ''
+        );
+        
         return response()->json([
             'status' => 'success',
             'data' => [
@@ -238,7 +241,7 @@ class ProjectVendorController extends AccountBaseController
                 'change_order_amount' => $changeOrderAmounts
             ]
         ]);
-
+        
     }
     
 
