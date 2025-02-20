@@ -66,14 +66,11 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                     </div>
                     <div class="modal-body">
                         <div class="form-group my-3">
-
                                 <div class="d-flex">
-                                    <x-forms.link-primary :link="route('lead-contact.create')"  class="px-3 openRightModal mr-3" id="client">
-                                    @lang('modules.modal.client')
-                                    </x-forms.link-primary>
-                                    <x-forms.link-primary :link="route('lead-vendor.handle')"  class="px-3 openRightModal" id="vendor">
-                                    @lang('modules.modal.vendor')
-                                    </x-forms.link-primary>
+                        <!-- Directly Redirect to Lead Contact Create Page -->
+                        <script>
+                            window.location.href = "{{ route('lead-contact.create') }}";
+                        </script>
                                 </div>
                         </div>
 
@@ -92,7 +89,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 
     <script>
           $('#clientvendor').click(function () {
-            $('#ajaxModel').modal('show');
+            window.location.href = "{{ route('lead-contact.create') }}";
          });
          $('#client').click(function () {
             $('#ajaxModel').modal('hide');
