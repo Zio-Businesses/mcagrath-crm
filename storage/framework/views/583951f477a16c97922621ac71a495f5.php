@@ -1,0 +1,1 @@
+<?php echo $ticketReply->message; ?><?php /**PATH /home/u659716913/domains/crm.mcresi.com/public_html/resources/views/emails/ticket/reply.blade.php ENDPATH**/ ?>

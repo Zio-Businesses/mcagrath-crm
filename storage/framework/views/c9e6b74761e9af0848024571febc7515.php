@@ -1,0 +1,1 @@
+<?php /**PATH /home/u659716913/domains/crm.mcresi.com/public_html/resources/views/front/tasks/history/show.blade.php ENDPATH**/ ?>
