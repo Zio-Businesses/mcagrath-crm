@@ -1287,7 +1287,7 @@ return array(
     'timeLogDetails' => 'TimeLog Details',
     'notify' => 'Notify',
     'moduleNotifySwitchMessage' => 'This will hide/show new update message on dashboard for :name module',
-    'leadContact' => 'Lead Contact',
+    'leadContact' => 'Client Lead',
     'deal' => 'Deals',
     'maritalStatus' => array(
         'single' => 'Single',
