@@ -511,8 +511,9 @@ class ProjectsDataTable extends BaseDataTable
             $model->join('pinned', 'pinned.project_id', 'projects.id');
             $model->where('pinned.user_id', user()->id);
         }
-
-        $model = self::customFilter($model);
+        if ($request->searchText == ''){
+            $model = self::customFilter($model);
+        }
 
         if (!is_null($request->status) && $request->status != 'all') {
 

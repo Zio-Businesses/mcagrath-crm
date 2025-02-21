@@ -208,15 +208,15 @@ class Project extends BaseModel
 
     public function vendor_recruiter(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'vendor_recruiter_id');
+        return $this->belongsTo(User::class, 'vendor_recruiter_id')->withoutGlobalScope(ActiveScope::class);
     }
     public function project_scheduler(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'project_scheduler_id');
+        return $this->belongsTo(User::class, 'project_scheduler_id')->withoutGlobalScope(ActiveScope::class);
     }
     public function project_coordinator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'project_coordinator_id');
+        return $this->belongsTo(User::class, 'project_coordinator_id')->withoutGlobalScope(ActiveScope::class);
     }
 
     public function projectMembersWithoutScope(): BelongsToMany
