@@ -38,12 +38,7 @@
             </div>
         </form>
     </div>
-    <div class="d-flex  py-1 px-lg-3 px-0 border-right-grey align-items-center">
-        <div class="custom-control custom-switch" style="cursor: pointer;">
-            <input type="checkbox" class="custom-control-input" id="customSwitch1" style="cursor: pointer;">
-            <label class="custom-control-label" for="customSwitch1" style="cursor: pointer;">Pre Population</label>
-        </div>
-    </div>
+
     
     <!-- SEARCH BY TASK END -->
 
@@ -161,20 +156,6 @@
             $('.filter-box .select-picker').selectpicker("refresh");
             $('#reset-filters').addClass('d-none');
             showTable();
-        });
-        const switchCheckbox = $('#customSwitch1');
-
-        // Check if the setting is already in localStorage and set the checkbox state accordingly
-        const prePopulateEnabled = localStorage.getItem('prePopulateEnabled') === 'true';
-        switchCheckbox.prop('checked', prePopulateEnabled);
-
-        // Toggle localStorage when the switch is clicked
-        switchCheckbox.change(function () {
-            if ($(this).is(':checked')) {
-                localStorage.setItem('prePopulateEnabled', 'true'); // Set to true
-            } else {
-                localStorage.setItem('prePopulateEnabled', 'false'); // Set to false
-            }
         });
 
     </script>

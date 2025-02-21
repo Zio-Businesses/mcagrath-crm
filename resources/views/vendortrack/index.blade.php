@@ -13,6 +13,13 @@
         display: none; /* Hides the scrollbar */
     }
 </style>
+<!-- Pre-Population Toggle Switch -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="custom-control custom-switch" style="cursor: pointer;">
+        <input type="checkbox" class="custom-control-input" id="customSwitch1" style="cursor: pointer;">
+        <label class="custom-control-label" for="customSwitch1" style="cursor: pointer;">Pre Population</label>
+    </div>
+</div>
 <x-filters.filter-box-moded>
     <div class="task-search d-flex  py-1 px-lg-3 px-0 align-items-center">
         <form class="w-100 mr-1 mr-lg-0 mr-md-1 ml-md-1 ml-0 ml-lg-0">
@@ -34,6 +41,8 @@
         </x-forms.button-secondary>
     </div>
 </x-filters.filter-box-moded>
+
+
 <div class="container-fluid d-flex position-relative border-bottom-grey">
 <!-- Left Scroll Button -->
 <button class="btn btn-dark" id="scrollLeftBtn" style="display: none; left: 0;">&#9664;</button>
@@ -307,7 +316,18 @@
 @push('scripts')
     @include('sections.datatable_js')
     <script>
-    
+      const switchCheckbox = $('#customSwitch1');
+        // Check if the setting is already in localStorage and set the checkbox state accordingly
+        const prePopulateEnabled = localStorage.getItem('prePopulateEnabled') === 'true';
+        switchCheckbox.prop('checked', prePopulateEnabled);
+        // Toggle localStorage when the switch is clicked
+        switchCheckbox.change(function () {
+            if ($(this).is(':checked')) {
+                localStorage.setItem('prePopulateEnabled', 'true'); // Set to true
+            } else {
+                localStorage.setItem('prePopulateEnabled', 'false'); // Set to false
+            }
+        });
     $(document).ready(function () {
     var startDate = '';
     var endDate = '';
@@ -624,6 +644,7 @@
                 showTable();
             @endif
         });
+
     </script>
    
 @endpush

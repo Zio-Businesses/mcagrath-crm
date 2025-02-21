@@ -22,26 +22,26 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         <div class="d-grid d-lg-flex d-md-flex action-bar">
             <div id="table-actions" class="flex-grow-1 align-items-center">
                 <?php if($addLeadPermission == 'all' || $addLeadPermission == 'added'): ?>
-                <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
-<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'plus'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('forms.button-primary'); ?>
+                <?php if (isset($component)) { $__componentOriginaldbb84df4c3a5cbdd95fb35d18ba6410f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginaldbb84df4c3a5cbdd95fb35d18ba6410f = $attributes; } ?>
+<?php $component = App\View\Components\Forms\LinkPrimary::resolve(['icon' => 'plus','link' => route('lead-contact.create')] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.link-primary'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\LinkPrimary::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'mr-3 float-left mb-2 mb-lg-0 mb-md-0','id' => 'clientvendor']); ?>
-                        <?php echo app('translator')->get('modules.leadContact.addLeadContact'); ?>
-                     <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['class' => 'mr-3 float-left mb-2 mb-lg-0 mb-md-0','id' => 'add-lead-contact']); ?>
+                <?php echo app('translator')->get('modules.leadContact.addLeadContact'); ?>
+             <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
-<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
-<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php if (isset($__attributesOriginaldbb84df4c3a5cbdd95fb35d18ba6410f)): ?>
+<?php $attributes = $__attributesOriginaldbb84df4c3a5cbdd95fb35d18ba6410f; ?>
+<?php unset($__attributesOriginaldbb84df4c3a5cbdd95fb35d18ba6410f); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
-<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
-<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php if (isset($__componentOriginaldbb84df4c3a5cbdd95fb35d18ba6410f)): ?>
+<?php $component = $__componentOriginaldbb84df4c3a5cbdd95fb35d18ba6410f; ?>
+<?php unset($__componentOriginaldbb84df4c3a5cbdd95fb35d18ba6410f); ?>
 <?php endif; ?>
                 <?php endif; ?>
 
@@ -122,7 +122,6 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 <?php endif; ?>
 
         </div>
-
         <!-- Add Task Export Buttons End -->
         <!-- Task Box Start -->
         <div class="d-flex flex-column w-tables rounded mt-3 bg-white table-responsive">
@@ -131,27 +130,6 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 
 
         </div>
-        <div class="modal fade" id="ajaxModel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modelHeading">Select Entity</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group my-3">
-                                <div class="d-flex">
-                        <!-- Directly Redirect to Lead Contact Create Page -->
-                        <script>
-                            window.location.href = "<?php echo e(route('lead-contact.create')); ?>";
-                        </script>
-                                </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Task Box End -->
     </div>
     <!-- CONTENT WRAPPER END -->
 
@@ -161,9 +139,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
     <?php echo $__env->make('sections.datatable_js', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     <script>
-          $('#clientvendor').click(function () {
-            window.location.href = "<?php echo e(route('lead-contact.create')); ?>";
-         });
+
          $('#client').click(function () {
             $('#ajaxModel').modal('hide');
          });
