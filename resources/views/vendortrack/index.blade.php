@@ -104,11 +104,11 @@
             <div id="table-actions" class="flex-grow-1 align-items-center"> 
 
      <!-- Add Vendor Lead Button -->
-    <x-forms.button-primary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0" 
-    icon="plus" 
-    id="addVendorLead">
-    @lang('Add Vendor Lead')
-    </x-forms.button-primary>
+    
+                    <x-forms.link-primary class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus"
+                    :link="route('lead-vendor.handle')" id="addVendorLead">
+                    @lang('Add Vendor Lead')
+                    </x-forms.link-primary>
                     <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeadVendor">
                         @lang('app.importExcel')
                     </x-forms.button-secondary> 
@@ -534,10 +534,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script>
-
-        $('#addVendorLead').click(function () {
-            window.location.href = "{{ route('lead-vendor.handle') }}";
-        });
 
         
          $("#file").dropify({
