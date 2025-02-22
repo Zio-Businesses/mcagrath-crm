@@ -22,12 +22,10 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
         <div class="d-grid d-lg-flex d-md-flex action-bar">
             <div id="table-actions" class="flex-grow-1 align-items-center">
                 @if ($addLeadPermission == 'all' || $addLeadPermission == 'added')
-                <x-forms.link-primary class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus"
-                :link="route('lead-contact.create')" id="add-lead-contact">
-                @lang('modules.leadContact.addLeadContact')
-            </x-forms.link-primary>
+                <x-forms.link-primary class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0" icon="plus" :link="route('lead-contact.create')" id="add-lead-contact">
+                 @lang('modules.leadContact.addLeadContact')
+                </x-forms.link-primary>
                 @endif
-
                 @if ($addLeadCustomFormPermission == 'all')
                     <x-forms.button-secondary icon="pencil-alt" class="mr-3 float-left mb-2 mb-lg-0 mb-md-0" id="add-lead">
                         @lang('modules.lead.leadForm')
@@ -40,7 +38,6 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                     </x-forms.link-secondary>
                 @endif
             </div>
-
             <x-datatable.actions>
                 <div class="select-status mr-3 pl-3">
                     <select name="action_type" class="form-control select-picker" id="quick-action-type" disabled>
@@ -49,7 +46,6 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                     </select>
                 </div>
             </x-datatable.actions>
-
         </div>
         <!-- Add Task Export Buttons End -->
         <!-- Task Box Start -->
@@ -65,9 +61,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 
 @push('scripts')
     @include('sections.datatable_js')
-
     <script>
-
          $('#client').click(function () {
             $('#ajaxModel').modal('hide');
          });
