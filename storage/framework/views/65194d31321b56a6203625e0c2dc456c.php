@@ -15,6 +15,29 @@ $deleteFilePermission = user()->permission('delete_project_files');
         visibility: visible;
     }
 
+    .file-checkbox {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 100; /* Increased z-index to ensure visibility */
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid #ccc;
+    }
+
+    /* Remove the !important and simplify the selector */
+    .show-checkboxes .file-checkbox {
+        display: block;
+    }
+
+    .position-relative.file-card {
+        margin: 10px;
+        padding: 5px;
+        position: relative; /* Ensure relative positioning */
+    }
+
 </style>
 
 <!-- TAB CONTENT START -->
@@ -40,6 +63,72 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
 <?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
 <?php endif; ?>
+    <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve(['icon' => 'share'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'share-link','class' => 'type-btn mb-3']); ?>
+        <?php echo app('translator')->get('Click Here For File Sharing'); ?>
+     <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+
+    <div id="share-actions" style="display: none;" class="mb-3">
+        <?php if (isset($component)) { $__componentOriginalcf8d12533ff890e0d6573daf32b7618d = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonPrimary::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-primary'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonPrimary::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'share-selected','class' => 'mr-2']); ?>
+            <?php echo app('translator')->get('Share Selected Files'); ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $attributes = $__attributesOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__attributesOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d)): ?>
+<?php $component = $__componentOriginalcf8d12533ff890e0d6573daf32b7618d; ?>
+<?php unset($__componentOriginalcf8d12533ff890e0d6573daf32b7618d); ?>
+<?php endif; ?>
+        <?php if (isset($component)) { $__componentOriginalc35c79ed7e812580313ad04118477974 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalc35c79ed7e812580313ad04118477974 = $attributes; } ?>
+<?php $component = App\View\Components\Forms\ButtonCancel::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('forms.button-cancel'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\Forms\ButtonCancel::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'cancel-share']); ?>
+            <?php echo app('translator')->get('Cancel'); ?>
+         <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $attributes = $__attributesOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__attributesOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalc35c79ed7e812580313ad04118477974)): ?>
+<?php $component = $__componentOriginalc35c79ed7e812580313ad04118477974; ?>
+<?php unset($__componentOriginalc35c79ed7e812580313ad04118477974); ?>
+<?php endif; ?>
+    </div>
 
     <?php if (isset($component)) { $__componentOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalbc9540fa671f26a0f8028a5a8d8f93e9 = $attributes; } ?>
@@ -300,9 +389,9 @@ $deleteFilePermission = user()->permission('delete_project_files');
 
 <script>
     $(document).ready(function () {
-        var add_project_files = "<?php echo e($addFilePermission); ?>";
-        var trashed = "<?php echo e($project->trashed()); ?>";
-        var isProjectAdmin = <?php echo e(($project->project_admin == user()->id) ? 1 : 0); ?>;
+    var add_project_files = "<?php echo e($addFilePermission); ?>";
+    var trashed = "<?php echo e($project->trashed()); ?>";
+    var isProjectAdmin = <?php echo e(($project->project_admin == user()->id) ? 1 : 0); ?>;
 
     if (!trashed && (add_project_files == "all" || isProjectAdmin)) {
 
@@ -497,6 +586,92 @@ $deleteFilePermission = user()->permission('delete_project_files');
                 console.error('Failed to copy text: ', err);
                 });
                 }
+            }
+        });
+    });
+    // Show checkboxes and share actions on clicking "Share"
+    $('#share-link').click(function() {
+        $('#files-upload-site').addClass('show-checkboxes');
+        $('#share-actions').show();
+        $(this).hide();
+    });
+
+    // Cancel sharing process
+    $('#cancel-share').click(function() {
+        $('#files-upload-site').removeClass('show-checkboxes');
+        $('#share-actions').hide();
+        $('#share-link').show();
+        $('.file-checkbox').prop('checked', false);
+    });
+
+    // Handle sharing selected files
+    $('#share-selected').click(function() {
+        var selectedFiles = [];
+
+        $('input[name="selected_files[]"]:checked').each(function() {
+            let fileHash = $(this).data('hashname'); // Use hashname instead of ID
+            selectedFiles.push(fileHash);
+        });
+
+        if (selectedFiles.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Please select at least one file to share.',
+                customClass: { confirmButton: 'btn btn-primary' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        var url = "<?php echo e(route('files.share-selected')); ?>"; // Ensure this route exists in Laravel
+        var token = "<?php echo e(csrf_token()); ?>";
+
+        $.easyAjax({
+            type: 'POST',
+            url: url,
+            data: {
+                '_token': token,
+                'files': selectedFiles
+            },
+            success: function(response) {
+                if (response.status === "success" && response.link) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Shareable link generated!',
+                        html: `<a href="${response.link}" target="_blank">${response.link}</a>`,
+                        showCancelButton: true,
+                        confirmButtonText: 'Copy Link',
+                        cancelButtonText: 'Close',
+                        customClass: { confirmButton: 'btn btn-primary', cancelButton: 'btn btn-secondary' },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            navigator.clipboard.writeText(response.link).then(function() {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: 'Link copied to clipboard!',
+                                    customClass: { confirmButton: 'btn btn-primary' },
+                                    buttonsStyling: false
+                                });
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Failed to generate shareable link!',
+                        customClass: { confirmButton: 'btn btn-primary' },
+                        buttonsStyling: false
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'An error occurred while generating the link.',
+                    customClass: { confirmButton: 'btn btn-primary' },
+                    buttonsStyling: false
+                });
             }
         });
     });
