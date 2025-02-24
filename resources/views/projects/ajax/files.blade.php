@@ -15,13 +15,49 @@ $deleteFilePermission = user()->permission('delete_project_files');
         visibility: visible;
     }
 
-</style>
+    .file-checkbox {
+        display: none;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 100; /* Increased z-index to ensure visibility */
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid #ccc;
+    }
 
+    /* Remove the !important and simplify the selector */
+    .show-checkboxes .file-checkbox {
+        display: block;
+    }
+
+    .position-relative.file-card {
+        margin: 10px;
+        padding: 5px;
+        position: relative; /* Ensure relative positioning */
+    }
+</style>
 <!-- TAB CONTENT START -->
 <div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab" id="files-upload-site">
     <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3">
         @lang('Generate Link')
     </x-forms.button-primary>
+
+    <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
+        @lang('Click Here For File Sharing')
+    </x-forms.button-primary>
+
+    <div id="share-actions" style="display: none;" class="mb-3">
+        <x-forms.button-primary id="share-selected" class="mr-2">
+            @lang('Share Selected Files')
+        </x-forms.button-primary>
+        <x-forms.button-cancel id="cancel-share">
+            @lang('Cancel')
+        </x-forms.button-cancel>
+    </div>
+
+    
 
     <x-cards.data :title="__('modules.projects.files')">
 
@@ -53,14 +89,15 @@ $deleteFilePermission = user()->permission('delete_project_files');
         @if ($viewFilePermission == 'all' || ($viewFilePermission == 'added' && user()->id == $project->added_by) || ($viewFilePermission == 'owned' && user()->id == $project->client_id))
             <div class="d-flex flex-wrap mt-3" id="task-file-list">
                 @forelse($project->files as $file)
-
-                    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
+                <div class="position-relative file-card">
+                    <!-- Make sure checkbox is the first element inside the card -->
+                    <input type="checkbox" class="file-checkbox" name="selected_files[]"   id="file_{{ $file->id }}"   value="{{ $file->id }}" data-hashname="{{ $file->hashname }}">                    <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
                         @if ($file->icon == 'images')
                             <img src="{{ $file->file_url }}">
                         @else
                             <i class="fa {{ $file->icon }} text-lightest"></i>
                         @endif
-
+                
                         @if ($viewFilePermission == 'all' || ($viewFilePermission == 'added' && $file->added_by == user()->id))
                             <x-slot name="action">
                                 <div class="dropdown ml-auto file-action">
@@ -69,18 +106,18 @@ $deleteFilePermission = user()->permission('delete_project_files');
                                         type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-ellipsis-h"></i>
                                     </button>
-
+                
                                     <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
                                         aria-labelledby="dropdownMenuLink" tabindex="0">
                                         @if ($viewFilePermission == 'all' || ($viewFilePermission == 'added' && $file->added_by == user()->id))
                                             <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
-                                                    target="_blank"
-                                                    href="{{ $file->file_url }}">@lang('app.view')</a>
-
-                                           <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                                target="_blank"
+                                                href="{{ $file->file_url }}">@lang('app.view')</a>
+                
+                                            <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
                                                 href="{{ route('files.download', md5($file->id)) }}">@lang('app.download')</a>
                                         @endif
-
+                
                                         @if ($deleteFilePermission == 'all' || ($deleteFilePermission == 'added' && $file->added_by == user()->id))
                                             <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-file"
                                                 data-row-id="{{ $file->id }}"
@@ -90,26 +127,70 @@ $deleteFilePermission = user()->permission('delete_project_files');
                                 </div>
                             </x-slot>
                         @endif
-
                     </x-file-card>
+                </div>
                 @empty
-                    <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
-                        <i class="fa fa-file-excel f-21 w-100"></i>
-
-                        <div class="f-15 mt-4">
-                            - @lang('messages.noFileUploaded') -
-                        </div>
+                <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
+                    <i class="fa fa-file-excel f-21 w-100"></i>
+                    <div class="f-15 mt-4">
+                        - @lang('messages.noFileUploaded') -
                     </div>
+                </div>
+                @endforelse
+                
+                @forelse($project->externalFiles as $file)
+                <div class="position-relative file-card">
+                    <input type="checkbox" name="selected_files[]" value="{{ $file->id }}" data-hashname="{{ $file->hashname }}">                    <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email" :tagname="$file->tag_name">
+                        @if ($file->icon == 'images')
+                            <img src="{{ $file->file_url }}">
+                        @else
+                            <i class="fa {{ $file->icon }} text-lightest"></i>
+                        @endif
+                        <x-slot name="action">
+                            <div class="dropdown ml-auto file-action">
+                                <button
+                                    class="btn btn-lg f-14 p-0 text-lightest text-capitalize rounded  dropdown-toggle"
+                                    type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                
+                                <div class="dropdown-menu dropdown-menu-right border-grey rounded b-shadow-4 p-0"
+                                    aria-labelledby="dropdownMenuLink" tabindex="0">
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pt-3 px-3 "
+                                        target="_blank"
+                                        href="{{ $file->file_url }}">@lang('app.view')</a>
+                
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 py-3 px-3 "
+                                        href="{{ route('external-file.download', md5($file->id)) }}">@lang('app.download')</a>
+                
+                                    <a class="cursor-pointer d-block text-dark-grey f-13 pb-3 px-3 delete-external-file"
+                                        data-row-id="{{ $file->id }}"
+                                        href="javascript:;">@lang('app.delete')</a>
+                                </div>
+                            </div>
+                        </x-slot>
+                    </x-cards.external-card>
+                </div>
+                @empty
+                <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
+                    <i class="fa fa-file-excel f-21 w-100"></i>
+                    <div class="f-15 mt-4">
+                        - @lang('messages.noFileUploaded') -
+                    </div>
+                </div>
                 @endforelse
 
             </div>
         @endif
 
     </x-cards.data>
-    <x-cards.data :title="__('External Files')" class="mt-2">
-        <div class="d-flex flex-wrap mt-3" id="task-file-list">
-            @forelse($project->externalFiles as $file)
-                <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email" :tagname="$file->tag_name"> 
+    
+<!-- External files section -->
+<x-cards.data :title="__('External Files')" class="mt-2">
+    <div class="d-flex flex-wrap mt-3" id="task-file-list">
+        @forelse($project->externalFiles as $file)
+            <div class="position-relative">
+                <input type="checkbox" class="file-checkbox" name="selected_external_files[]" value="{{ $file->id }}" data-hashname="{{ $file->hashname }}">                <x-cards.external-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()" :name="$file->name" :phone="$file->phone" :email="$file->email" :tagname="$file->tag_name">
                     @if ($file->icon == 'images')
                         <img src="{{ $file->file_url }}">
                     @else
@@ -139,35 +220,121 @@ $deleteFilePermission = user()->permission('delete_project_files');
                         </div>
                     </x-slot>
                 </x-cards.external-card>
-            @empty
-                <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
-                    <i class="fa fa-file-excel f-21 w-100"></i>
-                    <div class="f-15 mt-4">
-                        - @lang('messages.noFileUploaded') -
-                    </div>
+            </div>
+        @empty
+            <div class="align-items-center d-flex flex-column text-lightest p-20 w-100">
+                <i class="fa fa-file-excel f-21 w-100"></i>
+                <div class="f-15 mt-4">
+                    - @lang('messages.noFileUploaded') -
                 </div>
-            @endforelse
-
-        </div>
-    </x-cards.data>
-</div>
+            </div>
+        @endforelse
+    </div>
+</x-cards.data>
 <!-- TAB CONTENT END -->
 
 <script>
-    $(document).ready(function () {
-        var add_project_files = "{{ $addFilePermission }}";
-        var trashed = "{{ $project->trashed() }}";
-        var isProjectAdmin = {{ ($project->project_admin == user()->id) ? 1 : 0 }};
+  $(document).ready(function() {
+    // Show checkboxes and share actions on clicking "Share"
+    $('#share-link').click(function() {
+        $('#files-upload-site').addClass('show-checkboxes');
+        $('#share-actions').show();
+        $(this).hide();
+    });
+
+    // Cancel sharing process
+    $('#cancel-share').click(function() {
+        $('#files-upload-site').removeClass('show-checkboxes');
+        $('#share-actions').hide();
+        $('#share-link').show();
+        $('.file-checkbox').prop('checked', false);
+    });
+
+    // Handle sharing selected files
+// Handle sharing selected files
+$('#share-selected').click(function() {
+    var selectedFiles = [];
+
+    $('input[name="selected_files[]"]:checked').each(function() {
+        let fileHash = $(this).data('hashname'); // Use hashname instead of ID
+        selectedFiles.push(fileHash);
+    });
+
+    if (selectedFiles.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            text: 'Please select at least one file to share.',
+            customClass: { confirmButton: 'btn btn-primary' },
+            buttonsStyling: false
+        });
+        return;
+    }
+
+    var url = "{{ route('files.share-selected') }}"; // Ensure this route exists in Laravel
+    var token = "{{ csrf_token() }}";
+
+    $.easyAjax({
+        type: 'POST',
+        url: url,
+        data: {
+            '_token': token,
+            'files': selectedFiles
+        },
+        success: function(response) {
+            if (response.status === "success" && response.link) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Shareable link generated!',
+                    html: `<a href="${response.link}" target="_blank">${response.link}</a>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Copy Link',
+                    cancelButtonText: 'Close',
+                    customClass: { confirmButton: 'btn btn-primary', cancelButton: 'btn btn-secondary' },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigator.clipboard.writeText(response.link).then(function() {
+                            Swal.fire({
+                                icon: 'success',
+                                text: 'Link copied to clipboard!',
+                                customClass: { confirmButton: 'btn btn-primary' },
+                                buttonsStyling: false
+                            });
+                        });
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Failed to generate shareable link!',
+                    customClass: { confirmButton: 'btn btn-primary' },
+                    buttonsStyling: false
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                text: 'An error occurred while generating the link.',
+                customClass: { confirmButton: 'btn btn-primary' },
+                buttonsStyling: false
+            });
+        }
+    });
+});
+
+
+    // Dropzone initialization for file uploads
+    var add_project_files = "{{ $addFilePermission }}";
+    var trashed = "{{ $project->trashed() }}";
+    var isProjectAdmin = {{ ($project->project_admin == user()->id) ? 1 : 0 }};
 
     if (!trashed && (add_project_files == "all" || isProjectAdmin)) {
-
         Dropzone.autoDiscover = false;
-        taskDropzone = new Dropzone("#employee_file", {
+        var taskDropzone = new Dropzone("#employee_file", {
             dictDefaultMessage: "{{ __('app.dragDrop') }}",
             url: "{{ route('files.store') }}",
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
             paramName: "file",
             maxFilesize: DROPZONE_MAX_FILESIZE,
             maxFiles: DROPZONE_MAX_FILES,
@@ -175,187 +342,35 @@ $deleteFilePermission = user()->permission('delete_project_files');
             uploadMultiple: true,
             addRemoveLinks: true,
             parallelUploads: DROPZONE_MAX_FILES,
-            acceptedFiles: DROPZONE_FILE_ALLOW,
-            init: function() {
-                taskDropzone = this;
-            }
+            acceptedFiles: DROPZONE_FILE_ALLOW
         });
+
         taskDropzone.on('sending', function(file, xhr, formData) {
             var ids = "{{ $project->id }}";
             formData.append('project_id', ids);
             $.easyBlockUI();
         });
-        taskDropzone.on('uploadprogress', function() {
-            $.easyBlockUI();
-        });
-        taskDropzone.on('completemultiple', function(file) {
-            var taskView = JSON.parse(file[0].xhr.response).view;
-            taskDropzone.removeAllFiles();
-            $.easyUnblockUI();
-            $('#task-file-list').html(taskView);
-        });
-        taskDropzone.on('removedfile', function () {
-            var grp = $('div#employee_file').closest(".form-group");
-            var label = $('div#file-upload-box').siblings("label");
-            $(grp).removeClass("has-error");
-            $(label).removeClass("is-invalid");
-        });
-        taskDropzone.on('error', function (file, message) {
-            taskDropzone.removeFile(file);
-            var grp = $('div#employee_file').closest(".form-group");
-            var label = $('div#file-upload-box').siblings("label");
-            $(grp).find(".help-block").remove();
-            var helpBlockContainer = $(grp);
-
-            if (helpBlockContainer.length == 0) {
-                helpBlockContainer = $(grp);
-            }
-
-            helpBlockContainer.append('<div class="help-block invalid-feedback">' + message + '</div>');
-            $(grp).addClass("has-error");
-            $(label).addClass("is-invalid");
-
-        });
     }
 
-    $('#add-task-file').click(function() {
-        $(this).closest('.row').addClass('d-none');
-        $('#save-taskfile-data-form').removeClass('d-none');
-    });
-
-    $('#cancel-document').click(function() {
-        $('#save-taskfile-data-form').addClass('d-none');
-        $('#add-task-file').closest('.row').removeClass('d-none');
-    });
-
-    $('body').on('click', '#cancel-taskfile', function() {
-        $('#save-taskfile-data-form').toggleClass('d-none');
-        $('#add-btn').toggleClass('d-none');
-    });
-
-    $('body').on('click', '.delete-file', function() {
-        var id = $(this).data('row-id');
-        Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
-            icon: 'warning',
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
-            customClass: {
-                confirmButton: 'btn btn-primary mr-3',
-                cancelButton: 'btn btn-secondary'
-            },
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var url = "{{ route('files.destroy', ':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        '_token': token,
-                        '_method': 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.status == "success") {
-                            $('#task-file-list').html(response.view);
-                        }
-                    }
-                });
-            }
-        });
-    });
-
-    $('body').on('click', '.delete-external-file', function() {
-        var id = $(this).data('row-id');
-        Swal.fire({
-            title: "@lang('messages.sweetAlertTitle')",
-            text: "@lang('messages.recoverRecord')",
-            icon: 'warning',
-            showCancelButton: true,
-            focusConfirm: false,
-            confirmButtonText: "@lang('messages.confirmDelete')",
-            cancelButtonText: "@lang('app.cancel')",
-            customClass: {
-                confirmButton: 'btn btn-primary mr-3',
-                cancelButton: 'btn btn-secondary'
-            },
-            showClass: {
-                popup: 'swal2-noanimation',
-                backdrop: 'swal2-noanimation'
-            },
-            buttonsStyling: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                var url = "{{ route('external-file-upload.destroy', ':id') }}";
-                url = url.replace(':id', id);
-
-                var token = "{{ csrf_token() }}";
-
-                $.easyAjax({
-                    type: 'POST',
-                    url: url,
-                    container: "#files-upload-site",
-                    blockUI: true,
-                    data: {
-                        '_token': token,
-                        '_method': 'DELETE'
-                    },
-                    success: function(response) {
-                        if (response.status == "success") {
-                           window.location.reload();
-                        }
-                    }
-                });
-            }
-        });
-    });
-
+    // Generate external shareable link
     $('#generate-link').click(function() {
         var id = "{{ $project->id }}";
-        var url = "{{ route('files.external', ':id') }}";
-        url = url.replace(':id', id);
+        var url = "{{ route('files.external', ':id') }}".replace(':id', id);
         $.easyAjax({
             type: 'GET',
             url: url,
-            disableButton: true,
-            container: "#files-upload-site",
-            blockUI: true,
-            buttonSelector: "#generate-link",
             success: function(response) {
                 if (response.status == "success") {
                     navigator.clipboard.writeText(response.url).then(function() {
-                    Swal.fire({
-                        icon: 'success',
-                        text: '{{ __('Link Copied') }}',
-
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                        showClass: {
-                            popup: 'swal2-noanimation',
-                            backdrop: 'swal2-noanimation'
-                        },
-                        buttonsStyling: false
+                        Swal.fire({ icon: 'success', text: '{{ __('Link Copied') }}' });
+                    }).catch(function(err) {
+                        console.error('Failed to copy text: ', err);
                     });
-                }).catch(function(err) {
-                console.error('Failed to copy text: ', err);
-                });
                 }
             }
         });
     });
+});
 
-    });
 
 </script>
