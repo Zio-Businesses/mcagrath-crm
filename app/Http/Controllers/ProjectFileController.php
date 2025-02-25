@@ -143,7 +143,7 @@ class ProjectFileController extends AccountBaseController
     public function shareSelectedFiles(Request $request)
     {
         try {
-            Log::info('Share request received:', $request->all());
+            \Log::info('Share request received:', $request->all());
 
             $request->validate([
                 'files' => 'required|array',
@@ -156,12 +156,12 @@ class ProjectFileController extends AccountBaseController
             $projectFiles = ProjectFile::whereIn('hashname', $hashnames)->get();
 
             if ($projectFiles->isEmpty()) {
-                Log::warning('No files found for sharing');
+                \Log::warning('No files found for sharing');
                 return Reply::error('No matching files found.');
             }
 
             // Generate a single share token for all files
-            $shareToken = Str::random(40);
+            $shareToken = \Str::random(40);
 
             // Assign this token to all selected files
             foreach ($projectFiles as $file) {
@@ -176,7 +176,7 @@ class ProjectFileController extends AccountBaseController
                 ['hashname' => implode(',', $hashnames)]
             );
 
-            Log::info('Generated shareable signed URL:', ['url' => $url]);
+            \Log::info('Generated shareable signed URL:', ['url' => $url]);
 
             return Reply::successWithData('Shareable link generated successfully', [
                 'status' => 'success',
@@ -184,7 +184,7 @@ class ProjectFileController extends AccountBaseController
             ]);
 
         } catch (\Exception $e) {
-            Log::error('File sharing error: ' . $e->getMessage(), [
+            \Log::error('File sharing error: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()
             ]);
@@ -195,27 +195,27 @@ class ProjectFileController extends AccountBaseController
 
     public function accessSharedFiles(Request $request, $hashname)
     {
-        Log::info("Accessing shared files with hashname: $hashname");
+        \Log::info("Accessing shared files with hashname: $hashname");
 
         // Check if signature is valid
         if (!$request->hasValidSignature()) {
-            Log::error("Invalid Signature for: $hashname");
+            \Log::error("Invalid Signature for: $hashname");
             return response()->json(['error' => 'Invalid or expired link'], 401);
         }
 
         // Split by comma
         $hashnamesArray = explode(',', $hashname);
-        Log::info(" Extracted Hashnames: ", $hashnamesArray);
+        \Log::info(" Extracted Hashnames: ", $hashnamesArray);
 
         // Fetch files from DB
         $files = DB::table('project_files')->whereIn('hashname', $hashnamesArray)->get();
         
         if ($files->isEmpty()) {
-            Log::warning("No files found for hashname: $hashname");
+            \Log::warning("No files found for hashname: $hashname");
             return response()->json(['error' => 'No files found'], 404);
         }
 
-        Log::info(" Files retrieved successfully:", ['files' => $files]);
+        \Log::info(" Files retrieved successfully:", ['files' => $files]);
         return response()->json(['message' => 'Files found', 'files' => $files], 200);
     }
 
