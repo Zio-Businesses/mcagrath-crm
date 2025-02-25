@@ -42,20 +42,22 @@ $deleteFilePermission = user()->permission('delete_project_files');
 
 <!-- TAB CONTENT START -->
 <div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab" id="files-upload-site">
-    <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3">
-        @lang('Generate Link')
-    </x-forms.button-primary>
-    <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
-        @lang('Click Here For File Sharing')
-    </x-forms.button-primary>
-
-    <div id="share-actions" style="display: none;" class="mb-3">
-        <x-forms.button-primary id="share-selected" class="mr-2">
-            @lang('Share Selected Files')
+    <div class="d-flex">
+        <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3 mr-3">
+            @lang('Generate Link')
         </x-forms.button-primary>
-        <x-forms.button-cancel id="cancel-share">
-            @lang('Cancel')
-        </x-forms.button-cancel>
+        <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
+            @lang('Click Here For File Sharing')
+        </x-forms.button-primary>
+
+        <div id="share-actions" style="display: none;" class="mb-3">
+            <x-forms.button-primary id="share-selected" class="mr-2">
+                @lang('Share Selected Files')
+            </x-forms.button-primary>
+            <x-forms.button-cancel id="cancel-share">
+                @lang('Cancel')
+            </x-forms.button-cancel>
+        </div>
     </div>
 
     <x-cards.data :title="__('modules.projects.files')">
@@ -88,10 +90,11 @@ $deleteFilePermission = user()->permission('delete_project_files');
         @if ($viewFilePermission == 'all' || ($viewFilePermission == 'added' && user()->id == $project->added_by) || ($viewFilePermission == 'owned' && user()->id == $project->client_id))
             <div class="d-flex flex-wrap mt-3" id="task-file-list">
                 @forelse($project->files as $file)
-
+                    
                     <x-file-card :fileName="$file->filename" :dateAdded="$file->created_at->diffForHumans()">
                         @if ($file->icon == 'images')
                             <img src="{{ $file->file_url }}">
+                            <input type="checkbox" class="file-checkbox" name="selected_files[]"   id="file_{{ $file->id }}"   value="{{ $file->id }}" data-hashname="{{ $file->hashname }}">
                         @else
                             <i class="fa {{ $file->icon }} text-lightest"></i>
                         @endif
