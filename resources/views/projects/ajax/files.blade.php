@@ -15,49 +15,12 @@ $deleteFilePermission = user()->permission('delete_project_files');
         visibility: visible;
     }
 
-    .file-checkbox {
-        display: none;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 100; /* Increased z-index to ensure visibility */
-        width: 20px;
-        height: 20px;
-        background: white;
-        border: 1px solid #ccc;
-    }
-
-    /* Remove the !important and simplify the selector */
-    .show-checkboxes .file-checkbox {
-        display: block;
-    }
-
-    .position-relative.file-card {
-        margin: 10px;
-        padding: 5px;
-        position: relative; /* Ensure relative positioning */
-    }
 </style>
 <!-- TAB CONTENT START -->
 <div class="tab-pane fade show active mt-5" role="tabpanel" aria-labelledby="nav-email-tab" id="files-upload-site">
     <x-forms.button-primary icon="plus" id="generate-link" class="type-btn mb-3">
         @lang('Generate Link')
     </x-forms.button-primary>
-
-    <x-forms.button-primary icon="share" id="share-link" class="type-btn mb-3">
-        @lang('Click Here For File Sharing')
-    </x-forms.button-primary>
-
-    <div id="share-actions" style="display: none;" class="mb-3">
-        <x-forms.button-primary id="share-selected" class="mr-2">
-            @lang('Share Selected Files')
-        </x-forms.button-primary>
-        <x-forms.button-cancel id="cancel-share">
-            @lang('Cancel')
-        </x-forms.button-cancel>
-    </div>
-
-    
 
     <x-cards.data :title="__('modules.projects.files')">
 
@@ -234,100 +197,10 @@ $deleteFilePermission = user()->permission('delete_project_files');
 <!-- TAB CONTENT END -->
 
 <script>
-  $(document).ready(function() {
-    // Show checkboxes and share actions on clicking "Share"
-    $('#share-link').click(function() {
-        $('#files-upload-site').addClass('show-checkboxes');
-        $('#share-actions').show();
-        $(this).hide();
-    });
-
-    // Cancel sharing process
-    $('#cancel-share').click(function() {
-        $('#files-upload-site').removeClass('show-checkboxes');
-        $('#share-actions').hide();
-        $('#share-link').show();
-        $('.file-checkbox').prop('checked', false);
-    });
-
-    // Handle sharing selected files
-// Handle sharing selected files
-$('#share-selected').click(function() {
-    var selectedFiles = [];
-
-    $('input[name="selected_files[]"]:checked').each(function() {
-        let fileHash = $(this).data('hashname'); // Use hashname instead of ID
-        selectedFiles.push(fileHash);
-    });
-
-    if (selectedFiles.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            text: 'Please select at least one file to share.',
-            customClass: { confirmButton: 'btn btn-primary' },
-            buttonsStyling: false
-        });
-        return;
-    }
-
-    var url = "{{ route('files.share-selected') }}"; // Ensure this route exists in Laravel
-    var token = "{{ csrf_token() }}";
-
-    $.easyAjax({
-        type: 'POST',
-        url: url,
-        data: {
-            '_token': token,
-            'files': selectedFiles
-        },
-        success: function(response) {
-            if (response.status === "success" && response.link) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Shareable link generated!',
-                    html: `<a href="${response.link}" target="_blank">${response.link}</a>`,
-                    showCancelButton: true,
-                    confirmButtonText: 'Copy Link',
-                    cancelButtonText: 'Close',
-                    customClass: { confirmButton: 'btn btn-primary', cancelButton: 'btn btn-secondary' },
-                    buttonsStyling: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        navigator.clipboard.writeText(response.link).then(function() {
-                            Swal.fire({
-                                icon: 'success',
-                                text: 'Link copied to clipboard!',
-                                customClass: { confirmButton: 'btn btn-primary' },
-                                buttonsStyling: false
-                            });
-                        });
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    text: 'Failed to generate shareable link!',
-                    customClass: { confirmButton: 'btn btn-primary' },
-                    buttonsStyling: false
-                });
-            }
-        },
-        error: function() {
-            Swal.fire({
-                icon: 'error',
-                text: 'An error occurred while generating the link.',
-                customClass: { confirmButton: 'btn btn-primary' },
-                buttonsStyling: false
-            });
-        }
-    });
-});
-
-
-    // Dropzone initialization for file uploads
-    var add_project_files = "{{ $addFilePermission }}";
-    var trashed = "{{ $project->trashed() }}";
-    var isProjectAdmin = {{ ($project->project_admin == user()->id) ? 1 : 0 }};
+    $(document).ready(function () {
+        var add_project_files = "{{ $addFilePermission }}";
+        var trashed = "{{ $project->trashed() }}";
+        var isProjectAdmin = {{ ($project->project_admin == user()->id) ? 1 : 0 }};
 
     if (!trashed && (add_project_files == "all" || isProjectAdmin)) {
         Dropzone.autoDiscover = false;
@@ -370,7 +243,8 @@ $('#share-selected').click(function() {
             }
         });
     });
-});
+
+    });
 
 
 </script>
