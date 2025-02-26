@@ -1,6 +1,13 @@
 <?php
 
 return array(
+    'position' => 'Enter Position Name',
+    'poc'=>'POC',
+    'last_called_date'=>'last called date',
+    'next_follow_up_date'=>'next followup date',
+    'on_board_date'=>'onboard date',
+    'rejected_date'=>'rejected date',
+    'comments'=>'comments',
     'knowledgeBase' => 'Update your profile picture',
     'writeshortcode' => 'Project unique short code',
     'taskshortcode' => 'Task unique short code',

@@ -184,7 +184,10 @@ return array(
         'profileInfo' => 'Profile Info',
         'clientCanLogin' => 'Login Allowed?',
         'salutation' => 'Salutation',
+
     ),
+
+
     'credit-notes' => array(
         'currency' => 'Currency',
         'creditNoteDate' => 'Credit Note Date',
@@ -1866,6 +1869,14 @@ return array(
         'city' => 'City',
         'state' => 'State',
         'country' => 'Country',
+        'position' => 'Position',
+        'poc' => 'Point of Contact',
+        'lastCalledDate' => 'Last Called Date',
+        'nextFollowUpDate' => 'Next Follow-up Date',
+        'onBoardDate' => 'Onboard Date',
+        'rejectedDate' => 'Rejected Date',
+        'comments' => 'Comments'
+
     ),
     'taskLabel' => array(
         'createLabel' => 'Create Label',

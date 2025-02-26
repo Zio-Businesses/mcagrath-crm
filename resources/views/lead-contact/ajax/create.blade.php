@@ -137,6 +137,46 @@ $addProductPermission = user()->permission('add_product');
                         </div>
                     </div>
 
+                    <!-- Add this after the address field in paste-2.txt -->
+                    <div class="row p-20">
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.position')" fieldName="position"
+                                fieldId="position" :fieldPlaceholder="__('placeholders.position')" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.poc')" fieldName="poc"
+                                fieldId="poc" :fieldPlaceholder="__('placeholders.poc')" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
+                                fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
+                                fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="on_board_date" :fieldLabel="__('modules.stripeCustomerAddress.onBoardDate')" 
+                                fieldName="on_board_date" :fieldPlaceholder="__('placeholders.date')" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
+                                fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" />
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group my-3">
+                                <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
+                                    fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')">
+                                </x-forms.textarea>
+                            </div>
+                        </div>
+                    </div>
+
                     <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
 
 
@@ -161,6 +201,11 @@ $addProductPermission = user()->permission('add_product');
 
 
     $(document).ready(function() {
+        //date picker
+        datepicker('#last_called_date');
+        datepicker('#next_follow_up_date');
+        datepicker('#on_board_date');
+        datepicker('#rejected_date');
 
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
