@@ -69,6 +69,21 @@
             <x-cards.data-row :label="__('modules.stripeCustomerAddress.postalCode')" :value="$leadContact->postal_code ?? '--'" />
 
             <x-cards.data-row :label="__('modules.lead.address')" :value="$leadContact->address ?? '--'" />
+                   <!-- New Fields -->
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.position')" :value="$leadContact->position ?? '--'" />
+
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.poc')" :value="$leadContact->poc ?? '--'" />
+
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.lastCalledDate')" :value="$leadContact->last_called_date ? Carbon\Carbon::parse($leadContact->last_called_date)->format('m-d-Y') : '--'" />
+            
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.nextFollowUpDate')" :value="$leadContact->next_follow_up_date ? Carbon\Carbon::parse($leadContact->next_follow_up_date)->format('m-d-Y') : '--'" />
+            
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.onBoardDate')" :value="$leadContact->on_board_date ? Carbon\Carbon::parse($leadContact->on_board_date)->format('m-d-Y') : '--'" />
+            
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.rejectedDate')" :value="$leadContact->rejected_date ? Carbon\Carbon::parse($leadContact->rejected_date)->format('m-d-Y') : '--'" />
+            
+            <x-cards.data-row :label="__('modules.stripeCustomerAddress.comments')" :value="$leadContact->comments ?? '--'" />
+    
 
             {{-- Custom fields data --}}
             <x-forms.custom-field-show :fields="$fields" :model="$leadContact"></x-forms.custom-field-show>
