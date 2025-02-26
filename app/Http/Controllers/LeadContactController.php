@@ -213,14 +213,6 @@ class LeadContactController extends AccountBaseController
             ->whereNotNull('email')
             ->first();
 
-
-            // Log the date values from the request
-    Log::info('Date values from request:', [
-        'last_called_date' => $request->last_called_date,
-        'next_follow_up_date' => $request->next_follow_up_date,
-        'on_board_date' => $request->on_board_date,
-        'rejected_date' => $request->rejected_date,
-    ]);
         $leadContact = new Lead();
         $leadContact->company_id = company()->id;
         $leadContact->salutation = $request->salutation;
@@ -242,10 +234,10 @@ class LeadContactController extends AccountBaseController
          // Add new fields
         $leadContact->position = $request->position;
         $leadContact->poc = $request->poc;
-        $leadContact->last_called_date = $this->parseDate($request->last_called_date);
-        $leadContact->next_follow_up_date = $this->parseDate($request->next_follow_up_date);
-        $leadContact->on_board_date = $this->parseDate($request->on_board_date);
-        $leadContact->rejected_date = $this->parseDate($request->rejected_date);
+        $leadContact->last_called_date = $request->last_called_date ? Carbon::parse($request->last_called_date)->format('Y-m-d') : null;
+        $leadContact->next_follow_up_date = $request->next_follow_up_date ? Carbon::parse($request->next_follow_up_date)->format('Y-m-d') : null;
+        $leadContact->on_board_date = $request->on_board_date ? Carbon::parse($request->on_board_date)->format('Y-m-d') : null;
+        $leadContact->rejected_date = $request->rejected_date ? Carbon::parse($request->rejected_date)->format('Y-m-d') : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
         $leadContact->save();
 
@@ -276,28 +268,6 @@ class LeadContactController extends AccountBaseController
         return Reply::successWithData(__('messages.recordSaved'), ['redirectUrl' => $redirectUrl]);
 
     }
-        /**
-         * Parse a date string and return it in Y-m-d format, or null if the date is invalid or empty.
-         *
-         * @param string|null $date
-         * @return string|null
-         */
-        private function parseDate($date)
-        {
-            if (empty($date)) {
-                return null; // Return null if the date is empty or null
-            }
-
-            try {
-                // Convert flexible date formats into 'Y-m-d'
-                return Carbon::parse($date)->format('Y-m-d');
-            } catch (\Exception $e) {
-                // Log the error and return null if the date format is invalid
-                Log::error('Failed to convert date:', ['input' => $date, 'error' => $e->getMessage()]);
-                return null;
-            }
-        }
-
     /**
      * Show the form for editing the specified resource.
      *

@@ -136,7 +136,6 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.textarea>
                         </div>
                     </div>
-
                     <!-- Add this after the address field in paste-2.txt -->
                     <div class="row p-20">
                         <div class="col-lg-4 col-md-6">
@@ -176,12 +175,8 @@ $addProductPermission = user()->permission('add_product');
                             </div>
                         </div>
                     </div>
-
                     <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
-
-
                 </div>
-
                 <x-form-actions>
                     <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
                     </x-forms.button-primary>
@@ -198,8 +193,6 @@ $addProductPermission = user()->permission('add_product');
 </div>
 
 <script>
-
-
     $(document).ready(function() {
         //date picker
         datepicker('#last_called_date');
