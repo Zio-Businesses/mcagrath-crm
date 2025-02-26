@@ -571,7 +571,9 @@ if (!function_exists('currency_format')) {
         $thousand_separator = !is_null($formats->thousand_separator) ? $formats->thousand_separator : '';
         $decimal_separator = !is_null($formats->decimal_separator) ? $formats->decimal_separator : '0';
 
-        $amount = number_format($amount, $no_of_decimal, $decimal_separator, $thousand_separator);
+        //$amount = number_format($amount, $no_of_decimal, $decimal_separator, $thousand_separator);
+        $amount = number_format((float) $amount, $no_of_decimal, $decimal_separator, $thousand_separator);
+
 
         $amount = match ($currency_position) {
             'right' => $amount . $currency_symbol,

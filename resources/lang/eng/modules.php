@@ -1484,6 +1484,13 @@ return array(
         'rejectRemaining' => 'Reject Remaining',
     ),
     'lead' => array(
+        'position'=>'Designation/Position',
+        'poc'=>'POC',
+        'lastCalledDate'=>'Last Called Date',
+        'nextFollowUpDate'=>'NextFollowUpDate',
+        'onBoardDate'=>'OnBoardDate',
+        'rejectedDate'=>'RejectedDate',
+        'comments'=>'Comments',
         'createTitle' => 'Add Lead Info',
         'companyDetails' => 'Company Details',
         'companyName' => 'Company Name',
