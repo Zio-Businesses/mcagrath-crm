@@ -78,10 +78,8 @@ $addProductPermission = user()->permission('add_product');
                 </div>
 
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
-                    <a href="javascript:;" class="text-dark toggle-other-details"><i class="fa fa-chevron-down"></i>
-                        @lang('modules.client.companyDetails')</a>
+                    @lang('modules.client.companyDetails')
                 </h4>
-
 
                 <div class="row p-20 d-none" id="other-details">
 
@@ -238,10 +236,7 @@ $addProductPermission = user()->permission('add_product');
             $.ajaxModal(MODAL_LG, url);
         });
 
-        $('.toggle-other-details').click(function() {
-            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
-            $('#other-details').toggleClass('d-none');
-        });
+        $('#other-details').removeClass('d-none');
 
         init(RIGHT_MODAL);
     });
