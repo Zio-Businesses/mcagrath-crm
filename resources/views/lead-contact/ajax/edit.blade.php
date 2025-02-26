@@ -130,6 +130,51 @@ $addProductPermission = user()->permission('add_product');
                         </div>
                     </div>
 
+                    <!-- Add this after the address field -->
+                    <div class="row p-20">
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.position')" fieldName="position"
+                                fieldId="position" :fieldPlaceholder="__('placeholders.position')" 
+                                :fieldValue="$leadContact->position" />
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.poc')" fieldName="poc"
+                                fieldId="poc" :fieldPlaceholder="__('placeholders.poc')" 
+                                :fieldValue="$leadContact->poc" />
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
+                                fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" 
+                                :fieldValue="$leadContact->last_called_date" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
+                                fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" 
+                                :fieldValue="$leadContact->next_follow_up_date" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="on_board_date" :fieldLabel="__('modules.stripeCustomerAddress.onBoardDate')" 
+                                fieldName="on_board_date" :fieldPlaceholder="__('placeholders.date')" 
+                                :fieldValue="$leadContact->on_board_date" />
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6">
+                            <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
+                                fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" 
+                                :fieldValue="$leadContact->rejected_date" />
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group my-3">
+                                <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
+                                    fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')"
+                                    :fieldValue="$leadContact->comments">
+                                </x-forms.textarea>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                     <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
                 <x-form-actions>
@@ -148,6 +193,27 @@ $addProductPermission = user()->permission('add_product');
 
 <script>
     $(document).ready(function() {
+
+        //date picker
+        datepicker('#last_called_date', {
+        dateFormat: 'm-d-Y', // Match the format used in the create blade
+        ...datepickerConfig
+        });
+
+        datepicker('#next_follow_up_date', {
+            dateFormat: 'm-d-Y',
+            ...datepickerConfig
+        });
+
+        datepicker('#on_board_date', {
+            dateFormat: 'm-d-Y',
+            ...datepickerConfig
+        });
+
+        datepicker('#rejected_date', {
+            dateFormat: 'm-d-Y',
+            ...datepickerConfig
+        });
 
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {

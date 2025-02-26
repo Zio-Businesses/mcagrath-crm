@@ -298,7 +298,12 @@ class LeadContactController extends AccountBaseController
         $this->sources = LeadSource::all();
         $this->categories = LeadCategory::all();
         $this->countries = countries();
-
+       // Format dates for the view
+        $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
+        $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format('m-d-Y') : null;
+        $this->leadContact->on_board_date = $this->leadContact->on_board_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->on_board_date)->format('m-d-Y') : null;
+        $this->leadContact->rejected_date = $this->leadContact->rejected_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->rejected_date)->format('m-d-Y') : null;
+        $this->leadContact->comments = $this->leadContact->comments ?? '';
         $this->pageTitle = __('modules.leadContact.updateTitle');
         $this->salutations = Salutation::cases();
 
@@ -348,6 +353,15 @@ class LeadContactController extends AccountBaseController
         $leadContact->country = $request->country;
         $leadContact->postal_code = $request->postal_code;
         $leadContact->mobile = $request->mobile;
+        $leadContact->position = $request->position;
+        $leadContact->poc = $request->poc;
+        // Parse dates in m-d-Y format before saving to the database
+        $leadContact->last_called_date = $request->last_called_date ? Carbon::createFromFormat('m-d-Y', $request->last_called_date)->format('Y-m-d') : null;
+        $leadContact->next_follow_up_date = $request->next_follow_up_date ? Carbon::createFromFormat('m-d-Y', $request->next_follow_up_date)->format('Y-m-d') : null;
+        $leadContact->on_board_date = $request->on_board_date ? Carbon::createFromFormat('m-d-Y', $request->on_board_date)->format('Y-m-d') : null;
+        $leadContact->rejected_date = $request->rejected_date ? Carbon::createFromFormat('m-d-Y', $request->rejected_date)->format('Y-m-d') : null;
+        $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
+        $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
         $leadContact->save();
 
         // To add custom fields data
