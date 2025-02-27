@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\DataTables\DealsDataTable;
-use App\DataTables\LeadContactDataTable;
-use App\DataTables\LeadNotesDataTable;
-use App\Enums\Salutation;
+use Carbon\Carbon;
+use App\Models\Lead;
+use App\Models\User;
 use App\Helper\Reply;
-use App\Http\Requests\Admin\Employee\ImportProcessRequest;
-use App\Http\Requests\Admin\Employee\ImportRequest;
-use App\Http\Requests\Lead\StoreRequest;
-use App\Http\Requests\Lead\UpdateRequest;
+use App\Models\Product;
+use App\Enums\Salutation;
+use App\Models\LeadAgent;
+use App\Models\LeadSource;
+use App\Models\LeadStatus;
+use App\Models\StatusLead;
 use App\Imports\LeadImport;
 use App\Jobs\ImportLeadJob;
-use App\Models\LeadAgent;
-use App\Models\LeadCategory;
-use App\Models\Lead;
-use App\Models\LeadCustomForm;
-use App\Models\LeadPipeline;
-use App\Models\LeadSource;
-use App\Models\PipelineStage;
-use App\Models\LeadStatus;
-use App\Models\Product;
-use App\Models\User;
 use App\Traits\ImportExcel;
+use App\Models\LeadCategory;
+use App\Models\LeadPipeline;
 use Illuminate\Http\Request;
+use App\Models\PipelineStage;
+use App\Models\LeadCustomForm;
+use App\DataTables\DealsDataTable;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use App\DataTables\LeadNotesDataTable;
+use App\DataTables\LeadContactDataTable;
+use App\Http\Requests\Lead\StoreRequest;
+use App\Http\Requests\Lead\UpdateRequest;
+use App\Http\Controllers\AccountBaseController;
+use App\Http\Requests\Admin\Employee\ImportRequest;
+use App\Http\Requests\Admin\Employee\ImportProcessRequest;
 
 class LeadContactController extends AccountBaseController
 {
@@ -184,6 +186,7 @@ class LeadContactController extends AccountBaseController
         $this->categories = LeadCategory::all();
         $this->countries = countries();
         $this->salutations = Salutation::cases();
+        $this->statusLeads = StatusLead::all();
         $this->view = 'lead-contact.ajax.create';
 
         if (request()->ajax()) {

@@ -38,6 +38,26 @@ $addProductPermission = user()->permission('add_product');
                         </x-forms.email>
                     </div>
 
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="status_lead_id" id="status_lead_id" data-live-search="true">
+                                <option value="">-- Select Status --</option>
+                                @foreach ($statusLeads as $statusLead)
+                                    <option value="{{ $statusLead->id }}">{{ $statusLead->status }}</option>
+                                @endforeach
+                            </select>
+                            <x-slot name="append">
+                                <button id="addStatusLead" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
+                        </x-forms.input-group>
+                    </div>
+
+                    
+
                     @if ($viewLeadSourcesPermission != 'none')
                         <div class="col-lg-4 col-md-6">
                             <x-forms.label class="my-3" fieldId="source_id" :fieldLabel="__('modules.lead.leadSource')">
@@ -277,6 +297,55 @@ $addProductPermission = user()->permission('add_product');
         $('#other-details').removeClass('d-none');
 
         init(RIGHT_MODAL);
+        //status type
+        $('#addStatusLead').click(function() {
+    const url = "{{ route('status-leads.create') }}";
+    $.ajaxModal(MODAL_LG, url);
+});
+
+
+   // Add Status Lead button
+   $('#addStatusLead').click(function() {
+            const url = "{{ route('status-leads.create') }}";
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        // Refresh status leads dropdown
+        function refreshStatusLeadsSelect() {
+            $.ajax({
+                url: "{{ route('statusLeads.list') }}",
+                type: "GET",
+                success: function(response) {
+                    let statusLeadDropdown = $('#status_lead_id');
+                    let currentValue = statusLeadDropdown.val();
+
+                    statusLeadDropdown.html('<option value="">-- Select Status --</option>');
+
+                    if (response.statusLeads && response.statusLeads.length > 0) {
+                        response.statusLeads.forEach(function(statusLead) {
+                            statusLeadDropdown.append(
+                                `<option value="${statusLead.id}">${statusLead.status}</option>`
+                            );
+                        });
+                    }
+
+                    // Restore previously selected value
+                    if (currentValue) {
+                        statusLeadDropdown.val(currentValue);
+                    }
+
+                    statusLeadDropdown.selectpicker('refresh');
+                }
+            });
+        }
+
+        // Refresh dropdown when modal is closed
+        $(document).on('ajaxModalClosed', function() {
+            refreshStatusLeadsSelect();
+        });
+
+        // Initial load of status leads dropdown
+        refreshStatusLeadsSelect();
     });
 
     function checkboxChange(parentClass, id){
