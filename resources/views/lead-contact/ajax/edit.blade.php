@@ -127,12 +127,15 @@ $addProductPermission = user()->permission('add_product');
                             @endforeach
                         </x-forms.select>
                     </div>
-
-
                     <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" :fieldValue="$leadContact->city"
-                            fieldId="city" :fieldPlaceholder="__('placeholders.city')" />
+                        <x-forms.select fieldId="city" :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" search="true">
+                            <option value="">--</option>
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->city }}" @selected($leadContact->city == $city->city)>{{ $city->city }}</option>
+                            @endforeach
+                        </x-forms.select>
                     </div>
+                    
 
                     <div class="col-lg-3 col-md-6">
                         <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.postalCode')"

@@ -136,8 +136,9 @@ $addProductPermission = user()->permission('add_product');
                     </div>
                     
                     <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city"
-                            fieldId="city" :fieldPlaceholder="__('placeholders.city')" />
+                        <x-forms.select fieldId="city" :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" search="true">
+                            <option value="">--</option>
+                        </x-forms.select>
                     </div>
 
                     <div class="col-lg-3 col-md-6">
@@ -212,6 +213,7 @@ $addProductPermission = user()->permission('add_product');
         $('#state').change(function() {
             var state = $(this).val();
             if (state) {
+                // Fetch counties for the selected state
                 $.ajax({
                     url: "{{ route('getCounties') }}",
                     type: "GET",
@@ -225,10 +227,29 @@ $addProductPermission = user()->permission('add_product');
                         $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
                     }
                 });
+
+                // Fetch cities for the selected state
+                $.ajax({
+                    url: "{{ route('getCities') }}",
+                    type: "GET",
+                    data: {'state': state},
+                    success: function(data) {
+                        $('#city').empty();
+                        $('#city').append('<option value="">--</option>');
+                        $.each(data, function(key, value) {
+                            $('#city').append('<option value="'+ value +'">'+ value +'</option>');
+                        });
+                        $('#city').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+                    }
+                });
             } else {
                 $('#county').empty();
                 $('#county').append('<option value="">--</option>');
                 $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+
+                $('#city').empty();
+                $('#city').append('<option value="">--</option>');
+                $('#city').selectpicker('refresh'); // Refresh the selectpicker if you're using it
             }
         });
         //date picker

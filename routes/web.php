@@ -575,6 +575,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::post('import/process', [LeadContactController::class, 'importProcess'])->name('lead-contact.import.process');
         Route::get('/get-counties', [LeadContactController::class, 'getCounties'])->name('getCounties');
         Route::get('/get-states-by-county', [LeadContactController::class, 'getStatesByCounty'])->name('getStatesByCounty');
+        Route::get('/get-cities', [LeadContactController::class, 'getCities'])->name('getCities');
         });
 
 

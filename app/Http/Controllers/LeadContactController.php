@@ -214,6 +214,15 @@ class LeadContactController extends AccountBaseController
     
         return response()->json($counties);
     }
+    public function getCities(Request $request)
+{
+    $state = $request->input('state');
+    
+    // Fetch cities for the selected state
+    $cities = Locations::where('state', $state)->pluck('city')->unique();
+
+    return response()->json($cities);
+}
 
     /**
      * @param StoreRequest $request
@@ -249,7 +258,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;
         $leadContact->office = $request->office;
-        $leadContact->city = $request->city;
+        $leadContact->city = $request->city; 
         $leadContact->state = $request->state;
         $leadContact->county = $request->county;
         $leadContact->postal_code = $request->postal_code;
@@ -327,6 +336,8 @@ class LeadContactController extends AccountBaseController
          // Fetch counties and states for the dropdowns
         $this->counties = Locations::select('county')->distinct()->get();
         $this->states = Locations::select('state')->distinct()->get();
+        $this->cities = Locations::select('city')->distinct()->get(); // Ensure cities are fetched
+
        // Format dates for the view
         $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
         $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
