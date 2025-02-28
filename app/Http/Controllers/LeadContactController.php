@@ -186,7 +186,7 @@ class LeadContactController extends AccountBaseController
         $this->categories = LeadCategory::all();
         $this->countries = countries();
         $this->salutations = Salutation::cases();
-        $this->statusLeads = StatusLead::all();
+        $this->statusLeads = StatusLead::all();//newly added status
         $this->view = 'lead-contact.ajax.create';
 
         if (request()->ajax()) {

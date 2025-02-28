@@ -226,8 +226,6 @@ $addProductPermission = user()->permission('add_product');
                 ...datepickerConfig
             });
         });
-
-
         $('#save-more-lead-form').click(function () {
 
             $('#add_more').val(true);
@@ -285,10 +283,7 @@ $addProductPermission = user()->permission('add_product');
             });
 
         }
-
-
-
-        $('body').on('click', '.add-lead-source', function() {
+        $('body').off('click', '.add-lead-source').on('click', '.add-lead-source', function() {
             var url = '{{ route('lead-source-settings.create') }}';
             $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
             $.ajaxModal(MODAL_LG, url);
@@ -302,7 +297,6 @@ $addProductPermission = user()->permission('add_product');
     const url = "{{ route('status-leads.create') }}";
     $.ajaxModal(MODAL_LG, url);
 });
-
 
    // Add Status Lead button
    $('#addStatusLead').click(function() {
@@ -338,7 +332,6 @@ $addProductPermission = user()->permission('add_product');
                 }
             });
         }
-
         // Refresh dropdown when modal is closed
         $(document).on('ajaxModalClosed', function() {
             refreshStatusLeadsSelect();

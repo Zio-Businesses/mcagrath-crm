@@ -603,9 +603,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('lead-contact', LeadContactController::class);
     //ststus type
     Route::resource('status-leads', StatusLeadController::class);
-// In your routes file (web.php or routes/web.php)
-Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
-    
+    Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
+
     Route::resource('vendor-module-notes', VendorModuleNotesController::class);
     Route::post('lead-contact/apply-quick-action', [LeadContactController::class, 'applyQuickAction'])->name('lead-contact.apply_quick_action');
 

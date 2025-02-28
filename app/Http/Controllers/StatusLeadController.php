@@ -22,7 +22,8 @@ class StatusLeadController extends Controller
     public function index()
     {
         $this->statusLeads = StatusLead::all();
-        return view('status_leads.index', $this->data);
+        $this->deleteStatusPermission = user()->permission('manage_lead_status');
+        return view(['status_leads.index', $this->data,'deleteStatusPermission'=>$deleteStatusPermission]);
     }
 
     /**
@@ -40,8 +41,6 @@ class StatusLeadController extends Controller
     public function create()
     {
         $this->statusLeads = StatusLead::all();
-        $this->deleteStatusPermission = user()->permission('manage_lead_status');
-        $this->companyId = company()->id;
         return view('lead-contact.notes.status', $this->data);
     }
 
@@ -88,7 +87,9 @@ class StatusLeadController extends Controller
      */
     public function destroy($id)
     {
+        
         $statusLead = StatusLead::findOrFail($id);
+        $statusLead->relatedRecords()->delete();
         $statusLead->delete();
 
         return Reply::success(__('messages.deleteSuccess'));

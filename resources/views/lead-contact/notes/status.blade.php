@@ -8,7 +8,6 @@
         <span aria-hidden="true">×</span>
     </button>
 </div>
-
 <div class="modal-body">
     <!-- Status Lead Table -->
     <x-table class="table-bordered" headType="thead-light">
@@ -17,13 +16,13 @@
             <th>@lang('Status')</th>
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
-
+        <pre>Delete Permission: {{ $deleteStatusPermission }}</pre>
         @forelse($statusLeads ?? [] as $key => $item)
         <tr id="row-{{ $item->id }}">
             <td>{{ $key + 1 }}</td>
             <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->status }}</td>
             <td class="text-right">
-                @if ($deleteStatusPermission == 'all')
+                @if ($deleteStatusPermission == 'all' || $deleteStatusPermission == 'added')
                 <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row">
                     @lang('app.delete')
                 </x-forms.button-secondary>
@@ -61,7 +60,7 @@
             success: function (response) {
                 let statusLeadDropdown = $('#status_lead_id');
                 statusLeadDropdown.html('<option value="">-- Select Status --</option>');
-    
+
                 if (response.statusLeads && response.statusLeads.length > 0) {
                     response.statusLeads.forEach(function (statusLead) {
                         statusLeadDropdown.append(
@@ -69,17 +68,17 @@
                         );
                     });
                 }
-    
+
                 statusLeadDropdown.selectpicker('refresh');
             }
         });
     }
-    
+
     // Save button click handler
     $('#save-status-lead').click(function() {
         let formData = $('#createStatusLead').serialize();
         formData += '&company_id={{ $companyId ?? auth()->user()->company_id }}';
-    
+
         $.easyAjax({
             url: "{{ route('status-leads.store') }}",
             type: "POST",
@@ -93,13 +92,13 @@
             }
         });
     });
-    
+
     // Delete Status Lead
     $('body').on('click', '.delete-row', function() {
         var id = $(this).data('row-id');
         var url = "{{ route('status-leads.destroy', ':id') }}".replace(':id', id);
         var token = "{{ csrf_token() }}";
-    
+
         Swal.fire({
             title: "@lang('messages.sweetAlertTitle')",
             text: "@lang('messages.recoverRecord')",
@@ -139,14 +138,14 @@
             }
         });
     });
-    
+
     // Update Status Lead
-    $('body').on('blur', '[contenteditable=true]', function() {
+    $('body').off('blur', '[contenteditable=true]').on('blur', '[contenteditable=true]', function() {
         let id = $(this).data('row-id');
         let value = $(this).text().trim();
         let url = "{{ route('status-leads.update', '') }}/" + id;
         let token = "{{ csrf_token() }}";
-    
+
         $.easyAjax({
             url: url,
             type: "PUT",
@@ -163,4 +162,9 @@
             }
         });
     });
-    </script>
+
+    // Prevent default form submission
+    $('#createStatusLead').submit(function(event) {
+        event.preventDefault();
+    });
+</script>
