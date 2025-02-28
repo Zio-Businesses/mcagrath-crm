@@ -307,6 +307,8 @@ class LeadContactController extends AccountBaseController
         $this->countries = countries();
         $this->statusLeads = StatusLead::all();
        // Format dates for the view
+       $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
+
         $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
         $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format('m-d-Y') : null;
         $this->leadContact->on_board_date = $this->leadContact->on_board_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->on_board_date)->format('m-d-Y') : null;
@@ -337,6 +339,9 @@ class LeadContactController extends AccountBaseController
     {
         $leadContact = Lead::findOrFail($id);
         $this->editPermission = user()->permission('edit_lead');
+
+        $statusLead = StatusLead::find($request->status_type);
+        $statusName = $statusLead ? $statusLead->status : null;
 
         abort_403(!($this->editPermission == 'all'
             || ($this->editPermission == 'added' && $leadContact->added_by == user()->id)

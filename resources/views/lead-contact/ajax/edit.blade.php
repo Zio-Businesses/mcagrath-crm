@@ -38,6 +38,23 @@ $addProductPermission = user()->permission('add_product');
                             :fieldValue="$leadContact->client_email" :fieldHelp="__('modules.lead.leadEmailInfo')">
                         </x-forms.email>
                     </div>
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
+                                <option value="">-- Select Status --</option>
+                                @foreach ($statusLeads as $statusLead)
+                                    <option value="{{ $statusLead->id }}" 
+                                        @if($leadContact->status_type == $statusLead->status) selected @endif>
+                                        {{ $statusLead->status }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-slot name="append"></x-slot>
+                        </x-forms.input-group>
+                    </div>
+                    
 
                     @if ($viewLeadSourcesPermission != 'none')
                         <div class="col-lg-4 col-md-6">
