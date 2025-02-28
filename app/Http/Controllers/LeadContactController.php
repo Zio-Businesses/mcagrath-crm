@@ -215,6 +215,8 @@ class LeadContactController extends AccountBaseController
             ->where('email', $request->client_email)
             ->whereNotNull('email')
             ->first();
+        $statusLead = StatusLead::find($request->status_type);
+        $statusName = $statusLead ? $statusLead->status : null;
 
         $leadContact = new Lead();
         $leadContact->company_id = company()->id;
@@ -242,6 +244,8 @@ class LeadContactController extends AccountBaseController
         $leadContact->on_board_date = $request->on_board_date ? Carbon::parse($request->on_board_date)->format('Y-m-d') : null;
         $leadContact->rejected_date = $request->rejected_date ? Carbon::parse($request->rejected_date)->format('Y-m-d') : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
+        $leadContact->status_type = $statusName; 
+
         $leadContact->save();
 
         // To add custom fields data
@@ -301,6 +305,7 @@ class LeadContactController extends AccountBaseController
         $this->sources = LeadSource::all();
         $this->categories = LeadCategory::all();
         $this->countries = countries();
+        $this->statusLeads = StatusLead::all();
        // Format dates for the view
         $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
         $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format('m-d-Y') : null;
@@ -365,6 +370,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->rejected_date = $request->rejected_date ? Carbon::createFromFormat('m-d-Y', $request->rejected_date)->format('Y-m-d') : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
+        $leadContact->status_type = $statusName; 
         $leadContact->save();
 
         // To add custom fields data

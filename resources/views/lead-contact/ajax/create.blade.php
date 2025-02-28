@@ -42,7 +42,7 @@ $addProductPermission = user()->permission('add_product');
                         <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
                         </x-forms.label>
                         <x-forms.input-group>
-                            <select class="form-control select-picker" name="status_lead_id" id="status_lead_id" data-live-search="true">
+                            <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
                                 <option value="">-- Select Status --</option>
                                 @foreach ($statusLeads as $statusLead)
                                     <option value="{{ $statusLead->id }}">{{ $statusLead->status }}</option>
@@ -55,8 +55,6 @@ $addProductPermission = user()->permission('add_product');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-
-                    
 
                     @if ($viewLeadSourcesPermission != 'none')
                         <div class="col-lg-4 col-md-6">
