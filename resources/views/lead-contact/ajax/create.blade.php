@@ -120,24 +120,21 @@ $addProductPermission = user()->permission('add_product');
                         <x-forms.text :fieldLabel="__('modules.client.officePhoneNumber')" fieldName="office"
                             fieldId="office" fieldPlaceholder="" />
                     </div>
-
                     <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="country" :fieldLabel="__('app.country')" fieldName="country"
-                            search="true">
+                        <x-forms.select fieldId="state" :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state" search="true">
                             <option value="">--</option>
-                            @foreach ($countries as $item)
-                                <option data-tokens="{{ $item->iso3 }}"
-                                    data-content="<span class='flag-icon flag-icon-{{ strtolower($item->iso) }} flag-icon-squared'></span> {{ $item->nicename }}"
-                                    value="{{ $item->nicename }}">{{ $item->nicename }}</option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->state }}">{{ $state->state }}</option>
                             @endforeach
                         </x-forms.select>
                     </div>
-
+                    
                     <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state"
-                            fieldId="state" :fieldPlaceholder="__('placeholders.state')" />
+                        <x-forms.select fieldId="county" :fieldLabel="__('app.county')" fieldName="county" search="true">
+                            <option value="">--</option>
+                        </x-forms.select>
                     </div>
-
+                    
                     <div class="col-lg-3 col-md-6">
                         <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city"
                             fieldId="city" :fieldPlaceholder="__('placeholders.city')" />
@@ -212,6 +209,28 @@ $addProductPermission = user()->permission('add_product');
 
 <script>
     $(document).ready(function() {
+        $('#state').change(function() {
+            var state = $(this).val();
+            if (state) {
+                $.ajax({
+                    url: "{{ route('getCounties') }}",
+                    type: "GET",
+                    data: {'state': state},
+                    success: function(data) {
+                        $('#county').empty();
+                        $('#county').append('<option value="">--</option>');
+                        $.each(data, function(key, value) {
+                            $('#county').append('<option value="'+ value +'">'+ value +'</option>');
+                        });
+                        $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+                    }
+                });
+            } else {
+                $('#county').empty();
+                $('#county').append('<option value="">--</option>');
+                $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+            }
+        });
         //date picker
         datepicker('#last_called_date');
         datepicker('#next_follow_up_date');

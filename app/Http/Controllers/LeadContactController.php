@@ -29,6 +29,8 @@ use App\Http\Requests\Lead\UpdateRequest;
 use App\Http\Controllers\AccountBaseController;
 use App\Http\Requests\Admin\Employee\ImportRequest;
 use App\Http\Requests\Admin\Employee\ImportProcessRequest;
+use App\Models\Locations; 
+
 
 class LeadContactController extends AccountBaseController
 {
@@ -45,6 +47,7 @@ class LeadContactController extends AccountBaseController
             return $next($request);
         });
     }
+
 
     public function index(LeadContactDataTable $dataTable)
     {
@@ -180,6 +183,12 @@ class LeadContactController extends AccountBaseController
             $this->fields = $leadContact->getCustomFieldGroupsWithFields()->fields;
         }
 
+            // Fetch states for the dropdown
+    $this->states = Locations::select('state')->distinct()->get();
+
+    // Fetch counties for the dropdown
+    $this->counties = Locations::select('county')->distinct()->get();
+
         $this->products = Product::all();
         $this->sources = LeadSource::all();
         $this->status = LeadStatus::all();
@@ -195,6 +204,15 @@ class LeadContactController extends AccountBaseController
 
         return view('lead-contact.create', $this->data);
       
+    }
+    public function getCounties(Request $request)
+    {
+        $state = $request->input('state');
+        
+        // Fetch counties for the selected state
+        $counties = Locations::where('state', $state)->pluck('county')->unique();
+    
+        return response()->json($counties);
     }
 
     /**
