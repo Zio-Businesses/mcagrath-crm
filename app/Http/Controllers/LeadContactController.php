@@ -251,7 +251,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->office = $request->office;
         $leadContact->city = $request->city;
         $leadContact->state = $request->state;
-        $leadContact->country = $request->country;
+        $leadContact->county = $request->county;
         $leadContact->postal_code = $request->postal_code;
         $leadContact->mobile = $request->mobile;
          // Add new fields
@@ -324,9 +324,11 @@ class LeadContactController extends AccountBaseController
         $this->categories = LeadCategory::all();
         $this->countries = countries();
         $this->statusLeads = StatusLead::all();
+         // Fetch counties and states for the dropdowns
+        $this->counties = Locations::select('county')->distinct()->get();
+        $this->states = Locations::select('state')->distinct()->get();
        // Format dates for the view
-       $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
-
+        $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
         $this->leadContact->last_called_date = $this->leadContact->last_called_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->last_called_date)->format('m-d-Y') : null;
         $this->leadContact->next_follow_up_date = $this->leadContact->next_follow_up_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->next_follow_up_date)->format('m-d-Y') : null;
         $this->leadContact->on_board_date = $this->leadContact->on_board_date ? Carbon::createFromFormat('Y-m-d', $this->leadContact->on_board_date)->format('m-d-Y') : null;
@@ -381,7 +383,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->office = $request->office;
         $leadContact->city = $request->city;
         $leadContact->state = $request->state;
-        $leadContact->country = $request->country;
+        $leadContact->county = $request->county; 
         $leadContact->postal_code = $request->postal_code;
         $leadContact->mobile = $request->mobile;
         $leadContact->position = $request->position;

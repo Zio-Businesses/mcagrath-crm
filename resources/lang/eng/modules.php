@@ -1877,7 +1877,7 @@ return array(
         'postalCode' => 'Postal code',
         'city' => 'City',
         'state' => 'State',
-        'country' => 'Country',
+        'county' => 'County',
         'position' => 'Position',
         'poc' => 'Point of Contact',
         'lastCalledDate' => 'Last Called Date',
@@ -1932,7 +1932,7 @@ return array(
         'message' => 'Message',
         'city' => 'City',
         'state' => 'State',
-        'country' => 'Country',
+        'county' => 'County',
         'postal_code' => 'Postal Code',
     ),
 

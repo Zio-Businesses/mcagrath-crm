@@ -111,21 +111,23 @@ $addProductPermission = user()->permission('add_product');
                     </div>
 
                     <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="country" :fieldLabel="__('app.country')" fieldName="country"
-                            search="true">
+                        <x-forms.select fieldId="county" :fieldLabel="__('app.county')" fieldName="county" search="true">
                             <option value="">--</option>
-                            @foreach ($countries as $item)
-                                <option @if ($leadContact->country == $item->nicename) selected @endif data-tokens="{{ $item->iso3 }}"
-                                    data-content="<span class='flag-icon flag-icon-{{ strtolower($item->iso) }} flag-icon-squared'></span> {{ $item->nicename }}"
-                                    value="{{ $item->nicename }}">{{ $item->nicename }}</option>
+                            @foreach ($counties as $county)
+                                <option value="{{ $county->county }}" @selected($leadContact->county == $county->county)>{{ $county->county }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.select fieldId="state" :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state" search="true">
+                            <option value="">--</option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->state }}" @selected($leadContact->state == $state->state)>{{ $state->state }}</option>
                             @endforeach
                         </x-forms.select>
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state"
-                            fieldId="state" :fieldPlaceholder="__('placeholders.state')" :fieldValue="$leadContact->state" />
-                    </div>
 
                     <div class="col-lg-3 col-md-6">
                         <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" :fieldValue="$leadContact->city"
@@ -210,7 +212,28 @@ $addProductPermission = user()->permission('add_product');
 
 <script>
     $(document).ready(function() {
-
+        $('#county').change(function() {
+            var county = $(this).val();
+            if (county) {
+                $.ajax({
+                    url: "{{ route('getStatesByCounty') }}",
+                    type: "GET",
+                    data: {'county': county},
+                    success: function(data) {
+                        $('#state').empty();
+                        $('#state').append('<option value="">--</option>');
+                        $.each(data, function(key, value) {
+                            $('#state').append('<option value="'+ value +'">'+ value +'</option>');
+                        });
+                        $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+                    }
+                });
+            } else {
+                $('#state').empty();
+                $('#state').append('<option value="">--</option>');
+                $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+            }
+        });
         //date picker
         datepicker('#last_called_date', {
         dateFormat: 'm-d-Y', // Match the format used in the create blade
