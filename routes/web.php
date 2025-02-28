@@ -576,6 +576,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::get('/get-counties', [LeadContactController::class, 'getCounties'])->name('getCounties');
         Route::get('/get-states-by-county', [LeadContactController::class, 'getStatesByCounty'])->name('getStatesByCounty');
         Route::get('/get-cities', [LeadContactController::class, 'getCities'])->name('getCities');
+        Route::resource('status-leads', StatusLeadController::class);
+        Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
+    
         });
 
 
@@ -604,9 +607,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
     Route::resource('vendors', VendorController::class);
     Route::resource('vendor-crud', LeadVendorController::class);
     Route::resource('lead-contact', LeadContactController::class);
-    //ststus type
-    Route::resource('status-leads', StatusLeadController::class);
-    Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
+
 
     Route::resource('vendor-module-notes', VendorModuleNotesController::class);
     Route::post('lead-contact/apply-quick-action', [LeadContactController::class, 'applyQuickAction'])->name('lead-contact.apply_quick_action');
