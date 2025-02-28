@@ -9,8 +9,8 @@
     </button>
 </div>
 <div class="modal-body">
-    <!-- Status Lead Table -->
-    <x-table class="table-bordered" headType="thead-light">
+     <!-- Status Lead Table -->
+     <x-table class="table-bordered" headType="thead-light">
         <x-slot name="thead">
             <th>#</th>
             <th>@lang('Status')</th>
@@ -22,16 +22,16 @@
             <td>{{ $key + 1 }}</td>
             <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->status }}</td>
             <td class="text-right">
-                @if ($deleteStatusPermission == 'all' || $deleteStatusPermission == 'added')
+                @if ($deleteStatusPermission == 'all')
                 <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row">
                     @lang('app.delete')
                 </x-forms.button-secondary>
-            @endif
+                @endif
             </td>
         </tr>
-    @empty
+        @empty
         <x-cards.no-record-found-list colspan="3" />
-    @endforelse
+        @endforelse
     </x-table>
 
     <!-- Add New Status Lead -->

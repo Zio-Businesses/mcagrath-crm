@@ -73,6 +73,9 @@
             <x-cards.data-row :label="__('modules.stripeCustomerAddress.position')" :value="$leadContact->position ?? '--'" />
 
             <x-cards.data-row :label="__('modules.stripeCustomerAddress.poc')" :value="$leadContact->poc ?? '--'" />
+            
+            <x-cards.data-row :label="__('modules.lead.status_type')" :value="$leadContact->status ?? '--'" />
+
 
             <x-cards.data-row :label="__('modules.stripeCustomerAddress.lastCalledDate')" :value="$leadContact->last_called_date ? Carbon\Carbon::parse($leadContact->last_called_date)->format('m-d-Y') : '--'" />
             

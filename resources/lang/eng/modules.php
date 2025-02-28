@@ -1484,6 +1484,7 @@ return array(
         'rejectRemaining' => 'Reject Remaining',
     ),
     'lead' => array(
+        'status_type' => 'Status Type', 
         'position'=>'Designation/Position',
         'poc'=>'POC',
         'lastCalledDate'=>'Last Called Date',
@@ -1869,6 +1870,7 @@ return array(
         'goBestReply' => 'Go To Best Reply',
     ),
     'stripeCustomerAddress' => array(
+        'status_type' => 'Status Type', 
         'details' => 'Address Details',
         'name' => 'Name',
         'line1' => 'Address Line',

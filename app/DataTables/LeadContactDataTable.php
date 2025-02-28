@@ -108,6 +108,7 @@ class LeadContactDataTable extends BaseDataTable
         $datatables->addColumn('email', fn($row) => $row->client_email);
         $datatables->addColumn('category_name', fn($row) => $row->category?->category_name);
         // Add new columns for the additional fields
+        $datatables->addColumn('status_type',fn($row)=>$row->status_type ?? '--');
         $datatables->addColumn('position', fn($row) => $row->position ?? '--');
         $datatables->addColumn('poc', fn($row) => $row->poc ?? '--');
         $datatables->addColumn('last_called_date', fn($row) => $row->last_called_date ? Carbon::parse($row->last_called_date)->translatedFormat($this->company->date_format) : '--');
@@ -170,6 +171,7 @@ class LeadContactDataTable extends BaseDataTable
                 'leads.updated_at',
                 'lead_sources.type as source',
                 //newly added
+                'leads.status_type',
                 'leads.position',
                 'leads.poc',
                 'leads.last_called_date',
@@ -211,6 +213,10 @@ class LeadContactDataTable extends BaseDataTable
             $leadContact = $leadContact->having(DB::raw('DATE(leads.`updated_at`)'), '<=', $endDate);
         }
         //newly Add date filtering for new date fields
+
+        if ($this->request()->status_type != 'all' && $this->request()->status_type != '') {
+            $leadContact = $leadContact->where('status_type', $this->request()->status_type);
+        }
          if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'last_called_date') {
             $startDate = companyToDateString($this->request()->startDate);
             $leadContact = $leadContact->having(DB::raw('DATE(leads.`last_called_date`)'), '>=', $startDate);
@@ -340,6 +346,7 @@ class LeadContactDataTable extends BaseDataTable
            __('modules.lead.onBoardDate') => ['data' => 'on_board_date', 'name' => 'leads.on_board_date', 'title' => __('modules.lead.onBoardDate')],
            __('modules.lead.rejectedDate') => ['data' => 'rejected_date', 'name' => 'leads.rejected_date', 'title' => __('modules.lead.rejectedDate')],
            __('modules.lead.comments') => ['data' => 'comments', 'name' => 'leads.comments', 'title' => __('modules.lead.comments')],
+           __('modules.lead.status') => ['data' => 'status_type', 'name' => 'leads.status', 'title' => __('modules.lead.status')],
 
            //till here
             __('app.addedBy') => ['data' => 'added_by', 'name' => 'added_by', 'exportable' => true, 'title' => __('app.addedBy')],
