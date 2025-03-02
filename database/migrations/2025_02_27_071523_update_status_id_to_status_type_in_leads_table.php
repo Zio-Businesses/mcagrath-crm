@@ -12,7 +12,7 @@ return new class extends Migration
             $table->string('status_type')->nullable()->after('client_id');
             
             // Remove old column status_id
-            $table->dropColumn('status_id');
+           // $table->dropColumn('status_id');
         });
     }
 
