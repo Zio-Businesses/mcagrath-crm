@@ -17,28 +17,70 @@ $addProductPermission = user()->permission('add_product');
                 <div class="row p-20">
 
                     <div class="col-lg-4 col-md-6">
-                        <x-forms.select fieldId="salutation" :fieldLabel="__('modules.client.salutation')"
-                            fieldName="salutation">
-                            <option value="">--</option>
-                            @foreach ($salutations as $salutation)
-                                <option value="{{ $salutation->value }}">{{ $salutation->label() }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('app.name')" fieldName="client_name"
                             fieldId="client_name" :fieldPlaceholder="__('placeholders.name')" fieldRequired="true" />
                     </div>
-
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.poc')" fieldName="poc"
+                            fieldId="poc" :fieldPlaceholder="__('placeholders.poc')" />
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.position')" fieldName="position"
+                            fieldId="position" :fieldPlaceholder="__('placeholders.position')" />
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.tel fieldId="mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="mobile"
+                           :fieldPlaceholder="__('placeholders.mobile')"></x-forms.tel>
+                    </div>
                     <div class="col-lg-4 col-md-6">
 
                         <x-forms.email fieldId="client_email" :fieldLabel="__('app.email')"
                             fieldName="client_email" :fieldPlaceholder="__('placeholders.email')" :fieldHelp="__('modules.lead.leadEmailInfo')">
                         </x-forms.email>
                     </div>
+                    <div class="col-lg-3 col-md-6">
+                        <x-forms.select fieldId="state" :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state" search="true">
+                            <option value="">--</option>
+                            @foreach ($states as $state)
+                                <option value="{{ $state->state }}">{{ $state->state }}</option>
+                            @endforeach
+                        </x-forms.select>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.text :fieldLabel="__('modules.lead.website')" fieldName="website" fieldId="website"
+                            :fieldPlaceholder="__('placeholders.website')" />
+                    </div>
+                                        <!--comapny type-->
+                                        <div class="col-md-4">
+                                            <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
+                                            </x-forms.label>
+                                            <x-forms.input-group>
+                                                <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
+                                                    <option value="">-- Select Status --</option>
+                                                    @foreach ($statusLeads as $statusLead)
+                                                        <option value="{{ $statusLead->id }}">{{ $statusLead->status }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <x-slot name="append">
+                                                    <button id="addCompanyType" type="button" class="btn btn-outline-secondary border-grey">
+                                                        @lang('app.add')
+                                                    </button>
+                                                </x-slot>
+                                            </x-forms.input-group>
+                                        </div>
 
-                    <div class="col-md-4">
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
+                            fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" />
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
+                            fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" />
+                    </div>
+
+
+                  <div class="col-md-4">
                         <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
                         </x-forms.label>
                         <x-forms.input-group>
@@ -55,8 +97,14 @@ $addProductPermission = user()->permission('add_product');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-
-                    @if ($viewLeadSourcesPermission != 'none')
+                    <div class="col-md-12">
+                        <div class="form-group my-3">
+                            <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
+                                fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')">
+                            </x-forms.textarea>
+                        </div>
+                    </div>
+                    {{--  @if ($viewLeadSourcesPermission != 'none')
                         <div class="col-lg-4 col-md-6">
                             <x-forms.label class="my-3" fieldId="source_id" :fieldLabel="__('modules.lead.leadSource')">
                             </x-forms.label>
@@ -106,29 +154,14 @@ $addProductPermission = user()->permission('add_product');
                             fieldId="company_name" :fieldPlaceholder="__('placeholders.company')" />
                     </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.lead.website')" fieldName="website" fieldId="website"
-                            :fieldPlaceholder="__('placeholders.website')" />
-                    </div>
 
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.tel fieldId="mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="mobile"
-                           :fieldPlaceholder="__('placeholders.mobile')"></x-forms.tel>
-                    </div>
+
 
                     <div class="col-lg-3 col-md-6">
                         <x-forms.text :fieldLabel="__('modules.client.officePhoneNumber')" fieldName="office"
                             fieldId="office" fieldPlaceholder="" />
                     </div>
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="state" :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state" search="true">
-                            <option value="">--</option>
-                            @foreach ($states as $state)
-                                <option value="{{ $state->state }}">{{ $state->state }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>
-                    
+                  
                     <div class="col-lg-3 col-md-6">
                         <x-forms.select fieldId="county" :fieldLabel="__('app.county')" fieldName="county" search="true">
                             <option value="">--</option>
@@ -152,29 +185,9 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.textarea>
                         </div>
                     </div>
-                    <!-- Add this after the address field in paste-2.txt -->
-                    <div class="row p-20">
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.position')" fieldName="position"
-                                fieldId="position" :fieldPlaceholder="__('placeholders.position')" />
-                        </div>
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.poc')" fieldName="poc"
-                                fieldId="poc" :fieldPlaceholder="__('placeholders.poc')" />
-                        </div>
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
-                                fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" />
-                        </div>
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
-                                fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" />
-                        </div>
-                        
-                        <div class="col-lg-4 col-md-6">
+
+  
+                     <div class="col-lg-4 col-md-6">
                             <x-forms.datepicker fieldId="on_board_date" :fieldLabel="__('modules.stripeCustomerAddress.onBoardDate')" 
                                 fieldName="on_board_date" :fieldPlaceholder="__('placeholders.date')" />
                         </div>
@@ -182,14 +195,8 @@ $addProductPermission = user()->permission('add_product');
                         <div class="col-lg-4 col-md-6">
                             <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
                                 fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" />
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group my-3">
-                                <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
-                                    fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')">
-                                </x-forms.textarea>
-                            </div>
-                        </div>
+                        </div>--}}
+                      
                     </div>
                     <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
                 </div>
@@ -210,7 +217,7 @@ $addProductPermission = user()->permission('add_product');
 
 <script>
     $(document).ready(function() {
-        $('#state').change(function() {
+       /* $('#state').change(function() {
             var state = $(this).val();
             if (state) {
                 // Fetch counties for the selected state
@@ -251,12 +258,22 @@ $addProductPermission = user()->permission('add_product');
                 $('#city').append('<option value="">--</option>');
                 $('#city').selectpicker('refresh'); // Refresh the selectpicker if you're using it
             }
-        });
+        });*/
+        $('#state').change(function() {
+                var state = $(this).val();
+                if (state) {
+                    // You can add any additional logic here if needed
+                    console.log("Selected State:", state);
+                } else {
+                    // Handle the case when no state is selected
+                    console.log("No state selected");
+                }
+                });
         //date picker
         datepicker('#last_called_date');
         datepicker('#next_follow_up_date');
-        datepicker('#on_board_date');
-        datepicker('#rejected_date');
+       // datepicker('#on_board_date');
+       // datepicker('#rejected_date');
 
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
