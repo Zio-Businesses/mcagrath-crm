@@ -11,6 +11,7 @@ $addProductPermission = user()->permission('add_product');
 <div class="row">
     <div class="col-sm-12">
         <x-form id="save-lead-data-form" method="PUT">
+            @csrf
             <div class="add-client bg-white rounded">
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
                     @lang('modules.leadContact.leadDetails')</h4>
@@ -63,7 +64,19 @@ $addProductPermission = user()->permission('add_product');
                             <x-forms.text :fieldLabel="__('modules.lead.website')" fieldName="website" fieldId="website"
                                 :fieldPlaceholder="__('placeholders.website')" :fieldValue="$leadContact->website" />
                         </div>
-
+                        <div class="col-md-4">
+                            <x-forms.label class="mt-3" fieldId="company_type_id" :fieldLabel="__('Company Type')">
+                            </x-forms.label>
+                            <x-forms.input-group>
+                                <select class="form-control select-picker" name="company_type" id="company_type" data-live-search="true">
+                                    <option value="">-- Select Company Type --</option>
+                                    @foreach ($companyTypes as $companyType)
+                                        <option value="{{ $companyType->id }}" @selected($leadContact->company_type == $companyType->type)>{{ $companyType->type }}</option>
+                                    @endforeach
+                                </select>
+                                
+                            </x-forms.input-group>
+                        </div>
                         
                         <div class="col-lg-4 col-md-6">
                             <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
@@ -201,78 +214,78 @@ $addProductPermission = user()->permission('add_product');
                                 fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" 
                                 :fieldValue="$leadContact->rejected_date" />
                         </div>--}}
-                       
+                        
+                        </div>
+
                     </div>
+                        <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
+                    <x-form-actions>
+                        <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
+                        </x-forms.button-primary>
+                        <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
+                        </x-forms.button-cancel>
+                    </x-form-actions>
 
                 </div>
-                    <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
-                <x-form-actions>
-                    <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
-                    </x-forms.button-primary>
-                    <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
-                    </x-forms.button-cancel>
-                </x-form-actions>
+            </x-form>
 
-            </div>
-        </x-form>
-
+        </div>
     </div>
-</div>
 
 
-<script>
-    $(document).ready(function() {
-       /* $('#county').change(function() {
-            var county = $(this).val();
-            if (county) {
-                $.ajax({
-                    url: "{{ route('getStatesByCounty') }}",
-                    type: "GET",
-                    data: {'county': county},
-                    success: function(data) {
-                        $('#state').empty();
-                        $('#state').append('<option value="">--</option>');
-                        $.each(data, function(key, value) {
-                            $('#state').append('<option value="'+ value +'">'+ value +'</option>');
-                        });
-                        $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-                    }
-                });
-            } else {
-                $('#state').empty();
-                $('#state').append('<option value="">--</option>');
-                $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-            }
-        });*/
-        //date picker
-        datepicker('#last_called_date', {
-        dateFormat: 'm-d-Y', // Match the format used in the create blade
-        ...datepickerConfig
-        });
-
-        datepicker('#next_follow_up_date', {
-            dateFormat: 'm-d-Y',
+    <script>
+        $(document).ready(function() {
+        /* $('#county').change(function() {
+                var county = $(this).val();
+                if (county) {
+                    $.ajax({
+                        url: "{{ route('getStatesByCounty') }}",
+                        type: "GET",
+                        data: {'county': county},
+                        success: function(data) {
+                            $('#state').empty();
+                            $('#state').append('<option value="">--</option>');
+                            $.each(data, function(key, value) {
+                                $('#state').append('<option value="'+ value +'">'+ value +'</option>');
+                            });
+                            $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+                        }
+                    });
+                } else {
+                    $('#state').empty();
+                    $('#state').append('<option value="">--</option>');
+                    $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
+                }
+            });*/
+            //date picker
+            datepicker('#last_called_date', {
+            dateFormat: 'm-d-Y', // Match the format used in the create blade
             ...datepickerConfig
-        });
+            });
 
-        datepicker('#on_board_date', {
-            dateFormat: 'm-d-Y',
-            ...datepickerConfig
-        });
-
-        datepicker('#rejected_date', {
-            dateFormat: 'm-d-Y',
-            ...datepickerConfig
-        });
-
-        $('.custom-date-picker').each(function(ind, el) {
-            datepicker(el, {
-                position: 'bl',
+            datepicker('#next_follow_up_date', {
+                dateFormat: 'm-d-Y',
                 ...datepickerConfig
             });
-        });
 
-        $('#save-lead-form').click(function() {
+            datepicker('#on_board_date', {
+                dateFormat: 'm-d-Y',
+                ...datepickerConfig
+            });
+
+            datepicker('#rejected_date', {
+                dateFormat: 'm-d-Y',
+                ...datepickerConfig
+            });
+
+            $('.custom-date-picker').each(function(ind, el) {
+                datepicker(el, {
+                    position: 'bl',
+                    ...datepickerConfig
+                });
+            });
+
+            $('#save-lead-form').click(function() {
             const url = "{{ route('lead-contact.update', [$leadContact->id]) }}";
             $.easyAjax({
                 url: url,
@@ -289,95 +302,95 @@ $addProductPermission = user()->permission('add_product');
             });
         });
 
-        $('body').on('click', '.add-lead-source', function() {
-            const url = '{{ route('lead-source-settings.create') }}';
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        $('body').on('click', '.add-lead-category', function() {
-            var url = '{{ route('leadCategory.create') }}';
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        $('#create_task_category').click(function() {
-            const url = "{{ route('taskCategory.create') }}";
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        $('#department-setting').click(function() {
-            const url = "{{ route('departments.create') }}";
-            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_LG, url);
-        });
-
-        $('#client_view_task').change(function() {
-            $('#clientNotification').toggleClass('d-none');
-        });
-
-        $('#set_time_estimate').change(function() {
-            $('#set-time-estimate-fields').toggleClass('d-none');
-        });
-
-        $('.toggle-other-details').click(function() {
-            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
-            $('#other-details').toggleClass('d-none');
-        });
-
-        $('#createTaskLabel').click(function() {
-            const url = "{{ route('task-label.create') }}";
-            $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-            $.ajaxModal(MODAL_XL, url);
-        });
-
-        $('#add-project').click(function() {
-            $(MODAL_XL).modal('show');
-            const url = "{{ route('projects.create') }}";
-            $.easyAjax({
-                url: url,
-                blockUI: true,
-                container: MODAL_XL,
-                success: function(response) {
-                    if (response.status == "success") {
-                        $(MODAL_XL + ' .modal-body').html(response.html);
-                        $(MODAL_XL + ' .modal-title').html(response.title);
-                        init(MODAL_XL);
-                    }
-                }
+            $('body').on('click', '.add-lead-source', function() {
+                const url = '{{ route('lead-source-settings.create') }}';
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
             });
-        });
 
-        $('#add-employee').click(function() {
-            $(MODAL_XL).modal('show');
-
-            const url = "{{ route('employees.create') }}";
-
-            $.easyAjax({
-                url: url,
-                blockUI: true,
-                container: MODAL_XL,
-                success: function(response) {
-                    if (response.status == "success") {
-                        $(MODAL_XL + ' .modal-body').html(response.html);
-                        $(MODAL_XL + ' .modal-title').html(response.title);
-                        init(MODAL_XL);
-                    }
-                }
+            $('body').on('click', '.add-lead-category', function() {
+                var url = '{{ route('leadCategory.create') }}';
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
             });
+
+            $('#create_task_category').click(function() {
+                const url = "{{ route('taskCategory.create') }}";
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
+            });
+
+            $('#department-setting').click(function() {
+                const url = "{{ route('departments.create') }}";
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
+            });
+
+            $('#client_view_task').change(function() {
+                $('#clientNotification').toggleClass('d-none');
+            });
+
+            $('#set_time_estimate').change(function() {
+                $('#set-time-estimate-fields').toggleClass('d-none');
+            });
+
+            $('.toggle-other-details').click(function() {
+                $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+                $('#other-details').toggleClass('d-none');
+            });
+
+            $('#createTaskLabel').click(function() {
+                const url = "{{ route('task-label.create') }}";
+                $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_XL, url);
+            });
+
+            $('#add-project').click(function() {
+                $(MODAL_XL).modal('show');
+                const url = "{{ route('projects.create') }}";
+                $.easyAjax({
+                    url: url,
+                    blockUI: true,
+                    container: MODAL_XL,
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $(MODAL_XL + ' .modal-body').html(response.html);
+                            $(MODAL_XL + ' .modal-title').html(response.title);
+                            init(MODAL_XL);
+                        }
+                    }
+                });
+            });
+
+            $('#add-employee').click(function() {
+                $(MODAL_XL).modal('show');
+
+                const url = "{{ route('employees.create') }}";
+
+                $.easyAjax({
+                    url: url,
+                    blockUI: true,
+                    container: MODAL_XL,
+                    success: function(response) {
+                        if (response.status == "success") {
+                            $(MODAL_XL + ' .modal-body').html(response.html);
+                            $(MODAL_XL + ' .modal-title').html(response.title);
+                            init(MODAL_XL);
+                        }
+                    }
+                });
+            });
+
+            <x-forms.custom-field-filejs/>
+
+            init(RIGHT_MODAL);
         });
 
-        <x-forms.custom-field-filejs/>
-
-        init(RIGHT_MODAL);
-    });
-
-    function checkboxChange(parentClass, id){
-        let checkedData = '';
-        $('.'+parentClass).find("input[type= 'checkbox']:checked").each(function () {
-            checkedData = (checkedData !== '') ? checkedData+', '+$(this).val() : $(this).val();
-        });
-        $('#'+id).val(checkedData);
-    }
-</script>
+        function checkboxChange(parentClass, id){
+            let checkedData = '';
+            $('.'+parentClass).find("input[type= 'checkbox']:checked").each(function () {
+                checkedData = (checkedData !== '') ? checkedData+', '+$(this).val() : $(this).val();
+            });
+            $('#'+id).val(checkedData);
+        }
+    </script>

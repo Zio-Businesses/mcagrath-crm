@@ -209,7 +209,7 @@ class LeadContactController extends AccountBaseController
         return view('lead-contact.create', $this->data);
       
     }
-    public function getCounties(Request $request)
+    /*public function getCounties(Request $request)
     {
         $state = $request->input('state');
         
@@ -219,14 +219,14 @@ class LeadContactController extends AccountBaseController
         return response()->json($counties);
     }
     public function getCities(Request $request)
-{
+    {
     $state = $request->input('state');
     
     // Fetch cities for the selected state
     $cities = Locations::where('state', $state)->pluck('city')->unique();
 
     return response()->json($cities);
-}
+     }*/
 
     /**
      * @param StoreRequest $request
@@ -341,9 +341,10 @@ class LeadContactController extends AccountBaseController
         $this->countries = countries();
         $this->statusLeads = StatusLead::all();
          // Fetch counties and states for the dropdowns
-        $this->counties = Locations::select('county')->distinct()->get();
+       // $this->counties = Locations::select('county')->distinct()->get();
         $this->states = Locations::select('state')->distinct()->get();
-        $this->cities = Locations::select('city')->distinct()->get(); // Ensure cities are fetched
+       // $this->cities = Locations::select('city')->distinct()->get(); // Ensure cities are fetched
+       $this->companyTypes = CompanyType::all(); // Ensure company types are fetched
 
        // Format dates for the view
         $this->selectedStatus = $this->leadContact->statusLead ? $this->leadContact->statusLead->id : null;
@@ -381,6 +382,9 @@ class LeadContactController extends AccountBaseController
         $statusLead = StatusLead::find($request->status_type);
         $statusName = $statusLead ? $statusLead->status : null;
 
+        $companyType = CompanyType::find($request->company_type);
+        $companyTypeName = $companyType ? $companyType->type : null;
+
         abort_403(!($this->editPermission == 'all'
             || ($this->editPermission == 'added' && $leadContact->added_by == user()->id)
             || ($this->editPermission == 'owned' && $leadContact->added_by == user()->id)
@@ -394,7 +398,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->note = trim_editor($request->note);
         $leadContact->source_id = $request->source_id;
         $leadContact->category_id = $request->category_id;
-        $leadContact->company_name = $request->company_name;
+        $leadContact->company_type = $companyTypeName; // Update company type name
         $leadContact->website = $request->website;
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;

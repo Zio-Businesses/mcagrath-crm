@@ -581,7 +581,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
         Route::resource('company-types', CompanyTypeController::class);
         Route::get('companyTypes/list', [CompanyTypeController::class, 'getList'])->name('companyTypes.list');
-    
         });
 
 

@@ -1871,6 +1871,7 @@ return array(
         'goBestReply' => 'Go To Best Reply',
     ),
     'stripeCustomerAddress' => array(
+        'company_type'=>'Company Type',
         'status_type' => 'Status Type', 
         'details' => 'Address Details',
         'name' => 'Name',

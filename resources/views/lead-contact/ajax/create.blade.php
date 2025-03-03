@@ -38,7 +38,7 @@ $addProductPermission = user()->permission('add_product');
                             fieldName="client_email" :fieldPlaceholder="__('placeholders.email')" :fieldHelp="__('modules.lead.leadEmailInfo')">
                         </x-forms.email>
                     </div>
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-4 col-md-6">
                         <x-forms.select fieldId="state" :fieldLabel="__('modules.stripeCustomerAddress.state')" fieldName="state" search="true">
                             <option value="">--</option>
                             @foreach ($states as $state)
@@ -349,10 +349,10 @@ $addProductPermission = user()->permission('add_product');
 
         init(RIGHT_MODAL);
 
-        $('#addCompanyType').click(function() {
+    $('#addCompanyType').click(function() {
     const url = "{{ route('company-types.create') }}";
     $.ajaxModal(MODAL_LG, url);
-});
+    });
 // Refresh company types dropdown
 function refreshCompanyTypesSelect() {
     $.ajax({
