@@ -15,6 +15,7 @@ class StatusLead extends Model
         'company_id',
         'status',
     ];
+    
     public function lead()
     {
         return $this->belongsTo(Lead::class, 'company_id', 'company_id');

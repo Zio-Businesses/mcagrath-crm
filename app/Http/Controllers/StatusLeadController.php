@@ -89,9 +89,7 @@ class StatusLeadController extends Controller
     {
         
         $statusLead = StatusLead::findOrFail($id);
-        $statusLead->relatedRecords()->delete();
         $statusLead->delete();
-
         return Reply::success(__('messages.deleteSuccess'));
     }
 }

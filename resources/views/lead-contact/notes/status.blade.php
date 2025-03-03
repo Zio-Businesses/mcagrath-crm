@@ -22,11 +22,9 @@
             <td>{{ $key + 1 }}</td>
             <td data-row-id="{{ $item->id }}" contenteditable="true">{{ $item->status }}</td>
             <td class="text-right">
-                @if ($deleteStatusPermission == 'all')
                 <x-forms.button-secondary data-row-id="{{ $item->id }}" icon="trash" class="delete-row">
                     @lang('app.delete')
                 </x-forms.button-secondary>
-                @endif
             </td>
         </tr>
         @empty
