@@ -1485,6 +1485,7 @@ return array(
     ),
     'lead' => array(
         'status_type' => 'Status Type', 
+        'company_type'=>'Company Type',
         'position'=>'Designation/Position',
         'poc'=>'POC',
         'lastCalledDate'=>'Last Called Date',

@@ -11,9 +11,11 @@ use App\Enums\Salutation;
 use App\Models\LeadAgent;
 use App\Models\LeadSource;
 use App\Models\LeadStatus;
+use App\Models\Locations; 
 use App\Models\StatusLead;
 use App\Imports\LeadImport;
 use App\Jobs\ImportLeadJob;
+use App\Models\CompanyType;
 use App\Traits\ImportExcel;
 use App\Models\LeadCategory;
 use App\Models\LeadPipeline;
@@ -29,7 +31,6 @@ use App\Http\Requests\Lead\UpdateRequest;
 use App\Http\Controllers\AccountBaseController;
 use App\Http\Requests\Admin\Employee\ImportRequest;
 use App\Http\Requests\Admin\Employee\ImportProcessRequest;
-use App\Models\Locations; 
 
 
 class LeadContactController extends AccountBaseController
@@ -159,6 +160,8 @@ class LeadContactController extends AccountBaseController
         $this->addPermission = user()->permission('add_lead');
         abort_403(!in_array($this->addPermission, ['all', 'added']));
 
+
+
         if ($this->addPermission == 'all') {
             $this->employees = User::allEmployees();
         }
@@ -193,9 +196,10 @@ class LeadContactController extends AccountBaseController
         $this->sources = LeadSource::all();
         $this->status = LeadStatus::all();
         $this->categories = LeadCategory::all();
-        $this->countries = countries();
-        $this->salutations = Salutation::cases();
+       // $this->countries = countries();
+        //$this->salutations = Salutation::cases();
         $this->statusLeads = StatusLead::all();//newly added status
+        $this->companyTypes =CompanyType::all();
         $this->view = 'lead-contact.ajax.create';
 
         if (request()->ajax()) {
@@ -247,7 +251,7 @@ class LeadContactController extends AccountBaseController
 
         $leadContact = new Lead();
         $leadContact->company_id = company()->id;
-        $leadContact->salutation = $request->salutation;
+        //$leadContact->salutation = $request->salutation;
         $leadContact->client_name = $request->client_name;
         $leadContact->client_email = $request->client_email;
         $leadContact->note = trim_editor($request->note);
@@ -258,9 +262,9 @@ class LeadContactController extends AccountBaseController
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;
         $leadContact->office = $request->office;
-        $leadContact->city = $request->city; 
+        //$leadContact->city = $request->city; 
         $leadContact->state = $request->state;
-        $leadContact->county = $request->county;
+        //$leadContact->county = $request->county;
         $leadContact->postal_code = $request->postal_code;
         $leadContact->mobile = $request->mobile;
          // Add new fields
@@ -268,8 +272,8 @@ class LeadContactController extends AccountBaseController
         $leadContact->poc = $request->poc;
         $leadContact->last_called_date = $request->last_called_date ? Carbon::parse($request->last_called_date)->format('Y-m-d') : null;
         $leadContact->next_follow_up_date = $request->next_follow_up_date ? Carbon::parse($request->next_follow_up_date)->format('Y-m-d') : null;
-        $leadContact->on_board_date = $request->on_board_date ? Carbon::parse($request->on_board_date)->format('Y-m-d') : null;
-        $leadContact->rejected_date = $request->rejected_date ? Carbon::parse($request->rejected_date)->format('Y-m-d') : null;
+        //$leadContact->on_board_date = $request->on_board_date ? Carbon::parse($request->on_board_date)->format('Y-m-d') : null;
+        //$leadContact->rejected_date = $request->rejected_date ? Carbon::parse($request->rejected_date)->format('Y-m-d') : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
         $leadContact->status_type = $statusName; 
 

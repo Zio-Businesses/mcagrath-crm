@@ -62,6 +62,7 @@ use App\Http\Controllers\TaskReportController;
 use App\Http\Controllers\TicketFileController;
 use App\Http\Controllers\TwilioChatController;
 use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\CompanyTypeController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\EmployeeDocController;
 use App\Http\Controllers\ImmigrationController;
@@ -578,6 +579,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
         Route::get('/get-cities', [LeadContactController::class, 'getCities'])->name('getCities');
         Route::resource('status-leads', StatusLeadController::class);
         Route::get('statusLeads/list', [StatusLeadController::class, 'getList'])->name('statusLeads.list');
+        Route::resource('company-types', CompanyTypeController::class);
+        Route::get('companyTypes/list', [CompanyTypeController::class, 'getList'])->name('companyTypes.list');
     
         });
 

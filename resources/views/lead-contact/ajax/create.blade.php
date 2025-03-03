@@ -51,24 +51,25 @@ $addProductPermission = user()->permission('add_product');
                         <x-forms.text :fieldLabel="__('modules.lead.website')" fieldName="website" fieldId="website"
                             :fieldPlaceholder="__('placeholders.website')" />
                     </div>
-                                        <!--comapny type-->
-                                        <div class="col-md-4">
-                                            <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
-                                            </x-forms.label>
-                                            <x-forms.input-group>
-                                                <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
-                                                    <option value="">-- Select Status --</option>
-                                                    @foreach ($statusLeads as $statusLead)
-                                                        <option value="{{ $statusLead->id }}">{{ $statusLead->status }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <x-slot name="append">
-                                                    <button id="addCompanyType" type="button" class="btn btn-outline-secondary border-grey">
-                                                        @lang('app.add')
-                                                    </button>
-                                                </x-slot>
-                                            </x-forms.input-group>
-                                        </div>
+                    
+
+                    <div class="col-md-4">
+                        <x-forms.label class="mt-3" fieldId="company_type_id" :fieldLabel="__('Company Type')">
+                        </x-forms.label>
+                        <x-forms.input-group>
+                            <select class="form-control select-picker" name="company_type" id="company_type" data-live-search="true">
+                                <option value="">-- Select Company Type --</option>
+                                @foreach ($companyTypes as $companyType)
+                                    <option value="{{ $companyType->id }}">{{ $companyType->type }}</option>
+                                @endforeach
+                            </select>
+                            <x-slot name="append">
+                                <button id="addCompanyType" type="button" class="btn btn-outline-secondary border-grey">
+                                    @lang('app.add')
+                                </button>
+                            </x-slot>
+                        </x-forms.input-group>
+                    </div>
 
                     <div class="col-lg-4 col-md-6">
                         <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
@@ -347,6 +348,44 @@ $addProductPermission = user()->permission('add_product');
         $('#other-details').removeClass('d-none');
 
         init(RIGHT_MODAL);
+
+        $('#addCompanyType').click(function() {
+    const url = "{{ route('company-types.create') }}";
+    $.ajaxModal(MODAL_LG, url);
+});
+// Refresh company types dropdown
+function refreshCompanyTypesSelect() {
+    $.ajax({
+        url: "{{ route('companyTypes.list') }}",
+        type: "GET",
+        success: function(response) {
+            let companyTypeDropdown = $('#company_type');
+            let currentValue = companyTypeDropdown.val();
+
+            companyTypeDropdown.html('<option value="">-- Select Company Type --</option>');
+
+            if (response.companyTypes && response.companyTypes.length > 0) {
+                response.companyTypes.forEach(function(companyType) {
+                    companyTypeDropdown.append(
+                        `<option value="${companyType.id}">${companyType.type}</option>`
+                    );
+                });
+            }
+
+            // Restore previously selected value
+            if (currentValue) {
+                companyTypeDropdown.val(currentValue);
+            }
+
+            companyTypeDropdown.selectpicker('refresh');
+        }
+    });
+}
+// Refresh dropdown when modal is closed
+$(document).on('ajaxModalClosed', function() {
+    refreshCompanyTypesSelect();
+});
+refreshCompanyTypesSelect();
         //status type
         $('#addStatusLead').click(function() {
     const url = "{{ route('status-leads.create') }}";
