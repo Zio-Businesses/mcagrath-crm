@@ -248,6 +248,8 @@ class LeadContactController extends AccountBaseController
             ->first();
         $statusLead = StatusLead::find($request->status_type);
         $statusName = $statusLead ? $statusLead->status : null;
+        $companyType = CompanyType::find($request->company_type);
+        $companyTypeName = $companyType ? $companyType->type : null;
 
         $leadContact = new Lead();
         $leadContact->company_id = company()->id;
@@ -258,6 +260,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->source_id = $request->source_id;
         $leadContact->client_id = $existingUser?->id;
         $leadContact->company_name = $request->company_name;
+        $leadContact->company_type = $companyTypeName;  // Save company type name
         $leadContact->website = $request->website;
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;

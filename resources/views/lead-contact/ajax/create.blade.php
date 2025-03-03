@@ -70,7 +70,7 @@ $addProductPermission = user()->permission('add_product');
                             </x-slot>
                         </x-forms.input-group>
                     </div>
-
+                    
                     <div class="col-lg-4 col-md-6">
                         <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
                             fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" />
@@ -105,7 +105,26 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.textarea>
                         </div>
                     </div>
-                    {{--  @if ($viewLeadSourcesPermission != 'none')
+                   
+                      
+                    </div>
+                    <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
+                </div>
+                <x-form-actions>
+                    <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
+                    </x-forms.button-primary>
+                    <x-forms.button-secondary class="mr-3" id="save-more-lead-form" icon="check-double">@lang('app.saveAddMore')
+                    </x-forms.button-secondary>
+                    <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
+                    </x-forms.button-cancel>
+                </x-form-actions>
+
+            </div>
+        </x-form>
+
+    </div>
+</div>
+ {{--  @if ($viewLeadSourcesPermission != 'none')
                         <div class="col-lg-4 col-md-6">
                             <x-forms.label class="my-3" fieldId="source_id" :fieldLabel="__('modules.lead.leadSource')">
                             </x-forms.label>
@@ -197,25 +216,6 @@ $addProductPermission = user()->permission('add_product');
                             <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
                                 fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" />
                         </div>--}}
-                      
-                    </div>
-                    <x-forms.custom-field :fields="$fields" class="col-md-12"></x-forms.custom-field>
-                </div>
-                <x-form-actions>
-                    <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
-                    </x-forms.button-primary>
-                    <x-forms.button-secondary class="mr-3" id="save-more-lead-form" icon="check-double">@lang('app.saveAddMore')
-                    </x-forms.button-secondary>
-                    <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
-                    </x-forms.button-cancel>
-                </x-form-actions>
-
-            </div>
-        </x-form>
-
-    </div>
-</div>
-
 <script>
     $(document).ready(function() {
        /* $('#state').change(function() {
