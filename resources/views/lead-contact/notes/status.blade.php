@@ -16,7 +16,7 @@
             <th>@lang('Status')</th>
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
-        <pre>Delete Permission: {{ $deleteStatusPermission }}</pre>
+        <
         @forelse($statusLeads ?? [] as $key => $item)
         <tr id="row-{{ $item->id }}">
             <td>{{ $key + 1 }}</td>

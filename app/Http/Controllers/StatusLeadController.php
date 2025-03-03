@@ -11,7 +11,6 @@ class StatusLeadController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            abort_403(!in_array('leads', auth()->user()->modules));
             return $next($request);
         });
     }
@@ -22,8 +21,7 @@ class StatusLeadController extends Controller
     public function index()
     {
         $this->statusLeads = StatusLead::all();
-        $this->deleteStatusPermission = user()->permission('manage_lead_status');
-        return view(['status_leads.index', $this->data,'deleteStatusPermission'=>$deleteStatusPermission]);
+        return view('status_leads.index', $this->data);
     }
 
     /**
