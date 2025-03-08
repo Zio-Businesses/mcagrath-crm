@@ -9,6 +9,8 @@ use App\Helper\Files;
 use App\Helper\Reply;
 use App\Models\Project;
 use App\Models\ProjectExternalFile;
+use Illuminate\Support\Facades\Cache;
+
 class PublicProjectFileController extends Controller
 {
     public function FileView(Request $request)
@@ -60,5 +62,13 @@ class PublicProjectFileController extends Controller
         ProjectExternalFile::destroy($id);
 
         return Reply::success(__('messages.deleteSuccess'));
+    }
+
+    public function accessSharedFiles($key)
+    {
+        $this->company = Company::find(1);
+        $this->pageIcon = 'fa fa-file';
+        $this->files = Cache::get('shared_files_' . $key);
+        return view('file-share', $this->data);
     }
 }

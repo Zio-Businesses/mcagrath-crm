@@ -32,11 +32,14 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
                     </x-forms.button-secondary>
                 @endif
 
-                @if ($addLeadPermission == 'all' || $addLeadPermission == 'added')
+                <!-- @if ($addLeadPermission == 'all' || $addLeadPermission == 'added')
                     <x-forms.link-secondary :link="route('lead-contact.import')" class="mr-3 openRightModal float-left mb-2 mb-lg-0 mb-md-0 d-none d-lg-block" icon="file-upload">
                         @lang('app.importExcel')
                     </x-forms.link-secondary>
-                @endif
+                @endif -->
+                <!-- <x-forms.button-secondary class="mr-3 float-left mb-2 mb-lg-0 mb-md-0 d-sm-bloc d-none d-lg-block" icon="file-upload" id="importLeads">
+                        @lang('app.importExcel')
+                </x-forms.button-secondary>  -->
             </div>
             <x-datatable.actions>
                 <div class="select-status mr-3 pl-3">
@@ -62,12 +65,7 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
 @push('scripts')
     @include('sections.datatable_js')
     <script>
-         $('#client').click(function () {
-            $('#ajaxModel').modal('hide');
-         });
-         $('#vendor').click(function () {
-            $('#ajaxModel').modal('hide');
-         });
+         
         $('#lead-contact-table').on('preXhr.dt', function(e, settings, data) {
 
             var dateRangePicker = $('#datatableRange').data('daterangepicker');
@@ -251,6 +249,11 @@ $addLeadCustomFormPermission = user()->permission('manage_lead_custom_forms');
             $('#datatableRange').data('daterangepicker').setEndDate("{{ request('end') }}");
                 showTable();
             @endif
+        });
+        $('#importLeads').click(function () {
+                var url = "{{ route('lead-contact.import') }}";
+                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+                $.ajaxModal(MODAL_LG, url);
         });
 
     </script>

@@ -13,15 +13,15 @@
                     <div class="col-md-12">
                         <x-forms.file :fieldLabel="__('modules.import.file')" fieldName="import_file" fieldId="lead_import" />
                     </div>
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12">
                         <x-forms.toggle-switch class="mr-0 mr-lg-12"
                             :fieldLabel="__('modules.import.containsHeadings')"
                             fieldName="heading"
                             fieldId="heading"/>
-                    </div>
+                    </div> -->
                 </div>
                 <x-form-actions>
-                    <x-forms.button-primary id="import-lead-form" class="mr-3" icon="arrow-right">@lang('app.uploadNext')
+                    <x-forms.button-primary id="import-lead-form" class="mr-3" icon="arrow-right">@lang('Upload')
                     </x-forms.button-primary>
                     <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.back')
                     </x-forms.button-cancel>

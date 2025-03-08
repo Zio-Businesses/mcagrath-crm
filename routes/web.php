@@ -313,21 +313,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'account'], function () {
             Route::resource('files', ProjectFileController::class);
             Route::get('files/external/{id}', [ProjectFileController::class, 'FilesExternal'])->name('files.external');
             Route::post('files/share-selected', [ProjectFileController::class, 'shareSelectedFiles'])->name('files.share-selected');
-
-            // Route to handle sharing selected files using hashname
-            Route::post('files/share-selected', [ProjectFileController::class, 'shareSelectedFiles'])
-                ->name('files.share-selected');
-
-
-                //dont give hashname directly here(security)
-                //make the link public
-                Route::get('/account/projects/shared/files/{hashname}', [ProjectFileController::class, 'accessSharedFiles'])
-                ->where('hashname', '.*') // Allows multiple hashnames separated by commas
-                ->name('shared.files.access');
             
-
-
-                
+                        
             Route::get('milestones/byProject/{id}', [ProjectMilestoneController::class, 'byProject'])->name('milestones.by_project');
             Route::resource('milestones', ProjectMilestoneController::class);
             Route::resource('sow', ScopeOfWorkController::class);

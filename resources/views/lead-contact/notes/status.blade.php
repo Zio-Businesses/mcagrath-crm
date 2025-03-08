@@ -16,7 +16,6 @@
             <th>@lang('Status')</th>
             <th class="text-right">@lang('app.action')</th>
         </x-slot>
-        <
         @forelse($statusLeads ?? [] as $key => $item)
         <tr id="row-{{ $item->id }}">
             <td>{{ $key + 1 }}</td>
@@ -56,7 +55,7 @@
             url: "{{ route('statusLeads.list') }}",
             type: "GET",
             success: function (response) {
-                let statusLeadDropdown = $('#status_lead_id');
+                let statusLeadDropdown = $('#status_type');
                 statusLeadDropdown.html('<option value="">-- Select Status --</option>');
 
                 if (response.statusLeads && response.statusLeads.length > 0) {
@@ -85,7 +84,7 @@
                 if (response.status === 'success') {
                     $(MODAL_LG).modal('hide');
                     refreshStatusLeads();
-                    window.location.reload(); // Refresh the page to reflect changes
+                    //window.location.reload(); // Refresh the page to reflect changes
                 }
             }
         });
@@ -125,11 +124,12 @@
                     },
                     success: function(response) {
                         if (response.status == "success") {
+                            // console.log(id)
                             $('#row-' + id).fadeOut(100, function() {
                                 $(this).remove();
                             });
                             refreshStatusLeads();
-                            window.location.reload(); // Refresh the page to reflect changes
+                            //window.location.reload(); // Refresh the page to reflect changes
                         }
                     }
                 });
@@ -155,14 +155,10 @@
             success: function(response) {
                 if (response.status == 'success') {
                     refreshStatusLeads();
-                    window.location.reload(); // Refresh the page to reflect changes
+                    //window.location.reload(); // Refresh the page to reflect changes
                 }
             }
         });
     });
 
-    // Prevent default form submission
-    $('#createStatusLead').submit(function(event) {
-        event.preventDefault();
-    });
 </script>

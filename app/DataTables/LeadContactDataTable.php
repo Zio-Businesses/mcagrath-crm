@@ -113,9 +113,7 @@ class LeadContactDataTable extends BaseDataTable
         $datatables->addColumn('poc', fn($row) => $row->poc ?? '--');
         $datatables->addColumn('last_called_date', fn($row) => $row->last_called_date ? Carbon::parse($row->last_called_date)->translatedFormat($this->company->date_format) : '--');
         $datatables->addColumn('next_follow_up_date', fn($row) => $row->next_follow_up_date ? Carbon::parse($row->next_follow_up_date)->translatedFormat($this->company->date_format) : '--');
-        $datatables->addColumn('on_board_date', fn($row) => $row->on_board_date ? Carbon::parse($row->on_board_date)->translatedFormat($this->company->date_format) : '--');
-        $datatables->addColumn('rejected_date', fn($row) => $row->rejected_date ? Carbon::parse($row->rejected_date)->translatedFormat($this->company->date_format) : '--');
-        $datatables->addColumn('comments', fn($row) => $row->comments ?? '--');
+
 
         $datatables->editColumn('client_name', function ($row) {
             if ($row->client_id != null && $row->client_id != '') {
@@ -176,9 +174,7 @@ class LeadContactDataTable extends BaseDataTable
                 'leads.poc',
                 'leads.last_called_date',
                 'leads.next_follow_up_date',
-                'leads.on_board_date',
-                'leads.rejected_date',
-                'leads.comments'
+
             )
             ->leftJoin('lead_sources', 'lead_sources.id', 'leads.source_id');
         if ($this->request()->type != 'all' && $this->request()->type != '') {
@@ -217,44 +213,6 @@ class LeadContactDataTable extends BaseDataTable
         if ($this->request()->status_type != 'all' && $this->request()->status_type != '') {
             $leadContact = $leadContact->where('status_type', $this->request()->status_type);
         }
-         if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'last_called_date') {
-            $startDate = companyToDateString($this->request()->startDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`last_called_date`)'), '>=', $startDate);
-        }
-
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'last_called_date') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`last_called_date`)'), '<=', $endDate);
-        }
-
-        if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'next_follow_up_date') {
-            $startDate = companyToDateString($this->request()->startDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`next_follow_up_date`)'), '>=', $startDate);
-        }
-
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'next_follow_up_date') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`next_follow_up_date`)'), '<=', $endDate);
-        }
-        if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'on_board_date') {
-            $startDate = companyToDateString($this->request()->startDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`on_board_date`)'), '>=', $startDate);
-        }
-        
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'on_board_date') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`on_board_date`)'), '<=', $endDate);
-        }
-        
-        if ($this->request()->startDate !== null && $this->request()->startDate != 'null' && $this->request()->startDate != '' && request()->date_filter_on == 'rejected_date') {
-            $startDate = companyToDateString($this->request()->startDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`rejected_date`)'), '>=', $startDate);
-        }
-        
-        if ($this->request()->endDate !== null && $this->request()->endDate != 'null' && $this->request()->endDate != '' && request()->date_filter_on == 'rejected_date') {
-            $endDate = companyToDateString($this->request()->endDate);
-            $leadContact = $leadContact->having(DB::raw('DATE(leads.`rejected_date`)'), '<=', $endDate);
-        }
         
         //till here
 
@@ -277,8 +235,7 @@ class LeadContactDataTable extends BaseDataTable
                     ->orwhere('leads.mobile', 'like', '%' . request('searchText') . '%')
                     //newly added
                     ->orWhere('leads.position', 'like', '%' . request('searchText') . '%')
-                    ->orWhere('leads.poc', 'like', '%' . request('searchText') . '%')
-                    ->orWhere('leads.comments', 'like', '%' . request('searchText') . '%');
+                    ->orWhere('leads.poc', 'like', '%' . request('searchText') . '%');
             });
         }
 
@@ -333,7 +290,7 @@ class LeadContactDataTable extends BaseDataTable
             __('app.id') => ['data' => 'id', 'name' => 'id', 'title' => __('app.id'), 'visible' => showId()],
             __('app.name') => ['data' => 'name', 'name' => 'name', 'exportable' => true, 'visible' => false,'title' => __('app.name')],
             __('modules.leadContact.contactName') => ['data' => 'client_name', 'name' => 'leads.client_name', 'exportable' => false, 'title' => __('modules.leadContact.contactName')],
-            __('modules.lead.companyName') => ['data' => 'company_name', 'name' => 'company_name', 'exportable' => true, 'title' => __('modules.lead.companyName')],
+            // __('modules.lead.companyName') => ['data' => 'company_name', 'name' => 'company_name', 'exportable' => true, 'title' => __('modules.lead.companyName')],
 
             __('app.email') . ' ' . __('modules.lead.email') => ['data' => 'export_email', 'name' => 'email', 'title' => __('app.lead') . ' ' . __('modules.lead.email'), 'exportable' => true, 'visible' => false],
             __('modules.lead.email') => ['data' => 'email', 'name' => 'leads.client_email', 'title' => __('modules.lead.email')],
@@ -343,9 +300,6 @@ class LeadContactDataTable extends BaseDataTable
            __('modules.lead.poc') => ['data' => 'poc', 'name' => 'leads.poc', 'title' => __('modules.lead.poc')],
            __('modules.lead.lastCalledDate') => ['data' => 'last_called_date', 'name' => 'leads.last_called_date', 'title' => __('modules.lead.lastCalledDate')],
            __('modules.lead.nextFollowUpDate') => ['data' => 'next_follow_up_date', 'name' => 'leads.next_follow_up_date', 'title' => __('modules.lead.nextFollowUpDate')],
-           __('modules.lead.onBoardDate') => ['data' => 'on_board_date', 'name' => 'leads.on_board_date', 'title' => __('modules.lead.onBoardDate')],
-           __('modules.lead.rejectedDate') => ['data' => 'rejected_date', 'name' => 'leads.rejected_date', 'title' => __('modules.lead.rejectedDate')],
-           __('modules.lead.comments') => ['data' => 'comments', 'name' => 'leads.comments', 'title' => __('modules.lead.comments')],
            __('modules.lead.status') => ['data' => 'status_type', 'name' => 'leads.status', 'title' => __('modules.lead.status')],
 
            //till here

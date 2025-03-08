@@ -31,7 +31,8 @@ use App\Http\Requests\Lead\UpdateRequest;
 use App\Http\Controllers\AccountBaseController;
 use App\Http\Requests\Admin\Employee\ImportRequest;
 use App\Http\Requests\Admin\Employee\ImportProcessRequest;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\LeadClientImport;
 
 class LeadContactController extends AccountBaseController
 {
@@ -186,11 +187,11 @@ class LeadContactController extends AccountBaseController
             $this->fields = $leadContact->getCustomFieldGroupsWithFields()->fields;
         }
 
-            // Fetch states for the dropdown
-    $this->states = Locations::select('state')->distinct()->get();
+        // Fetch states for the dropdown
+        $this->states = Locations::select('state')->distinct()->get();
 
-    // Fetch counties for the dropdown
-    $this->counties = Locations::select('county')->distinct()->get();
+        // Fetch counties for the dropdown
+        $this->counties = Locations::select('county')->distinct()->get();
 
         $this->products = Product::all();
         $this->sources = LeadSource::all();
@@ -209,24 +210,6 @@ class LeadContactController extends AccountBaseController
         return view('lead-contact.create', $this->data);
       
     }
-    /*public function getCounties(Request $request)
-    {
-        $state = $request->input('state');
-        
-        // Fetch counties for the selected state
-        $counties = Locations::where('state', $state)->pluck('county')->unique();
-    
-        return response()->json($counties);
-    }
-    public function getCities(Request $request)
-    {
-    $state = $request->input('state');
-    
-    // Fetch cities for the selected state
-    $cities = Locations::where('state', $state)->pluck('city')->unique();
-
-    return response()->json($cities);
-     }*/
 
     /**
      * @param StoreRequest $request
@@ -242,14 +225,10 @@ class LeadContactController extends AccountBaseController
         $existingUser = User::select('id')
             ->whereHas('roles', function ($q) {
                 $q->where('name', 'client');
-            })->where('company_id', company()->id)
-            ->where('email', $request->client_email)
-            ->whereNotNull('email')
-            ->first();
-        $statusLead = StatusLead::find($request->status_type);
-        $statusName = $statusLead ? $statusLead->status : null;
-        $companyType = CompanyType::find($request->company_type);
-        $companyTypeName = $companyType ? $companyType->type : null;
+        })->where('company_id', company()->id)
+        ->where('email', $request->client_email)
+        ->whereNotNull('email')
+        ->first();
 
         $leadContact = new Lead();
         $leadContact->company_id = company()->id;
@@ -260,7 +239,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->source_id = $request->source_id;
         $leadContact->client_id = $existingUser?->id;
         $leadContact->company_name = $request->company_name;
-        $leadContact->company_type = $companyTypeName;  // Save company type name
+        $leadContact->company_type = $request->company_type;  // Save company type name
         $leadContact->website = $request->website;
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;
@@ -273,12 +252,12 @@ class LeadContactController extends AccountBaseController
          // Add new fields
         $leadContact->position = $request->position;
         $leadContact->poc = $request->poc;
-        $leadContact->last_called_date = $request->last_called_date ? Carbon::parse($request->last_called_date)->format('Y-m-d') : null;
-        $leadContact->next_follow_up_date = $request->next_follow_up_date ? Carbon::parse($request->next_follow_up_date)->format('Y-m-d') : null;
+        $leadContact->last_called_date = $request->last_called_date ? companyToYmd($request->last_called_date) : null;
+        $leadContact->next_follow_up_date = $request->next_follow_up_date ? companyToYmd($request->next_follow_up_date) : null;
         //$leadContact->on_board_date = $request->on_board_date ? Carbon::parse($request->on_board_date)->format('Y-m-d') : null;
         //$leadContact->rejected_date = $request->rejected_date ? Carbon::parse($request->rejected_date)->format('Y-m-d') : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
-        $leadContact->status_type = $statusName; 
+        $leadContact->status_type = $request->status_type; 
 
         $leadContact->save();
 
@@ -379,12 +358,6 @@ class LeadContactController extends AccountBaseController
         $leadContact = Lead::findOrFail($id);
         $this->editPermission = user()->permission('edit_lead');
 
-        $statusLead = StatusLead::find($request->status_type);
-        $statusName = $statusLead ? $statusLead->status : null;
-
-        $companyType = CompanyType::find($request->company_type);
-        $companyTypeName = $companyType ? $companyType->type : null;
-
         abort_403(!($this->editPermission == 'all'
             || ($this->editPermission == 'added' && $leadContact->added_by == user()->id)
             || ($this->editPermission == 'owned' && $leadContact->added_by == user()->id)
@@ -398,7 +371,7 @@ class LeadContactController extends AccountBaseController
         $leadContact->note = trim_editor($request->note);
         $leadContact->source_id = $request->source_id;
         $leadContact->category_id = $request->category_id;
-        $leadContact->company_type = $companyTypeName; // Update company type name
+        $leadContact->company_type = $request->company_type; // Update company type name
         $leadContact->website = $request->website;
         $leadContact->address = $request->address;
         $leadContact->cell = $request->cell;
@@ -411,13 +384,10 @@ class LeadContactController extends AccountBaseController
         $leadContact->position = $request->position;
         $leadContact->poc = $request->poc;
         // Parse dates in m-d-Y format before saving to the database
-        $leadContact->last_called_date = $request->last_called_date ? Carbon::createFromFormat('m-d-Y', $request->last_called_date)->format('Y-m-d') : null;
-        $leadContact->next_follow_up_date = $request->next_follow_up_date ? Carbon::createFromFormat('m-d-Y', $request->next_follow_up_date)->format('Y-m-d') : null;
-        $leadContact->on_board_date = $request->on_board_date ? Carbon::createFromFormat('m-d-Y', $request->on_board_date)->format('Y-m-d') : null;
-        $leadContact->rejected_date = $request->rejected_date ? Carbon::createFromFormat('m-d-Y', $request->rejected_date)->format('Y-m-d') : null;
+        $leadContact->last_called_date = $request->last_called_date ? companyToYmd($request->last_called_date) : null;
+        $leadContact->next_follow_up_date = $request->next_follow_up_date ? companyToYmd($request->next_follow_up_date) : null;
         $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
-        $leadContact->comments = $request->comments !== null ? trim_editor($request->comments) : null;
-        $leadContact->status_type = $statusName; 
+        $leadContact->status_type = $request->status_type; 
         $leadContact->save();
 
         // To add custom fields data
@@ -464,27 +434,34 @@ class LeadContactController extends AccountBaseController
     {
         $this->pageTitle = __('app.importExcel') . ' ' . __('app.menu.lead');
 
-        $this->addPermission = user()->permission('add_lead');
-        abort_403(!in_array($this->addPermission, ['all', 'added']));
+        // $this->addPermission = user()->permission('add_lead');
+        // abort_403(!in_array($this->addPermission, ['all', 'added']));
 
-        if (request()->ajax()) {
-            $html = view('leads.ajax.import', $this->data)->render();
+        // if (request()->ajax()) {
+        //     $html = view('leads.ajax.import', $this->data)->render();
 
-            return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle]);
-        }
+        //     return Reply::dataOnly(['status' => 'success', 'html' => $html, 'title' => $this->pageTitle]);
+        // }
 
-        $this->view = 'leads.ajax.import';
+        // $this->view = 'leads.ajax.import';
 
-        return view('leads.create', $this->data);
+        return view('leads.ajax.import', $this->data);
     }
 
     public function importStore(ImportRequest $request)
     {
-        $this->importFileProcess($request, LeadImport::class);
+        // $this->importFileProcess($request, LeadImport::class);
 
-        $view = view('leads.ajax.import_progress', $this->data)->render();
+        // $view = view('leads.ajax.import_progress', $this->data)->render();
 
-        return Reply::successWithData(__('messages.importUploadSuccess'), ['view' => $view]);
+        // return Reply::successWithData(__('messages.importUploadSuccess'), ['view' => $view]);
+        $request->validate([
+            'import_file' => 'required'
+        ]);
+
+        Excel::import(new LeadClientImport, $request->file('import_file'));
+
+        return Reply::success(__('messages.updateSuccess'));
     }
 
     public function importProcess(ImportProcessRequest $request)

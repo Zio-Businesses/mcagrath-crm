@@ -88,7 +88,7 @@
             if (response.status === 'success') {
                 $(MODAL_LG).modal('hide');
                 refreshCompanyTypes();
-                window.location.reload(); // Refresh the page to reflect changes
+                //window.location.reload(); // Refresh the page to reflect changes
             }
         }
     });
@@ -132,7 +132,7 @@
                                 $(this).remove();
                             });
                             refreshCompanyTypes();
-                            window.location.reload(); // Refresh the page to reflect changes
+                            //window.location.reload(); // Refresh the page to reflect changes
                         }
                     }
                 });
@@ -156,14 +156,14 @@
         success: function(response) {
             if (response.status == 'success') {
                 refreshCompanyTypes();
-                window.location.reload(); // Refresh the page to reflect changes
+                //window.location.reload(); // Refresh the page to reflect changes
             }
         }
     });
 });
 
-    // Prevent default form submission
-    $('#createCompanyType').submit(function(event) {
-        event.preventDefault();
-    });
+    // // Prevent default form submission
+    // $('#createCompanyType').submit(function(event) {
+    //     event.preventDefault();
+    // });
 </script>

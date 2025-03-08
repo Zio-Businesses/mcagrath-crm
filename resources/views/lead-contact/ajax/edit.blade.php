@@ -11,21 +11,10 @@ $addProductPermission = user()->permission('add_product');
 <div class="row">
     <div class="col-sm-12">
         <x-form id="save-lead-data-form" method="PUT">
-            @csrf
             <div class="add-client bg-white rounded">
                 <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-bottom-grey">
-                    @lang('modules.leadContact.leadDetails')</h4>
-                    <div class="row p-20">
-               {{-- <div class="row p-20">
-                    <div class="col-lg-4 col-md-6">
-                        <x-forms.select fieldId="salutation" :fieldLabel="__('modules.client.salutation')"
-                            fieldName="salutation">
-                            <option value="">--</option>
-                            @foreach ($salutations as $salutation)
-                                <option value="{{ $salutation->value }}" @selected($leadContact->salutation == $salutation)>{{ $salutation->label() }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>--}}
+                @lang('modules.leadContact.leadDetails')</h4>
+                <div class="row p-20">
 
                     <div class="col-lg-4 col-md-6">
                         <x-forms.text :fieldLabel="__('app.name')" fieldName="client_name"
@@ -44,7 +33,7 @@ $addProductPermission = user()->permission('add_product');
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <x-forms.tel fieldId="mobile" :fieldLabel="__('modules.lead.mobile')" fieldName="mobile"
-                               :fieldPlaceholder="__('placeholders.mobile')" :fieldValue="$leadContact->mobile"></x-forms.tel>
+                            :fieldPlaceholder="__('placeholders.mobile')" :fieldValue="$leadContact->mobile"></x-forms.tel>
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <x-forms.email fieldId="client_email" :fieldLabel="__('app.email')"
@@ -69,9 +58,9 @@ $addProductPermission = user()->permission('add_product');
                             </x-forms.label>
                             <x-forms.input-group>
                                 <select class="form-control select-picker" name="company_type" id="company_type" data-live-search="true">
-                                    <option value="">-- Select Company Type --</option>
+                                    <option value="">--</option>
                                     @foreach ($companyTypes as $companyType)
-                                        <option value="{{ $companyType->id }}" @selected($leadContact->company_type == $companyType->type)>{{ $companyType->type }}</option>
+                                        <option value="{{ $companyType->type }}" @selected($leadContact->company_type == $companyType->type)>{{ $companyType->type }}</option>
                                     @endforeach
                                 </select>
                                 
@@ -81,23 +70,23 @@ $addProductPermission = user()->permission('add_product');
                         <div class="col-lg-4 col-md-6">
                             <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
                                 fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" 
-                                :fieldValue="$leadContact->last_called_date" />
+                                :fieldValue="$leadContact->last_called_date" custom/>
                         </div>
                         
                         <div class="col-lg-4 col-md-6">
                             <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
                                 fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" 
-                                :fieldValue="$leadContact->next_follow_up_date" />
+                                :fieldValue="$leadContact->next_follow_up_date" custom/>
                         </div>
-                   
+                
                     <div class="col-md-4">
                         <x-forms.label class="mt-3" fieldId="status_lead_id" :fieldLabel="__('Status Lead')">
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
-                                <option value="">-- Select Status --</option>
+                                <option value="">--</option>
                                 @foreach ($statusLeads as $statusLead)
-                                    <option value="{{ $statusLead->id }}" 
+                                    <option value="{{ $statusLead->status }}" 
                                         @if($leadContact->status_type == $statusLead->status) selected @endif>
                                         {{ $statusLead->status }}
                                     </option>
@@ -108,289 +97,174 @@ $addProductPermission = user()->permission('add_product');
                     </div>
                     <div class="col-md-12">
                         <div class="form-group my-3">
-                            <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
-                                fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')"
-                                :fieldValue="$leadContact->comments">
-                            </x-forms.textarea>
-                        </div>
-                    </div>
-                    {{--
-
-                    @if ($viewLeadSourcesPermission != 'none')
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.label class="my-3" fieldId="source_id" :fieldLabel="__('modules.lead.leadSource')">
-                            </x-forms.label>
-                            <x-forms.input-group>
-                                <select class="form-control select-picker" name="source_id" id="source_id"
-                                    data-live-search="true">
-                                    <option value="">--</option>
-                                    @foreach ($sources as $source)
-                                        <option @if ($leadContact->source_id == $source->id) selected @endif value="{{ $source->id }}">
-                                            {{ $source->type }}</option>
-                                    @endforeach
-                                </select>
-
-                                @if ($addLeadSourcesPermission == 'all' || $addLeadSourcesPermission == 'added')
-                                    <x-slot name="append">
-                                        <button type="button"
-                                            class="btn btn-outline-secondary border-grey add-lead-source"
-                                            data-toggle="tooltip" data-original-title="{{ __('app.add').' '.__('modules.lead.leadSource') }}">@lang('app.add')</button>
-                                    </x-slot>
-                                @endif
-                            </x-forms.input-group>
-                        </div>
-                    @endif
-
-                </div>
-
-                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
-                    @lang('modules.lead.companyDetails')</h4>
-
-
-                <div class="row p-20">
-
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.lead.companyName')" fieldName="company_name"
-                            fieldId="company_name" :fieldPlaceholder="__('placeholders.company')"
-                            :fieldValue="$leadContact->company_name" />
-                    </div>
-
-                
-
-                  
-
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.client.officePhoneNumber')" fieldName="office"
-                            fieldId="office" fieldPlaceholder="" :fieldValue="$leadContact->office" />
-                    </div>
-
-                  {{--  <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="county" :fieldLabel="__('app.county')" fieldName="county" search="true">
-                            <option value="">--</option>
-                            @foreach ($counties as $county)
-                                <option value="{{ $county->county }}" @selected($leadContact->county == $county->county)>{{ $county->county }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>
-                    
-                  
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="city" :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" search="true">
-                            <option value="">--</option>
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->city }}" @selected($leadContact->city == $city->city)>{{ $city->city }}</option>
-                            @endforeach
-                        </x-forms.select>
-                    </div>--}}
-                    
-
-                  {{--  <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.postalCode')"
-                            fieldName="postal_code" fieldId="postal_code" :fieldPlaceholder="__('placeholders.postalCode')"
-                            :fieldValue="$leadContact->postal_code" />
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="form-group my-3">
                             <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.address')"
                                 fieldName="address" fieldId="address" :fieldPlaceholder="__('placeholders.address')"
                                 :fieldValue="$leadContact->address">
                             </x-forms.textarea>
                         </div>
                     </div>
-
-                    <!-- Add this after the address field -->
-                   
-                      
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="on_board_date" :fieldLabel="__('modules.stripeCustomerAddress.onBoardDate')" 
-                                fieldName="on_board_date" :fieldPlaceholder="__('placeholders.date')" 
-                                :fieldValue="$leadContact->on_board_date" />
+                    <div class="col-md-12">
+                        <div class="form-group my-3">
+                            <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('modules.stripeCustomerAddress.comments')"
+                                fieldName="comments" fieldId="comments" :fieldPlaceholder="__('placeholders.comments')"
+                                :fieldValue="$leadContact->comments">
+                            </x-forms.textarea>
                         </div>
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
-                                fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" 
-                                :fieldValue="$leadContact->rejected_date" />
-                        </div>--}}
-                        
-                        </div>
-
                     </div>
-                        <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
+    
+                    <x-forms.custom-field :fields="$fields" :model="$leadContact"></x-forms.custom-field>
                     <x-form-actions>
                         <x-forms.button-primary id="save-lead-form" class="mr-3" icon="check">@lang('app.save')
                         </x-forms.button-primary>
                         <x-forms.button-cancel :link="route('lead-contact.index')" class="border-0">@lang('app.cancel')
                         </x-forms.button-cancel>
                     </x-form-actions>
-
                 </div>
-            </x-form>
-
-        </div>
+            </div>
+        </x-form>
     </div>
+</div>
 
 
-    <script>
-        $(document).ready(function() {
-        /* $('#county').change(function() {
-                var county = $(this).val();
-                if (county) {
-                    $.ajax({
-                        url: "{{ route('getStatesByCounty') }}",
-                        type: "GET",
-                        data: {'county': county},
-                        success: function(data) {
-                            $('#state').empty();
-                            $('#state').append('<option value="">--</option>');
-                            $.each(data, function(key, value) {
-                                $('#state').append('<option value="'+ value +'">'+ value +'</option>');
-                            });
-                            $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-                        }
-                    });
-                } else {
-                    $('#state').empty();
-                    $('#state').append('<option value="">--</option>');
-                    $('#state').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-                }
-            });*/
-            //date picker
-            datepicker('#last_called_date', {
-            dateFormat: 'm-d-Y', // Match the format used in the create blade
-            ...datepickerConfig
-            });
+<script>
+    $(document).ready(function() {
 
-            datepicker('#next_follow_up_date', {
-                dateFormat: 'm-d-Y',
+
+        $('.custom-date-picker').each(function(ind, el) {
+            datepicker(el, {
+                position: 'bl',
                 ...datepickerConfig
             });
+        });
 
-            datepicker('#on_board_date', {
-                dateFormat: 'm-d-Y',
-                ...datepickerConfig
-            });
+        $('#save-lead-form').click(function() {
+        const url = "{{ route('lead-contact.update', [$leadContact->id]) }}";
+        $.easyAjax({
+            url: url,
+            container: '#save-lead-data-form',
+            type: "POST",
+            disableButton: true,
+            blockUI: true,
+            file: true,
+            buttonSelector: "#save-lead-form",
+            data: $('#save-lead-data-form').serialize(),
+            success: function(response) {
+                window.location.href = response.redirectUrl;
+            }
+        });
+    });
 
-            datepicker('#rejected_date', {
-                dateFormat: 'm-d-Y',
-                ...datepickerConfig
-            });
+        $('body').on('click', '.add-lead-source', function() {
+            const url = '{{ route('lead-source-settings.create') }}';
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
 
-            $('.custom-date-picker').each(function(ind, el) {
-                datepicker(el, {
-                    position: 'bl',
-                    ...datepickerConfig
-                });
-            });
+        $('body').on('click', '.add-lead-category', function() {
+            var url = '{{ route('leadCategory.create') }}';
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
 
-            $('#save-lead-form').click(function() {
-            const url = "{{ route('lead-contact.update', [$leadContact->id]) }}";
+        $('#create_task_category').click(function() {
+            const url = "{{ route('taskCategory.create') }}";
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#department-setting').click(function() {
+            const url = "{{ route('departments.create') }}";
+            $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_LG, url);
+        });
+
+        $('#client_view_task').change(function() {
+            $('#clientNotification').toggleClass('d-none');
+        });
+
+        $('#set_time_estimate').change(function() {
+            $('#set-time-estimate-fields').toggleClass('d-none');
+        });
+
+        $('.toggle-other-details').click(function() {
+            $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
+            $('#other-details').toggleClass('d-none');
+        });
+
+        $('#createTaskLabel').click(function() {
+            const url = "{{ route('task-label.create') }}";
+            $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
+            $.ajaxModal(MODAL_XL, url);
+        });
+
+        $('#add-project').click(function() {
+            $(MODAL_XL).modal('show');
+            const url = "{{ route('projects.create') }}";
             $.easyAjax({
                 url: url,
-                container: '#save-lead-data-form',
-                type: "POST",
-                disableButton: true,
                 blockUI: true,
-                file: true,
-                buttonSelector: "#save-lead-form",
-                data: $('#save-lead-data-form').serialize(),
+                container: MODAL_XL,
                 success: function(response) {
-                    window.location.href = response.redirectUrl;
+                    if (response.status == "success") {
+                        $(MODAL_XL + ' .modal-body').html(response.html);
+                        $(MODAL_XL + ' .modal-title').html(response.title);
+                        init(MODAL_XL);
+                    }
+                }
+            });
+        });
+        $('#mobile').on('input', function () {
+            let value = $(this).val().replace(/[^0-9]/g, '');  // Remove non-digit characters
+            if (value.length > 10) {
+                value = value.slice(0, 10);  // Limit to 10 digits
+            }
+            $(this).val(value);
+            
+            if (value.length === 10) {
+                $('#save-lead-form').prop('disabled', false);
+                $('#save-email-form').prop('disabled', false);
+            } 
+            else if (value.length===0)
+            {
+                $('#save-lead-form').prop('disabled', false);
+                $('#save-email-form').prop('disabled', false);
+            }
+            else {
+                $('#save-lead-form').prop('disabled', true);
+                $('#save-email-form').prop('disabled', true);
+            }
+
+        });
+
+        $('#add-employee').click(function() {
+            $(MODAL_XL).modal('show');
+
+            const url = "{{ route('employees.create') }}";
+
+            $.easyAjax({
+                url: url,
+                blockUI: true,
+                container: MODAL_XL,
+                success: function(response) {
+                    if (response.status == "success") {
+                        $(MODAL_XL + ' .modal-body').html(response.html);
+                        $(MODAL_XL + ' .modal-title').html(response.title);
+                        init(MODAL_XL);
+                    }
                 }
             });
         });
 
-            $('body').on('click', '.add-lead-source', function() {
-                const url = '{{ route('lead-source-settings.create') }}';
-                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                $.ajaxModal(MODAL_LG, url);
-            });
+        <x-forms.custom-field-filejs/>
 
-            $('body').on('click', '.add-lead-category', function() {
-                var url = '{{ route('leadCategory.create') }}';
-                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                $.ajaxModal(MODAL_LG, url);
-            });
+        init(RIGHT_MODAL);
+    });
 
-            $('#create_task_category').click(function() {
-                const url = "{{ route('taskCategory.create') }}";
-                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                $.ajaxModal(MODAL_LG, url);
-            });
-
-            $('#department-setting').click(function() {
-                const url = "{{ route('departments.create') }}";
-                $(MODAL_LG + ' ' + MODAL_HEADING).html('...');
-                $.ajaxModal(MODAL_LG, url);
-            });
-
-            $('#client_view_task').change(function() {
-                $('#clientNotification').toggleClass('d-none');
-            });
-
-            $('#set_time_estimate').change(function() {
-                $('#set-time-estimate-fields').toggleClass('d-none');
-            });
-
-            $('.toggle-other-details').click(function() {
-                $(this).find('svg').toggleClass('fa-chevron-down fa-chevron-up');
-                $('#other-details').toggleClass('d-none');
-            });
-
-            $('#createTaskLabel').click(function() {
-                const url = "{{ route('task-label.create') }}";
-                $(MODAL_XL + ' ' + MODAL_HEADING).html('...');
-                $.ajaxModal(MODAL_XL, url);
-            });
-
-            $('#add-project').click(function() {
-                $(MODAL_XL).modal('show');
-                const url = "{{ route('projects.create') }}";
-                $.easyAjax({
-                    url: url,
-                    blockUI: true,
-                    container: MODAL_XL,
-                    success: function(response) {
-                        if (response.status == "success") {
-                            $(MODAL_XL + ' .modal-body').html(response.html);
-                            $(MODAL_XL + ' .modal-title').html(response.title);
-                            init(MODAL_XL);
-                        }
-                    }
-                });
-            });
-
-            $('#add-employee').click(function() {
-                $(MODAL_XL).modal('show');
-
-                const url = "{{ route('employees.create') }}";
-
-                $.easyAjax({
-                    url: url,
-                    blockUI: true,
-                    container: MODAL_XL,
-                    success: function(response) {
-                        if (response.status == "success") {
-                            $(MODAL_XL + ' .modal-body').html(response.html);
-                            $(MODAL_XL + ' .modal-title').html(response.title);
-                            init(MODAL_XL);
-                        }
-                    }
-                });
-            });
-
-            <x-forms.custom-field-filejs/>
-
-            init(RIGHT_MODAL);
+    function checkboxChange(parentClass, id){
+        let checkedData = '';
+        $('.'+parentClass).find("input[type= 'checkbox']:checked").each(function () {
+            checkedData = (checkedData !== '') ? checkedData+', '+$(this).val() : $(this).val();
         });
-
-        function checkboxChange(parentClass, id){
-            let checkedData = '';
-            $('.'+parentClass).find("input[type= 'checkbox']:checked").each(function () {
-                checkedData = (checkedData !== '') ? checkedData+', '+$(this).val() : $(this).val();
-            });
-            $('#'+id).val(checkedData);
-        }
-    </script>
+        $('#'+id).val(checkedData);
+    }
+</script>

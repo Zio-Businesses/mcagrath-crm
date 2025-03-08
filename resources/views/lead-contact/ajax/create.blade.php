@@ -58,9 +58,9 @@ $addProductPermission = user()->permission('add_product');
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="company_type" id="company_type" data-live-search="true">
-                                <option value="">-- Select Company Type --</option>
+                                <option value="">--</option>
                                 @foreach ($companyTypes as $companyType)
-                                    <option value="{{ $companyType->id }}">{{ $companyType->type }}</option>
+                                    <option value="{{ $companyType->type }}">{{ $companyType->type }}</option>
                                 @endforeach
                             </select>
                             <x-slot name="append">
@@ -73,11 +73,11 @@ $addProductPermission = user()->permission('add_product');
                     
                     <div class="col-lg-4 col-md-6">
                         <x-forms.datepicker fieldId="last_called_date" :fieldLabel="__('modules.stripeCustomerAddress.lastCalledDate')" 
-                            fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" />
+                            fieldName="last_called_date" :fieldPlaceholder="__('placeholders.date')" custom/>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <x-forms.datepicker fieldId="next_follow_up_date" :fieldLabel="__('modules.stripeCustomerAddress.nextFollowUpDate')" 
-                            fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" />
+                            fieldName="next_follow_up_date" :fieldPlaceholder="__('placeholders.date')" custom/>
                     </div>
 
 
@@ -86,9 +86,9 @@ $addProductPermission = user()->permission('add_product');
                         </x-forms.label>
                         <x-forms.input-group>
                             <select class="form-control select-picker" name="status_type" id="status_type" data-live-search="true">
-                                <option value="">-- Select Status --</option>
+                                <option value="">--</option>
                                 @foreach ($statusLeads as $statusLead)
-                                    <option value="{{ $statusLead->id }}">{{ $statusLead->status }}</option>
+                                    <option value="{{ $statusLead->status }}">{{ $statusLead->status }}</option>
                                 @endforeach
                             </select>
                             <x-slot name="append">
@@ -97,6 +97,13 @@ $addProductPermission = user()->permission('add_product');
                                 </button>
                             </x-slot>
                         </x-forms.input-group>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group my-3">
+                            <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.address')"
+                                fieldName="address" fieldId="address" :fieldPlaceholder="__('placeholders.address')">
+                            </x-forms.textarea>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group my-3">
@@ -124,157 +131,9 @@ $addProductPermission = user()->permission('add_product');
 
     </div>
 </div>
- {{--  @if ($viewLeadSourcesPermission != 'none')
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.label class="my-3" fieldId="source_id" :fieldLabel="__('modules.lead.leadSource')">
-                            </x-forms.label>
-                            <x-forms.input-group>
-                                <select class="form-control select-picker" name="source_id" id="source_id"
-                                    data-live-search="true">
-                                    <option value="">--</option>
-                                    @foreach ($sources as $source)
-                                        <option value="{{ $source->id }}">{{ $source->type }}</option>
-                                    @endforeach
-                                </select>
-
-                                @if ($addLeadSourcesPermission == 'all' || $addLeadSourcesPermission == 'added')
-                                    <x-slot name="append">
-                                        <button type="button"
-                                            class="btn btn-outline-secondary border-grey add-lead-source"
-                                            data-toggle="tooltip" data-original-title="{{ __('app.add').' '.__('modules.lead.leadSource') }}">
-                                            @lang('app.add')</button>
-                                    </x-slot>
-                                @endif
-                            </x-forms.input-group>
-                        </div>
-                    @endif
-
-                    @if ($addPermission == 'all')
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.select fieldId="added_by" :fieldLabel="__('app.added').' '.__('app.by')"
-                                fieldName="added_by">
-                                <option value="">--</option>
-                                @foreach ($employees as $item)
-                                    <x-user-option :user="$item" :selected="user()->id == $item->id" />
-                                @endforeach
-                            </x-forms.select>
-                        </div>
-                    @endif
-
-                </div>
-
-                <h4 class="mb-0 p-20 f-21 font-weight-normal text-capitalize border-top-grey">
-                    @lang('modules.client.companyDetails')
-                </h4>
-
-                <div class="row p-20 d-none" id="other-details">
-
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.lead.companyName')" fieldName="company_name"
-                            fieldId="company_name" :fieldPlaceholder="__('placeholders.company')" />
-                    </div>
-
-
-
-
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.client.officePhoneNumber')" fieldName="office"
-                            fieldId="office" fieldPlaceholder="" />
-                    </div>
-                  
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="county" :fieldLabel="__('app.county')" fieldName="county" search="true">
-                            <option value="">--</option>
-                        </x-forms.select>
-                    </div>
-                    
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.select fieldId="city" :fieldLabel="__('modules.stripeCustomerAddress.city')" fieldName="city" search="true">
-                            <option value="">--</option>
-                        </x-forms.select>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6">
-                        <x-forms.text :fieldLabel="__('modules.stripeCustomerAddress.postalCode')"
-                            fieldName="postal_code" fieldId="postal_code" :fieldPlaceholder="__('placeholders.postalCode')" />
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group my-3">
-                            <x-forms.textarea class="mr-0 mr-lg-2 mr-md-2" :fieldLabel="__('app.address')"
-                                fieldName="address" fieldId="address" :fieldPlaceholder="__('placeholders.address')">
-                            </x-forms.textarea>
-                        </div>
-                    </div>
-
-  
-                     <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="on_board_date" :fieldLabel="__('modules.stripeCustomerAddress.onBoardDate')" 
-                                fieldName="on_board_date" :fieldPlaceholder="__('placeholders.date')" />
-                        </div>
-                        
-                        <div class="col-lg-4 col-md-6">
-                            <x-forms.datepicker fieldId="rejected_date" :fieldLabel="__('modules.stripeCustomerAddress.rejectedDate')" 
-                                fieldName="rejected_date" :fieldPlaceholder="__('placeholders.date')" />
-                        </div>--}}
+ 
 <script>
     $(document).ready(function() {
-       /* $('#state').change(function() {
-            var state = $(this).val();
-            if (state) {
-                // Fetch counties for the selected state
-                $.ajax({
-                    url: "{{ route('getCounties') }}",
-                    type: "GET",
-                    data: {'state': state},
-                    success: function(data) {
-                        $('#county').empty();
-                        $('#county').append('<option value="">--</option>');
-                        $.each(data, function(key, value) {
-                            $('#county').append('<option value="'+ value +'">'+ value +'</option>');
-                        });
-                        $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-                    }
-                });
-
-                // Fetch cities for the selected state
-                $.ajax({
-                    url: "{{ route('getCities') }}",
-                    type: "GET",
-                    data: {'state': state},
-                    success: function(data) {
-                        $('#city').empty();
-                        $('#city').append('<option value="">--</option>');
-                        $.each(data, function(key, value) {
-                            $('#city').append('<option value="'+ value +'">'+ value +'</option>');
-                        });
-                        $('#city').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-                    }
-                });
-            } else {
-                $('#county').empty();
-                $('#county').append('<option value="">--</option>');
-                $('#county').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-
-                $('#city').empty();
-                $('#city').append('<option value="">--</option>');
-                $('#city').selectpicker('refresh'); // Refresh the selectpicker if you're using it
-            }
-        });*/
-        $('#state').change(function() {
-                var state = $(this).val();
-                if (state) {
-                    // You can add any additional logic here if needed
-                    console.log("Selected State:", state);
-                } else {
-                    // Handle the case when no state is selected
-                    console.log("No state selected");
-                }
-                });
-        //date picker
-        datepicker('#last_called_date');
-        datepicker('#next_follow_up_date');
-       // datepicker('#on_board_date');
-       // datepicker('#rejected_date');
 
         $('.custom-date-picker').each(function(ind, el) {
             datepicker(el, {
@@ -282,6 +141,7 @@ $addProductPermission = user()->permission('add_product');
                 ...datepickerConfig
             });
         });
+
         $('#save-more-lead-form').click(function () {
 
             $('#add_more').val(true);
@@ -349,91 +209,40 @@ $addProductPermission = user()->permission('add_product');
 
         init(RIGHT_MODAL);
 
-    $('#addCompanyType').click(function() {
-    const url = "{{ route('company-types.create') }}";
-    $.ajaxModal(MODAL_LG, url);
-    });
-// Refresh company types dropdown
-function refreshCompanyTypesSelect() {
-    $.ajax({
-        url: "{{ route('companyTypes.list') }}",
-        type: "GET",
-        success: function(response) {
-            let companyTypeDropdown = $('#company_type');
-            let currentValue = companyTypeDropdown.val();
+        $('#addCompanyType').click(function() {
+        const url = "{{ route('company-types.create') }}";
+        $.ajaxModal(MODAL_LG, url);
+        });
 
-            companyTypeDropdown.html('<option value="">-- Select Company Type --</option>');
-
-            if (response.companyTypes && response.companyTypes.length > 0) {
-                response.companyTypes.forEach(function(companyType) {
-                    companyTypeDropdown.append(
-                        `<option value="${companyType.id}">${companyType.type}</option>`
-                    );
-                });
-            }
-
-            // Restore previously selected value
-            if (currentValue) {
-                companyTypeDropdown.val(currentValue);
-            }
-
-            companyTypeDropdown.selectpicker('refresh');
-        }
-    });
-}
-// Refresh dropdown when modal is closed
-$(document).on('ajaxModalClosed', function() {
-    refreshCompanyTypesSelect();
-});
-refreshCompanyTypesSelect();
-        //status type
         $('#addStatusLead').click(function() {
-    const url = "{{ route('status-leads.create') }}";
-    $.ajaxModal(MODAL_LG, url);
-});
-
-   // Add Status Lead button
-   $('#addStatusLead').click(function() {
             const url = "{{ route('status-leads.create') }}";
             $.ajaxModal(MODAL_LG, url);
         });
 
-        // Refresh status leads dropdown
-        function refreshStatusLeadsSelect() {
-            $.ajax({
-                url: "{{ route('statusLeads.list') }}",
-                type: "GET",
-                success: function(response) {
-                    let statusLeadDropdown = $('#status_lead_id');
-                    let currentValue = statusLeadDropdown.val();
+        $('#mobile').on('input', function () {
+            let value = $(this).val().replace(/[^0-9]/g, '');  // Remove non-digit characters
+            if (value.length > 10) {
+                value = value.slice(0, 10);  // Limit to 10 digits
+            }
+            $(this).val(value);
+            
+            if (value.length === 10) {
+                $('#save-lead-form').prop('disabled', false);
+                $('#save-email-form').prop('disabled', false);
+            } 
+            else if (value.length===0)
+            {
+                $('#save-lead-form').prop('disabled', false);
+                $('#save-email-form').prop('disabled', false);
+            }
+            else {
+                $('#save-lead-form').prop('disabled', true);
+                $('#save-email-form').prop('disabled', true);
+            }
 
-                    statusLeadDropdown.html('<option value="">-- Select Status --</option>');
-
-                    if (response.statusLeads && response.statusLeads.length > 0) {
-                        response.statusLeads.forEach(function(statusLead) {
-                            statusLeadDropdown.append(
-                                `<option value="${statusLead.id}">${statusLead.status}</option>`
-                            );
-                        });
-                    }
-
-                    // Restore previously selected value
-                    if (currentValue) {
-                        statusLeadDropdown.val(currentValue);
-                    }
-
-                    statusLeadDropdown.selectpicker('refresh');
-                }
-            });
-        }
-        // Refresh dropdown when modal is closed
-        $(document).on('ajaxModalClosed', function() {
-            refreshStatusLeadsSelect();
         });
-
-        // Initial load of status leads dropdown
-        refreshStatusLeadsSelect();
     });
+    
 
     function checkboxChange(parentClass, id){
         var checkedData = '';
